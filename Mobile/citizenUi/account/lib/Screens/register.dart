@@ -4,6 +4,7 @@ import 'package:account/Screens/register1.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:adobe_xd/page_link.dart';
+import '../Repository/language_constants.dart';
 import 'login.dart';
 import 'register2.dart';
 // ignore: depend_on_referenced_packages
@@ -50,8 +51,8 @@ class _XDRegisterState extends State<XDRegister> {
                 Pinned.fromPins(
                   Pin(start: 0.0, end: 0.0),
                   Pin(size: 21.0, start: 0.0),
-                  child: const Text(
-                    'Are you Jordanian?',
+                  child:  Text(
+                    translation(context).areYourJordanian,
                     style: TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 15,
@@ -59,13 +60,13 @@ class _XDRegisterState extends State<XDRegister> {
                     ),
                   ),
                 ),
-                const Align(
+                 Align(
                   alignment: Alignment(-0.587, 1.0),
                   child: SizedBox(
                     width: 27.0,
                     height: 21.0,
                     child: Text(
-                      'Yes',
+                      translation(context).yes,
                       style: TextStyle(
                         fontFamily: 'Poppins',
                         fontSize: 15,
@@ -74,13 +75,13 @@ class _XDRegisterState extends State<XDRegister> {
                     ),
                   ),
                 ),
-                const Align(
+                 Align(
                   alignment: Alignment.bottomRight,
                   child: SizedBox(
                     width: 27.0,
                     height: 21.0,
                     child: Text(
-                      'No',
+                      translation(context).no,
                       style: TextStyle(
                         fontFamily: 'Poppins',
                         fontSize: 15,
@@ -174,8 +175,8 @@ class _XDRegisterState extends State<XDRegister> {
                 Pinned.fromPins(
                   Pin(size: 86.0, start: 3.0),
                   Pin(size: 21.0, start: 0.0),
-                  child: const Text(
-                    'First Name',
+                  child:  Text(
+                    translation(context).firstName,
                     style: TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 15,
@@ -235,8 +236,8 @@ class _XDRegisterState extends State<XDRegister> {
                 Pinned.fromPins(
                   Pin(size: 80.0, start: 3.0),
                   Pin(size: 21.0, start: 0.0),
-                  child: const Text(
-                    'Last Name',
+                  child:  Text(
+                    translation(context).lastName,
                     style: TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 15,
@@ -263,6 +264,7 @@ class _XDRegisterState extends State<XDRegister> {
                  TextFormField(
                   controller:PhoneController,
                   validator: inputValidate,
+                  maxLength: 10,
                  onSaved:(newValue) => Phone =newValue!,
                 decoration: InputDecoration(
                 filled: true,
@@ -295,8 +297,8 @@ class _XDRegisterState extends State<XDRegister> {
                 Pinned.fromPins(
                   Pin(size: 115.0, start: 3.0),
                   Pin(size: 21.0, start: 0.0),
-                  child: const Text(
-                    'Phone Number',
+                  child:  Text(
+                    translation(context).phoneNumber,
                     style: TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 15,
@@ -347,8 +349,8 @@ class _XDRegisterState extends State<XDRegister> {
                   Pinned.fromPins(
                     Pin(size: 69.0, middle: 0.5),
                     Pin(start: 5.10, end: 10.0),
-                    child: const Text(
-                      'Next',
+                    child:  Text(
+                      translation(context).next,
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 30,
@@ -371,8 +373,8 @@ class _XDRegisterState extends State<XDRegister> {
                   pageBuilder: () =>  XDLogin(),
                 ),
               ],
-              child: const Text(
-                'Already Have an account?',
+              child:  Text(
+                translation(context).haveAccount,
                 style: TextStyle(
                   fontFamily: 'Poppins',
                   fontSize: 15,
@@ -422,8 +424,8 @@ class _XDRegisterState extends State<XDRegister> {
           Pinned.fromPins(
             Pin(size: 167.0, middle: 0.5019),
             Pin(size: 56.0, start: 96.0),
-            child: const Text(
-              'Register',
+            child:  Text(
+              translation(context).register,
               style: TextStyle(
                 fontFamily: 'Poppins',
                 fontSize: 40,

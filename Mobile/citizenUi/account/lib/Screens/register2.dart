@@ -10,6 +10,8 @@ import 'package:adobe_xd/page_link.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
+import '../Repository/language_constants.dart';
+
 late String dropdownValue;
 late List<String> dropdownItems;
 Map<String, String> _nationalities = {};
@@ -78,8 +80,8 @@ void initState() {
                 Pinned.fromPins(
                   Pin(size: 69.0, middle: 0.5),
                   Pin(start: 16.0, end: 15.0),
-                  child: const Text(
-                    'Next',
+                  child:  Text(
+                    translation(context).next,
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 30,
@@ -106,8 +108,8 @@ Padding(
   child: Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-     const Text(
-        'Type of ID',
+      Text(
+        translation(context).idType,
         style: TextStyle(
           fontFamily: 'Poppins',
           fontSize: 15,

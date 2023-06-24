@@ -11,7 +11,6 @@ import 'package:adobe_xd/page_link.dart';
 // ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
-
  var _date="20/jan/2023";
  var _time="12:00pm";
  String _status="pending";

@@ -7,6 +7,8 @@ import 'package:adobe_xd/pinned.dart';
 import 'package:flutter/services.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+import '../Repository/language_constants.dart';
 String IdField="National number";
 late String _nationalNumber;
 late String _idNumber;
@@ -78,8 +80,8 @@ class _XDRegister1State extends State<XDRegister1> {
                   Pinned.fromPins(
                     Pin(size: 69.0, middle: 0.5),
                     Pin(start: 16.0, end: 15.0),
-                    child: const Text(
-                      'Next',
+                    child:  Text(
+                      translation(context).next,
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 30,
@@ -101,7 +103,7 @@ class _XDRegister1State extends State<XDRegister1> {
                 Stack(
               children: <Widget>[
                 Text(
-               'National Number',
+               translation(context).nationalNumber,
              style: TextStyle(
           fontFamily: 'Poppins',
           fontSize: 15,
@@ -166,7 +168,7 @@ Padding(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Text(
-        'Type of ID',
+        translation(context).idType,
         style: TextStyle(
           fontFamily: 'Poppins',
           fontSize: 15,
@@ -274,8 +276,8 @@ Padding(
           Pinned.fromPins(
             Pin(size: 167.0, middle: 0.5019),
             Pin(size: 56.0, start: 96.0),
-            child: const Text(
-              'Register',
+            child:  Text(
+              translation(context).register,
               style: TextStyle(
                 fontFamily: 'Poppins',
                 fontSize: 40,

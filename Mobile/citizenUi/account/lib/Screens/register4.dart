@@ -1,5 +1,6 @@
 // ignore_for_file: constant_identifier_names, unused_element, unnecessary_null_comparison, prefer_const_constructors, unused_local_variable, depend_on_referenced_packages
 
+import 'package:account/Repository/language_constants.dart';
 import 'package:account/Screens/register.dart';
 import 'package:account/Screens/register1.dart';
 import 'package:flutter/material.dart';
@@ -55,8 +56,8 @@ class XDRegister4 extends StatelessWidget {
                   Pinned.fromPins(
                     Pin(size: 89.0, middle: 0.5),
                     Pin(start: 16.0, end: 15.0),
-                    child: const Text(
-                      'Finish',
+                    child:  Text(
+                      translation(context).finish,
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 30,
@@ -130,8 +131,8 @@ class XDRegister4 extends StatelessWidget {
                 Pinned.fromPins(
                   Pin(size: 140.0, start: 3.0),
                   Pin(size: 21.0, start: 0.0),
-                  child: const Text(
-                    'Confirm Password',
+                  child:  Text(
+                    translation(context).confirmPassword,
                     style: TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 15,
@@ -203,8 +204,8 @@ class XDRegister4 extends StatelessWidget {
                 Pinned.fromPins(
                   Pin(size: 115.0, start: 3.0),
                   Pin(size: 21.0, start: 0.0),
-                  child: const Text(
-                    'Password',
+                  child:  Text(
+                    translation(context).password,
                     style: TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 15,
@@ -274,8 +275,8 @@ class XDRegister4 extends StatelessWidget {
                 Pinned.fromPins(
                   Pin(size: 80.0, start: 3.0),
                   Pin(size: 21.0, start: 0.0),
-                  child: const Text(
-                    'Username',
+                  child:  Text(
+                    translation(context).username,
                     style: TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 15,
@@ -335,8 +336,8 @@ class XDRegister4 extends StatelessWidget {
                 Pinned.fromPins(
                   Pin(size: 86.0, start: 3.0),
                   Pin(size: 21.0, start: 0.0),
-                  child: const Text(
-                    'Email',
+                  child:  Text(
+                  translation(context).email,
                     style: TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 15,
@@ -389,8 +390,8 @@ class XDRegister4 extends StatelessWidget {
           Pinned.fromPins(
             Pin(size: 167.0, middle: 0.5019),
             Pin(size: 56.0, start: 96.0),
-            child: const Text(
-              'Register',
+            child:  Text(
+              translation(context).register,
               style: TextStyle(
                 fontFamily: 'Poppins',
                 fontSize: 40,

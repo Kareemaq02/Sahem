@@ -2,6 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
+import '../Repository/language.dart';
+import '../Repository/language_constants.dart';
+import '../main.dart';
 import 'register.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'login.dart';
@@ -66,13 +69,50 @@ class XDHome extends StatelessWidget {
                       width: 254.0,
                       height: 249.0,
                       decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage(''),
-                          fit: BoxFit.fill,
-                        ),
+                        
                       ),
                     ),
                   ),
+                ),
+
+                Pinned.fromPins(
+                  Pin(size: 366.0, middle: 1.400),
+                  Pin(size: 100.0, end: 200.7),   
+                  child:
+
+                    Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: DropdownButton<Language>(
+                    underline: const SizedBox(),
+                     icon: const Icon(
+                      Icons.language,
+                      color: Colors.white,
+                       ),
+              onChanged: (Language? language) async {
+                if (language != null) {
+                  Locale _locale = await setLocale(language.languageCode);
+                  MyApp.setLocale(context, _locale);
+                }
+              },
+              items: Language.languageList()
+                  .map<DropdownMenuItem<Language>>(
+                    (e) => DropdownMenuItem<Language>(
+                      value: e,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          Text(
+                            e.flag,
+                            style: const TextStyle(fontSize: 20),
+                          ),
+                          Text(e.name)
+                        ],
+                      ),
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
                 ),
                 
                 Pinned.fromPins(
@@ -117,8 +157,8 @@ class XDHome extends StatelessWidget {
                   Pinned.fromPins(
                     Pin(size: 126.0, middle: 0.5028),
                     Pin(start: 16.0, end: 15.0),
-                    child: const Text(
-                      'Register',
+                    child:  Text(
+                      translation(context).register,
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 30,
@@ -158,10 +198,10 @@ class XDHome extends StatelessWidget {
                     onTap:(){Navigator.push(context,MaterialPageRoute(builder: (context) =>  const XDLogin()),);}
                   ),
                   Pinned.fromPins(
-                    Pin(size: 82.0, middle: 0.5022),
-                    Pin(start: 16.0, end: 15.0),
-                    child: const Text(
-                      'Login',
+                    Pin(size: 180.0, middle: 0.5200),
+                    Pin(start: 16.0, end: 10.0),
+                    child:  Text(
+                      translation(context).login,
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 30,
@@ -177,8 +217,8 @@ class XDHome extends StatelessWidget {
           Pinned.fromPins(
             Pin(start: 70.0, end: 30.0),
             Pin(size: 30.0, middle: 0.7400),
-            child: const Text(
-              'If you don\'t have an account',
+            child:  Text(
+               translation(context).dont_have_acc,
               style: TextStyle(
                 fontFamily: 'Poppins',
                 fontSize: 15,

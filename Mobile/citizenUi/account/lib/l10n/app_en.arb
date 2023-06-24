@@ -10,7 +10,7 @@
 "register":"register",
 "idType":"Type of ID",
 "idNumber":"ID Number",
-"nationalID":"National ID",
+"nationalID":"National ID Number",
 "nationalNumber":"National Number",
 "next":"Next",
 "nationality":"Nationality",
@@ -22,6 +22,12 @@
 "areYourJordanian":"are Your Jordanian",
 "yes":"Yes",
 "no":"Yes",
-"haveAccount":"Already have an account"
+"haveAccount":"Already have an account",
+"rememberMe":"Remeber me",
+"email_or_username":"Email/Username",
+"registrationNumber":"Registeration Number",
+"selectHere":"Select Here"
+
+
 
 }

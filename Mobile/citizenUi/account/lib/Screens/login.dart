@@ -1,5 +1,6 @@
 // ignore_for_file: constant_identifier_names, unused_element, depend_on_referenced_packages, prefer_typing_uninitialized_variables, unnecessary_new, library_private_types_in_public_api, avoid_print, unused_local_variable
 
+import 'package:account/Repository/language_constants.dart';
 import 'package:account/Screens/public_feed.dart';
 import 'package:account/Screens/register.dart';
 import 'package:flutter/material.dart';
@@ -40,12 +41,12 @@ class _XDLoginState extends State<XDLogin> {
          
 
           //pasowrd box
-         passowrdForm(),
+         passowrdForm(context),
           Pinned.fromPins(
             Pin(size: 136.0, end: 10.0),
            Pin(size: 20.0, middle: 0.6807),
-            child: const Text(
-              'Forgot Password?',
+            child:  Text(
+              translation(context).forgot_password,
               style: TextStyle(
                 fontFamily: 'Poppins',
                 fontSize: 15,
@@ -62,8 +63,8 @@ class _XDLoginState extends State<XDLogin> {
                 Pin(size: 130.0, start: 40.0),
                 Pin(start: 175.0, end: 10.0),
                 
-                  child: const Text(
-                    'Remember me',
+                  child:  Text(
+                    translation(context).rememberMe,
                     style: TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 15,
@@ -114,8 +115,8 @@ class _XDLoginState extends State<XDLogin> {
                   Pinned.fromPins(
                     Pin(size: 82.0, middle: 0.5022),
                     Pin(start: 16.0, end: 15.0),
-                    child: const Text(
-                      'Login',
+                    child: Text(
+                      translation(context).login,
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 30,
@@ -138,8 +139,8 @@ class _XDLoginState extends State<XDLogin> {
                   pageBuilder: () => const XDRegister(),
                 ),
               ],
-              child: const Text(
-                'If you don\'t have an account',
+              child:  Text(
+                translation(context).dont_have_acc,
                 style: TextStyle(
                   fontFamily: 'Poppins',
                   fontSize: 15,
@@ -188,8 +189,8 @@ class _XDLoginState extends State<XDLogin> {
           Pinned.fromPins(
             Pin(size: 111.0, middle: 0.5016),
             Pin(size: 56.0, start: 96.0),
-            child: const Text(
-              'Login',
+            child:  Text(
+              translation(context).login,
               style: TextStyle(
                 fontFamily: 'Poppins',
                 fontSize: 40,
@@ -273,7 +274,7 @@ String? validateEmail(String? value) {
     }
      return null;
   }
- Widget passowrdForm(){
+ Widget passowrdForm(BuildContext context){
   return Form(
     key: _key,
     autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -337,8 +338,8 @@ String? validateEmail(String? value) {
                 Pinned.fromPins(
                   Pin(size: 144.0, start: 3.0),
                   Pin(size: 21.0, start: 0.0),
-                  child: const Text(
-                    'Email or Username',
+                  child:  Text(
+                    translation(context).email_or_username,
                     style: TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 15,
@@ -404,8 +405,8 @@ String? validateEmail(String? value) {
                 Pinned.fromPins(
                   Pin(size: 76.0, start: 3.0),
                   Pin(size: 21.0, start: 0.0),
-                  child: const Text(
-                    'Password',
+                  child:  Text(
+                    translation(context).password,
                     style: TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 15,
