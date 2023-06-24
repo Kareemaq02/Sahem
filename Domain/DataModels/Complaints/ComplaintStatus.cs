@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Domain.DataModels.Intersections;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.DataModels.Complaints
@@ -13,5 +14,8 @@ namespace Domain.DataModels.Complaints
         [Column("NAME")]
         [Required]
         public string strName { get; set; }
+
+        // Relations
+        public ICollection<ComplaintsStatuses> Complaints { get; set; }
     }
 }

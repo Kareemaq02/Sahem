@@ -114,6 +114,21 @@ namespace Persistence
                 .WithMany(q => q.Voters)
                 .HasForeignKey(q => q.intComplaintId);
 
+            // Complaint_Statuses intersection table
+            builder.Entity<ComplaintsStatuses>(
+                q => q.HasKey(q => new { q.intComplaintId, q.intStatusId })
+            );
+            builder
+                .Entity<ComplaintsStatuses>()
+                .HasOne(q => q.Complaint)
+                .WithMany(q => q.Statuses)
+                .HasForeignKey(q => q.intStatusId);
+            builder
+                .Entity<ComplaintsStatuses>()
+                .HasOne(q => q.ComplaintStatus)
+                .WithMany(q => q.Complaints)
+                .HasForeignKey(q => q.intComplaintId);
+
             // Complaint_Attachment table
             builder.Entity<ComplaintAttachment>(
                 q => q.HasKey(q => new { q.intComplaintId, q.strMediaRef })
@@ -190,6 +205,7 @@ namespace Persistence
         public DbSet<ComplaintType> ComplaintTypes { get; set; }
         public DbSet<ComplaintVoters> ComplaintVoters { get; set; }
         public DbSet<ComplaintAttachment> ComplaintAttachments { get; set; }
+        public DbSet<ComplaintsStatuses> ComplaintsStatuses { get; set; }
 
         // Users DataSets
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }

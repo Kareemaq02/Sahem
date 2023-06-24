@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.IdentityModel.Tokens;
 using Persistence;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace API.Controllers
@@ -119,6 +120,103 @@ namespace API.Controllers
         public async Task<ActionResult<string>> RefreshToken()
         {
             var user = await _userManager.FindByNameAsync(User.FindFirstValue("username"));
+            return _tokenService.CreateToken(user);
+        }
+
+        [Authorize]
+        [HttpPut("update")]
+        public async Task<ActionResult<string>> UpdateUserInfo(UserUpdateDTO userUpdateDTO)
+        {
+            string authHeader = Request.Headers["Authorization"];
+            JwtSecurityTokenHandler tokenHandler = new();
+            JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
+
+            var strUserName = jwtToken.Claims.First(c => c.Type == "username").Value;
+            var user = await _userManager.FindByNameAsync(strUserName);
+
+            if (user == null)
+            {
+                return BadRequest("Bad security token.");
+            }
+
+            if (!string.IsNullOrWhiteSpace(userUpdateDTO.strNewUserName))
+            {
+                if (
+                    await _userManager.Users.AnyAsync(
+                        q => q.UserName == userUpdateDTO.strNewUserName
+                    )
+                )
+                {
+                    return BadRequest("Username is already used.");
+                }
+
+                user.UserName = userUpdateDTO.strNewUserName;
+                user.NormalizedUserName = _userManager.NormalizeName(userUpdateDTO.strNewUserName);
+            }
+
+            if (!string.IsNullOrWhiteSpace(userUpdateDTO.strNewEmail))
+            {
+                if (await _userManager.Users.AnyAsync(q => q.Email == userUpdateDTO.strNewEmail))
+                {
+                    return BadRequest("Email is already used.");
+                }
+
+                user.Email = userUpdateDTO.strNewEmail;
+                user.NormalizedEmail = _userManager.NormalizeName(userUpdateDTO.strNewEmail);
+            }
+
+            if (!string.IsNullOrWhiteSpace(userUpdateDTO.strNewPhoneNumber))
+            {
+                if (
+                    await _context.UserInfos.AnyAsync(
+                        q => q.strPhoneNumber == userUpdateDTO.strNewPhoneNumber
+                    )
+                )
+                {
+                    return BadRequest("Phonenumber is already used.");
+                }
+
+                var userInfo = await _context.UserInfos.FindAsync(user.intUserInfoId);
+                userInfo.strPhoneNumber = userUpdateDTO.strNewPhoneNumber;
+            }
+
+            if (
+                !string.IsNullOrWhiteSpace(userUpdateDTO.strNewPassword)
+                && !string.IsNullOrWhiteSpace(userUpdateDTO.strOldPassword)
+            )
+            {
+                var result = await _userManager.ChangePasswordAsync(
+                    user,
+                    userUpdateDTO.strOldPassword,
+                    userUpdateDTO.strNewPassword
+                );
+
+                if (!result.Succeeded)
+                {
+                    return result.Errors.First().Description;
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(userUpdateDTO.strNewLocation))
+            {
+                // NOT IMPLEMENTED IN SYSTEM YET
+            }
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            {
+                try
+                {
+                    await _userManager.UpdateAsync(user);
+                    await _context.SaveChangesAsync();
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    return StatusCode(500, "An error occurred while updating user information.");
+                }
+            }
+
             return _tokenService.CreateToken(user);
         }
 

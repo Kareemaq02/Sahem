@@ -1,10 +1,10 @@
 ﻿using Application.Core;
 using Application.Queries.Complaints;
 using Domain.ClientDTOs.Complaint;
+using Domain.Helpers;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
-using System.Linq;
 
 namespace Application.Handlers.Complaints
 {

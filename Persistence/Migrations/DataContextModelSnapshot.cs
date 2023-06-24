@@ -26,6 +26,10 @@ namespace Persistence.Migrations
                         .HasColumnType("int")
                         .HasColumnName("ID");
 
+                    b.Property<bool>("blnIsRefiled")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("IS_REFILED");
+
                     b.Property<DateTime>("dtmDateCreated")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("DATE_CREATED");
@@ -214,15 +218,32 @@ namespace Persistence.Migrations
                         .HasColumnType("int")
                         .HasColumnName("COMPLAINT_ID");
 
-                    b.Property<bool>("blnIsHost")
-                        .HasColumnType("tinyint(1)")
-                        .HasColumnName("IS_HOST");
-
                     b.HasKey("intUserId", "intComplaintId");
 
                     b.HasIndex("intComplaintId");
 
                     b.ToTable("complaints_voters");
+                });
+
+            modelBuilder.Entity("Domain.DataModels.Intersections.ComplaintsStatuses", b =>
+                {
+                    b.Property<int>("intComplaintId")
+                        .HasColumnType("int")
+                        .HasColumnName("COMPLAINT_ID");
+
+                    b.Property<int>("intStatusId")
+                        .HasColumnType("int")
+                        .HasColumnName("STATUS_ID");
+
+                    b.Property<DateTime>("dtmTransDate")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("TRANS_DATE");
+
+                    b.HasKey("intComplaintId", "intStatusId");
+
+                    b.HasIndex("intStatusId");
+
+                    b.ToTable("complaints_statuses");
                 });
 
             modelBuilder.Entity("Domain.DataModels.Intersections.DepartmentUsers", b =>
@@ -426,6 +447,10 @@ namespace Persistence.Migrations
                     b.Property<decimal>("decRating")
                         .HasColumnType("decimal(18,2)")
                         .HasColumnName("RATING");
+
+                    b.Property<decimal>("decUserRating")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("USER_RATING");
 
                     b.Property<DateTime>("dtmDateActivated")
                         .HasColumnType("datetime(6)")
@@ -897,6 +922,25 @@ namespace Persistence.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Domain.DataModels.Intersections.ComplaintsStatuses", b =>
+                {
+                    b.HasOne("Domain.DataModels.Complaints.ComplaintStatus", "ComplaintStatus")
+                        .WithMany("Complaints")
+                        .HasForeignKey("intComplaintId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.DataModels.Complaints.Complaint", "Complaint")
+                        .WithMany("Statuses")
+                        .HasForeignKey("intStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Complaint");
+
+                    b.Navigation("ComplaintStatus");
+                });
+
             modelBuilder.Entity("Domain.DataModels.Intersections.DepartmentUsers", b =>
                 {
                     b.HasOne("Domain.DataModels.LookUps.Department", "Department")
@@ -1085,9 +1129,16 @@ namespace Persistence.Migrations
                 {
                     b.Navigation("Attachments");
 
+                    b.Navigation("Statuses");
+
                     b.Navigation("Tasks");
 
                     b.Navigation("Voters");
+                });
+
+            modelBuilder.Entity("Domain.DataModels.Complaints.ComplaintStatus", b =>
+                {
+                    b.Navigation("Complaints");
                 });
 
             modelBuilder.Entity("Domain.DataModels.LookUps.Department", b =>

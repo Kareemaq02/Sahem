@@ -2,6 +2,8 @@
 using Application;
 using System.IdentityModel.Tokens.Jwt;
 using Domain.ClientDTOs.Department;
+using Application.Queries.Complaints;
+using Application.Queries.Departments;
 
 namespace API.Controllers
 {
@@ -20,7 +22,12 @@ namespace API.Controllers
 
             return HandleResult(await Mediator.Send(new InsertDepartmentCommand(departmentDTO)));
         }
+        [HttpGet] // .../api/departments
+        public async Task<IActionResult> GetDepartmentsList()
+        {
+            return HandleResult(await Mediator.Send(new GetDepartmentsListQuery()));
+        }
 
-       
+
     }
 }

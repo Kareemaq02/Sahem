@@ -1,11 +1,7 @@
-﻿namespace Domain.ClientDTOs.Complaint
-{
-    public struct LatLng
-    {
-        public decimal decLat { get; set; }
-        public decimal decLng { get; set; }
-    }
+﻿using Domain.Helpers;
 
+namespace Domain.ClientDTOs.Complaint
+{
     public class ComplaintsListDTO
     {
         public int intComplaintId { get; set; }
@@ -19,6 +15,6 @@
         public int intPrivacyId { get; set; }
         public int intVotersCount { get; set; }
         public LatLng latLng { get; set; }
-        public Decimal decPriority { get; set; }
+        public decimal decPriority { get; set; }
     }
 }

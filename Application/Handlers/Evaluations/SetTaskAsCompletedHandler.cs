@@ -56,15 +56,19 @@ namespace Application.Handlers.Evaluations
 
             try
             {
-                int complaintId = await _context.TasksComplaints
+                var complaintIds = await _context.TasksComplaints
                 .Where(q => q.intTaskId == request.Id)
                 .Select(q => q.intComplaintId)
-                .FirstOrDefaultAsync();
+                .ToListAsync();
 
-                var complaint = new Complaint { intId = complaintId };
-                _context.Complaints.Attach(complaint);
-                complaint.intStatusId = (int)ComplaintsConstant.complaintStatus.completed;
-                await _context.SaveChangesAsync(cancellationToken);
+                foreach (var x in complaintIds)
+                {
+                    var complaint = new Complaint { intId = x };
+                    _context.Complaints.Attach(complaint);
+                    complaint.intStatusId = (int)ComplaintsConstant.complaintStatus.completed;
+                    await _context.SaveChangesAsync(cancellationToken);
+                }
+
                 await transaction.CommitAsync();
             }
             catch (DbUpdateException)

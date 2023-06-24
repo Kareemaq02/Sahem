@@ -1,6 +1,7 @@
 ﻿using Application.Core;
 using Application.Queries.Complaints;
 using Domain.ClientDTOs.Complaint;
+using Domain.ClientDTOs.Task;
 using Domain.DataModels.Complaints;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -23,18 +24,20 @@ namespace Application.Handlers.Complaints
             CancellationToken cancellationToken
         )
         {
-            List<ComplaintTypeDTO> result = await _context.ComplaintTypes
-                .Select(
-                    q =>
-                        new ComplaintTypeDTO
-                        {
-                            intDepartmentId = q.intDepartmentId,
-                            strNameAr = q.strNameAr,
-                            strNameEn = q.strNameEn,
-                            intPrivacyId = q.intPrivacyId,
-                        }
-                )
-                .ToListAsync();
+            var query =
+            from t in _context.ComplaintTypes
+            join p in _context.ComplaintPrivacy on t.intPrivacyId equals p.intId
+            select new ComplaintTypeDTO
+            {
+                decGrade = t.decGrade,
+                intDepartmentId = t.intDepartmentId,
+                strPrivacy = p.strName,
+                strNameAr = t.strNameAr,
+                strNameEn = t.strNameEn
+            };
+
+            var result = await query.ToListAsync();
+
 
             return Result<List<ComplaintTypeDTO>>.Success(result);
         }

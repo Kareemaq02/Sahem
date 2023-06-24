@@ -60,9 +60,13 @@ namespace Domain.DataModels.Complaints
         [AllowNull]
         public DateTime dtmDateLastModified { get; set; }
 
+        [Column("IS_REFILED")]
+        public Boolean blnIsRefiled { get; set; }
+
         // Relations
         public ICollection<ComplaintVoters> Voters { get; set; }
         public ICollection<ComplaintAttachment> Attachments { get; set; }
         public ICollection<WorkTaskComplaints> Tasks { get; set; }
+        public ICollection<ComplaintsStatuses> Statuses { get; set; }
     }
 }

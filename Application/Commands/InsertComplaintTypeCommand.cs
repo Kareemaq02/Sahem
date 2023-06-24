@@ -1,10 +1,9 @@
 ﻿using Application.Core;
 using Domain.ClientDTOs.Complaint;
-using Domain.ClientDTOs.Task;
 using MediatR;
 
 namespace Application
 {
-    public record InsertComplaintTypeCommand(ComplaintTypeDTO ComplaintTypeDTO)
-        : IRequest<Result<ComplaintTypeDTO>>;
+    public record InsertComplaintTypeCommand(InsertComplaintTypeDTO InsertComplaintTypeDTO)
+        : IRequest<Result<InsertComplaintTypeDTO>>;
 }

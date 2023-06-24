@@ -73,6 +73,10 @@ namespace Domain.DataModels.Tasks
         [Required]
         public decimal decRating { get; set; }
 
+        [Column("USER_RATING")]
+        [Required]
+        public decimal decUserRating { get; set; }
+
         [Column("IS_DELETED")]
         public Boolean blnIsDeleted { get; set; }
 

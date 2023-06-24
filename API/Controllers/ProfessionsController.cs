@@ -2,6 +2,8 @@
 using Application;
 using System.IdentityModel.Tokens.Jwt;
 using Domain.ClientDTOs.Profession;
+using Application.Queries.Complaints;
+using Application.Queries.Professions;
 
 namespace API.Controllers
 {
@@ -19,6 +21,12 @@ namespace API.Controllers
             professionDTO.strUserName = jwtToken.Claims.First(c => c.Type == "username").Value;
 
             return HandleResult(await Mediator.Send(new InsertProfessionCommand(professionDTO)));
+        }
+
+        [HttpGet] // .../api/professions
+        public async Task<IActionResult> GetProfessionsList()
+        {
+            return HandleResult(await Mediator.Send(new GetProfessionsListQuery()));
         }
 
 

@@ -13,9 +13,18 @@ const EvaluateTask = Loadable(lazy(() => import("../../Views/Tasks")));
 const NotFound = Loadable(lazy(() => import("../../Views/NotFound")));
 const Auth = Loadable(lazy(() => import("../../Views/Authentication/")));
 const Login = Loadable(lazy(() => import("../../Views/Authentication/Login")));
+const ComplaintType = Loadable(lazy(() => import("../../Views/ComplaintsType/index")));
+const DepartmentType = Loadable(lazy(() => import("../../Views/Department/index")));
+const TaskType = Loadable(lazy(() => import("../../Views/TaskType/index")));
 const Register = Loadable(
   lazy(() => import("../../Views/Authentication/Register"))
 );
+const Proffession = Loadable(lazy(() => import("../../Views/Proffessions/index")));
+const InsertTaskType = Loadable(lazy(() => import("../../Views/TaskType/InsertTaskType")));
+const InsertComplaintType = Loadable(lazy(() => import("../../Views/ComplaintsType/InsertComplaintType")));
+const InsertDepartmentType = Loadable(lazy(() => import("../../Views/Department/InsertDepartmentType")));
+const InsertProffession = Loadable(lazy(() => import("../../Views/Proffessions/InsertProffession")));
+
 
 const Admin = "admin";
 const Worker = "worker";
@@ -49,6 +58,78 @@ const MainRoutes = {
         <PermissionsHelper
           allowedRoles={[Admin, Worker]}
           element={<EvaluateTask />}
+        />
+      ),
+    },
+    {
+      path: "tasktype",
+      element: (
+        <PermissionsHelper
+          allowedRoles={[Admin]}
+          element={<TaskType />}
+        />
+      ),
+    },
+    {
+      path: "insert-task-type",
+      element: (
+        <PermissionsHelper
+          allowedRoles={[Admin]}
+          element={<InsertTaskType />}
+        />
+      ),
+    },
+    {
+      path: "complainttype",
+      element: (
+        <PermissionsHelper
+          allowedRoles={[Admin]}
+          element={<ComplaintType />}
+        />
+      ),
+    },
+    {
+      path: "insert-complaint-type",
+      element: (
+        <PermissionsHelper
+          allowedRoles={[Admin]}
+          element={<InsertComplaintType />}
+        />
+      ),
+    },
+    {
+      path: "department-type",
+      element: (
+        <PermissionsHelper
+          allowedRoles={[Admin]}
+          element={<DepartmentType />}
+        />
+      ),
+    },
+    {
+      path: "insert-department-type",
+      element: (
+        <PermissionsHelper
+          allowedRoles={[Admin]}
+          element={<InsertDepartmentType />}
+        />
+      ),
+    },
+    {
+      path: "proffession",
+      element: (
+        <PermissionsHelper
+          allowedRoles={[Admin]}
+          element={<Proffession />}
+        />
+      ),
+    },
+    {
+      path: "insert-proffession",
+      element: (
+        <PermissionsHelper
+          allowedRoles={[Admin]}
+          element={<InsertProffession />}
         />
       ),
     },

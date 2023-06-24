@@ -14,6 +14,8 @@ import {
   Map,
   TableChart,
 } from "@mui/icons-material";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import InsertPageBreakIcon from "@mui/icons-material/Add";
 
 const AdminMenus = [
   {
@@ -33,6 +35,16 @@ const AdminMenus = [
         text: "Table View",
         path: "/auth/complaints",
         icon: <TableChart />,
+      },
+      {
+        text: "Complaints Type",
+        path: "/auth/complainttype",
+        icon: <FormatListBulletedIcon />,
+      },
+      {
+        text: "Insert Complaints Type",
+        path: "/auth/insert-complaint-type",
+        icon: <InsertPageBreakIcon />,
       },
       {
         text: "Map View",
@@ -57,12 +69,48 @@ const AdminMenus = [
         icon: <TableChart />,
       },
       {
+        text: "Task Type",
+        path: "/auth/tasktype",
+        icon: <FormatListBulletedIcon />,
+      },
+      {
+        text: "Insert Task Type",
+        path: "/auth/insert-task-type",
+        icon: <InsertPageBreakIcon />,
+      },
+      {
         text: "Map View",
         path: "/auth/maptasks",
         icon: <Map />,
       },
     ],
   },
+  //Start Department
+  {
+    text: "Department Type",
+    path: "/auth/department-type",
+    icon: <AssignmentIndOutlined />,
+    children: [
+      {
+        text: "Insert Department Type",
+        path: "/auth/insert-department-type",
+        icon: <InsertPageBreakIcon />,
+      },
+    ],
+  },
+  {
+    text: "Proffession",
+    path: "/auth/proffession",
+    icon: <AssignmentIndOutlined />,
+    children: [
+      {
+        text: "Insert Proffession",
+        path: "/auth/insert-proffession",
+        icon: <InsertPageBreakIcon />,
+      },
+    ],
+  },
+  //Start Proffession
   {
     text: "History",
     path: "/auth/history",
