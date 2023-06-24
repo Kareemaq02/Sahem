@@ -15,14 +15,14 @@ class UserSignup{
 
 void signup(String username,String phone,String password,
 String firstName,String lastName,String email,String  nationalId,String passportNumber,
-String registrationNumber,String nationalIdNumber,BuildContext context) async {
+String registrationNumber,String nationalIDNumber,BuildContext context) async {
 
-  print(username + phone  + password + email +nationalId + firstName + lastName +nationalIdNumber  );
+  print(username + phone  + password + email +nationalId + firstName + lastName +nationalIDNumber  );
 
-  
+  print(registrationNumber);
     try{
       HttpOverrides.global = MyHttpOverrides();
-      registrationNumber='666/555';
+      //registrationNumber='666/555';
       //nationalIdNumber=  'ABC12345';
      
       
@@ -36,15 +36,15 @@ String registrationNumber,String nationalIdNumber,BuildContext context) async {
         body:jsonEncode({
         
         "strUsername": username,
-        "strPhonenumber": "0795820003",
+        "strPhonenumber": phone,
         "strPassword": password,
-        "strFirstName": "ruba",
+        "strFirstName": firstName,
         "strLastName": lastName,
-        "strEmail": "rubaabu@yahoo.com",
+        "strEmail":email,
         "strNationalId": nationalId,
         "strPassportNumber": passportNumber,
         "strRegistrationNumber": registrationNumber,
-        "strNationalIdNumber": "BBB00000",
+        "strNationalIdNumber": nationalIDNumber,
         }),
       
       );
