@@ -95,9 +95,8 @@ class _XDLoginState extends State<XDLogin> {
 
                     //_sendToServer();
                      UserLogin user=UserLogin();
-                    // user.login(usernameController.text,passwordController.text,context);
-                  // print(responseMessage);
-                    Navigator.push(context,MaterialPageRoute(builder: (context) =>  XDPublicFeed1 ()));
+                     user.login(usernameController.text,passwordController.text,context);
+                 
                   } ,
               
               child: Stack(
@@ -259,24 +258,6 @@ const String _svg_anq0p =
 //   }
 
 
-<<<<<<< HEAD
-  String? validatePassword(String? value) {
-    String pattern =
-       r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%\^&\*])[A-Za-z\d!@#\$%\^&\*]{8,}$'; // passowrd validation regex pattern
-    RegExp regex = RegExp(pattern);
-     if (value!.length == 0) {
-      return "Password is Required";
-      if(code==401){
-        return "Password is not correct.";
-      }
-       else {
-      return null;
-    }
-    }
-     return null;
-  }
- Widget passowrdForm(BuildContext context){
-=======
   // String? validatePassword(String? value) {
   //   String pattern =
   //      r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%\^&\*])[A-Za-z\d!@#\$%\^&\*]{8,}$'; // passowrd validation regex pattern
@@ -292,8 +273,7 @@ const String _svg_anq0p =
   //   }
   // }
   
- Widget passowrdForm(){
->>>>>>> FixBugs
+ Widget passowrdForm(context){
   return Form(
     key: _key,
     autovalidateMode: AutovalidateMode.onUserInteraction,
