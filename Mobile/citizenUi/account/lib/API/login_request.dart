@@ -19,9 +19,9 @@ late String token2;
 class UserLogin{
   
 
-  Future<int> login(String email, String password,BuildContext context) async {
+  Future<int> login(String username, String password,BuildContext context) async {
 
-    print(email);
+    print(username);
     print(password);
   try {
     HttpOverrides.global = MyHttpOverrides();
@@ -32,11 +32,11 @@ class UserLogin{
         "Accept": "application/json",
       },
       body: jsonEncode({
-        "strLogin":"aburummann" ,
+        "strLogin":username ,
         "strPassword": password,
       }),
     );
-    //print(response.body);
+    print(response.body);
     responseMessage=response.body;
     //print(responseMessage);
     print(response.statusCode);

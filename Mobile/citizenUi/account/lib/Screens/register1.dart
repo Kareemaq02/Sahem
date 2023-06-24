@@ -18,7 +18,6 @@ TextEditingController NationalNumController = TextEditingController();
 TextEditingController IDNumbberController = TextEditingController();
 TextEditingController RegNumberController1 = TextEditingController();
 TextEditingController RegNumberController2= TextEditingController();
-String registrationNumberConcat=RegNumberController1.text.toString()+RegNumberController2.text.toString();
 GlobalKey nationalNumKey = GlobalKey();
 // GlobalKey<FormState> _key22 = new GlobalKey();
 // GlobalKey<FormState> _key33 = new GlobalKey();

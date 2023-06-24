@@ -12,10 +12,10 @@ import 'package:adobe_xd/page_link.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
 
- var _date="20/jan/2023";
- var _time="12:00pm";
- String _status="pending";
- String _comment="violation in streets";
+//  var _date="20/jan/2023";
+//  var _time="12:00pm";
+//  String _status="pending";
+//  String _comment="violation in streets";
 
 
  
@@ -31,17 +31,20 @@ class _XDComplaintsListState extends State<XDComplaintsList> {
 
   @override
   void initState() {
+    fetchComplaints();
     super.initState();
    
   }
 
 Future<List<dynamic>> fetchComplaints() async {
-  final response = await http.get(Uri.parse("https://10.0.2.2:5000/api/complaints"),
+  final response = await http.get(Uri.parse("https://10.0.2.2:5000/api/complaints/user"),
    headers: {
           'Authorization': 'Bearer $token2',
         }
   );
   if (response.statusCode == 200) {
+    print("ok");
+    print(jsonDecode(response.body.toString()));
     return jsonDecode(response.body.toString());
   } else {
     throw Exception('Failed to fetch complaints');
@@ -63,32 +66,33 @@ Future<List<dynamic>> fetchComplaints() async {
            Column(
         children: [
           Expanded(
-                child: FutureBuilder(
-                  future: fetchComplaints(),
-                  builder: (context, snapshot) {
-                    print(snapshot.data);
+            child: Text(""),
+              //   child: FutureBuilder(
+              //     future: fetchComplaints(),
+              //     builder: (context, snapshot) {
+              //       print(snapshot.data);
                     
-                    if (snapshot.hasData) {
-                     var data = snapshot.data;
-                      return ListView.builder(
-                         itemCount: data != null ? data.length : 0,
-                        itemBuilder: (context, index) {
-                          return 
-                            Column(
-                              children: [
-                          ReusableRow( value: data![index]['strComplaintTypeEn'].toString(),),
-                          ReusableRow( value: data[index]['strStatus'].toString(),),
+              //       if (snapshot.hasData) {
+              //        var data = snapshot.data;
+              //         return ListView.builder(
+              //            itemCount: data != null ? data.length : 0,
+              //           itemBuilder: (context, index) {
+              //             return 
+              //               Column(
+              //                 children: [
+              //             ReusableRow( value: data![index]['strComplaintTypeEn'].toString(),),
+              //             ReusableRow( value: data[index]['strStatus'].toString(),),
                                
-                              ],
+              //                 ],
                             
-                          );
-                        },
-                      );
-                    } else {
-                      return Text("No data available");
-                    }
-                  },
-                ),
+              //             );
+              //           },
+              //         );
+              //       } else {
+              //         return Text("No data available");
+              //       }
+              //     },
+              //   ),
               ),
             ],
     
