@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:account/API/file_complaint_request.dart';
 import 'package:account/Screens/public_feed.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
@@ -205,13 +206,17 @@ void initState() {
             Pin(size: 71.0, end: 20.0),
             child:
                 // Adobe XD layer: 'submit Button' (group)
-                PageLink(
-              links: [
-                PageLinkInfo(
-                  duration: 0,
-                  pageBuilder: () => const XDPublicFeed1(),
-                ),
-              ],
+                InkWell(
+              
+                  onTap: () {
+                    Complaint _fileComplaint=Complaint();
+                    _fileComplaint.fileComplaint(1, 1, selectedMediaFiles,"trial");
+                 
+                 
+                   // const XDPublicFeed1();
+                  },
+                
+              
               child: Stack(
                 children: <Widget>[
                   // Adobe XD layer: 'sbumut' (shape)
@@ -363,17 +368,17 @@ void initState() {
                Wrap(
         spacing: 13, 
         children: [
-          if (selectedImages != null)
-            ...selectedImages.map((imageone) {
-              return Container(
-                width:80,
-                height: 80,
-                child: Image.file(
-                  File(imageone.path),
-                  fit: BoxFit.cover,
-                ),
-              );
-            }).toList(),
+           if (selectedMediaFiles != null)
+      ...selectedMediaFiles.map((mediaFile) {
+        return Container(
+          width: 80,
+          height: 80,
+          child: Image.file(
+            mediaFile.file,
+            fit: BoxFit.cover,
+          ),
+        );
+      }).toList(),
         ],
       ),
           ),

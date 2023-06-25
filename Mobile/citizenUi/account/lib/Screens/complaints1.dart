@@ -9,10 +9,12 @@ import 'package:adobe_xd/pinned.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
+import '../API/file_complaint_request.dart';
 import '../API/login_request.dart';
 import 'complaints2.dart';
 import 'package:http/http.dart' as http;
-  List<File> selectedImages = [];
+ List<MediaFile> selectedMediaFiles = [];
+
   late DropDownValue dropdown=DropDownValue(1, "");
   TextEditingController commentController = TextEditingController();
 
@@ -85,9 +87,16 @@ Future<void> getImages(BuildContext context) async {
   final pickedFile = await _picker.pickImage(source: ImageSource.camera, imageQuality: 50);
 
   if (pickedFile != null) {
-    selectedImages.add(File(pickedFile.path));
+     selectedMediaFiles.add(
+      MediaFile(
+        File(pickedFile.path),
+        31.958946, // Placeholder value for decLat
+        31.958946, // Placeholder value for decLng
+        false, // Placeholder value for blnIsVideo
+      ),
+    );
     setState(() {});
-    print(selectedImages.length);
+   
   } else {
     Navigator.pop(context,MaterialPageRoute(builder: (context) =>  XDPublicFeed1()));
     // ScaffoldMessenger.of(context).showSnackBar(
@@ -307,7 +316,7 @@ Future<void> getImages(BuildContext context) async {
                     size: 45,),
 
                     onTap: () {
-                      if(selectedImages.length<=2){
+                      if(selectedMediaFiles.length<=2){
                         getImages(context);
                       }
                      else{
@@ -353,22 +362,22 @@ Future<void> getImages(BuildContext context) async {
   child: Column(
     children: [
       SizedBox(height: 120),
-      Wrap(
-        spacing: 13, 
-        children: [
-          if (selectedImages != null)
-            ...selectedImages.map((imageone) {
-              return Container(
-                width:80,
-                height: 80,
-                child: Image.file(
-                  File(imageone.path),
-                  fit: BoxFit.cover,
-                ),
-              );
-            }).toList(),
-        ],
-      ),
+     Wrap(
+  spacing: 13,
+  children: [
+    if (selectedMediaFiles != null)
+      ...selectedMediaFiles.map((mediaFile) {
+        return Container(
+          width: 80,
+          height: 80,
+          child: Image.file(
+            mediaFile.file,
+            fit: BoxFit.cover,
+          ),
+        );
+      }).toList(),
+  ],
+),
     ],
   ),
 ),
