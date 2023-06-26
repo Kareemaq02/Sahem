@@ -55,43 +55,44 @@ Future<List<dynamic>> fetchComplaints() async {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xffffffff),
+      
       body: Stack(
         children: <Widget>[
 
        Pinned.fromPins(
-            Pin(size: 265.0, end: 5.0),
-            Pin(start: 90.0, end: -4.0),
+            Pin(size: 265.0, end: 30.0),
+            Pin(start: 90.0, end: 4.0),
             child:
            Column(
         children: [
           Expanded(
-            child: Text(""),
-              //   child: FutureBuilder(
-              //     future: fetchComplaints(),
-              //     builder: (context, snapshot) {
-              //       print(snapshot.data);
+            
+                child: FutureBuilder(
+                  future: fetchComplaints(),
+                  builder: (context, snapshot) {
+                    print(snapshot.data);
                     
-              //       if (snapshot.hasData) {
-              //        var data = snapshot.data;
-              //         return ListView.builder(
-              //            itemCount: data != null ? data.length : 0,
-              //           itemBuilder: (context, index) {
-              //             return 
-              //               Column(
-              //                 children: [
-              //             ReusableRow( value: data![index]['strComplaintTypeEn'].toString(),),
-              //             ReusableRow( value: data[index]['strStatus'].toString(),),
+                    if (snapshot.hasData) {
+                     var data = snapshot.data;
+                      return ListView.builder(
+                         itemCount: data != null ? data.length : 0,
+                        itemBuilder: (context, index) {
+                          return 
+                            Column(
+                              children: [
+                          ReusableRow( comment: data![index]['strComment'].toString(),type: data![index]['strComplaintTypeEn'].toString(),status: data![index]['strStatus'].toString(),date: data![index]['dtmDateCreated'].toString(),),
+                          //ReusableRow( value: data[index]['strStatus'].toString(),),
                                
-              //                 ],
+                              ],
                             
-              //             );
-              //           },
-              //         );
-              //       } else {
-              //         return Text("No data available");
-              //       }
-              //     },
-              //   ),
+                          );
+                        },
+                      );
+                    } else {
+                      return Text("No data available");
+                    }
+                  },
+                ),
               ),
             ],
     
@@ -101,7 +102,7 @@ Future<List<dynamic>> fetchComplaints() async {
 
           //title complaints
           Pinned.fromPins(
-            Pin(size: 151.0, middle: 0.3441),
+            Pin(size: 151.0, middle: 0.5200),
             Pin(size: 45.0, start: 51.0),
             child:
                 // Adobe XD layer: 'PageDisplay' (group)
@@ -139,253 +140,260 @@ Future<List<dynamic>> fetchComplaints() async {
                     softWrap: false,
                   ),
                 ),
+               Pinned.fromPins(
+                  Pin(size: 0.0, start: -60.0),
+                  Pin(size: 60.0, end: 20.0), 
+                  child: Icon(Icons.list_rounded,
+                  color:const Color(0xff6f407d) ,
+                  size: 40,),
+               ),
               ],
             ),
           ),
           
           //side list 
-          Pinned.fromPins(
-            Pin(size: 65.0, start: 0.0),
-            Pin(start: 0.0, end: 0.0),
-            child:
-                // Adobe XD layer: 'NavSideBar' (group)
-                Stack(
-              children: <Widget>[
+          // Pinned.fromPins(
+          //   Pin(size: 65.0, start: 0.0),
+          //   Pin(start: 0.0, end: 0.0),
+          //   child:
+          //       // Adobe XD layer: 'NavSideBar' (group)
+          //       Stack(
+          //     children: <Widget>[
                 
-                // Adobe XD layer: 'NavbarBox' (shape)
-                Container(
-                  color: const Color(0xff6f407d),
-                  margin: EdgeInsets.fromLTRB(0.0, 0.0, 11.0, 0.0),
-                ),
-                Pinned.fromPins(
-                  Pin(size: 59.0, start: 11.4),
-                  Pin(size: 1.0, start: 177.4),
-                  child: SvgPicture.string(
-                    _svg_n3fr4,
-                    allowDrawingOutsideViewBox: true,
-                    fit: BoxFit.fill,
-                  ),
-                ),
-                Pinned.fromPins(
-                  Pin(size: 33.0, middle: 0.3729),
-                  Pin(start: 124.0, end: 776.0),
-                  child: Stack(
-                    children: <Widget>[
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Container(
-                          width: 33.0,
-                          height: 32.0,
-                          decoration: BoxDecoration(
-                            color: const Color(0xfffeb25b),
-                            borderRadius: BorderRadius.all(
-                                Radius.elliptical(9999.0, 9999.0)),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color(0x29000000),
-                                offset: Offset(0, 3),
-                                blurRadius: 40,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Pinned.fromPins(
-                  Pin(size: 33.0, middle: 0.3878),
-                  Pin(start: 209.0, end: 691.0),
-                  child: Stack(
-                    children: <Widget>[
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Container(
-                          width: 33.0,
-                          height: 32.0,
-                          decoration: BoxDecoration(
-                            color: const Color(0xfffe5b60),
-                            borderRadius: BorderRadius.all(
-                                Radius.elliptical(9999.0, 9999.0)),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color(0x29000000),
-                                offset: Offset(0, 3),
-                                blurRadius: 40,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Pinned.fromPins(
-                  Pin(size: 33.0, middle: 0.3878),
-                  Pin(start: 259.0, end: 641.0),
-                  child: Stack(
-                    children: <Widget>[
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Container(
-                          width: 33.0,
-                          height: 32.0,
-                          decoration: BoxDecoration(
-                            color: const Color(0xff54b39b),
-                            borderRadius: BorderRadius.all(
-                                Radius.elliptical(9999.0, 9999.0)),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color(0x29000000),
-                                offset: Offset(0, 3),
-                                blurRadius: 40,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Pinned.fromPins(
-                  Pin(size: 33.0, middle: 0.4177),
-                  Pin(start: 310.0, end: 590.0),
-                  child: Stack(
-                    children: <Widget>[
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Container(
-                          width: 33.0,
-                          height: 32.0,
-                          decoration: BoxDecoration(
-                            color: const Color(0xff615bfe),
-                            borderRadius: BorderRadius.all(
-                                Radius.elliptical(9999.0, 9999.0)),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color(0x29000000),
-                                offset: Offset(0, 3),
-                                blurRadius: 40,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Pinned.fromPins(
-                  Pin(size: 11.8, middle: 0.4093),
-                  Pin(size: 11.8, start: 134.1),
-                  child: Stack(
-                    children: <Widget>[
-                      Pinned.fromPins(
-                        Pin(start: 0.0, end: 0.0),
-                        Pin(size: 1.0, middle: 0.5465),
-                        child: SvgPicture.string(
-                          _svg_mdpbht,
-                          allowDrawingOutsideViewBox: true,
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                      Pinned.fromPins(
-                        Pin(size: 1.0, middle: 0.5465),
-                        Pin(start: 0.0, end: 0.0),
-                        child: SvgPicture.string(
-                          _svg_uc6nl,
-                          allowDrawingOutsideViewBox: true,
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Align(
-                  alignment: Alignment(1.0, -0.313),
-                  child: SizedBox(
-                    width: 22.0,
-                    height: 34.0,
-                    child: SvgPicture.string(
-                      _svg_zig1xb,
-                      allowDrawingOutsideViewBox: true,
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment(-0.17, -0.526),
-                  child: SizedBox(
-                    width: 11.0,
-                    height: 15.0,
-                    child: SvgPicture.string(
-                      _svg_gkc6gw,
-                      allowDrawingOutsideViewBox: true,
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment(-0.19, -0.418),
-                  child: SizedBox(
-                    width: 16.0,
-                    height: 17.0,
-                    child: SvgPicture.string(
-                      _svg_uamdhb,
-                      allowDrawingOutsideViewBox: true,
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment(-0.128, -0.305),
-                  child: SizedBox(
-                    width: 14.0,
-                    height: 14.0,
-                    child: Stack(
-                      children: <Widget>[
-                        SizedBox.expand(
-                            child: SvgPicture.string(
-                          _svg_pt988k,
-                          allowDrawingOutsideViewBox: true,
-                          fit: BoxFit.fill,
-                        )),
-                        Center(
-                          child: SizedBox(
-                            width: 7.0,
-                            height: 5.0,
-                            child: SvgPicture.string(
-                              _svg_ci0fk5,
-                              allowDrawingOutsideViewBox: true,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Pinned.fromPins(
-                  Pin(size: 21.9, middle: 0.3831),
-                  Pin(size: 36.6, start: 55.8),
-                  child:
-                      // Adobe XD layer: 'BackIcon' (shape)
-                      PageLink(
-                    links: [
-                      PageLinkInfo(
-                        duration: 0,
-                        pageBuilder: () => XDPublicFeed1(),
-                      ),
-                    ],
-                    child: SvgPicture.string(
-                      _svg_h30c0y,
-                      allowDrawingOutsideViewBox: true,
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          //       // Adobe XD layer: 'NavbarBox' (shape)
+          //       Container(
+          //         color: const Color(0xff6f407d),
+          //         margin: EdgeInsets.fromLTRB(0.0, 0.0, 11.0, 0.0),
+          //       ),
+          //       Pinned.fromPins(
+          //         Pin(size: 59.0, start: 11.4),
+          //         Pin(size: 1.0, start: 177.4),
+          //         child: SvgPicture.string(
+          //           _svg_n3fr4,
+          //           allowDrawingOutsideViewBox: true,
+          //           fit: BoxFit.fill,
+          //         ),
+          //       ),
+          //       Pinned.fromPins(
+          //         Pin(size: 33.0, middle: 0.3729),
+          //         Pin(start: 124.0, end: 776.0),
+          //         child: Stack(
+          //           children: <Widget>[
+          //             Align(
+          //               alignment: Alignment.topLeft,
+          //               child: Container(
+          //                 width: 33.0,
+          //                 height: 32.0,
+          //                 decoration: BoxDecoration(
+          //                   color: const Color(0xfffeb25b),
+          //                   borderRadius: BorderRadius.all(
+          //                       Radius.elliptical(9999.0, 9999.0)),
+          //                   boxShadow: const [
+          //                     BoxShadow(
+          //                       color: Color(0x29000000),
+          //                       offset: Offset(0, 3),
+          //                       blurRadius: 40,
+          //                     ),
+          //                   ],
+          //                 ),
+          //               ),
+          //             ),
+          //           ],
+          //         ),
+          //       ),
+          //       Pinned.fromPins(
+          //         Pin(size: 33.0, middle: 0.3878),
+          //         Pin(start: 209.0, end: 691.0),
+          //         child: Stack(
+          //           children: <Widget>[
+          //             Align(
+          //               alignment: Alignment.topLeft,
+          //               child: Container(
+          //                 width: 33.0,
+          //                 height: 32.0,
+          //                 decoration: BoxDecoration(
+          //                   color: const Color(0xfffe5b60),
+          //                   borderRadius: BorderRadius.all(
+          //                       Radius.elliptical(9999.0, 9999.0)),
+          //                   boxShadow: const [
+          //                     BoxShadow(
+          //                       color: Color(0x29000000),
+          //                       offset: Offset(0, 3),
+          //                       blurRadius: 40,
+          //                     ),
+          //                   ],
+          //                 ),
+          //               ),
+          //             ),
+          //           ],
+          //         ),
+          //       ),
+          //       Pinned.fromPins(
+          //         Pin(size: 33.0, middle: 0.3878),
+          //         Pin(start: 259.0, end: 641.0),
+          //         child: Stack(
+          //           children: <Widget>[
+          //             Align(
+          //               alignment: Alignment.topLeft,
+          //               child: Container(
+          //                 width: 33.0,
+          //                 height: 32.0,
+          //                 decoration: BoxDecoration(
+          //                   color: const Color(0xff54b39b),
+          //                   borderRadius: BorderRadius.all(
+          //                       Radius.elliptical(9999.0, 9999.0)),
+          //                   boxShadow: const [
+          //                     BoxShadow(
+          //                       color: Color(0x29000000),
+          //                       offset: Offset(0, 3),
+          //                       blurRadius: 40,
+          //                     ),
+          //                   ],
+          //                 ),
+          //               ),
+          //             ),
+          //           ],
+          //         ),
+          //       ),
+          //       Pinned.fromPins(
+          //         Pin(size: 33.0, middle: 0.4177),
+          //         Pin(start: 310.0, end: 590.0),
+          //         child: Stack(
+          //           children: <Widget>[
+          //             Align(
+          //               alignment: Alignment.topLeft,
+          //               child: Container(
+          //                 width: 33.0,
+          //                 height: 32.0,
+          //                 decoration: BoxDecoration(
+          //                   color: const Color(0xff615bfe),
+          //                   borderRadius: BorderRadius.all(
+          //                       Radius.elliptical(9999.0, 9999.0)),
+          //                   boxShadow: const [
+          //                     BoxShadow(
+          //                       color: Color(0x29000000),
+          //                       offset: Offset(0, 3),
+          //                       blurRadius: 40,
+          //                     ),
+          //                   ],
+          //                 ),
+          //               ),
+          //             ),
+          //           ],
+          //         ),
+          //       ),
+          //       Pinned.fromPins(
+          //         Pin(size: 11.8, middle: 0.4093),
+          //         Pin(size: 11.8, start: 134.1),
+          //         child: Stack(
+          //           children: <Widget>[
+          //             Pinned.fromPins(
+          //               Pin(start: 0.0, end: 0.0),
+          //               Pin(size: 1.0, middle: 0.5465),
+          //               child: SvgPicture.string(
+          //                 _svg_mdpbht,
+          //                 allowDrawingOutsideViewBox: true,
+          //                 fit: BoxFit.fill,
+          //               ),
+          //             ),
+          //             Pinned.fromPins(
+          //               Pin(size: 1.0, middle: 0.5465),
+          //               Pin(start: 0.0, end: 0.0),
+          //               child: SvgPicture.string(
+          //                 _svg_uc6nl,
+          //                 allowDrawingOutsideViewBox: true,
+          //                 fit: BoxFit.fill,
+          //               ),
+          //             ),
+          //           ],
+          //         ),
+          //       ),
+          //       Align(
+          //         alignment: Alignment(1.0, -0.313),
+          //         child: SizedBox(
+          //           width: 22.0,
+          //           height: 34.0,
+          //           child: SvgPicture.string(
+          //             _svg_zig1xb,
+          //             allowDrawingOutsideViewBox: true,
+          //           ),
+          //         ),
+          //       ),
+          //       Align(
+          //         alignment: Alignment(-0.17, -0.526),
+          //         child: SizedBox(
+          //           width: 11.0,
+          //           height: 15.0,
+          //           child: SvgPicture.string(
+          //             _svg_gkc6gw,
+          //             allowDrawingOutsideViewBox: true,
+          //           ),
+          //         ),
+          //       ),
+          //       Align(
+          //         alignment: Alignment(-0.19, -0.418),
+          //         child: SizedBox(
+          //           width: 16.0,
+          //           height: 17.0,
+          //           child: SvgPicture.string(
+          //             _svg_uamdhb,
+          //             allowDrawingOutsideViewBox: true,
+          //           ),
+          //         ),
+          //       ),
+          //       Align(
+          //         alignment: Alignment(-0.128, -0.305),
+          //         child: SizedBox(
+          //           width: 14.0,
+          //           height: 14.0,
+          //           child: Stack(
+          //             children: <Widget>[
+          //               SizedBox.expand(
+          //                   child: SvgPicture.string(
+          //                 _svg_pt988k,
+          //                 allowDrawingOutsideViewBox: true,
+          //                 fit: BoxFit.fill,
+          //               )),
+          //               Center(
+          //                 child: SizedBox(
+          //                   width: 7.0,
+          //                   height: 5.0,
+          //                   child: SvgPicture.string(
+          //                     _svg_ci0fk5,
+          //                     allowDrawingOutsideViewBox: true,
+          //                   ),
+          //                 ),
+          //               ),
+          //             ],
+          //           ),
+          //         ),
+          //       ),
+          //       Pinned.fromPins(
+          //         Pin(size: 21.9, middle: 0.3831),
+          //         Pin(size: 36.6, start: 55.8),
+          //         child:
+          //             // Adobe XD layer: 'BackIcon' (shape)
+          //             PageLink(
+          //           links: [
+          //             PageLinkInfo(
+          //               duration: 0,
+          //               pageBuilder: () => XDPublicFeed1(),
+          //             ),
+          //           ],
+          //           child: SvgPicture.string(
+          //             _svg_h30c0y,
+          //             allowDrawingOutsideViewBox: true,
+          //             fit: BoxFit.fill,
+          //           ),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
           
           //complaint title
           Pinned.fromPins(
-            Pin(size: 165.0, middle: 0.3623),
+            Pin(size: 165.0, middle: 0.5000),
             Pin(size: 1.0, start: 99.0),
             child: SvgPicture.string(
               _svg_yp9moa,
@@ -431,113 +439,147 @@ const String _svg_yp9moa =
 
 
 class ReusableRow extends StatelessWidget {
-  final String value;
+  final String comment;
+  final String type;
+  final String status;
+  var date;
 
-  const ReusableRow({Key? key, required this.value}) : super(key: key);
+   ReusableRow({Key? key, required this.comment, required this.status, required this.date, required this.type}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(left: 12.0, top: 10.0, right: 12.0, bottom: 4.0),
-      width: 250.0,
-      child: Stack(
-        children: <Widget>[
-          Align(
-            alignment: Alignment.topRight,
-            child: Container(
-              width: 250.0,
-              height: 150.0,
-              decoration: BoxDecoration(
-                color: const Color(0xffffffff),
-                borderRadius: BorderRadius.circular(5.0),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0x21465883),
-                    offset: Offset(0, 0),
-                    blurRadius: 2,
-                  ),
-                ],
+  DateTime dateTime = DateTime.parse(date);
+String time = '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}:${dateTime.second.toString().padLeft(2, '0')}';
+
+String period = dateTime.hour < 12 ? 'am' : 'pm';
+return Container(
+  margin: EdgeInsets.only(left: 1.0, top: 0.0, right: 2.0, bottom: 4.0),
+  child: Stack(
+    children: <Widget>[
+      Align(
+        alignment: Alignment.topRight,
+        child: Container(
+          height: 100.0,
+          decoration: BoxDecoration(
+            color: const Color(0xffffffff),
+            borderRadius: BorderRadius.circular(5.0),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x21465883),
+                offset: Offset(0, 0),
+                blurRadius: 2,
               ),
-              child: Row(
-                children: <Widget>[
-                  Container(
-                    //width: 10.0,
-                    margin: EdgeInsets.only(left: 21.0, top: 22.0),
-                    child: Text(
-                      value,
-                      style: TextStyle(
-                        fontFamily: 'Euclid Circular A',
-                        fontSize: 9,
-                        color: const Color(0xff223e6d),
-                        fontWeight: FontWeight.w600,
-                      ),
-                      softWrap: false,
-                    ),
-                  ),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                        Text(
-                          "rrrr",
-                          style: TextStyle(
-                            fontFamily: 'Euclid Circular A',
-                            fontSize: 9,
-                            color: const Color(0xff367be2),
-                          ),
-                          softWrap: false,
-                        ),
-                        Text(
-                          value,
-                          style: TextStyle(
-                            fontFamily: 'Euclid Circular A',
-                            fontSize: 9,
-                            color: const Color(0xff92a5c6),
-                          ),
-                          softWrap: false,
-                        ),
-                      ],
-                    ),
-                  ),
-                  //status box
-                  Container(
-                    width: 50.0,
-                    height: 20.0,
-                    margin: EdgeInsets.only(right: 18.0, top: 1.0),
-                    child: Stack(
-                      children: <Widget>[
-                        Container(
-                          decoration: BoxDecoration(
-                            color: const Color(0xfffeb25b),
-                            borderRadius: BorderRadius.circular(5.0),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment(0.053, 0.143),
-                          child: SizedBox(
-                            width: 23.0,
-                            height: 8.0,
-                            child: Text(
-                              value,
-                              style: TextStyle(
-                                fontFamily: 'Euclid Circular A',
-                                fontSize: 6,
-                                color: const Color(0xffffffff),
-                              ),
-                              softWrap: false,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            ],
           ),
-        ],
+          child: Row(
+            children: <Widget>[
+              Expanded( 
+                child: Column(children: [
+                 Container(
+                 /// padding:EdgeInsets.only(left:5),
+                 margin: EdgeInsets.only(right: 75.0, top: 30.0),
+                  child: Text(
+                    type,
+                    style: TextStyle(
+
+                      fontFamily: 'Euclid Circular A',
+                      fontSize: 12,
+                      color: const Color(0xff223e6d),
+                      fontWeight: FontWeight.bold,
+                      
+                    ),
+                    softWrap: false,
+                  ),
+                ),
+
+                  SizedBox(height: 10,),
+                Container(
+                  margin: EdgeInsets.only(right: 110.0,),
+                  child: Text(
+                    comment,
+                    style: TextStyle(
+                      fontFamily: 'Euclid Circular A',
+                      fontSize: 9,
+                      color: const Color(0xff223e6d),
+                      fontWeight: FontWeight.w300,
+                    ),
+                    softWrap: false,
+                  ),
+                ),
+                ],)
+                
+              ),
+            
+              Container(
+                width: 50.0,
+                height: 20.0,
+                margin: EdgeInsets.only(right: 18.0, top: 1.0),
+                child: Stack(
+                  children: <Widget>[
+                    Container(
+                      decoration: BoxDecoration(
+                        color: const Color(0xfffeb25b),
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment(0.053, 0.143),
+                      child: SizedBox(
+                        width: 35.0,
+                        height: 10.0,
+                        child: Text(
+                          status,
+                          style: TextStyle(
+                            fontFamily: 'Euclid Circular A',
+                            fontSize: 9,
+                            color: const Color(0xffffffff),
+                          ),
+                          softWrap: false,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
-    );
-  }
-}
+      Row(
+     children: [
+       Container(
+        margin: EdgeInsets.only( top: 85.0,left:15),
+        child: Text(
+          date.substring(0, 10),
+          style: TextStyle(
+            fontFamily: 'Euclid Circular A',
+            fontSize: 9,
+            color: const Color(0xff367be2),
+          ),
+          softWrap: false,
+        ),
+      ),
+     
+
+      Container(
+          margin: EdgeInsets.only( top: 85.0,left:130),
+        child: Text(
+          '$time $period',
+          style: TextStyle(
+            fontFamily: 'Euclid Circular A',
+            fontSize: 9,
+            color: const Color(0xff92a5c6),
+          ),
+          softWrap: false,
+        ),
+      ),
+      Spacer( ),
+    
+     ],
+
+
+      )
+    ],
+  ),
+);
+  }}

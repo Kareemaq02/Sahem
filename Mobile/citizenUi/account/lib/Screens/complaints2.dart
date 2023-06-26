@@ -335,13 +335,14 @@ void initState() {
             child:
               
                 // Adobe XD layer: 'BackIcon' (shape)
-                PageLink(
-              links: [
-                PageLinkInfo(
-                  duration: 0,
-                  pageBuilder: () => XDPublicFeed1(),
-                ),
-              ],
+                InkWell(
+              
+               
+                  onTap :(){
+                Navigator.push(context,MaterialPageRoute(builder: (context) =>  XDComplaints1()));
+                  } ,
+                
+              
               child:
                 // Adobe XD layer: 'BackIcon' (shape)
                 SvgPicture.string(

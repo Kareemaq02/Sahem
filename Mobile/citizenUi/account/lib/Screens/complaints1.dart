@@ -15,7 +15,7 @@ import 'complaints2.dart';
 import 'package:http/http.dart' as http;
  List<MediaFile> selectedMediaFiles = [];
 
-  late DropDownValue dropdown=DropDownValue(1, "");
+  late DropDownValue dropdown=DropDownValue(2, " ");
   TextEditingController commentController = TextEditingController();
 
 class XDComplaints1 extends StatefulWidget {
@@ -137,7 +137,7 @@ Future<void> getImages(BuildContext context) async {
 
       
       // dropdown=items[0].value!;
-       dropdown=items[dropdown.intID-1].value!;
+      dropdown=items[dropdown.intID-1].value!;
 
          return DropdownButton(
        
