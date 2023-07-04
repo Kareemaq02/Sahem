@@ -4,85 +4,83 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'login_request.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+import 'login_request.dart';
 
 class ComplaintModel {
   final int intId;
-  final int intUserId;
-  final int intTypeId;
-  final  complaintType;
-  final int intStatusId;
-  final  status;
-  final String strComment;
-  final int intReminder;
+  final String strUserName;
   final String dtmDateCreated;
-  final String dtmDateLastReminded;
-  final int intLastModifiedBy;
-  final String dtmDateLastModified;
-  final  voters;
-  final attachments;
-  final tasks;
+  final String dtmDateFinished;
+  final String strComplaintTypeEn;
+  final String strComplaintTypeAr;
+  final String? strComment;
+  final String? strStatus;
+  final  intPrivacyId;
+  final  intVotersCount;
+  final  decLat;
+  final  decLng;
+  final int decPriority;
+  final List<dynamic> lstMedia;
+  final bool blnIsVideo;
 
   ComplaintModel({
-    this.complaintType="",
-    required this.intStatusId, 
-    this.status="", 
-    required this.voters, 
-    required this.attachments, 
-    required this.tasks, 
     required this.intId,
-    required this.intUserId,
-    required this.intTypeId,
-    required this.strComment,
-    required this.intReminder,
+    required this.strUserName,
     required this.dtmDateCreated,
-    required this.dtmDateLastReminded,
-    required this.intLastModifiedBy,
-    required this.dtmDateLastModified,
+    required this.dtmDateFinished,
+    required this.strComplaintTypeEn,
+    required this.strComplaintTypeAr,
+    required this.strComment,
+    required this.strStatus,
+    required this.intPrivacyId,
+    required this.intVotersCount,
+    required this.decLat,
+    required this.decLng,
+    required this.decPriority,
+    required this.lstMedia,
+    required this.blnIsVideo,
   });
 
   factory ComplaintModel.fromJson(Map<String, dynamic> json) {
     return ComplaintModel(
-      intId: json['intId'],
-      intUserId: json['intUserID'],
-      intTypeId: json['intTypeId'],
-      complaintType:json['complaintType'],
-      intStatusId:json['intStatusId'],
-      status:json['status'],
-      strComment: json['strComment'],
-      intReminder: json['intReminder'],
+      intId: json['intComplaintId'],
+      strUserName: json['strUserName'],
       dtmDateCreated: json['dtmDateCreated'],
-      dtmDateLastReminded: json['dtmDateLastReminded'],
-      intLastModifiedBy: json['intLastModifiedBy'],
-      dtmDateLastModified: json['dtmDateLastModified'],
-      voters: json['voters'],
-      attachments: json['attachments'],
-      tasks: json['tasks'],
+      dtmDateFinished: json['dtmDateFinished'],
+      strComplaintTypeEn: json['strComplaintTypeEn'],
+      strComplaintTypeAr: json['strComplaintTypeAr'],
+      strComment: json['strComment'],
+      strStatus: json['strStatus'],
+      intPrivacyId: json['intPrivacyId'],
+      intVotersCount: json['intVotersCount'],
+      decLat: json['decLat'],
+      decLng: json['decLng'],
+      decPriority: json['decPriority'],
+      lstMedia: json['lstMedia'],
+      blnIsVideo: json['blnIsVideo'],
     );
   }
 }
 
-class getUserComplaint{
- 
- Future<List<ComplaintModel>> getComplaints() async {
-  
-  var baseUrl = "https://10.0.2.2:5000/api/complaints/user/522";
-  http.Response response = await http.get(
-    Uri.parse(baseUrl),
-    headers: {'Authorization': 'Bearer $token2'}
-  );
-  print(response.body);
-  print(response.statusCode);
-  print(response.reasonPhrase);
-   print(response.headers);
+class getUserComplaint {
+  Future<List<ComplaintModel>> getComplaintById(String complaintId) async {
+    var baseUrl = "https://10.0.2.2:5000/api/complaints/$complaintId";
+    print(complaintId);
+    http.Response response = await http.get(Uri.parse(baseUrl), headers: {'Authorization': 'Bearer $token2'});
+    print(response.body);
+    print(response.statusCode);
+    print(response.reasonPhrase);
+    print(response.headers);
 
-  if (response.statusCode == 200) {
-    var jsonData = json.decode(response.body) as List;
-     List<ComplaintModel> complaints = jsonData.map((element) =>
-      ComplaintModel.fromJson(element)
-    ).toList();
-    return complaints;
-  } else {
-    throw response.statusCode;
+    if (response.statusCode == 200) {
+      var jsonData = json.decode(response.body) as Map<String, dynamic>;
+      ComplaintModel complaint = ComplaintModel.fromJson(jsonData);
+      return [complaint];
+    } else {
+      throw response.statusCode;
+    }
   }
- }
 }
