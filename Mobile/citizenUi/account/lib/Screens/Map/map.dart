@@ -1,10 +1,10 @@
 // ignore_for_file: depend_on_referenced_packages, camel_case_types, constant_identifier_names
 
-import 'package:account/Screens/profile.dart';
-import 'package:account/Screens/public_feed.dart';
+import 'package:account/Screens/Profile/profile.dart';
+import 'package:account/Screens/Home/public_feed.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
-import 'complaints_list.dart';
+import '../View complaints/complaints_list.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 

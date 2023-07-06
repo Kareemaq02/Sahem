@@ -1,11 +1,11 @@
 // ignore_for_file: constant_identifier_names, unused_element, depend_on_referenced_packages, prefer_typing_uninitialized_variables, unnecessary_new, library_private_types_in_public_api, avoid_print, unused_local_variable
 
 import 'package:account/Repository/language_constants.dart';
-import 'package:account/Screens/public_feed.dart';
-import 'package:account/Screens/register.dart';
+import 'package:account/Screens/Home/public_feed.dart';
+import 'package:account/Screens/Registration/register.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
-import '../API/login_request.dart';
+import '../../API/login_request.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -34,6 +34,7 @@ class _XDLoginState extends State<XDLogin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       
       backgroundColor: const Color(0xffffffff),
       body: Stack(

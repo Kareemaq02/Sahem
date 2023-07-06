@@ -2,10 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
-import '../Repository/language.dart';
-import '../Repository/language_constants.dart';
-import '../main.dart';
-import 'register.dart';
+import '../../Repository/language.dart';
+import '../../Repository/language_constants.dart';
+import '../../main.dart';
+import '../Registration/register.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'login.dart';
 // ignore: depend_on_referenced_packages

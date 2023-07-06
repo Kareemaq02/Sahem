@@ -1,197 +1,129 @@
-// ignore_for_file: constant_identifier_names, unused_element, unused_import, depend_on_referenced_packages, avoid_print
+// ignore_for_file: prefer_const_constructors, constant_identifier_names, unused_element, depend_on_referenced_packages, non_constant_identifier_names, library_private_types_in_public_api, unnecessary_null_comparison
 
-import 'dart:convert';
-
-import 'package:account/Screens/register4.dart';
+import 'package:account/Screens/Registration/register.dart';
+import 'package:account/Screens/Registration/register4.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:flutter/services.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
 
-import '../Repository/language_constants.dart';
-
-late String dropdownValue;
-late List<String> dropdownItems;
-Map<String, String> _nationalities = {};
-
-Future<void> loadNationalities() async {
-  final jsonString = await rootBundle.loadString('assets/data.json');
-  final Map<String, dynamic> jsonMap = json.decode(jsonString);
-  print(jsonMap.length);
-  jsonMap.forEach((key, value) {
-    _nationalities[key] = key.toString();
-
-  });
-}
+import '../../Repository/language_constants.dart';
+String IdField="National number";
+late String _nationalNumber;
+late String _idNumber;
+late String _registrationNumber1;
+late String _registrationNumber2;
 
 
-class XDRegister2 extends StatefulWidget {
-  const XDRegister2({
+TextEditingController NationalNumController = TextEditingController();
+TextEditingController IDNumbberController = TextEditingController();
+TextEditingController RegNumberController1 = TextEditingController();
+TextEditingController RegNumberController2= TextEditingController();
+GlobalKey nationalNumKey = GlobalKey();
+// GlobalKey<FormState> _key22 = new GlobalKey();
+// GlobalKey<FormState> _key33 = new GlobalKey();
+// GlobalKey<FormState> _key32 = new GlobalKey();
+bool _validate1 = false;
+
+List<String> dropdownItems = ['Select Here','National ID Number','registration Number'];
+String dropdownValue = dropdownItems.first;
+class XDRegister1 extends StatefulWidget {
+  const XDRegister1({
     Key? key,
   }) : super(key: key);
        @override
-  _XDRegister2State createState() => _XDRegister2State();
+  _XDRegister1State createState() => _XDRegister1State();
 }
 
-class _XDRegister2State extends State<XDRegister2> {
-
-
-void initState() {
-  super.initState();
-  loadNationalities();
-  dropdownValue=_nationalities.keys.first;
-  print(dropdownValue);
-}
-
-
-
+class _XDRegister1State extends State<XDRegister1> {
 
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xffffffff),
       body: Stack(
         children: <Widget>[
           Pinned.fromPins(
-            Pin(start: 62.5, end: 62.5),
-            Pin(size: 71.0, end: 70.2),
+            Pin(start: 63.0, end: 62.0),
+            Pin(size: 71.0, end: 20.2),
             child:
                 // Adobe XD layer: 'Login Button' (group)
-                Stack(
-              children: <Widget>[
                 InkWell(
-                  onTap: () {
-            Navigator.push(context,MaterialPageRoute(builder: (context) =>  const XDRegister4()),
-  );
-                  },
-                  child:               // Adobe XD layer: 'Login' (shape)
-                Container(
-                  decoration: BoxDecoration(
-                    color: const Color(0xff2a0340),
-                    borderRadius: BorderRadius.circular(20.0),
-                    border:
-                        Border.all(width: 1.0, color: const Color(0xff707070)),
-                  ),
-                ),),
-                Pinned.fromPins(
-                  Pin(size: 69.0, middle: 0.5),
-                  Pin(start: 16.0, end: 15.0),
-                  child:  Text(
-                    translation(context).next,
-                    style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 30,
-                      color: Color(0xffffffff),
-                      fontWeight: FontWeight.w700,
+                onTap:(){
+               //  _sendToServer(_key12);
+                 
+               Navigator.push(context,MaterialPageRoute(builder: (context) => XDRegister4()),);
+              if(NationalNumController.text!=null){
+                if( IDNumbberController.text!=null || registrationNumberConcat!=null) {
+                  Navigator.push(context,MaterialPageRoute(builder: (context) => XDRegister4()),);
+                }
+                }
+                
+              //   },
+                },
+              
+              child: Stack(
+                children: <Widget>[
+                  // Adobe XD layer: 'Login' (shape)
+                  Container(
+                    decoration: BoxDecoration(
+                      color: const Color(0xff2a0340),
+                      borderRadius: BorderRadius.circular(20.0),
+                      border: Border.all(
+                          width: 1.0, color: const Color(0xff707070)),
                     ),
                   ),
-                ),
-              ],
+                  Pinned.fromPins(
+                    Pin(size: 69.0, middle: 0.5),
+                    Pin(start: 16.0, end: 15.0),
+                    child:  Text(
+                      translation(context).next,
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 30,
+                        color: Color(0xffffffff),
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        
-          Pinned.fromPins(
+            Pinned.fromPins(
             Pin(start: 23.0, end: 23.0),
-            Pin(size: 120.0, middle: 0.4000),
+            Pin(size: 100.0, middle: 0.4300),
+           
             child:
-                // Adobe XD layer: 'Type of ID' (group)
+            // Adobe XD layer: 'Type of ID' (group)
                 Stack(
               children: <Widget>[
-                SingleChildScrollView(
-  child:           
-Padding(
-  padding: const EdgeInsets.fromLTRB(0.0, 24.0, 0.0, 0.0),
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        translation(context).idType,
-        style: TextStyle(
+                Text(
+               translation(context).nationalNumber,
+             style: TextStyle(
           fontFamily: 'Poppins',
           fontSize: 15,
           color: Color(0xff6f407d),
         ),
       ),
-      SizedBox(height: 10,),
-      TypeAheadFormField<String>(
-        initialValue: dropdownValue,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        textFieldConfiguration: TextFieldConfiguration(
-          
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: Colors.white,
-            contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(5),
-              borderSide: BorderSide(
-                width: 1,
-                color: Colors.grey.shade300,
-              ),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(5),
-              borderSide: BorderSide(
-                width: 1,
-                color: Colors.grey.shade300,
-              ),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(5),
-              borderSide: const BorderSide(
-                width: 1,
-                color: Color(0xff6f407d),
-              ),
-            ),
-          ),
-          style: const TextStyle(color: Color(0xff6f407d)),
-        ),
-        suggestionsCallback: (pattern) {
-        
-          return _nationalities.values.where((nationality) =>
-            nationality.toLowerCase().contains(pattern.toLowerCase())
-            
-          );
-        },
-        itemBuilder: (context, suggestion) {
-          return ListTile(
-            title: Text(suggestion),
-          );
-        },
-        onSuggestionSelected: (suggestion) {
-          setState(() {
-            dropdownValue = suggestion;
-            
-            
-          });
-        },
-        
-         getImmediateSuggestions: false, 
-         // added this line
-      ),
-      
-  
-      
-    ],
-  ),
-)
-                )])),
-    
-          
-          Pinned.fromPins(
-            Pin(start: 23.0, end: 23.0),
-            Pin(size: 90.0, middle: 0.6300),
-            child:
-                // Adobe XD layer: 'Last Name' (group)
-                Stack(
-              children: <Widget>[
-               Padding(
+         
+                 Padding(
                 padding: const EdgeInsets.fromLTRB(0.0, 24.0, 0.0, 0.0),child:
-                TextField(
+                 Form(
+              key:nationalNumKey,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              child: 
+                TextFormField(
+                  controller: NationalNumController,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  maxLength: 10,
+                  validator:inputValidate,
+                  onSaved:(newValue) =>  _nationalNumber = newValue!,
+                  keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                 filled: true,
                fillColor: Colors.white,
@@ -218,27 +150,94 @@ Padding(
       ),
     ),
   )
-),
-                ),
-                Pinned.fromPins(
-                  Pin(size: 132.0, start: 3.0),
-                  Pin(size: 21.0, start: 0.0),
-                  child: const Text(
-                    'Passport Number',
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 15,
-                      color: Color(0xff6f407d),
-                    ),
-                  ),
-                ),
-              
-              ],
+),))])),
+          
+          Pinned.fromPins(
+            Pin(start: 23.0, end: 23.0),
+            Pin(size: 120.0, middle: 0.6000),
+           
+            child:
+                // Adobe XD layer: 'Type of ID' (group)
+                Stack(
+              children: <Widget>[
+     SingleChildScrollView(
+  child:           
+Padding(
+  padding: const EdgeInsets.fromLTRB(0.0, 24.0, 0.0, 0.0),
+  child:Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        translation(context).idType,
+        style: TextStyle(
+          fontFamily: 'Poppins',
+          fontSize: 15,
+          color: Color(0xff6f407d),
+        ),
+      ),
+      SizedBox(height: 10,),
+   DropdownButtonFormField<String>(
+    decoration: InputDecoration(
+      filled: true,
+      fillColor: Colors.white,
+      contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(5),
+        borderSide: BorderSide(
+          width: 1,
+          color: Colors.grey.shade300,
+        ),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(5),
+        borderSide: BorderSide(
+          width: 1,
+          color: Colors.grey.shade300,
+        ),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(5),
+        borderSide: const BorderSide(
+          width: 1,
+          color: Color(0xff6f407d),
+        ),
+      ),
+    ),
+    value: dropdownValue,
+    icon: const Icon(Icons.arrow_drop_down),
+    iconSize: 24,
+    elevation: 16,
+    style: const TextStyle(color: Color(0xff6f407d)),
+    onChanged: (String? newValue) {
+      setState(() {
+        dropdownValue = newValue!;
+        IdField=dropdownValue;
+      });
+    },
+    items:dropdownItems.map<DropdownMenuItem<String>>((String value) {
+      return DropdownMenuItem<String>(
+        value: value,
+        child: Text(value),
+      );
+    }).toList(),
+  ),
+              ]),),
+
+                )],
             ),
           ),
+     
+   
+      if(IdField=="National ID Number")
+      numberWid(),
+      if(IdField=="registration Number")
+      RegWid(),
+      
+
+      
           Pinned.fromPins(
             Pin(start: -61.4, end: -99.1),
-            Pin(size: 368.2, start: -160.2),
+            Pin(size: 368.2, start: -150.2),
             child:
                 // Adobe XD layer: 'Action Bar' (group)
                 Stack(
@@ -273,12 +272,12 @@ Padding(
               ],
             ),
           ),
-          
+         
           Pinned.fromPins(
             Pin(size: 167.0, middle: 0.5019),
             Pin(size: 56.0, start: 96.0),
-            child: const Text(
-              'Register',
+            child:  Text(
+              translation(context).register,
               style: TextStyle(
                 fontFamily: 'Poppins',
                 fontSize: 40,
@@ -291,11 +290,13 @@ Padding(
             Pin(size: 36.6, start: 55.8),
             child:
                 // Adobe XD layer: 'BackIcon' (shape)
-                InkWell(
-             
-                 
-                 
-      
+                PageLink(
+              links: [
+                PageLinkInfo(
+                  duration: 0,
+                  pageBuilder: () => XDRegister(),
+                ),
+              ],
               child: SvgPicture.string(
                 _svg_h30c0y,
                 allowDrawingOutsideViewBox: true,
@@ -307,6 +308,18 @@ Padding(
       ),
     );
   }
+
+   _sendToServer(var pKey) {
+    if (pKey.currentState!.validate()) {
+      // No any error in validation
+      pKey.currentState!.save();
+    } else {
+      // validation error
+      setState(() {
+        _validate1 = true;
+      });
+    }
+  }
 }
 
 const String _svg_nrpqt7 =
@@ -317,10 +330,12 @@ const String _svg_anq0p =
     '<svg viewBox="370.0 18.5 17.0 10.7" ><path transform="translate(370.0, 18.48)" d="M 16.00020027160645 10.6668004989624 L 15.00029945373535 10.6668004989624 C 14.44894981384277 10.6668004989624 14.00039958953857 10.2182502746582 14.00039958953857 9.666900634765625 L 14.00039958953857 0.9998999834060669 C 14.00039958953857 0.4485500156879425 14.44894981384277 0 15.00029945373535 0 L 16.00020027160645 0 C 16.55154991149902 0 17.00010108947754 0.4485500156879425 17.00010108947754 0.9998999834060669 L 17.00010108947754 9.666900634765625 C 17.00010108947754 10.2182502746582 16.55154991149902 10.6668004989624 16.00020027160645 10.6668004989624 Z M 11.33369922637939 10.6668004989624 L 10.33290004730225 10.6668004989624 C 9.781549453735352 10.6668004989624 9.332999229431152 10.2182502746582 9.332999229431152 9.666900634765625 L 9.332999229431152 3.333600044250488 C 9.332999229431152 2.782249927520752 9.781549453735352 2.333699941635132 10.33290004730225 2.333699941635132 L 11.33369922637939 2.333699941635132 C 11.88504981994629 2.333699941635132 12.33360004425049 2.782249927520752 12.33360004425049 3.333600044250488 L 12.33360004425049 9.666900634765625 C 12.33360004425049 10.2182502746582 11.88504981994629 10.6668004989624 11.33369922637939 10.6668004989624 Z M 6.666300296783447 10.6668004989624 L 5.666399955749512 10.6668004989624 C 5.115049839019775 10.6668004989624 4.666500091552734 10.2182502746582 4.666500091552734 9.666900634765625 L 4.666500091552734 5.66640043258667 C 4.666500091552734 5.115050315856934 5.115049839019775 4.666500091552734 5.666399955749512 4.666500091552734 L 6.666300296783447 4.666500091552734 C 7.218140125274658 4.666500091552734 7.667099952697754 5.115050315856934 7.667099952697754 5.66640043258667 L 7.667099952697754 9.666900634765625 C 7.667099952697754 10.2182502746582 7.218140125274658 10.6668004989624 6.666300296783447 10.6668004989624 Z M 1.999799966812134 10.6668004989624 L 0.9998999834060669 10.6668004989624 C 0.4485500156879425 10.6668004989624 0 10.2182502746582 0 9.666900634765625 L 0 7.667100429534912 C 0 7.115260124206543 0.4485500156879425 6.666300296783447 0.9998999834060669 6.666300296783447 L 1.999799966812134 6.666300296783447 C 2.55115008354187 6.666300296783447 2.99970006942749 7.115260124206543 2.99970006942749 7.667100429534912 L 2.99970006942749 9.666900634765625 C 2.99970006942749 10.2182502746582 2.55115008354187 10.6668004989624 1.999799966812134 10.6668004989624 Z" fill="#ffffff" stroke="none" stroke-width="1" stroke-miterlimit="10" stroke-linecap="butt" /></svg>';
 const String _svg_heebsv =
     '<svg viewBox="23.0 300.0 384.0 66.0" ><path transform="translate(23.0, 300.0)" d="M 10 0 L 374 0 C 379.5228576660156 0 384 4.477152347564697 384 10 L 384 56 C 384 61.52284622192383 379.5228576660156 66 374 66 L 10 66 C 4.477152347564697 66 0 61.52284622192383 0 56 L 0 10 C 0 4.477152347564697 4.477152347564697 0 10 0 Z" fill="#ffffff" stroke="#6f407d" stroke-width="1" stroke-miterlimit="4" stroke-linecap="round" /></svg>';
-const String _svg_mvbn2e =
-    '<svg viewBox="74.5 300.5 1.0 65.0" ><path transform="translate(74.5, 300.5)" d="M 0 0 L 0 65" fill="none" stroke="#6f407d" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
+const String _svg_un235n =
+    '<svg viewBox="74.5 300.5 1.0 65.5" ><path transform="translate(74.5, 300.5)" d="M 0 0 L 0.0206298828125 65.45578002929688" fill="none" stroke="#6f407d" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
 const String _svg_j863bm =
     '<svg viewBox="355.0 326.0 27.0 14.0" ><path transform="matrix(-1.0, 0.0, 0.0, -1.0, 382.0, 340.0)" d="M 13.49999904632568 0 L 27 14 L 0 14 Z" fill="#6f407d" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
+const String _svg_n9irso =
+    '<svg viewBox="74.5 300.5 1.0 65.5" ><path transform="translate(74.5, 300.5)" d="M 0 0 L 0 65.5" fill="none" stroke="#6f407d" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
 const String _svg_tllar =
     '<svg viewBox="-13.1 -60.8 477.0 340.8" ><path transform="matrix(1.0, 0.0, 0.0, 1.0, -13.08, -60.83)" d="M 166.5 -1.195902399331317e-07 L 310.5 -2.230196400887507e-07 C 402.4554138183594 -2.890675148137234e-07 477 76.29647064208984 477 170.4129486083984 C 477 264.5294189453125 402.4554138183594 340.8258972167969 310.5 340.8258972167969 L 166.5 340.8258972167969 C 74.54458618164062 340.8258972167969 -1.856381146581043e-07 264.5294189453125 -1.195902399331317e-07 170.4129486083984 C -5.354237586630006e-08 76.29647064208984 74.54458618164062 -5.354237586630006e-08 166.5 -1.195902399331317e-07 Z" fill="#8285bd" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
 const String _svg_mz =
@@ -329,3 +344,192 @@ const String _svg_gg6p5 =
     '<svg viewBox="-65.7 -88.2 432.0 333.1" ><path transform="translate(-65.7, -88.23)" d="M 100.4580535888672 0 L 331.5115661621094 0 C 386.9930114746094 0 431.9696044921875 32.0065803527832 431.9696044921875 71.48870849609375 L 431.9696044921875 261.648681640625 C 431.9696044921875 301.1308288574219 386.9930114746094 333.1373901367188 331.5115661621094 333.1373901367188 L 100.4580535888672 333.1373901367188 C 44.97659683227539 333.1373901367188 0 301.1308288574219 0 261.648681640625 L 0 71.48870849609375 C 0 32.0065803527832 44.97659683227539 0 100.4580535888672 0 Z" fill="#6f407d" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
 const String _svg_h30c0y =
     '<svg viewBox="29.9 55.8 21.9 36.6" ><path transform="translate(21.94, 49.75)" d="M 29.90407371520996 10.30359077453613 L 25.73609352111816 6 L 7.999998092651367 24.31315040588379 L 25.73609352111816 42.62630462646484 L 29.90407371520996 38.32271575927734 L 16.36552429199219 24.31315040588379 L 29.90407371520996 10.30359077453613 Z" fill="#ffffff" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
+
+
+
+
+   String? inputValidate(String? value) {
+     if (value!.isEmpty) {
+      return "Field is Required";
+    } else {
+      return null;
+    }
+  }
+
+
+  
+ 
+ Widget RegWid(){
+  return 
+  Pinned.fromPins(
+      Pin(start: 23.0, end: 50.0),
+      Pin(size: 90.0, middle: 0.8100),
+      child:
+      Row(
+     mainAxisAlignment: MainAxisAlignment.center,
+     children: [
+    SizedBox(
+      width: 100.0,
+      height: 50,
+      child:
+       Form(
+              //key:_key33,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              child: 
+      
+       TextFormField(
+        controller: RegNumberController1,
+        maxLength: 3,
+        keyboardType: TextInputType.number,
+        validator:inputValidate,
+        onSaved: (newValue) => _registrationNumber1=newValue!,
+        decoration: InputDecoration(
+          counterText: '',
+          contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(5),
+            borderSide: BorderSide(
+              width: 1,
+              color: Colors.grey.shade300,
+            ),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(5),
+            borderSide: BorderSide(
+              width: 1,
+              color: Colors.grey.shade300,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(5),
+            borderSide: const BorderSide(
+              width: 1,
+              color: Color(0xff6f407d),
+            ),
+          ),
+        ),
+      ),
+    ),),
+    SizedBox(
+      width: 20.0,
+      child: Center(
+        child: Text(
+          '/',
+          style: TextStyle(
+            fontSize: 30.0,
+            color: Colors.grey.shade300,
+          ),
+        ),
+      ),
+    ),
+    SizedBox(
+      width: 100.0,
+      height: 50,
+      child:
+      Form(
+       // key:_key32,
+         autovalidateMode: AutovalidateMode.onUserInteraction,
+        child: 
+       TextFormField(
+         controller: RegNumberController2,
+        maxLength: 3,
+        validator: inputValidate,
+        onSaved: (newValue) => _registrationNumber2=newValue!,
+        keyboardType: TextInputType.number,
+        decoration: InputDecoration(
+          counterText: '',
+          contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(5),
+            borderSide: BorderSide(
+              width: 1,
+              color: Colors.grey.shade300,
+            ),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(5),
+            borderSide: BorderSide(
+              width: 1,
+              color: Colors.grey.shade300,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(5),
+            borderSide: const BorderSide(
+              width: 1,
+              color: Color(0xff6f407d),
+            ),
+          ),
+        ),
+      ),
+    ),),
+
+    
+  ],
+),
+   );
+ }
+
+  Widget numberWid(){
+  return 
+  Pinned.fromPins(
+            Pin(start: 27.0, end: 23.0),
+            Pin(size: 90.0, middle: 0.8000),
+            child:
+                // Adobe XD layer: 'Type of ID' (group)
+                Stack(
+              children: <Widget>[
+                      Text(
+               'National ID number',
+             style: TextStyle(
+          fontFamily: 'Poppins',
+          fontSize: 15,
+          color: Color(0xff6f407d),
+        ),
+      ),
+                 Padding(
+                padding: const EdgeInsets.fromLTRB(0.0, 24.0, 0.0, 0.0),child:
+                  Form(
+             // key:_key22,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              child: 
+                TextFormField(
+                  controller: IDNumbberController,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  maxLength:  dropdownValue==dropdownItems[2] ? 10 :6 ,
+                  validator: 
+                   inputValidate,
+                   onSaved: (newValue) => _idNumber=newValue!,
+                  
+                  keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                filled: true,
+               fillColor: Colors.white,
+               contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+               border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5),
+             borderSide: BorderSide(
+             width: 1,
+             color: Colors.grey.shade300,
+             ),
+            ),
+           enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(5),
+          borderSide: BorderSide(
+        width: 1,
+        color: Colors.grey.shade300,
+         ),
+        ),
+       focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(5),
+      borderSide: const BorderSide(
+        width: 1,
+        color: Color(0xff6f407d),
+      ),
+    ),
+  )
+),))]));
+ }
+
+ 
+

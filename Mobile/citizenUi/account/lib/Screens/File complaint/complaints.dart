@@ -1,6 +1,6 @@
 // ignore_for_file: constant_identifier_names, depend_on_referenced_packages
 
-import 'package:account/Screens/public_feed.dart';
+import 'package:account/Screens/Home/public_feed.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:adobe_xd/page_link.dart';
