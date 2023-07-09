@@ -1,14 +1,10 @@
 // ignore_for_file: prefer_typing_uninitialized_variables, camel_case_types, avoid_print
-
-
-
-
 import 'dart:convert';
 
 import 'package:account/API/login_request.dart';
 import 'package:http/http.dart' as http;
 
-class ComplaintModel {
+class ComplaintModel2 {
   final int intId;
   final String strUserName;
   final String dtmDateCreated;
@@ -17,15 +13,15 @@ class ComplaintModel {
   final String strComplaintTypeAr;
   final String? strComment;
   final String? strStatus;
-  final  intPrivacyId;
-  final  intVotersCount;
-  final  decLat;
-  final  decLng;
-  final int decPriority;
-  final List<dynamic> lstMedia;
-  final bool blnIsVideo;
+  final int intPrivacyId;
+  final int intVotersCount;
+  final double? decLat;
+  final double? decLng;
+  final  decPriority;
+  //final List<dynamic> lstMedia;
+  final bool? blnIsVideo;
 
-  ComplaintModel({
+  ComplaintModel2({
     required this.intId,
     required this.strUserName,
     required this.dtmDateCreated,
@@ -39,12 +35,12 @@ class ComplaintModel {
     required this.decLat,
     required this.decLng,
     required this.decPriority,
-    required this.lstMedia,
+    //required this.lstMedia,
     required this.blnIsVideo,
   });
 
-  factory ComplaintModel.fromJson(Map<String, dynamic> json) {
-    return ComplaintModel(
+  factory ComplaintModel2.fromJson(Map<String, dynamic> json) {
+    return ComplaintModel2(
       intId: json['intComplaintId'],
       strUserName: json['strUserName'],
       dtmDateCreated: json['dtmDateCreated'],
@@ -58,29 +54,36 @@ class ComplaintModel {
       decLat: json['decLat'],
       decLng: json['decLng'],
       decPriority: json['decPriority'],
-      lstMedia: json['lstMedia'],
+      //lstMedia: json['lstMedia'],
       blnIsVideo: json['blnIsVideo'],
     );
   }
 }
 
-class getUserComplaint {
-  
-  Future<List<ComplaintModel>> getComplaintById(String complaintId) async {
-    var baseUrl = "https://10.0.2.2:5000/api/complaints/$complaintId";
-    print(complaintId);
-    http.Response response = await http.get(Uri.parse(baseUrl), headers: {'Authorization': 'Bearer $token2'});
+class getUsersComplaint {
+  String token2="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFidXJ1bW1hbm4iLCJmaXJzdE5hbWUiOiJydWJhIiwibGFzdE5hbWUiOiJhYnVydW1tYW4iLCJwaG9uZU51bWJlciI6IjA3OTg5ODk5OTkiLCJ1c2VyVHlwZSI6InVzZXIiLCJuYmYiOjE2ODg2NDUyOTgsImV4cCI6MTY5MTIzNzI5OCwiaWF0IjoxNjg4NjQ1Mjk4fQ.b9clyTj4T7T46N81pRLKJKTfpxMPzncEUR5S72m1EPA";
+  Future<List<ComplaintModel2>> getComplaints() async {
+    var baseUrl = "https://10.0.2.2:5000/api/complaints";
+
+    http.Response response = await http.get(
+      Uri.parse(baseUrl),
+      headers: {'Authorization': 'Bearer $token2'},
+    );
     print(response.body);
     print(response.statusCode);
-    print(response.reasonPhrase);
-    print(response.headers);
 
     if (response.statusCode == 200) {
-      var jsonData = json.decode(response.body) as Map<String, dynamic>;
-      ComplaintModel complaint = ComplaintModel.fromJson(jsonData);
-      return [complaint];
+      var jsonData = json.decode(response.body) as List<dynamic>;
+      List<ComplaintModel2> complaints = [];
+
+      jsonData.forEach((complaintData) {
+        var complaint = ComplaintModel2.fromJson(complaintData);
+        complaints.add(complaint);
+      });
+
+      return complaints;
     } else {
-      throw response.statusCode;
+      throw Exception('Failed to get complaints. Status code: ${response.statusCode}');
     }
   }
 }

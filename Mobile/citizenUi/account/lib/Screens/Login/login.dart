@@ -1,7 +1,6 @@
 // ignore_for_file: constant_identifier_names, unused_element, depend_on_referenced_packages, prefer_typing_uninitialized_variables, unnecessary_new, library_private_types_in_public_api, avoid_print, unused_local_variable
 
 import 'package:account/Repository/language_constants.dart';
-import 'package:account/Screens/Home/public_feed.dart';
 import 'package:account/Screens/Registration/register.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';

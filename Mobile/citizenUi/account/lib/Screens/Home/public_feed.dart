@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:account/Screens/Map/map_view.dart';
 import 'package:account/Screens/Profile/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
@@ -12,9 +13,8 @@ import '../File complaint/complaints1.dart';
 import '../View complaints/complaints_list.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../Map/map.dart'; 
 import 'package:http/http.dart' as http;
-import '../File complaint/complaints2.dart';
+
 class XDPublicFeed1 extends StatefulWidget {
   const XDPublicFeed1({Key? key}) : super(key: key);
 
@@ -847,7 +847,7 @@ Future<List<dynamic>> fetchComplaints(double latitude, double longitude) async {
                           links: [
                             PageLinkInfo(
                               duration: 0,
-                              pageBuilder: () => const XDMap_(),
+                              pageBuilder: () => const FullMap(),
                             ),
                           ],
                           child: SvgPicture.string(

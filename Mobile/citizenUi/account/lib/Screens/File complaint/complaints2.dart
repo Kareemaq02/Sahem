@@ -1,12 +1,7 @@
 // ignore_for_file: constant_identifier_names, depend_on_referenced_packages, unnecessary_null_comparison
-
-import 'dart:io';
-
-import 'package:account/API/file_complaint_request.dart';
-import 'package:account/Screens/Home/public_feed.dart';
+import '../../API/file_complaint_request.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
-import 'package:adobe_xd/page_link.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -14,7 +9,7 @@ import 'package:geolocator/geolocator.dart';
 import 'complaints1.dart';
 
 class XDComplaints2 extends StatefulWidget {
-  const XDComplaints2({super.key});
+  const XDComplaints2({key});
 
  
   @override
