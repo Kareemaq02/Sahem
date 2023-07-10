@@ -4,6 +4,9 @@ using System.IdentityModel.Tokens.Jwt;
 using Domain.ClientDTOs.Task;
 using Application.Queries.Tasks;
 using Application.Queries.Users;
+using Microsoft.AspNetCore.Authorization;
+using Application.Handlers.Tasks;
+using Application.Commands;
 
 namespace API.Controllers
 {
@@ -49,6 +52,25 @@ namespace API.Controllers
             taskDTO.strUserName = jwtToken.Claims.First(c => c.Type == "username").Value;
 
             return HandleResult(await Mediator.Send(new InsertTaskCommand(taskDTO, id)));
+        }
+
+        [HttpDelete("delete/{id}")] // .../api/tasks/delete/id
+        public async Task<IActionResult> DeleteTasks(int id)
+        {
+            return HandleResult(await Mediator.Send(new DeleteTaskCommand(id)));
+        }
+
+        [Authorize]
+        [HttpPut("update/{id}")] // .../api/tasks/update/id
+        public async Task<IActionResult> UpdateTask(int id, UpdateTaskDTO updateTaskDTO)
+        {
+            string authHeader = Request.Headers["Authorization"];
+            JwtSecurityTokenHandler tokenHandler = new();
+            JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
+
+            updateTaskDTO.strUserName = jwtToken.Claims.First(c => c.Type == "username").Value;
+
+            return HandleResult(await Mediator.Send(new UpdateTaskCommand(updateTaskDTO, id)));
         }
     }
 }
