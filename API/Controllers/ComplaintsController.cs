@@ -4,6 +4,7 @@ using Domain.ClientDTOs.Complaint;
 using System.IdentityModel.Tokens.Jwt;
 using Application.Queries.Complaints;
 using Domain.Helpers;
+using Application.Commands;
 
 namespace API.Controllers
 {
@@ -57,9 +58,7 @@ namespace API.Controllers
         }
 
         [HttpPost("CreateType")] // .../api/complaints/CreateType
-        public async Task<IActionResult> InsertComplaintType(
-            [FromForm] ComplaintTypeDTO complaintTypeDTO
-        )
+        public async Task<IActionResult> InsertComplaintType([FromForm] InsertComplaintTypeDTO insertComplaintTypeDTO)
         {
             string authHeader = Request.Headers["Authorization"];
             JwtSecurityTokenHandler tokenHandler = new();
@@ -67,9 +66,7 @@ namespace API.Controllers
 
             insertComplaintTypeDTO.strUserName = jwtToken.Claims.First(c => c.Type == "username").Value;
 
-            return HandleResult(
-                await Mediator.Send(new InsertComplaintTypeCommand(complaintTypeDTO))
-            );
+            return HandleResult(await Mediator.Send(new InsertComplaintTypeCommand(insertComplaintTypeDTO)));
         }
 
         [HttpPost("vote/{intComplaintId}")] // .../api/complaints/vote
@@ -85,5 +82,27 @@ namespace API.Controllers
                 await Mediator.Send(new InsertVoteCommand(intComplaintId, strUserName))
             );
         }
+
+        [HttpDelete("delete/{id}")] // .../api/complaints/delete/id
+        public async Task<IActionResult> DeleteComplaint(int id)
+        {
+            return HandleResult(await Mediator.Send(new DeleteComplaintCommand(id)));
+        }
+
+        [HttpPut("update/{id}")] // .../api/complaints/update/id
+        public async Task<IActionResult> UpdateComplaint(int id, UpdateComplaintDTO updateComplaintDTO)
+        {
+            string authHeader = Request.Headers["Authorization"];
+            JwtSecurityTokenHandler tokenHandler = new();
+            JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
+
+            updateComplaintDTO.strUserName = jwtToken.Claims.First(c => c.Type == "username").Value;
+
+            return HandleResult(await Mediator.Send(new UpdateComplaintCommand(updateComplaintDTO, id)));
+        }
+
+
+
+
     }
 }
