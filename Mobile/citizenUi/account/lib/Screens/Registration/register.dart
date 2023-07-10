@@ -18,12 +18,12 @@ late String fName,lName,Phone;
   TextEditingController PhoneController = TextEditingController();
   
 
- GlobalKey<FormState> _key1 = GlobalKey();
+  GlobalKey<FormState> _key1 = GlobalKey();
   GlobalKey<FormState> _key2 = GlobalKey();
-   GlobalKey<FormState> _key3 = GlobalKey();
+  GlobalKey<FormState> _key3 = GlobalKey();
   bool _validate = false;
   bool jordanian = false;
-   bool forign = false;
+  bool forign = false;
 
 class XDRegister extends StatefulWidget {
   const XDRegister({

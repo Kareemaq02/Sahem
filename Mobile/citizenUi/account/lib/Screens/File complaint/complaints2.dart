@@ -3,10 +3,8 @@
 import 'dart:io';
 
 import 'package:account/API/file_complaint_request.dart';
-import 'package:account/Screens/Home/public_feed.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
-import 'package:adobe_xd/page_link.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
