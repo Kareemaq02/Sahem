@@ -47,6 +47,7 @@ namespace Application.Handlers.Complaints
                             strUserName = c.UserName,
                             dtmDateCreated = c.Complaint.dtmDateCreated,
                             strComplaintTypeEn = c.ComplaintTypeEn,
+                            strComment = c.Complaint.strComment,
                             strComplaintTypeAr = c.ComplaintTypeAr,
                             strStatus = c.Status,
                             decPriority =
