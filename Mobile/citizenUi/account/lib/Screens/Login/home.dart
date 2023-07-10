@@ -11,13 +11,21 @@ import 'login.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_svg/flutter_svg.dart';
 
-class XDHome extends StatelessWidget {
-  const XDHome({
-    Key? key,
-  }) : super(key: key);
+class XDHome extends StatefulWidget {
+ const XDHome({Key? key}) : super(key: key);
   @override
+  _XDHomeState createState() => _XDHomeState();
+}
+
+class _XDHomeState extends State<XDHome> {
+  
+  var languagea='en';
+  var arr='اَلْعَرَبِيَّةُ';
+
+ @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
       backgroundColor: const Color(0xffffffff),
       body: Stack(
         children: <Widget>[
@@ -32,7 +40,7 @@ class XDHome extends StatelessWidget {
                   alignment: Alignment.bottomRight,
                   child: SizedBox(
                     width: 477.0,
-                    height: 333.0,
+                    height: 200.0,
                     child: SvgPicture.string(
                       _svg_tz7yhk,
                       allowDrawingOutsideViewBox: true,
@@ -74,52 +82,83 @@ class XDHome extends StatelessWidget {
                     ),
                   ),
                 ),
-
-                Pinned.fromPins(
-                  Pin(size: 366.0, middle: 1.400),
-                  Pin(size: 100.0, end: 200.7),   
-                  child:
-
-                    Padding(
-                    padding: const EdgeInsets.all(2.0),
-                    child: DropdownButton<Language>(
-                    underline: const SizedBox(),
-                     icon: const Icon(
-                      Icons.language,
-                      color: Colors.white,
-                       ),
-              onChanged: (Language? language) async {
-                if (language != null) {
-                  Locale _locale = await setLocale(language.languageCode);
-                  MyApp.setLocale(context, _locale);
-                }
-              },
-              items: Language.languageList()
-                  .map<DropdownMenuItem<Language>>(
-                    (e) => DropdownMenuItem<Language>(
-                      value: e,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          Text(
-                            e.flag,
-                            style: const TextStyle(fontSize: 20),
-                          ),
-                          Text(e.name)
-                        ],
-                      ),
+               
+          //language selector
+          Pinned.fromPins(
+          Pin(size: 500.0, middle:languagea =='ar'? 0.1500 :   0.9800),
+           Pin(size: 90.0, start: 200.7),          
+           child: Padding(
+             padding: const EdgeInsets.only(right:40.0),
+             child: Stack(
+               children: [
+               Align(
+          alignment: languagea=='en' ?Alignment.topLeft : Alignment.topRight,
+          child: DropdownButton<Language>(
+            underline: const SizedBox(),
+            onChanged: (Language? language) async {
+              if (language != null) {
+                Locale _locale = await setLocale(language.languageCode);
+                MyApp.setLocale(context, _locale);
+                print(languagea);
+                 languagea=language.languageCode ;
+                 arr=language.name;
+              }
+            },
+            items: Language.languageList()
+                .map<DropdownMenuItem<Language>>(
+                  (e) => DropdownMenuItem<Language>(
+                    value: e,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        Text(
+                          e.flag,
+                          style: const TextStyle(fontSize: 20),
+                        ),
+                        Text(e.name),
+                      ],
                     ),
-                  )
-                  .toList(),
+                  ),
+                )
+                .toList(),
+          ),
+        ),
+                Align(
+                alignment: languagea=='en' ?Alignment.topLeft : Alignment.topRight,
+                 child: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                  child: Row(
+                      children: [
+                     Icon(
+                       Icons.language,
+                       color: Colors.white,
+                     ),
+                Text(
+                  languagea=='en'? languagea :arr,
+                  style: TextStyle(color: Colors.white),
+                ),
+              ],
             ),
           ),
-                ),
-                
+        ),
+      ],
+    ),
+  ),
+),
+
+          //app logo
+                 Pinned.fromPins(
+                  Pin(size: 240.0, middle: 0.4500),
+                  Pin(size: 200.0, end: 100.7),
+                  child:Image.asset('assets/icons/logo.png')
+                 ),
+           //app name
                 Pinned.fromPins(
-                  Pin(size: 366.0, middle: 0.5900),
-                  Pin(size: 100.0, end: 50.7),
+                  Pin(size: 400.0, middle: 0.4600),
+                  Pin(size: 80.0, end: 30.7),
                   child: const Text(
                     'Road Damage',
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 50,
@@ -131,6 +170,8 @@ class XDHome extends StatelessWidget {
               ],
             ),
           ),
+
+          //register Button
           Pinned.fromPins(
             Pin(start: 63.0, end: 62.0),
             Pin(size: 71.0, middle: 0.8500),
@@ -159,7 +200,8 @@ class XDHome extends StatelessWidget {
                     Pin(start: 16.0, end: 15.0),
                     child:  Text(
                       translation(context).register,
-                      style: TextStyle(
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 30,
                         color: Color(0xffffffff),
@@ -171,6 +213,7 @@ class XDHome extends StatelessWidget {
               ),
             ),
           ),
+         //login button
           Pinned.fromPins(
             Pin(start: 63.0, end: 62.0),
             Pin(size: 71.0, middle: 0.6300),
@@ -202,7 +245,8 @@ class XDHome extends StatelessWidget {
                     Pin(start: 16.0, end: 10.0),
                     child:  Text(
                       translation(context).login,
-                      style: TextStyle(
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 30,
                         color: Color(0xffffffff),
@@ -214,18 +258,22 @@ class XDHome extends StatelessWidget {
               ),
             ),
           ),
+          //dont have a acc
           Pinned.fromPins(
-            Pin(start: 70.0, end: 30.0),
+            Pin(start: 50.0, end: 30.0),
             Pin(size: 30.0, middle: 0.7400),
             child:  Text(
                translation(context).dont_have_acc,
-              style: TextStyle(
+               textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontWeight: FontWeight.w300,
                 fontFamily: 'Poppins',
                 fontSize: 15,
                 color: Color(0xff6f407d),
               ),
             ),
           ),
+          //copy right   
           Pinned.fromPins(
             Pin(size: 161.0, middle: 0.5019),
             Pin(size: 21.0, end: 15.0),
