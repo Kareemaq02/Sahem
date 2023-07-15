@@ -1,4 +1,4 @@
-import { Typography, SwipeableDrawer } from "@mui/material";
+import { Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import ProffessionDataGrid from "../Components/ProffessionDataGrid";
 import GetProffession from "../Service/GetProffession";

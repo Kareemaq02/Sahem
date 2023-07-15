@@ -13,7 +13,7 @@ const ProffessionForm = () => {
       console.log("Conn..");
       console.log("Done.. OK");
     } catch (error) {
-      console.log("Error While Connect");
+      console.error(`Error While Connect: ${error}`);
     }
   };
 

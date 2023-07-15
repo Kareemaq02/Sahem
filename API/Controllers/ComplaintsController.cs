@@ -4,6 +4,7 @@ using Domain.ClientDTOs.Complaint;
 using System.IdentityModel.Tokens.Jwt;
 using Application.Queries.Complaints;
 using Domain.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Application.Commands;
 
 namespace API.Controllers
@@ -88,6 +89,20 @@ namespace API.Controllers
         {
             return HandleResult(await Mediator.Send(new DeleteComplaintCommand(id)));
         }
+        
+        [Authorize]
+        [HttpGet("completed/public")] // .../api/complaints/completed/public
+        public async Task<IActionResult> GetCompletedComplaintsUser()
+        {
+            return HandleResult(await Mediator.Send(new GetCompletedComplaintsUserQuery()));
+        }
+
+        [Authorize]
+        [HttpGet("completed/all")] // .../api/complaints/completed/all
+        public async Task<IActionResult> GetCompletedComplaintsAdmin()
+        {
+            return HandleResult(await Mediator.Send(new GetCompletedComplaintsAdminQuery()));
+        }
 
         [HttpPut("update/{id}")] // .../api/complaints/update/id
         public async Task<IActionResult> UpdateComplaint(int id, UpdateComplaintDTO updateComplaintDTO)
@@ -100,9 +115,5 @@ namespace API.Controllers
 
             return HandleResult(await Mediator.Send(new UpdateComplaintCommand(updateComplaintDTO, id)));
         }
-
-
-
-
     }
 }

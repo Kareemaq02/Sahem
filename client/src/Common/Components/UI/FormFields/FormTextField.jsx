@@ -20,7 +20,7 @@ const FormTextField = (props) => {
       }) => (
         <TextField
           fullWidth
-          label={props.label}
+          placeholder={props.label}
           onChange={onChange}
           value={value || ""}
           type={props.type || "text"}
