@@ -14,6 +14,12 @@ namespace Domain.Resources
             completed = 7,
             refiled = 8
         }
+        public enum complaintPrivacy {
+            privacyPrivate = 1,
+            privacyPublic = 2,
+            privacyAny = 3,
+
+        }
     }
 }
 
