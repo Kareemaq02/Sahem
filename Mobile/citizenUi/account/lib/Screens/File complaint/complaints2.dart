@@ -1,212 +1,189 @@
-// ignore_for_file: depend_on_referenced_packages, constant_identifier_names, unused_element, unnecessary_null_comparison, library_private_types_in_public_api
+// ignore_for_file: constant_identifier_names, depend_on_referenced_packages, unnecessary_null_comparison
 
-import 'dart:convert';
 import 'dart:io';
 
-import 'package:account/Screens/public_feed.dart';
+import 'package:account/API/file_complaint_request.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
-import 'package:adobe_xd/page_link.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:image_picker/image_picker.dart';
-import '../API/login_request.dart';
-import 'complaints2.dart';
-import 'package:http/http.dart' as http;
-  List<File> selectedImages = [];
-  late DropDownValue dropdown=DropDownValue(1, "");
-  TextEditingController commentController = TextEditingController();
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 
-class XDComplaints1 extends StatefulWidget {
-  const XDComplaints1({super.key});
+import 'complaints1.dart';
+
+class XDComplaints2 extends StatefulWidget {
+  const XDComplaints2({super.key});
 
  
   @override
-   _XDComplaints1State createState() => _XDComplaints1State();
+   _XDComplaints2State createState() => _XDComplaints2State();
 
  }
- class _XDComplaints1State extends State<XDComplaints1> {
-
-  final _picker = ImagePicker();
-
-  //drop down List
-
-  late int intType;
-  List<DropDownValue> items = [];
-  late Future<List<Map<String, dynamic>>>_futureData;
-  String language="strNameAr";
+ class _XDComplaints2State extends State<XDComplaints2> {
 
 
 @override
 void initState() {
    WidgetsBinding.instance.addPostFrameCallback((_) {
-    getImages(context);
+    _getCurrentPosition();
   });
   super.initState();
-    _futureData=getAllCategory();
-   _initializeData();
  
 }
 
-  void _initializeData() async {
-  final data = await getAllCategory();
-  setState(() {
-    items = data.map((item) => DropDownValue(item["intId"], item[language])).toList();
-    dropdown = items[0];
-  });
-}
 
+  String? currentAddress=" ";
+  Position? _currentPosition;
 
-//fetch classification
- Future<List<Map<String, dynamic>>> getAllCategory() async {
-   
-   
-  var baseUrl = "https://10.0.2.2:5000/api/complaints/types";
-  http.Response response = await http.get(Uri.parse(baseUrl),
-   headers: {
-          'Authorization': 'Bearer $token2',
-        }
-  );
+  Future<bool> _handleLocationPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
 
-
-  if (response.statusCode == 200) {
-    var jsonData = json.decode(response.body) as List;
-    return jsonData.map((element) => {
-      "intId": element["intId"],
-      "strNameAr": element["strNameAr"],
-      "strNameEn": element["strNameEn"]
-    }).toList();
-  } else {
-    throw response.statusCode;
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location services are disabled. Please enable the services')));
+      return false;
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Location permissions are denied')));
+        return false;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location permissions are permanently denied, we cannot request permissions.')));
+      return false;
+    }
+    return true;
   }
-}
 
+  Future<void> _getCurrentPosition() async {
 
-Future<void> getImages(BuildContext context) async {
-  final pickedFile = await _picker.pickImage(source: ImageSource.camera, imageQuality: 50);
+   
+    final hasPermission = await _handleLocationPermission();
 
-  if (pickedFile != null) {
-    selectedImages.add(File(pickedFile.path));
-    setState(() {});
-    print(selectedImages.length);
-  } else {
-    Navigator.pop(context,MaterialPageRoute(builder: (context) =>  XDPublicFeed1()));
-    // ScaffoldMessenger.of(context).showSnackBar(
-    //   const SnackBar(content: Text('Nothing is selected')),);
+    if (!hasPermission) return;
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) {
+      setState(() => _currentPosition = position);
+      _getAddressFromLatLng(_currentPosition!);
+    }).catchError((e) {
+      debugPrint(e);
+    });
     
   }
-}
+
+  Future<void> _getAddressFromLatLng(Position position) async {
+    await placemarkFromCoordinates(
+            _currentPosition!.latitude, _currentPosition!.longitude)
+        .then((List<Placemark> placemarks) {
+      Placemark place = placemarks[0];
+      setState(() {
+        currentAddress =
+            '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}, ${place.postalCode}';
+      });
+    }).catchError((e) {
+      debugPrint(e);
+    });
+  }
+
 
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
-      
       backgroundColor: const Color(0xffffffff),
       body: Stack(
         children: <Widget>[
           Pinned.fromPins(
-            //plus sign
-            Pin(start: 23.0, end: 23.0),
-            Pin(size: 90.0, middle: 0.5650),
+            Pin(size: 193.0, start: 28.0),
+            Pin(size: 74.0, middle: 0.5047),
             child: Stack(
               children: <Widget>[
-
-            // DropdownButton(),
-                 FutureBuilder<List<Map<String, dynamic>>>(
-          //move getAllCategory on page load
-           future: _futureData,
-          builder: (context, snapshot) {
-          if (snapshot.hasData) {
-         var data = snapshot.data!;
-         var items =  data.map((item) {
-          return DropdownMenuItem(
-            value:  DropDownValue(item["intId"], item[language]) ,
-            child: Text(item[language]),
-          );
-        }).toList();
-
-      
-      // dropdown=items[0].value!;
-       dropdown=items[dropdown.intID-1].value!;
-
-         return DropdownButton(
-       
-        value:dropdown ,
-        icon: const Icon(Icons.keyboard_arrow_down),
-        items:items,
-        onChanged: (newValue) {
-          setState(() {
-            dropdown= newValue!;
-            print(dropdown.intID );
-            print(dropdown.stringName );
-           
-          });
-        },
-
-      );
-    } else {
-      return const CircularProgressIndicator();
-    }
-  },
-),
-                Pinned.fromPins(
-                  Pin(size: 144.0, start: 3.0),
-                  Pin(size: 21.0, start: 0.0),
-                  child: const Text(
-                    'Type of Complaint',
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 15,
-                      color: Color(0xff6f407d),
+                const Align(
+                  alignment: Alignment.topLeft,
+                  child: SizedBox(
+                    width: 144.0,
+                    height: 21.0,
+                    child: Text(
+                      'Type of Complaint',
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 15,
+                        color: Color(0xff6f407d),
+                      ),
                     ),
                   ),
                 ),
-                
-                
+                const Align(
+                  alignment: Alignment(1.0, 0.509),
+                  child: SizedBox(
+                    width: 144.0,
+                    height: 40.0,
+                    child: Text(
+                      'Complaint',
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 15,
+                        color: Color(0xff6f407d),
+                      ),
+                    ),
+                  ),
+                ),
+                Pinned.fromPins(
+                  Pin(size: 20.0, start: 10.0),
+                  Pin(size: 40.0, end: 20.0),
+                  child:
+                      // Adobe XD layer: 'report' (shape)
+                      Container( child:
+                    Icon(Icons.report_gmailerrorred_outlined,color:Color(0xff2a0340)),
+                  ),
+                ),
               ],
             ),
           ),
           Pinned.fromPins(
             Pin(start: 23.0, end: 23.0),
-            Pin(size: 167.3, middle: 0.8800),
+            Pin(size: 110.3, middle: 0.6700),
             child: Stack(
               children: <Widget>[
                Padding(
-                padding: const EdgeInsets.fromLTRB(0.0, 24.0, 0.0, 0.0),child:
-                TextFormField( 
-                
-                 controller: commentController,
-              
-                decoration: InputDecoration(
-                filled: true,
-               fillColor: Colors.white,
-               contentPadding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
-               border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-             borderSide: BorderSide(
-             width: 1,
-             color: Color(0xff6f407d),
-             ),
-            ),
-           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(6),
-          borderSide: BorderSide(
-        width: 1,
-        color:  Color(0xff6f407d),
-         ),
+  padding: const EdgeInsets.fromLTRB(0.0, 24.0, 0.0, 0.0),
+  child: Stack(
+    children: [
+      SizedBox.expand(
+        child: SvgPicture.string(
+          _svg_bs1q1u,
+          allowDrawingOutsideViewBox: true,
+          fit: BoxFit.fill,
         ),
-       focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(6),
-      borderSide: const BorderSide(
-        width: 1,
-        color: Color(0xff6f407d),
       ),
-    ),
-  )
-),
-                ),
-
+      Positioned.fill(
+        child: Align(
+          alignment: Alignment.center,
+          child: Text(
+            'Hello',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+        ),
+      ),
+    ],
+  ),
+)
+,
                 Pinned.fromPins(
                   Pin(size: 87.0, start: 3.0),
                   Pin(size: 21.0, start: 0.0),
@@ -226,17 +203,21 @@ Future<void> getImages(BuildContext context) async {
             Pin(start: 63.0, end: 62.0),
             Pin(size: 71.0, end: 20.0),
             child:
-                // Adobe XD layer: 'Next Button' (group)
+                // Adobe XD layer: 'submit Button' (group)
                 InkWell(
               
-                onTap:(){
-                Navigator.push(context,MaterialPageRoute(builder: (context) => XDComplaints2()),);
-                },
+                  onTap: () {
+                    Complaint _fileComplaint=Complaint();
+                    _fileComplaint.fileComplaint(1, 1, selectedMediaFiles,"trial");
+                 
+                 
+                   // const XDPublicFeed1();
+                  },
                 
               
               child: Stack(
                 children: <Widget>[
-                  // Adobe XD layer: 'Next' (shape)
+                  // Adobe XD layer: 'sbumut' (shape)
                   Container(
                     decoration: BoxDecoration(
                       color: const Color(0xff2a0340),
@@ -246,10 +227,10 @@ Future<void> getImages(BuildContext context) async {
                     ),
                   ),
                   Pinned.fromPins(
-                    Pin(size: 69.0, middle: 0.5),
+                    Pin(size: 107.0, middle: 0.5),
                     Pin(start: 16.0, end: 15.0),
                     child: const Text(
-                      'Next',
+                      'Submit',
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 30,
@@ -258,14 +239,13 @@ Future<void> getImages(BuildContext context) async {
                       ),
                     ),
                   ),
-              ],
+                ],
               ),
             ),
           ),
-          //purple container
           Pinned.fromPins(
-            Pin(start: -63.4, end: -145.3),
-            Pin(size: 400.3, start: -91.2),
+            Pin(start: -61.4, end: -147.3),
+            Pin(size: 350.3, start: -88.2),
             child:
                 // Adobe XD layer: 'Action Bar' (group)
                 Stack(
@@ -297,48 +277,70 @@ Future<void> getImages(BuildContext context) async {
                     fit: BoxFit.fill,
                   ),
                 ),
+              ],
+            ),
+          ),
+         
+          Pinned.fromPins(
+            Pin(size: 142.0, start: 34.0),
+            Pin(size: 68.0, middle: 0.8300),
+            child:
+                // Adobe XD layer: 'Type of Complaint' (group)
+                Stack(
+              children: <Widget>[
                 Pinned.fromPins(
-                  Pin(size: 33.6, middle: 0.6200),
-                  Pin(size: 31.3, end: 55.8),
+                  Pin(start: 0.0, end: 0.0),
+                  Pin(size: 21.0, start: 0.0),
+                  child: const Text(
+                    'Location',
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontSize: 15,
+                      color: Color(0xff2a0340),
+                    ),
+                  ),
+                ),
+                Pinned.fromPins(
+                  Pin(size: 220.0, end: 30.0),
+                  Pin(size: 45.0, start: 60.0),
+                  child:  Text(
+                    currentAddress!,
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontSize: 15,
+                      color: Color(0xff2a0340),
+                    ),
+                  ),
+                ),
+                Pinned.fromPins(
+                  Pin(size: 10.0, start: -2.0),
+                  Pin(size: 50.0, end: 0.0),
                   child:
-                  InkWell(
-                  child:  Icon(Icons.add,
-                    color: Colors.white,
-                    size: 45,),
-
-                    onTap: () {
-                      if(selectedImages.length<=2){
-                        getImages(context);
-                      }
-                     else{
-                      ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('you can only 3 images capture')));
-
-                }
-                    },
-
-                  )
-                    // Adobe XD layer: 'FillComplaintIcon' (group)
-                   
+                      // Adobe XD layer: 'location' (shape)
+                      Container(child:
+                   Icon(Icons.location_on,color: Color((0xff2a0340)),
+                     
+                   ),
+                  ),
                 ),
               ],
             ),
           ),
-          
-          
+         
           Pinned.fromPins(
             Pin(size: 21.9, start: 23.0),
             Pin(size: 36.6, start: 49.1),
             child:
               
                 // Adobe XD layer: 'BackIcon' (shape)
-                PageLink(
-              links: [
-                PageLinkInfo(
-                  duration: 0,
-                  pageBuilder: () => XDPublicFeed1(),
-                ),
-              ],
+                InkWell(
+              
+               
+                  onTap :(){
+                Navigator.push(context,MaterialPageRoute(builder: (context) =>  XDComplaints1()));
+                  } ,
+                
+              
               child:
                 // Adobe XD layer: 'BackIcon' (shape)
                 SvgPicture.string(
@@ -347,80 +349,85 @@ Future<void> getImages(BuildContext context) async {
               fit: BoxFit.fill,
             ),
           )),
-         
-      Align(
-  alignment: const Alignment(-0.561, -0.286),
-  child: Column(
-    children: [
-      SizedBox(height: 120),
-      Wrap(
+          Pinned.fromPins(
+            Pin(size: 287.0, end: 62.0),
+            Pin(size: 288.0, start: 39.0),
+            child:
+                // Adobe XD layer: 'photo' (shape)
+                Container(
+              decoration: const BoxDecoration(
+                
+              ),
+            ),
+          ),
+          Align(
+            alignment: const Alignment(-0.500, -0.800),
+            child:
+                // Adobe XD layer: 'photo' (shape)
+               Wrap(
         spacing: 13, 
         children: [
-          if (selectedImages != null)
-            ...selectedImages.map((imageone) {
-              return Container(
-                width:80,
-                height: 80,
-                child: Image.file(
-                  File(imageone.path),
-                  fit: BoxFit.cover,
-                ),
-              );
-            }).toList(),
+           if (selectedMediaFiles != null)
+      ...selectedMediaFiles.map((mediaFile) {
+        return Container(
+          width: 80,
+          height: 80,
+          child: Image.file(
+            mediaFile.file,
+            fit: BoxFit.cover,
+          ),
+        );
+      }).toList(),
         ],
       ),
-    ],
-  ),
-),
-
-
+          ),
           Align(
-            alignment: const Alignment(-0.251, -0.287),
+            alignment: const Alignment(-0.005, -0.294),
             child:
                 // Adobe XD layer: 'photo' (shape)
                 Container(
               width: 48.0,
               height: 48.0,
               decoration: const BoxDecoration(
-               
+                
               ),
             ),
           ),
           Align(
-            alignment: const Alignment(0.068, -0.286),
+            alignment: const Alignment(0.316, -0.293),
             child:
                 // Adobe XD layer: 'photo' (shape)
                 Container(
               width: 50.0,
               height: 50.0,
               decoration: const BoxDecoration(
-                
+              
               ),
             ),
           ),
-         
         ],
       ),
     );
   }
+
+
+
+
+
+
+
+
+
+
+
 }
 
-const String _svg_heebsv =
-    '<svg viewBox="23.0 300.0 384.0 66.0" ><path transform="translate(23.0, 300.0)" d="M 10 0 L 374 0 C 379.5228576660156 0 384 4.477152347564697 384 10 L 384 56 C 384 61.52284622192383 379.5228576660156 66 374 66 L 10 66 C 4.477152347564697 66 0 61.52284622192383 0 56 L 0 10 C 0 4.477152347564697 4.477152347564697 0 10 0 Z" fill="#ffffff" stroke="#6f407d" stroke-width="1" stroke-miterlimit="4" stroke-linecap="round" /></svg>';
-const String _svg_mvbn2e =
-    '<svg viewBox="74.5 300.5 1.0 65.0" ><path transform="translate(74.5, 300.5)" d="M 0 0 L 0 65" fill="none" stroke="#6f407d" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
-const String _svg_sp2zzo =
-    '<svg viewBox="358.0 326.0 27.0 14.0" ><path transform="matrix(-1.0, 0.0, 0.0, -1.0, 385.0, 340.0)" d="M 13.49999904632568 0 L 27 14 L 0 14 Z" fill="#6f407d" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
 const String _svg_bs1q1u =
     '<svg viewBox="23.0 300.0 384.0 143.3" ><path transform="translate(23.0, 300.0)" d="M 10 0 L 374 0 C 379.5228576660156 0 384 9.723049163818359 384 21.71703720092773 L 384 121.6154174804688 C 384 133.6094055175781 379.5228576660156 143.3324584960938 374 143.3324584960938 L 10 143.3324584960938 C 4.477152347564697 143.3324584960938 0 133.6094055175781 0 121.6154174804688 L 0 21.71703720092773 C 0 9.723049163818359 4.477152347564697 0 10 0 Z" fill="#ffffff" stroke="#6f407d" stroke-width="1" stroke-miterlimit="4" stroke-linecap="round" /></svg>';
 const String _svg_rzpvul =
     '<svg viewBox="35.2 -60.8 477.0 483.9" ><path transform="matrix(1.0, 0.0, 0.0, 1.0, 35.2, -60.83)" d="M 166.5 -1.989373231481295e-06 L 310.5 -3.983765054726973e-06 C 402.4554138183594 -5.257342763798079e-06 477 108.3254547119141 477 241.9517059326172 C 477 375.5779418945312 402.4554138183594 483.9034118652344 310.5 483.9034118652344 L 166.5 483.9034118652344 C 74.54457855224609 483.9034118652344 -3.460002972133225e-06 375.5779418945312 -2.186425490435795e-06 241.9517059326172 C -9.128481224252027e-07 108.3254623413086 74.54458618164062 -7.157958634707029e-07 166.5 -1.989373231481295e-06 Z" fill="#8285bd" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
 const String _svg_fypls =
     '<svg viewBox="-126.5 -60.8 477.0 483.9" ><path transform="matrix(1.0, 0.0, 0.0, 1.0, -126.5, -60.83)" d="M 166.5 -1.989373231481295e-06 L 310.5 -3.983765054726973e-06 C 402.4554138183594 -5.257342763798079e-06 477 108.3254547119141 477 241.9517059326172 C 477 375.5779418945312 402.4554138183594 483.9034118652344 310.5 483.9034118652344 L 166.5 483.9034118652344 C 74.54457855224609 483.9034118652344 -3.460002972133225e-06 375.5779418945312 -2.186425490435795e-06 241.9517059326172 C -9.128481224252027e-07 108.3254623413086 74.54458618164062 -7.157958634707029e-07 166.5 -1.989373231481295e-06 Z" fill="#8285bd" fill-opacity="0.89" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
-const String _svg_xph1jx =
-    '<svg viewBox="16.8 0.0 1.0 31.3" ><path transform="translate(16.81, 0.0)" d="M 0 0 L 0 31.3182373046875" fill="none" stroke="#ffffff" stroke-width="3" stroke-miterlimit="4" stroke-linecap="round" /></svg>';
-const String _svg_o6ekv6 =
-    '<svg viewBox="0.0 15.7 33.6 1.0" ><path transform="matrix(0.0, 1.0, -1.0, 0.0, 33.62, 15.66)" d="M 0 0 L 0 33.6187744140625" fill="none" stroke="#ffffff" stroke-width="3" stroke-miterlimit="4" stroke-linecap="round" /></svg>';
 const String _svg_okdldq =
     '<svg viewBox="-65.7 -88.2 432.0 476.2" ><path transform="translate(-65.7, -88.23)" d="M 100.4580535888672 0 L 331.5115661621094 0 C 386.9930114746094 0 431.9696044921875 45.75292587280273 431.9696044921875 102.1920318603516 L 431.9696044921875 374.0228576660156 C 431.9696044921875 430.4620056152344 386.9930114746094 476.2149047851562 331.5115661621094 476.2149047851562 L 100.4580535888672 476.2149047851562 C 44.97659683227539 476.2149047851562 0 430.4620056152344 0 374.0228576660156 L 0 102.1920318603516 C 0 45.75292587280273 44.97659683227539 0 100.4580535888672 0 Z" fill="#6f407d" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
 const String _svg_nrpqt7 =
@@ -431,12 +438,3 @@ const String _svg_anq0p =
     '<svg viewBox="370.0 18.5 17.0 10.7" ><path transform="translate(370.0, 18.48)" d="M 16.00020027160645 10.6668004989624 L 15.00029945373535 10.6668004989624 C 14.44894981384277 10.6668004989624 14.00039958953857 10.2182502746582 14.00039958953857 9.666900634765625 L 14.00039958953857 0.9998999834060669 C 14.00039958953857 0.4485500156879425 14.44894981384277 0 15.00029945373535 0 L 16.00020027160645 0 C 16.55154991149902 0 17.00010108947754 0.4485500156879425 17.00010108947754 0.9998999834060669 L 17.00010108947754 9.666900634765625 C 17.00010108947754 10.2182502746582 16.55154991149902 10.6668004989624 16.00020027160645 10.6668004989624 Z M 11.33369922637939 10.6668004989624 L 10.33290004730225 10.6668004989624 C 9.781549453735352 10.6668004989624 9.332999229431152 10.2182502746582 9.332999229431152 9.666900634765625 L 9.332999229431152 3.333600044250488 C 9.332999229431152 2.782249927520752 9.781549453735352 2.333699941635132 10.33290004730225 2.333699941635132 L 11.33369922637939 2.333699941635132 C 11.88504981994629 2.333699941635132 12.33360004425049 2.782249927520752 12.33360004425049 3.333600044250488 L 12.33360004425049 9.666900634765625 C 12.33360004425049 10.2182502746582 11.88504981994629 10.6668004989624 11.33369922637939 10.6668004989624 Z M 6.666300296783447 10.6668004989624 L 5.666399955749512 10.6668004989624 C 5.115049839019775 10.6668004989624 4.666500091552734 10.2182502746582 4.666500091552734 9.666900634765625 L 4.666500091552734 5.66640043258667 C 4.666500091552734 5.115050315856934 5.115049839019775 4.666500091552734 5.666399955749512 4.666500091552734 L 6.666300296783447 4.666500091552734 C 7.218140125274658 4.666500091552734 7.667099952697754 5.115050315856934 7.667099952697754 5.66640043258667 L 7.667099952697754 9.666900634765625 C 7.667099952697754 10.2182502746582 7.218140125274658 10.6668004989624 6.666300296783447 10.6668004989624 Z M 1.999799966812134 10.6668004989624 L 0.9998999834060669 10.6668004989624 C 0.4485500156879425 10.6668004989624 0 10.2182502746582 0 9.666900634765625 L 0 7.667100429534912 C 0 7.115260124206543 0.4485500156879425 6.666300296783447 0.9998999834060669 6.666300296783447 L 1.999799966812134 6.666300296783447 C 2.55115008354187 6.666300296783447 2.99970006942749 7.115260124206543 2.99970006942749 7.667100429534912 L 2.99970006942749 9.666900634765625 C 2.99970006942749 10.2182502746582 2.55115008354187 10.6668004989624 1.999799966812134 10.6668004989624 Z" fill="#ffffff" stroke="none" stroke-width="1" stroke-miterlimit="10" stroke-linecap="butt" /></svg>';
 const String _svg_u5a7dw =
     '<svg viewBox="23.0 49.1 21.9 36.6" ><path transform="translate(15.0, 43.14)" d="M 29.90407371520996 10.30359077453613 L 25.73609352111816 6 L 7.999998092651367 24.31315040588379 L 25.73609352111816 42.62630462646484 L 29.90407371520996 38.32271575927734 L 16.36552429199219 24.31315040588379 L 29.90407371520996 10.30359077453613 Z" fill="#ffffff" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
-
-
-class DropDownValue{
-DropDownValue( this.intID, this.stringName);
-
-late int intID=0;
-late String stringName;
-}
-

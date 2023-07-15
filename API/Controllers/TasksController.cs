@@ -6,6 +6,8 @@ using Application.Queries.Tasks;
 using Application.Queries.Users;
 using Microsoft.AspNetCore.Authorization;
 using Application.Queries.Complaints;
+using Application.Handlers.Tasks;
+using Application.Commands;
 
 namespace API.Controllers
 {
@@ -52,18 +54,13 @@ namespace API.Controllers
 
             return HandleResult(await Mediator.Send(new InsertTaskCommand(taskDTO, id)));
         }
+        
         [HttpDelete("delete/{id}")] // .../api/tasks/delete/id
         public async Task<IActionResult> DeleteTasks(int id)
         {
             return HandleResult(await Mediator.Send(new DeleteTaskCommand(id)));
         }
-        [Authorize]
-        [HttpPut("update/{id}")]
-        public async Task<IActionResult> UpdateTask(int id)
-        {
-            return HandleResult(await Mediator.Send(new UpdateTaskCommand(id)));
-        }
-
+       
         [Authorize]
         [HttpGet("worker/{id}")]   //api/tasks/worker/id
         public async Task<IActionResult> GetWorkerTasks(int id)
@@ -78,6 +75,19 @@ namespace API.Controllers
         {
             return HandleResult(await Mediator.Send(new GetTaskDetailsByIdQuery(id)));
 
+        }
+
+        [Authorize]
+        [HttpPut("update/{id}")] // .../api/tasks/update/id
+        public async Task<IActionResult> UpdateTask(int id, UpdateTaskDTO updateTaskDTO)
+        {
+            string authHeader = Request.Headers["Authorization"];
+            JwtSecurityTokenHandler tokenHandler = new();
+            JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
+
+            updateTaskDTO.strUserName = jwtToken.Claims.First(c => c.Type == "username").Value;
+
+            return HandleResult(await Mediator.Send(new UpdateTaskCommand(updateTaskDTO, id)));
         }
 
     }

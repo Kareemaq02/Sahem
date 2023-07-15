@@ -1,7 +1,7 @@
-// ignore_for_file: avoid_print, unused_local_variable
-
+// ignore_for_file: avoid_print, unused_local_variablimport 'dart:convert';
 import 'dart:convert';
 import 'dart:io';
+import 'package:account/Screens/Login/login.dart';
 import 'package:http/http.dart' as http;
 
 import 'login_request.dart';
@@ -11,18 +11,18 @@ class Complaint {
     int intTypeId,
     int intPrivacyId,
     List<MediaFile> lstMedia,
+
     String strComment,
-    double decLat,
-    double decLng,
   ) async {
     try {
       final request = http.MultipartRequest(
         'POST',
         Uri.parse('https://10.0.2.2:5000/api/complaints'),
       );
+      print(token2);
 
       // Add the request headers
-      request.headers['Authorization'] = 'Bearer $token2';
+      request.headers.addAll({"Authorization": "Bearer $token2"});
       request.headers['Content-Type'] = 'multipart/form-data';
 
       // Add the request fields
@@ -31,32 +31,32 @@ class Complaint {
       request.fields['strComment'] = strComment;
 
       // Add the files
-      for (var mediaFile in lstMedia) {
-        var stream = http.ByteStream(mediaFile.file.openRead());
-        var length = await mediaFile.file.length();
-        var multipartFile = http.MultipartFile(
-          'lstMedia',
-          stream,
-          length,
-          filename: mediaFile.file.path.split('/').last,
-        );
-        request.files.add(multipartFile);
-        request.fields['decLat'] = mediaFile.decLat.toString();
-        request.fields['decLng'] = mediaFile.decLng.toString();
-        request.fields['blnIsVideo'] = mediaFile.blnIsVideo.toString();
-      }
+   for (var index = 0; index < lstMedia.length; index++) {
+    var mediaFile = lstMedia[index];
+    var stream = http.ByteStream(mediaFile.file.openRead());
+    var length = await mediaFile.file.length();
+    var multipartFile = http.MultipartFile(
+    'lstMedia[$index].fileMedia',
+    stream,
+    length,
+    filename: mediaFile.file.path.split('/').last,
+    );
+    request.files.add(multipartFile);
 
-      // Send the request
+ 
+   request.fields['lstMedia[$index].decLat'] = mediaFile.decLat.toString();
+   request.fields['lstMedia[$index].decLng'] = mediaFile.decLng.toString();
+   request.fields['lstMedia[$index].blnIsVideo'] =
+   mediaFile.blnIsVideo.toString();
+}
+
+      
       final response = await request.send();
 
-      // Get the response body
+     
       final responseJson = await response.stream.bytesToString();
 
-      // Print the response
-      print(responseJson);
-      print(response.headers);
-      print(response.reasonPhrase);
-      print(response.statusCode);
+      
 
       if (response.statusCode == 200) {
         Map<String, dynamic> jsonResponse = jsonDecode(responseJson);

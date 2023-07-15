@@ -5,6 +5,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Application.Queries.Complaints;
 using Domain.Helpers;
 using Microsoft.AspNetCore.Authorization;
+using Application.Commands;
 
 namespace API.Controllers
 {
@@ -88,7 +89,7 @@ namespace API.Controllers
         {
             return HandleResult(await Mediator.Send(new DeleteComplaintCommand(id)));
         }
-
+        
         [Authorize]
         [HttpGet("completed/public")] // .../api/complaints/completed/public
         public async Task<IActionResult> GetCompletedComplaintsUser()
@@ -103,6 +104,16 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new GetCompletedComplaintsAdminQuery()));
         }
 
+        [HttpPut("update/{id}")] // .../api/complaints/update/id
+        public async Task<IActionResult> UpdateComplaint(int id, UpdateComplaintDTO updateComplaintDTO)
+        {
+            string authHeader = Request.Headers["Authorization"];
+            JwtSecurityTokenHandler tokenHandler = new();
+            JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
 
+            updateComplaintDTO.strUserName = jwtToken.Claims.First(c => c.Type == "username").Value;
+
+            return HandleResult(await Mediator.Send(new UpdateComplaintCommand(updateComplaintDTO, id)));
+        }
     }
 }

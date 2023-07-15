@@ -6,11 +6,11 @@
 "confirmPassword":"Confirm Password",
 "username":"Username",
 "forgot_password":"Forgot Password?",
-"dont_have_acc":"If you don'nt have an account",
+"dont_have_acc":"Don't have an account? Sign up",
 "register":"register",
 "idType":"Type of ID",
 "idNumber":"ID Number",
-"nationalID":"National ID",
+"nationalID":"National ID Number",
 "nationalNumber":"National Number",
 "next":"Next",
 "nationality":"Nationality",
@@ -21,7 +21,13 @@
 "phoneNumber":"Phone Number",
 "areYourJordanian":"are Your Jordanian",
 "yes":"Yes",
-"no":"Yes",
-"haveAccount":"Already have an account"
+"no":"No",
+"haveAccount":"Already have an account",
+"rememberMe":"Remeber me",
+"email_or_username":"Email/Username",
+"registrationNumber":"Registeration Number",
+"selectHere":"Select Here",
+"rememberMe": "Remeber me"
+
 
 }

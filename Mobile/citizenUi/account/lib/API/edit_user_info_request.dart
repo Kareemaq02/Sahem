@@ -38,7 +38,7 @@ String strNewPassword,String strNewPhoneNumber,String strNewLocation) async {
       print('Failed to update account. Error code: ${response.statusCode}');
     }
   } catch (e) {
-    // Exception occurred
+    
     print('Exception: $e');
   }
 }

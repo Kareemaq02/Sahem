@@ -2,20 +2,21 @@
 
 import 'dart:convert';
 
-import 'package:account/Screens/public_feed.dart';
+import 'package:account/API/view_complaint_request.dart';
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:account/Screens/Home/public_feed.dart';
+
 import 'package:adobe_xd/pinned.dart';
-import '../API/login_request.dart';
-import '../API/view_complaint_request.dart';
+import '../../API/login_request.dart';
 import 'package:adobe_xd/page_link.dart';
 // ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
 
- var _date="20/jan/2023";
- var _time="12:00pm";
- String _status="pending";
- String _comment="violation in streets";
+import 'complaints_details.dart';
+
+
 
 
  
@@ -31,17 +32,22 @@ class _XDComplaintsListState extends State<XDComplaintsList> {
 
   @override
   void initState() {
+   
+    fetchComplaints();
     super.initState();
    
   }
 
 Future<List<dynamic>> fetchComplaints() async {
-  final response = await http.get(Uri.parse("https://10.0.2.2:5000/api/complaints"),
+  final response = await http.get(Uri.parse("https://10.0.2.2:5000/api/complaints/user"),
    headers: {
           'Authorization': 'Bearer $token2',
         }
   );
   if (response.statusCode == 200) {
+    print("ok");
+     print(token2);
+   // print(jsonDecode(response.body.toString()));
     return jsonDecode(response.body.toString());
   } else {
     throw Exception('Failed to fetch complaints');
@@ -53,21 +59,25 @@ Future<List<dynamic>> fetchComplaints() async {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xffffffff),
+      
       body: Stack(
         children: <Widget>[
 
        Pinned.fromPins(
-            Pin(size: 265.0, end: 5.0),
-            Pin(start: 90.0, end: -4.0),
+            Pin(size: 265.0, end: 0.0),
+            Pin(start: 90.0, end: 4.0),
             child:
            Column(
         children: [
           Expanded(
+            
                 child: FutureBuilder(
                   future: fetchComplaints(),
                   builder: (context, snapshot) {
-                    print(snapshot.data);
+                  
+                   
                     
+                 
                     if (snapshot.hasData) {
                      var data = snapshot.data;
                       return ListView.builder(
@@ -76,8 +86,9 @@ Future<List<dynamic>> fetchComplaints() async {
                           return 
                             Column(
                               children: [
-                          ReusableRow( value: data![index]['strComplaintTypeEn'].toString(),),
-                          ReusableRow( value: data[index]['strStatus'].toString(),),
+                          
+                          ReusableRow( comment: data![index]['strComment'].toString(),type: data![index]['strComplaintTypeEn'].toString(),status: data![index]['strStatus'].toString(),date: data![index]['dtmDateCreated'].toString(), id: data![index]['intComplaintId'].toString(),),
+                          //ReusableRow( value: data[index]['strStatus'].toString(),),
                                
                               ],
                             
@@ -98,7 +109,7 @@ Future<List<dynamic>> fetchComplaints() async {
 
           //title complaints
           Pinned.fromPins(
-            Pin(size: 151.0, middle: 0.3441),
+            Pin(size: 151.0, middle: 0.3700),
             Pin(size: 45.0, start: 51.0),
             child:
                 // Adobe XD layer: 'PageDisplay' (group)
@@ -136,11 +147,12 @@ Future<List<dynamic>> fetchComplaints() async {
                     softWrap: false,
                   ),
                 ),
+               
               ],
             ),
           ),
           
-          //side list 
+         // side list 
           Pinned.fromPins(
             Pin(size: 65.0, start: 0.0),
             Pin(start: 0.0, end: 0.0),
@@ -217,63 +229,15 @@ Future<List<dynamic>> fetchComplaints() async {
                     ],
                   ),
                 ),
+               
+                //add complaints bar
+                InkWell(
+                  onTap: (){},
+                  child: 
+                
                 Pinned.fromPins(
-                  Pin(size: 33.0, middle: 0.3878),
-                  Pin(start: 259.0, end: 641.0),
-                  child: Stack(
-                    children: <Widget>[
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Container(
-                          width: 33.0,
-                          height: 32.0,
-                          decoration: BoxDecoration(
-                            color: const Color(0xff54b39b),
-                            borderRadius: BorderRadius.all(
-                                Radius.elliptical(9999.0, 9999.0)),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color(0x29000000),
-                                offset: Offset(0, 3),
-                                blurRadius: 40,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Pinned.fromPins(
-                  Pin(size: 33.0, middle: 0.4177),
-                  Pin(start: 310.0, end: 590.0),
-                  child: Stack(
-                    children: <Widget>[
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Container(
-                          width: 33.0,
-                          height: 32.0,
-                          decoration: BoxDecoration(
-                            color: const Color(0xff615bfe),
-                            borderRadius: BorderRadius.all(
-                                Radius.elliptical(9999.0, 9999.0)),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color(0x29000000),
-                                offset: Offset(0, 3),
-                                blurRadius: 40,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Pinned.fromPins(
-                  Pin(size: 11.8, middle: 0.4093),
-                  Pin(size: 11.8, start: 134.1),
+                  Pin(size: 18.8, middle: 0.4100),
+                  Pin(size: 20.8, start: 120.1),
                   child: Stack(
                     children: <Widget>[
                       Pinned.fromPins(
@@ -297,6 +261,10 @@ Future<List<dynamic>> fetchComplaints() async {
                     ],
                   ),
                 ),
+                ),
+
+
+                //selector
                 Align(
                   alignment: Alignment(1.0, -0.313),
                   child: SizedBox(
@@ -308,6 +276,8 @@ Future<List<dynamic>> fetchComplaints() async {
                     ),
                   ),
                 ),
+
+                //cat
                 Align(
                   alignment: Alignment(-0.17, -0.526),
                   child: SizedBox(
@@ -319,6 +289,8 @@ Future<List<dynamic>> fetchComplaints() async {
                     ),
                   ),
                 ),
+                
+                //in progress
                 Align(
                   alignment: Alignment(-0.19, -0.418),
                   child: SizedBox(
@@ -330,6 +302,9 @@ Future<List<dynamic>> fetchComplaints() async {
                     ),
                   ),
                 ),
+
+
+              //dont complaint
                 Align(
                   alignment: Alignment(-0.128, -0.305),
                   child: SizedBox(
@@ -357,9 +332,10 @@ Future<List<dynamic>> fetchComplaints() async {
                     ),
                   ),
                 ),
+                
                 Pinned.fromPins(
-                  Pin(size: 21.9, middle: 0.3831),
-                  Pin(size: 36.6, start: 55.8),
+                  Pin(size: 15.9, middle: 0.3831),
+                  Pin(size: 20.6, start: 70.8),
                   child:
                       // Adobe XD layer: 'BackIcon' (shape)
                       PageLink(
@@ -382,7 +358,7 @@ Future<List<dynamic>> fetchComplaints() async {
           
           //complaint title
           Pinned.fromPins(
-            Pin(size: 165.0, middle: 0.3623),
+            Pin(size: 165.0, middle: 0.5000),
             Pin(size: 1.0, start: 99.0),
             child: SvgPicture.string(
               _svg_yp9moa,
@@ -427,114 +403,181 @@ const String _svg_yp9moa =
 
 
 
-class ReusableRow extends StatelessWidget {
-  final String value;
 
-  const ReusableRow({Key? key, required this.value}) : super(key: key);
+class ReusableRow extends StatelessWidget {
+  final String comment;
+  final String type;
+  final String status;
+  final String date;
+  final String id;
+ 
+
+   ReusableRow({
+    Key? key,
+    required this.comment,
+    required this.status,
+    required this.date,
+    required this.type, required this.id, 
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(left: 12.0, top: 10.0, right: 12.0, bottom: 4.0),
-      width: 250.0,
-      child: Stack(
-        children: <Widget>[
-          Align(
-            alignment: Alignment.topRight,
-            child: Container(
-              width: 250.0,
-              height: 150.0,
-              decoration: BoxDecoration(
-                color: const Color(0xffffffff),
-                borderRadius: BorderRadius.circular(5.0),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0x21465883),
-                    offset: Offset(0, 0),
-                    blurRadius: 2,
+    DateTime dateTime = DateTime.parse(date);
+    String time =
+        '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}:${dateTime.second.toString().padLeft(2, '0')}';
+    String period = dateTime.hour < 12 ? 'am' : 'pm';
+
+    return OpenContainer(
+      closedElevation: 0,
+      openElevation: 0,
+      closedColor: Colors.transparent,
+      openColor: Colors.transparent,
+      closedBuilder: (context, openContainer) {
+        return Container(
+          margin: EdgeInsets.only(left: 1.0, top: 0.0, right: 2.0, bottom: 10.0),
+          child: Stack(
+            children: <Widget>[
+              Align(
+                alignment: Alignment.topRight,
+                child: Container(
+                  height: 100.0,
+                  decoration: BoxDecoration(
+                    color: const Color(0xffffffff),
+                    borderRadius: BorderRadius.circular(5.0),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0x21465883),
+                        offset: Offset(0, 0),
+                        blurRadius: 40,
+                        //spreadRadius: 3,
+                      ),
+                    ],
                   ),
-                ],
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(right: 75.0, top: 30.0),
+                              child: Text(
+                                type,
+                                style: TextStyle(
+                                  fontFamily: 'Euclid Circular A',
+                                  fontSize: 12,
+                                  color: const Color(0xff223e6d),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                softWrap: false,
+                              ),
+                            ),
+                            SizedBox(height: 10,),
+                            Container(
+                              margin: EdgeInsets.only(right: 110.0,),
+                              child: Text(
+                                comment,
+                                style: TextStyle(
+                                  fontFamily: 'Euclid Circular A',
+                                  fontSize: 9,
+                                  color: const Color(0xff223e6d),
+                                  fontWeight: FontWeight.w300,
+                                ),
+                                softWrap: false,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        width: 50.0,
+                        height: 20.0,
+                        margin: EdgeInsets.only(right: 18.0, top: 1.0),
+                        child: Stack(
+                          children: <Widget>[
+                            Container(
+                              decoration: BoxDecoration(
+                                color: const Color(0xfffeb25b),
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment(0.053, 0.143),
+                              child: SizedBox(
+                                width: 35.0,
+                                height: 10.0,
+                                child: Text(
+                                  status,
+                                  style: TextStyle(
+                                    fontFamily: 'Euclid Circular A',
+                                    fontSize: 9,
+                                    color: const Color(0xffffffff),
+                                  ),
+                                  softWrap: false,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              child: Row(
-                children: <Widget>[
+              Row(
+                children: [
                   Container(
-                    //width: 10.0,
-                    margin: EdgeInsets.only(left: 21.0, top: 22.0),
+                    margin: EdgeInsets.only(top: 85.0, left: 15),
                     child: Text(
-                      value,
+                      date.substring(0, 10),
                       style: TextStyle(
                         fontFamily: 'Euclid Circular A',
                         fontSize: 9,
-                        color: const Color(0xff223e6d),
-                        fontWeight: FontWeight.w600,
+                        color: const Color(0xff367be2),
                       ),
                       softWrap: false,
                     ),
                   ),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                        Text(
-                          "rrrr",
-                          style: TextStyle(
-                            fontFamily: 'Euclid Circular A',
-                            fontSize: 9,
-                            color: const Color(0xff367be2),
-                          ),
-                          softWrap: false,
-                        ),
-                        Text(
-                          value,
-                          style: TextStyle(
-                            fontFamily: 'Euclid Circular A',
-                            fontSize: 9,
-                            color: const Color(0xff92a5c6),
-                          ),
-                          softWrap: false,
-                        ),
-                      ],
-                    ),
-                  ),
-                  //status box
                   Container(
-                    width: 50.0,
-                    height: 20.0,
-                    margin: EdgeInsets.only(right: 18.0, top: 1.0),
-                    child: Stack(
-                      children: <Widget>[
-                        Container(
-                          decoration: BoxDecoration(
-                            color: const Color(0xfffeb25b),
-                            borderRadius: BorderRadius.circular(5.0),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment(0.053, 0.143),
-                          child: SizedBox(
-                            width: 23.0,
-                            height: 8.0,
-                            child: Text(
-                              value,
-                              style: TextStyle(
-                                fontFamily: 'Euclid Circular A',
-                                fontSize: 6,
-                                color: const Color(0xffffffff),
-                              ),
-                              softWrap: false,
-                            ),
-                          ),
-                        ),
-                      ],
+                    margin: EdgeInsets.only(top: 85.0, left: 130),
+                    child: Text(
+                      '$time $period',
+                      style: TextStyle(
+                        fontFamily: 'Euclid Circular A',
+                        fontSize: 9,
+                        color: const Color(0xff92a5c6),
+                      ),
+                      softWrap: false,
                     ),
                   ),
+                  Spacer(),
                 ],
-              ),
-            ),
+              )
+            ],
           ),
-        ],
-      ),
+        );
+      },
+     openBuilder: (context, closeContainer) {
+  getUserComplaint a = getUserComplaint();
+  Future<List<ComplaintModel>> complaintFuture = a.getComplaintById(id);
+  return FutureBuilder<List<ComplaintModel>>(
+    future: complaintFuture,
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return CircularProgressIndicator();
+      } else if (snapshot.hasError) {
+        return Text('Error: ${snapshot.error}');
+      } else if (snapshot.hasData) {
+        List<ComplaintModel> complaints = snapshot.data!;
+        return ComplaintDetailsScreen(
+          complaints: complaints,
+        );
+      } else {
+        return Text('No data available');
+      }
+    },
+  );
+},
+
     );
-  }
-}
+}}
+

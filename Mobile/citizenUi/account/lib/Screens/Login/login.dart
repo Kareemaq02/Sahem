@@ -1,23 +1,27 @@
 // ignore_for_file: constant_identifier_names, unused_element, depend_on_referenced_packages, prefer_typing_uninitialized_variables, unnecessary_new, library_private_types_in_public_api, avoid_print, unused_local_variable
 
-import 'package:account/Screens/public_feed.dart';
-import 'package:account/Screens/register.dart';
+import 'package:account/Repository/language_constants.dart';
+import 'package:account/Screens/Login/langSelector.dart';
+import 'package:account/Screens/Registration/register.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
-import '../API/login_request.dart';
+import '../../API/login_request.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-var code;
+//var code;
 
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-   var responseMessage;
-  final GlobalKey<FormState> _key = GlobalKey();
+
+ var responseMessage;
+ final GlobalKey<FormState> _key = GlobalKey();
  final GlobalKey<FormState> _key2 = new GlobalKey();
-  bool _validate = false;
-   String _password="";
-   String _email="";
+ bool _validate = false;
+ String _password="";
+ String _email="";
+
+ 
 class XDLogin extends StatefulWidget {
  const XDLogin({Key? key}) : super(key: key);
   @override
@@ -26,13 +30,10 @@ class XDLogin extends StatefulWidget {
 
 class _XDLoginState extends State<XDLogin> {
   
-
- 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       
       backgroundColor: const Color(0xffffffff),
       body: Stack(
@@ -40,40 +41,49 @@ class _XDLoginState extends State<XDLogin> {
          
 
           //pasowrd box
-         passowrdForm(),
+         BoxForm(context,0.4200,usernameController,"Email",Icons.email_outlined),
+         BoxForm(context,0.5600,passwordController,"Password",Icons.lock),
+
+         //forgetpassword
           Pinned.fromPins(
-            Pin(size: 136.0, end: 10.0),
-           Pin(size: 20.0, middle: 0.6807),
-            child: const Text(
-              'Forgot Password?',
-              style: TextStyle(
+            Pin(size: 136.0, end: 5.0),
+           Pin(size: 40.0, middle: 0.6700),
+            child:  Text(
+              translation(context).forgot_password,
+              textAlign: TextAlign.left,
+              style: const TextStyle(
                 fontFamily: 'Poppins',
                 fontSize: 15,
                 color: Color(0xff6f407d),
               ),
             ),
           ),
+
+         //remeber me
           Pinned.fromPins(
-            Pin(size: 156.0, start: 33.0),
-            Pin(size: 200.0, middle: 0.6500),
+            Pin(size:120.0, start: 33.0),
+            Pin(size: 300.0, middle: 0.5400),
             child: Stack(
               children: <Widget>[
                 Pinned.fromPins(
-                Pin(size: 130.0, start: 40.0),
-                Pin(start: 175.0, end: 10.0),
+                Pin(size: 100.0, start: 40.0),
+                Pin(start: 268.0, end: 10.0),
                 
-                  child: const Text(
-                    'Remember me',
-                    style: TextStyle(
+                  child:  Text(
+                    translation(context).rememberMe,
+                    textAlign: TextAlign.left,
+                    style: const TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 15,
                       color: Color(0xff6f407d),
                     ),
                   ),
                 ),
+
+
                 Pinned.fromPins(
                   Pin(size: 15.0, start: 0.0),
-                  Pin(size: 15.0, end: 10.0),
+                  Pin(size: 15.0, end: 15.0),
                   child: SvgPicture.string(
                     _svg_t3ffj,
                     allowDrawingOutsideViewBox: true,
@@ -83,22 +93,19 @@ class _XDLoginState extends State<XDLogin> {
               ],
             ),
           ),
+
+          //Login Button
           Pinned.fromPins(
             Pin(start: 63.0, end: 62.0),
-            Pin(size: 71.0, middle: 0.9000),
+            Pin(size: 71.0, middle: 0.8300),
             child:
                 // Adobe XD layer: 'Login Button' (group)
                 InkWell(
-                  
                   onTap: () {
-
                     //_sendToServer();
                      UserLogin user=UserLogin();
-                    // user.login(usernameController.text,passwordController.text,context);
-                  // print(responseMessage);
-                    Navigator.push(context,MaterialPageRoute(builder: (context) =>  XDPublicFeed1 ()));
+                     user.login(usernameController.text,passwordController.text,context);
                   } ,
-              
               child: Stack(
                 children: <Widget>[
                   // Adobe XD layer: '
@@ -111,12 +118,14 @@ class _XDLoginState extends State<XDLogin> {
                           width: 1.0, color: const Color(0xff707070)),
                     ),
                   ),
+                  //login button
                   Pinned.fromPins(
-                    Pin(size: 82.0, middle: 0.5022),
-                    Pin(start: 16.0, end: 15.0),
-                    child: const Text(
-                      'Login',
-                      style: TextStyle(
+                    Pin(size: 200.0, middle: 0.4500),
+                    Pin(start: 15.0, end: 15.0),
+                    child: Text(
+                      translation(context).login,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 30,
                         color: Color(0xffffffff),
@@ -128,9 +137,11 @@ class _XDLoginState extends State<XDLogin> {
               ),
             ),
           ),
+         
+         //dont you have an account
           Pinned.fromPins(
-            Pin(start: 75.0, end: 10.0),
-            Pin(size: 60.0, end: -20.0),
+            Pin(start: 75.0, end: 60.0),
+            Pin(size: 70.0, end: 30.0),
             child: PageLink(
               links: [
                 PageLinkInfo(
@@ -138,9 +149,12 @@ class _XDLoginState extends State<XDLogin> {
                   pageBuilder: () => const XDRegister(),
                 ),
               ],
-              child: const Text(
-                'If you don\'t have an account',
-                style: TextStyle(
+              child:  Text(
+                translation(context).dont_have_acc,
+
+                textAlign: TextAlign.center,
+                style:const TextStyle(
+                  fontWeight: FontWeight.w300,
                   fontFamily: 'Poppins',
                   fontSize: 15,
                   color: Color(0xff6f407d),
@@ -148,9 +162,11 @@ class _XDLoginState extends State<XDLogin> {
               ),
             ),
           ),
+         
+         //Top Bar
           Pinned.fromPins(
             Pin(start: -61.4, end: -99.1),
-            Pin(size: 368.2, start: -150.2),
+            Pin(size: 368.2, start: -110.2),
             child:
                 // Adobe XD layer: 'Action Bar' (group)
                 Stack(
@@ -185,19 +201,23 @@ class _XDLoginState extends State<XDLogin> {
               ],
             ),
           ),
+         
+         // langugaeSelector(context),
+         
+          //loginLabel
           Pinned.fromPins(
-            Pin(size: 111.0, middle: 0.5016),
-            Pin(size: 56.0, start: 96.0),
-            child: const Text(
-              'Login',
-              style: TextStyle(
+            Pin(size: 300.0, middle: 0.5400),
+            Pin(size: 100.0, start: 100.0),
+            child:  Text(
+              translation(context).login,
+              style: const TextStyle(
                 fontFamily: 'Poppins',
                 fontSize: 40,
                 color: Color(0xffffffff),
               ),
+              textAlign: TextAlign.center,
             ),
           ),
-          
         ],
       ),
     );
@@ -243,177 +263,101 @@ const String _svg_anq0p =
     '<svg viewBox="370.0 18.5 17.0 10.7" ><path transform="translate(370.0, 18.48)" d="M 16.00020027160645 10.6668004989624 L 15.00029945373535 10.6668004989624 C 14.44894981384277 10.6668004989624 14.00039958953857 10.2182502746582 14.00039958953857 9.666900634765625 L 14.00039958953857 0.9998999834060669 C 14.00039958953857 0.4485500156879425 14.44894981384277 0 15.00029945373535 0 L 16.00020027160645 0 C 16.55154991149902 0 17.00010108947754 0.4485500156879425 17.00010108947754 0.9998999834060669 L 17.00010108947754 9.666900634765625 C 17.00010108947754 10.2182502746582 16.55154991149902 10.6668004989624 16.00020027160645 10.6668004989624 Z M 11.33369922637939 10.6668004989624 L 10.33290004730225 10.6668004989624 C 9.781549453735352 10.6668004989624 9.332999229431152 10.2182502746582 9.332999229431152 9.666900634765625 L 9.332999229431152 3.333600044250488 C 9.332999229431152 2.782249927520752 9.781549453735352 2.333699941635132 10.33290004730225 2.333699941635132 L 11.33369922637939 2.333699941635132 C 11.88504981994629 2.333699941635132 12.33360004425049 2.782249927520752 12.33360004425049 3.333600044250488 L 12.33360004425049 9.666900634765625 C 12.33360004425049 10.2182502746582 11.88504981994629 10.6668004989624 11.33369922637939 10.6668004989624 Z M 6.666300296783447 10.6668004989624 L 5.666399955749512 10.6668004989624 C 5.115049839019775 10.6668004989624 4.666500091552734 10.2182502746582 4.666500091552734 9.666900634765625 L 4.666500091552734 5.66640043258667 C 4.666500091552734 5.115050315856934 5.115049839019775 4.666500091552734 5.666399955749512 4.666500091552734 L 6.666300296783447 4.666500091552734 C 7.218140125274658 4.666500091552734 7.667099952697754 5.115050315856934 7.667099952697754 5.66640043258667 L 7.667099952697754 9.666900634765625 C 7.667099952697754 10.2182502746582 7.218140125274658 10.6668004989624 6.666300296783447 10.6668004989624 Z M 1.999799966812134 10.6668004989624 L 0.9998999834060669 10.6668004989624 C 0.4485500156879425 10.6668004989624 0 10.2182502746582 0 9.666900634765625 L 0 7.667100429534912 C 0 7.115260124206543 0.4485500156879425 6.666300296783447 0.9998999834060669 6.666300296783447 L 1.999799966812134 6.666300296783447 C 2.55115008354187 6.666300296783447 2.99970006942749 7.115260124206543 2.99970006942749 7.667100429534912 L 2.99970006942749 9.666900634765625 C 2.99970006942749 10.2182502746582 2.55115008354187 10.6668004989624 1.999799966812134 10.6668004989624 Z" fill="#ffffff" stroke="none" stroke-width="1" stroke-miterlimit="10" stroke-linecap="butt" /></svg>';
 
 
-String? validateEmail(String? value) {
-    String pattern =
-        r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$'; // email validation regex pattern
-    RegExp regex = RegExp(pattern);
-     if (value!.isEmpty) {
-      return "Email is Required";
-     }
-    if (!regex.hasMatch(usernameController.text)) {
-      return 'Please enter a valid email address';
-    } else {
-      return null;
-    }
-  }
+// String? validateEmail(String? value) {
+//     String pattern =
+//         r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$'; // email validation regex pattern
+//     RegExp regex = RegExp(pattern);
+//      if (value!.isEmpty) {
+//       return "Email is Required";
+//      }
+//     if (!regex.hasMatch(usernameController.text)) {
+//       return 'Please enter a valid email address';
+//     } else {
+//       return null;
+//     }
+//   }
 
 
-  String? validatePassword(String? value) {
-    String pattern =
-       r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%\^&\*])[A-Za-z\d!@#\$%\^&\*]{8,}$'; // passowrd validation regex pattern
-    RegExp regex = RegExp(pattern);
-     if (value!.length == 0) {
-      return "Password is Required";
-      if(code==401){
-        return "Password is not correct.";
-      }
-       else {
-      return null;
-    }
-    }
-     return null;
-  }
- Widget passowrdForm(){
+  // String? validatePassword(String? value) {
+  //   String pattern =
+  //      r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%\^&\*])[A-Za-z\d!@#\$%\^&\*]{8,}$'; // passowrd validation regex pattern
+  //   RegExp regex = RegExp(pattern);
+  //    if (value!.length == 0) {
+  //     return "Password is Required";
+  //     if(code==401){
+  //       return "Password is not correct.";
+  //     }
+  //      else {
+  //     return null;
+  //   }
+  //   }
+  // }
+  
+
+
+  //TextField Box Desgin
+ Widget BoxForm(context,mid,controller,String label,IconData iconName){
   return Form(
-    key: _key,
+   // key: _key,
     autovalidateMode: AutovalidateMode.onUserInteraction,
     child:  Stack(
         children: <Widget>[
           Pinned.fromPins(
             Pin(start: 28.0, end: 18.0),
-            Pin(size: 90.0, middle: 0.4200),
+            Pin(size: 90.0, middle: mid),
             child: Stack(
               children: <Widget>[
                 Padding(
-                padding: const EdgeInsets.fromLTRB(0.0, 24.0, 0.0, 0.0),child:
+                padding: const EdgeInsets.fromLTRB(0.0, 30.0, 0.0, 0.0),child:
                 TextFormField( 
-                 validator: (value)=>validateEmail(value),
-                controller: usernameController,
-                 onSaved:(newValue) {
-                 _email=newValue!;
-                },
+                // validator: (value)=>validateEmail(value),
+                controller: controller,
+                //  onSaved:(newValue) {
+                //  _email=newValue!;
+                // },
                 decoration: InputDecoration(
+                  prefixIcon:
+                        Icon(iconName,color: Color(0xff6f407d),size: 25,),
+                
                 filled: true,
-               fillColor: Colors.white,
-               contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-               border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(5),
-             borderSide: BorderSide(
-             width: 1,
-             color: Colors.grey.shade300,
-             ),
-            ),
-           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(5),
-          borderSide: BorderSide(
-        width: 1,
-        color: Colors.grey.shade300,
-         ),
-        ),
+                fillColor: Colors.white,
+               contentPadding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+               
+                enabledBorder: OutlineInputBorder(
+               borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(
+                   width: 1,
+                color: Color(0xff6f407d),
+                ),
+                ),
+                
        focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(5),
-      borderSide: const BorderSide(
+      borderRadius: BorderRadius.circular(10),
+      borderSide:  BorderSide(
         width: 1,
-        color: Color(0xff6f407d),
+        color:Colors.purple[700]!,
       ),
     ),
   )
 ),
                 ),
 
-                //icon
-               
-                //vertical line
-                // Pinned.fromPins(
-                //   Pin(size: 1.0, start: 51.5),
-                //   Pin(size: 65.0, end: 0.5),
-                //   child: SvgPicture.string(
-                //     _svg_mvbn2e,
-                //     allowDrawingOutsideViewBox: true,
-                //     fit: BoxFit.fill,
-                //   ),
-                // ),
-                
-                Pinned.fromPins(
-                  Pin(size: 144.0, start: 3.0),
-                  Pin(size: 21.0, start: 0.0),
-                  child: const Text(
-                    'Email or Username',
-                    style: TextStyle(
+                //TextFiled Label
+               Padding(padding:const EdgeInsets.only(right: 10,top: 5),
+                child: 
+                Text( label=='Email' ?
+                    translation(context).email : 
+                     translation(context).password,
+                     textAlign:TextAlign.left,
+                     style:const TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 15,
                       color: Color(0xff6f407d),
                     ),
-                  ),
-                ),
-              ],
+                  ), 
             ),
-          ),
-          Form(
-            key: _key2,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            child: 
-        Pinned.fromPins(
-            Pin(start: 26.0, end: 20.0),
-            Pin(size: 90.0, middle: 0.595),
-            child: Stack(
-              children: <Widget>[
-                 Padding(
-                padding: const EdgeInsets.fromLTRB(0.0, 24.0, 0.0, 0.0),child:
-                TextFormField(
-                // key:_formKey,
-                 keyboardType: TextInputType.visiblePassword,
-                 obscureText: true,
-                maxLength: 20,
-                validator: (value) => validatePassword(value!),
-                controller: passwordController,
-                onSaved:(newValue) {
-                 _password=newValue!;
-                },
-                decoration: InputDecoration(
-                filled: true,
-               fillColor: Colors.white,
-               contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-               border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(5),
-             borderSide: BorderSide(
-             width: 1,
-             color: Colors.grey.shade300,
-             ),
+            
+            ],
             ),
-           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(5),
-          borderSide: BorderSide(
-        width: 1,
-        color: Colors.grey.shade300,
-         ),
-        ),
-       focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(5),
-      borderSide: const BorderSide(
-        width: 1,
-        color: Color(0xff6f407d),
-      ),
-    ),
-  )
-),),
-              
-
-                //passowrd
-               
-                Pinned.fromPins(
-                  Pin(size: 76.0, start: 3.0),
-                  Pin(size: 21.0, start: 0.0),
-                  child: const Text(
-                    'Password',
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 15,
-                      color: Color(0xff6f407d),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-  ))]),);
+  )]));
  }

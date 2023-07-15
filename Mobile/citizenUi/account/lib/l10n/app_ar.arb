@@ -1,11 +1,11 @@
 {
-    "login":"دخول",
+    "login":"تسجيل الدخول",
     "email":"البريد الإلكتروني أو اسم المستخدم",
     "password":"كلمة المرور",
     "confirmPassword":"تأكيد كلمة المرور",
     "username":"اسم المستخدم",
     "forgot_password":"هل نسيت كلمة المرور؟",
-    "dont_have_acc":"ليس لديك حساب؟",
+    "dont_have_acc":"ليس لديك حساب؟ أنشىْ حساب",
     "register":"تسجيل",
     "idType":"نوع الوثيقة",
     "idNumber":"رقم الهوية",
@@ -21,6 +21,13 @@
     "areYourJordanian":"هل أنت أردني",
     "yes":"نعم",
     "no":"لا",
-    "haveAccount":"هل لديك حساب؟"
+    "haveAccount":"هل لديك حساب؟",
+    "rememberMe":"ذكرني",
+    "email_or_username":"بريد الإلكتروني/أسم المستخدم",
+    "registrationNumber":"رقم القيد",
+    "selectHere":"اختر هنا",
+    "rememberMe": "ذكرني"
+
+    
     
     }

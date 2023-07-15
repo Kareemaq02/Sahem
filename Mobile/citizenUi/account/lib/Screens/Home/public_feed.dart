@@ -1,19 +1,114 @@
 // ignore_for_file: depend_on_referenced_packages, constant_identifier_names, unused_element
 
-import 'package:account/Screens/profile.dart';
+import 'dart:convert';
+
+import 'package:account/Screens/Profile/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
-import 'complaints1.dart';
-import 'complaints_list.dart';
+import 'package:geolocator/geolocator.dart';
+import '../../API/login_request.dart';
+import '../../API/view_complaint_request.dart';
+import '../File complaint/complaints1.dart';
+import '../View complaints/complaints_list.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../Map/map.dart'; 
+import 'package:http/http.dart' as http;
+import '../File complaint/complaints2.dart';
+class XDPublicFeed1 extends StatefulWidget {
+  const XDPublicFeed1({Key? key}) : super(key: key);
 
-import 'map.dart';
+  @override
+  _XDPublicFeed1State createState() => _XDPublicFeed1State();
+}
 
-class XDPublicFeed1 extends StatelessWidget {
-  const XDPublicFeed1({
-    Key? key,
-  }) : super(key: key);
+class _XDPublicFeed1State extends State<XDPublicFeed1> {
+  
+  late List<ComplaintModel> complaints;
+
+  @override
+  void initState() {
+   _getCurrentPosition();
+   super.initState();
+  
+   // fetchComplaints(_currentPosition!.latitude,_currentPosition!.longitude);
+    
+   
+  }
+
+Future<List<dynamic>> fetchComplaints(double latitude, double longitude) async {
+  final response = await http.post(
+    Uri.parse('https://10.0.2.2:5000/api/complaints/location'),
+    headers: {
+      'Authorization': 'Bearer $token2',
+      'Content-Type': 'application/json',
+    },
+    body: jsonEncode({
+      'decLat': latitude,
+      'decLng': longitude,
+    }),
+  );
+
+  if (response.statusCode == 200) {
+    return jsonDecode(response.body.toString());
+  } else {
+    throw Exception('Failed to fetch complaints');
+  }
+}
+
+
+
+
+  String? currentAddress=" ";
+  Position? _currentPosition;
+
+  Future<bool> _handleLocationPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location services are disabled. Please enable the services')));
+      return false;
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Location permissions are denied')));
+        return false;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location permissions are permanently denied, we cannot request permissions.')));
+      return false;
+    }
+    return true;
+  }
+
+  Future<void> _getCurrentPosition() async {
+
+   
+    final hasPermission = await _handleLocationPermission();
+
+    if (!hasPermission) return;
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) {
+      setState(() => _currentPosition = position);
+     // _getAddressFromLatLng(_currentPosition!);
+    }).catchError((e) {
+      debugPrint(e);
+    });
+    
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
