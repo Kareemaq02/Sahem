@@ -4,6 +4,8 @@ using System.IdentityModel.Tokens.Jwt;
 using Domain.ClientDTOs.Task;
 using Application.Queries.Tasks;
 using Application.Queries.Users;
+using Microsoft.AspNetCore.Authorization;
+using Application.Queries.Complaints;
 
 namespace API.Controllers
 {
@@ -39,7 +41,7 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new GetTaskTypesListQuery()));
         }
 
-        [HttpPost("{id}")] // .../api/tasks
+        [HttpPost("{id}")] // .../api/tasks/id
         public async Task<IActionResult> InsertTaskStats([FromForm] TaskDTO taskDTO, int id) // Create task for selected complaint
         {
             string authHeader = Request.Headers["Authorization"];
@@ -50,5 +52,33 @@ namespace API.Controllers
 
             return HandleResult(await Mediator.Send(new InsertTaskCommand(taskDTO, id)));
         }
+        [HttpDelete("delete/{id}")] // .../api/tasks/delete/id
+        public async Task<IActionResult> DeleteTasks(int id)
+        {
+            return HandleResult(await Mediator.Send(new DeleteTaskCommand(id)));
+        }
+        [Authorize]
+        [HttpPut("update/{id}")]
+        public async Task<IActionResult> UpdateTask(int id)
+        {
+            return HandleResult(await Mediator.Send(new UpdateTaskCommand(id)));
+        }
+
+        [Authorize]
+        [HttpGet("worker/{id}")]   //api/tasks/worker/id
+        public async Task<IActionResult> GetWorkerTasks(int id)
+        {
+            return HandleResult(await Mediator.Send(new GetTasksByWorkerIdQuery(id)));
+        
+        }
+
+        [Authorize]
+        [HttpGet("details/{id}")]   //api/tasks/details/id
+        public async Task<IActionResult> GetTaskDetails(int id)
+        {
+            return HandleResult(await Mediator.Send(new GetTaskDetailsByIdQuery(id)));
+
+        }
+
     }
 }
