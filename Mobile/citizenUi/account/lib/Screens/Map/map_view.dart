@@ -1,9 +1,10 @@
 import 'package:account/API/map_complaints.dart';
 import 'package:account/Repository/mapLinks.dart';
 import 'package:account/Screens/Map/makerMap.dart';
+import 'package:account/Widgets/bottom_navBat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as map2;
 import 'package:flutter_map/plugin_api.dart' as a;
 import 'package:flutter_map/src/layer/marker_layer.dart' as map;
 import 'package:flutter_map/src/layer/marker_layer.dart';
@@ -20,8 +21,8 @@ class FullMapState extends State<FullMap> with TickerProviderStateMixin {
 
 getUsersComplaint _complaintApi = getUsersComplaint();
  List<ComplaintModel2> _complaints = [];
-
-MapboxMap? mapboxMap;
+bool showCards = false; 
+map2.MapboxMap? mapboxMap;
 final pageController = PageController();
 int selectedIndex = 0;
 var currentLocation = MapConstants.myLocation;
@@ -41,8 +42,12 @@ void _fetchComplaints() async {
 }
 
 
-  _onMapCreated(MapboxMap mapboxMap) {
+  _onMapCreated(map2.MapboxMap mapboxMap) {
     this.mapboxMap = mapboxMap;
+
+     setState(() {
+      showCards = false; 
+    });
   }
 
 late final MapController mapController;
@@ -50,14 +55,18 @@ late final MapController mapController;
   @override
   void initState() {
     super.initState();
+      mapController = MapController();
      _fetchComplaints();
-    mapController = MapController();
+  
   }
-  @override
+  
+
+
    @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title:Text('b'),),
+      appBar: AppBar(title:Text('View Compalints'),centerTitle: true,backgroundColor: (Color(0xff223e6d)),
+                                     ),
       
       body: Stack(
         children: [
@@ -66,9 +75,10 @@ late final MapController mapController;
             options: a.MapOptions(
               minZoom: 5,
               maxZoom: 18,
-              zoom: 13,
+              zoom: 11,
               center: currentLocation,
-            ),
+            ), 
+              
           
               layers: [
               TileLayerOptions(
@@ -96,6 +106,10 @@ late final MapController mapController;
                               curve: Curves.easeInOut,
                             );
                             selectedIndex = i;
+                            currentLocation = mapMarkers3[i].location ??
+                                MapConstants.myLocation;
+                                
+                            _animatedMapMove(currentLocation, 11.5);
                             setState(() {});
                           },
                           child: AnimatedScale(
@@ -116,6 +130,7 @@ late final MapController mapController;
             
           ),
         ],
+        
        
       ),
 
@@ -123,20 +138,22 @@ late final MapController mapController;
        Positioned(
             left: 0,
             right: 0,
-            bottom: 2,
+            bottom: 120,
             height: MediaQuery.of(context).size.height * 0.3,
             child: PageView.builder(
               controller: pageController,
               onPageChanged: (value) {
                selectedIndex = value;
-               currentLocation = LatLng(
-  _complaints[value].decLat ?? MapConstants.myLocation.latitude,
-  _complaints[value].decLng ?? MapConstants.myLocation.longitude,
-);
-               _animatedMapMove(LatLng(
-  _complaints[value].decLat ?? MapConstants.myLocation.latitude,
-  _complaints[value].decLng ?? MapConstants.myLocation.longitude,
-), 11.5);
+              mapMarkers3[value].location ?? MapConstants.myLocation;
+                _animatedMapMove(currentLocation, 11.5);
+//                currentLocation = LatLng(
+//   MapMarker3[] ?? MapConstants.myLocation.latitude,
+//   _complaints[value].decLng ?? MapConstants.myLocation.longitude,
+// );
+//                _animatedMapMove(LatLng(
+//   _complaints[value].decLat ?? MapConstants.myLocation.latitude,
+//   _complaints[value].decLng ?? MapConstants.myLocation.longitude,
+// ), 11.5);
                 setState(() {});
               },
               itemCount: _complaints.length,
@@ -199,14 +216,15 @@ late final MapController mapController;
                 );
               },
             ),
-          )]));
+          ),
+          BottomNavBar(),
+          ]));
 
 
                     
 
                         
-  }
-  void _animatedMapMove(LatLng destLocation, double destZoom) {
+  }void _animatedMapMove(LatLng destLocation, double destZoom) {
     // Create some tweens. These serve to split up the transition from one location to another.
     // In our case, we want to split the transition be<tween> our current map center and the destination.
     final latTween = Tween<double>(
@@ -241,8 +259,9 @@ late final MapController mapController;
     controller.forward();
   }
 
+   
+  
 }
-
 
 
          
