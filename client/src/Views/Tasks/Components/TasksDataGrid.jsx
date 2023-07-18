@@ -43,7 +43,7 @@ const TasksDataGrid = ({ EvaluateTask }) => {
         <IconButton
           variant="contained"
           color="primary"
-          onClick={() => EvaluateTask(params.row.id)}
+          onClick={() => EvaluateTask(params.row.id, params.row.admin)}
         >
           <CheckCircleOutline />
         </IconButton>

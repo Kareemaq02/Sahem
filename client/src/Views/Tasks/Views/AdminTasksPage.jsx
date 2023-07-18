@@ -41,20 +41,18 @@ const radioOptions = ["Failed", "Incomplete", "Completed"];
 const AdminTasksPage = () => {
   const methods = useForm();
   const theme = useTheme();
-  const [taskId, setTaskId] = useState(0);
-  const [task, setTask] = useState(testPhotos);
+  const [taskPhotos, setTaskPhotos] = useState(testPhotos);
+  const [taskData, setTaskData] = useState({
+    taskId: 0,
+    taskStatus: null,
+    members: [],
+    type: null,
+    date: null,
+  });
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-
-  useEffect(() => {
-    const setTaskDetails = async () => {
-      var response = await GetTaskDetailsApi();
-      // setTask(response.data);
-    };
-    setTaskDetails();
-  }, []);
 
   const onSubmit = (data) => {
     if (EvaluateTaskApi(data)) {
@@ -74,8 +72,10 @@ const AdminTasksPage = () => {
     <div>
       <Typography variant="h1">Evaluate task</Typography>
       <TasksDataGrid
-        EvaluateTask={(params) => {
-          setTaskId(params);
+        EvaluateTask={async (id, admin) => {
+          const data = await GetTaskDetailsApi(id);
+          setTaskPhotos(data.photos);
+          setTaskData({ taskId: id, ...data, admin: admin, photos: null });
           setDrawerOpen(true);
         }}
       />
@@ -90,12 +90,12 @@ const AdminTasksPage = () => {
             <form onSubmit={methods.handleSubmit(onSubmit)}>
               <Stack spacing={2} width="32.5vw">
                 <MediaGallery
-                  items={task}
+                  items={taskPhotos}
                   height="25rem"
                   width="auto"
                   borderRadius="1rem"
                 />
-                <TaskDetails theme={theme} taskId={taskId} />
+                <TaskDetails theme={theme} taskData={taskData} />
                 <FormRatingGroup name="rating" />
                 <FormTextFieldMulti label="Comment" name="comment" />
                 <FormRowRadioGroup
