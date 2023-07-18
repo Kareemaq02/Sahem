@@ -1,8 +1,11 @@
+import { useEffect, useState } from "react";
+
 import { Box, IconButton, Avatar, Chip, useTheme } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { CheckCircleOutline } from "@mui/icons-material/";
 
-import { taskMockData } from "../Service/TestData";
+// Project Imports
+import { GetTasksApi } from "../Service/GetTasksApi";
 
 function StatusColor(status) {
   switch (status) {
@@ -23,6 +26,15 @@ function StatusColor(status) {
 
 const TasksDataGrid = ({ EvaluateTask }) => {
   const theme = useTheme();
+  const [tasks, setTasks] = useState([]);
+  useEffect(() => {
+    const setTasksView = async () => {
+      const response = await GetTasksApi();
+      setTasks(response);
+    };
+    setTasksView();
+  }, []);
+
   const columns = [
     {
       field: "button",
@@ -79,7 +91,7 @@ const TasksDataGrid = ({ EvaluateTask }) => {
   return (
     <Box margin="2rem 0 0 0" height="75vh">
       <DataGrid
-        rows={taskMockData}
+        rows={tasks}
         columns={columns}
         components={{ Toolbar: GridToolbar }}
         density="compact"

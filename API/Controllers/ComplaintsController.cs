@@ -23,7 +23,7 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new GetComplaintByIdQuery(id)));
         }
 
-        [HttpGet("location")] // .../api/complaints/location
+        [HttpPost("location")] // .../api/complaints/location
         public async Task<IActionResult> GetComplaintsByLocation(LatLng latLng)
         {
             return HandleResult(await Mediator.Send(new GetComplaintsBtLocationQuery(latLng)));
