@@ -26,7 +26,6 @@ const MuiAvatarGroup = styled(AvatarGroup)(({ theme }) => ({
 }));
 
 const TaskDetails = ({ theme, taskData }) => {
-  console.log(taskData);
   return (
     <Box>
       <Stack spacing={2}>

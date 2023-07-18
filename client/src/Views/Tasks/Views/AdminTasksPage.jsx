@@ -55,7 +55,8 @@ const AdminTasksPage = () => {
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
   const onSubmit = (data) => {
-    if (EvaluateTaskApi(data)) {
+    console.log(data, taskData.taskId);
+    if (EvaluateTaskApi(data, taskData.taskId)) {
       setSnackbarMessage("Task evaluated successfully!");
       setSnackbarOpen(true);
     } else {
