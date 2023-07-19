@@ -2,6 +2,8 @@
 
 import 'dart:convert';
 
+
+import 'package:account/API/get_complaints_ByLocation.dart';
 import 'package:account/Screens/Profile/profile.dart';
 import 'package:account/Widgets/likeButton.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +16,7 @@ import '../File complaint/complaints1.dart';
 import '../View complaints/complaints_list.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../Map/map.dart'; 
 import 'package:http/http.dart' as http;
 
 class XDPublicFeed1 extends StatefulWidget {
@@ -505,7 +508,7 @@ class _XDPublicFeed1State extends State<XDPublicFeed1> {
                           links: [
                             PageLinkInfo(
                               duration: 0,
-                              pageBuilder: () => const FullMap(),
+                              pageBuilder: () => const XDMap_(),
                             ),
                           ],
                           child: SvgPicture.string(
