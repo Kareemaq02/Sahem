@@ -2,11 +2,6 @@
 
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
-import 'login_request.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-
 import 'login_request.dart';
 
 class ComplaintModel {
@@ -70,10 +65,6 @@ class getUserComplaint {
     var baseUrl = "https://10.0.2.2:5000/api/complaints/$complaintId";
     print(complaintId);
     http.Response response = await http.get(Uri.parse(baseUrl), headers: {'Authorization': 'Bearer $token2'});
-    print(response.body);
-    print(response.statusCode);
-    print(response.reasonPhrase);
-    print(response.headers);
 
     if (response.statusCode == 200) {
       var jsonData = json.decode(response.body) as Map<String, dynamic>;
