@@ -16,17 +16,11 @@ class _ComplaintViewState extends State<ComplaintDetailsScreen> {
 
   int selectedIndex = 0;
   
- 
-
-
-
   @override
   Widget build(BuildContext context) {
     ComplaintModel complaint = widget.complaints.first;
-    
-
-
- List<String> getImageUrls() {
+   
+  List<String> getImageUrls() {
   List<String> imageUrls = [];
   for (var media in complaint.lstMedia) {
     imageUrls.add(media); // Add the media (URL) to the list
