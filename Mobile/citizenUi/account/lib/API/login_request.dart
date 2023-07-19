@@ -14,7 +14,7 @@ import '../Screens/Home/public_feed.dart';
 
 
 
-late String token2;
+ String token2="";
 
 class UserLogin{
   

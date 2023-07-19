@@ -5,8 +5,10 @@ import 'dart:convert';
 
 import 'package:account/API/get_complaints_ByLocation.dart';
 import 'package:account/Screens/Profile/profile.dart';
+import 'package:account/Widgets/likeButton.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import '../../API/login_request.dart';
 import '../../API/view_complaint_request.dart';
@@ -27,6 +29,7 @@ class XDPublicFeed1 extends StatefulWidget {
 class _XDPublicFeed1State extends State<XDPublicFeed1> {
   
   late List<ComplaintModel> complaints;
+  late var Address;
 
   @override
   void initState() {
@@ -112,6 +115,21 @@ class _XDPublicFeed1State extends State<XDPublicFeed1> {
     
   }
 
+   Future<void> _getAddressFromLatLng(double latitude, double longitude) async {
+    await placemarkFromCoordinates(
+            _currentPosition!.latitude, _currentPosition!.longitude)
+        .then((List<Placemark> placemarks) {
+      Placemark place = placemarks[0];
+      setState(() {
+        currentAddress =
+            '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}, ${place.postalCode}';
+      });
+    }).catchError((e) {
+      debugPrint(e);
+    });
+  }
+ 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -185,30 +203,46 @@ class _XDPublicFeed1State extends State<XDPublicFeed1> {
             ),
           ),
          
-
          //complaint Post
-        FutureBuilder<List<dynamic>>(
-  future: getComplaintsByLocation(31.961899172907753, 35.86508730906701),
-  builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
-    if (snapshot.connectionState == ConnectionState.done) {
-      if (snapshot.hasData) {
-        var data = snapshot.data;
-        return ListView.builder(
-          itemCount: data!.length,
-          itemBuilder: (BuildContext context, int index) {
-            var item = data[index].toString();
-            print(item);
-            return post1(); // Render the widget for each item in the list
-          },
-        ); // Render the widget if the API call is successful
-      } else {
-        return Text('No complaints found'); // Render an error message if the API call returns an empty list
-      }
-    } else {
-      return CircularProgressIndicator(); // Show a progress indicator while the API call is in progress
-    }
-  },
-),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 65.0,left: 10,bottom: 140),
+            child: FutureBuilder<List<dynamic>>(
+            future: getComplaintsByLocation(31.961899172907753, 35.86508730906701),
+            builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasData) {
+            var data = snapshot.data;
+            return ListView.builder(
+              itemCount: data!.length,
+              itemBuilder: (BuildContext context, int index) {
+             
+             
+                return post1(context,
+                intComplaintId:data![index]['intComplaintId'].toString(),
+                strStatus:data![index]['strStatus'].toString(),
+                strUserName:data![index]['strUserName'].toString(),
+                dtmDateCreated: data![index]['dtmDateCreated'].toString(),
+                 intVotersCount: data![index]['intVotersCount'],
+                 strComplaintTypeEn: data![index]['strComplaintTypeEn'].toString(),
+                 strComment: data![index]['StrComment'].toString(),
+                address: "amman",
+                
+                
+                );
+              
+              },
+            ); // Render the widget if the API call is successful
+                } else {
+            return const Text('No complaints found'); // Render an error message if the API call returns an empty list
+                }
+              } else {
+                return const CircularProgressIndicator(); // Show a progress indicator while the API call is in progress
+              }
+            },
+          ),
+          ),
+        ),
          
 
 
@@ -409,7 +443,7 @@ class _XDPublicFeed1State extends State<XDPublicFeed1> {
                         InkWell(
                       onTap: () {
                           
-                          Navigator.push(context,MaterialPageRoute(builder: (context) =>  XDComplaints1()));
+                          Navigator.push(context,MaterialPageRoute(builder: (context) =>  const XDComplaints1()));
                       },             
                       child: Stack(
                         children: <Widget>[
@@ -563,184 +597,244 @@ const String _svg_p8s453 =
 const String _svg_j1pel9 =
     '<svg viewBox="0.7 8.0 29.6 25.2" ><path transform="translate(-1.27, 5.0)" d="M 13.85300064086914 28.1876220703125 L 13.85300064086914 19.29787445068359 L 19.77949523925781 19.29787445068359 L 19.77949523925781 28.1876220703125 L 27.1876220703125 28.1876220703125 L 27.1876220703125 16.33462524414062 L 31.63249969482422 16.33462524414062 L 16.81625175476074 2.999999523162842 L 1.999999523162842 16.33462524414062 L 6.444873809814453 16.33462524414062 L 6.444873809814453 28.1876220703125 L 13.85300064086914 28.1876220703125 Z" fill="#6f407d" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
 
-Widget post1() {
-  return Padding(
-    padding: EdgeInsets.symmetric(horizontal: 18.0, vertical: 100.0),
-    child: Column(
-      children: <Widget>[
-        // Card
-        Padding(
-          padding: const EdgeInsets.all(50.0),
-          child: Container(
+Widget post1(BuildContext context,  
+{
+required String dtmDateCreated,
+required String strComplaintTypeEn,
+required String strComment,
+required int intVotersCount,
+required String strStatus,
+required String strUserName,
+required var address,
+required var intComplaintId,
+
+
+
+}) {
+  return
+   Padding(
+    padding: const EdgeInsets.only(top:20.0,right:10),
+    child: Container(
             decoration: BoxDecoration(
               color: const Color(0xffffffff),
               borderRadius: BorderRadius.circular(10.0),
               boxShadow: const [
                 BoxShadow(
-                  color: Colors.black,
+                  color: Color.fromARGB(255, 108, 107, 107),
                   offset: Offset(0, 0),
-                  blurRadius: 2,
+                  blurRadius: 5,
                 ),
               ],
             ),
-          ),
-        ),
-
+          child:
+    
+    Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        // Card
+       
+  
         // Photo
-        Container(
-          height: 183.0,
-          decoration: const BoxDecoration(
-            color: Color(0xff6f407d),
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(10.0),
-              topRight: Radius.circular(10.0),
-            ),
-          ),
+        Stack(
+         
+          children: <Widget>[
+             Container(
+              child: Image.asset('assets/icons/pothole.jpg',fit:BoxFit.fill,),
+         height: 183.0,
+         decoration: const BoxDecoration(
+           color: Color(0xff6f407d),
+           borderRadius: BorderRadius.only(
+             topLeft: Radius.circular(10.0),
+             topRight: Radius.circular(10.0),
+           ),
+         ),
         ),
-
-        // Data
-        Padding(
-          padding: EdgeInsets.only(left: 14.0, right: 10.3, bottom: 5.0),
-          child: Stack(
-            children: <Widget>[
-              Text(
-                'ruba',
-                style: TextStyle(
-                  fontFamily: 'Euclid Circular A',
-                  fontSize: 11,
-                  color: Color(0xff6f407d),
-                  fontWeight: FontWeight.w700,
-                ),
-                softWrap: false,
-              ),
-
-              Align(
-                alignment: Alignment.topLeft,
-                child: SizedBox(
-                  width: 124.0,
-                  height: 10.0,
-                  child: Text(
-                    'Taj LifeStyle Center, Amman 11183',
-                    style: TextStyle(
-                      fontFamily: 'Euclid Circular A',
-                      fontSize: 8,
-                      color: Color(0xff92a5c6),
-                      fontWeight: FontWeight.w300,
-                    ),
-                    softWrap: false,
+            // StatusBox
+    MediaQuery(
+    data: MediaQuery.of(context), child:
+  
+     Padding(
+     padding: const EdgeInsets.all(8.0),
+     child: Container(
+      height: 15,
+      width: 50,
+                
+                  decoration: BoxDecoration(
+                    color: const Color(0xffffffff),
+                    borderRadius: BorderRadius.circular(10.0),
                   ),
+               child:
+            
+            //status
+                  Text(
+                  
+                  strStatus,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontFamily: 'Euclid Circular A',
+                    fontSize: 12,
+                    color: Color(0xff6f407d),
+                  ),
+                  softWrap: false,
                 ),
-              ),
-
-              // Datetime
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Stack(
-                  children: <Widget>[
-                    Text(
-                      '20/Jan/2023',
-                      style: TextStyle(
-                        fontFamily: 'Euclid Circular A',
-                        fontSize: 7,
-                        color: Color(0xff92a5c6),
-                        fontWeight: FontWeight.w300,
-                      ),
-                      softWrap: false,
                     ),
-
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: SizedBox(
-                        width: 25.0,
-                        height: 8.0,
-                        child: Text(
-                          '12:00 pm',
-                          style: TextStyle(
-                            fontFamily: 'Euclid Circular A',
-                            fontSize: 6,
-                            color: Color(0xff92a5c6),
-                            fontWeight: FontWeight.w300,
-                          ),
-                          softWrap: false,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+     ),
+          ),],
+        ),
+        
+  
+        // Data
+    const SizedBox(height: 10,),
+        Row(
+          children: [
+            //username
+             Text(
+              strUserName,
+              style:const  TextStyle(
+                fontFamily: 'Euclid Circular A',
+                fontSize: 13,
+                color: Color(0xff6f407d),
+                fontWeight: FontWeight.w700,
               ),
-
-              // Vote count
-              Align(
+              softWrap: false,
+            ),
+          const Spacer(),
+            Align(
                 alignment: Alignment.topRight,
                 child: SizedBox(
-                  width: 26.0,
-                  height: 44.0,
-                  child: Stack(
+                  width: 75.0,
+                  height: 65.0,
+                  child: Column(
                     children: <Widget>[
-                      Text(
-                        '754',
-                        style: TextStyle(
-                          fontFamily: 'Euclid Circular A',
-                          fontSize: 11,
-                          color: Color(0xff6f407d),
-                          fontWeight: FontWeight.w500,
-                        ),
-                        softWrap: false,
-                      ),
+                         // VoteIcon
 
-                      // VoteIcon
-                      SvgPicture.string(
-                        _svg_u7gglt,
-                        allowDrawingOutsideViewBox: true,
-                        fit: BoxFit.fill,
-                      ),
+                        like(intVotersCount,intComplaintId),
+                     
+                    
                     ],
                   ),
                 ),
               ),
-
-              // Description
-              Padding(
-                padding: EdgeInsets.only(left: 2.0, right: 41.7),
+          ],
+        ),
+  
+  
+         // Description
+               Padding(
+                padding:const  EdgeInsets.only(left: 2.0, right: 41.7,bottom: 30),
                 child: Text(
-                  'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500.',
-                  style: TextStyle(
+                strComplaintTypeEn + '\n' +
+             (strComment=="" ? strComment : 'Uneven road surface due to pothole - hazardous conditions!'),
+
+                  style: const TextStyle(
                     fontFamily: 'Poppins',
                     fontSize: 15,
                     color: Color(0xff000000),
                   ),
                 ),
               ),
-            ],
-          ),
-        ),
-
-        // Status box
-        Padding(
-          padding: EdgeInsets.only(left: 14.0, top: 15.0),
-          child: Stack(
-            children: <Widget>[
-              // StatusBox
-              Container(
-                decoration: BoxDecoration(
-                  color: const Color(0xffffffff),
-                  borderRadius: BorderRadius.circular(10.0),
+          SizedBox(height: 1,),
+  
+          Padding(
+            padding: const EdgeInsets.only(bottom: 15.0,left: 5),
+            child: Row(children: [
+            // address
+              Align(
+                  alignment: Alignment.bottomLeft,
+                  child: SizedBox(
+                    width: 124.0,
+                    height: 10.0,
+                    child: Text(
+                      address,
+                      style: TextStyle(
+                        fontFamily: 'Euclid Circular A',
+                        fontSize: 10,
+                        color: Color(0xff92a5c6),
+                        fontWeight: FontWeight.bold,
+                      ),
+                      softWrap: false,
+                    ),
+                  ),
                 ),
-              ),
-
-              Text(
-                'Approved',
-                style: TextStyle(
-                  fontFamily: 'Euclid Circular A',
-                  fontSize: 9,
-                  color: Color(0xff6f407d),
-                ),
-                softWrap: false,
-              ),
-            ],
-          ),
-        ),
+                   
+             SizedBox(width: 18,),
+                // date
+                 Align(
+                  alignment: Alignment.bottomRight,
+                  child: Text(
+                    dtmDateCreated.toString().substring(0,10),
+                    style: const TextStyle(
+                      fontFamily: 'Euclid Circular A',
+                      fontSize: 10,
+                      color: Color(0xff92a5c6),
+                      fontWeight: FontWeight.bold,
+                    ),
+                    softWrap: false,
+                  ),),
+              SizedBox(width: 40,),
+                //time
+                 Align(
+                        alignment: Alignment.bottomRight,
+                        child: Text(
+                           dtmDateCreated.toString().substring(11,17),
+                          style:const   TextStyle(
+                            fontFamily: 'Euclid Circular A',
+                            fontSize: 10,
+                            color: Color(0xff92a5c6),
+                             fontWeight: FontWeight.bold,
+                          ),
+                          softWrap: false,
+                        ),
+                      ),
+            
+                   ],),
+          )
+             
+  
+       
+  
+      
+  
+        //       // Vote count
+        //       Align(
+        //         alignment: Alignment.topRight,
+        //         child: SizedBox(
+        //           width: 26.0,
+        //           height: 44.0,
+        //           child: Stack(
+        //             children: <Widget>[
+        //               Text(
+        //                 '754',
+        //                 style: TextStyle(
+        //                   fontFamily: 'Euclid Circular A',
+        //                   fontSize: 11,
+        //                   color: Color(0xff6f407d),
+        //                   fontWeight: FontWeight.w500,
+        //                 ),
+        //                 softWrap: false,
+        //               ),
+  
+        //               // VoteIcon
+        //               SvgPicture.string(
+        //                 _svg_u7gglt,
+        //                 allowDrawingOutsideViewBox: true,
+        //                 fit: BoxFit.fill,
+        //               ),
+        //             ],
+        //           ),
+        //         ),
+        //       ),
+  
+             
+        //     ],
+        //   ),
+        // ),
+  
+        // // Status box
+        
       ],
+    ),
     ),
   );
 }
