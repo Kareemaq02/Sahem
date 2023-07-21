@@ -9,13 +9,13 @@ using Persistence;
 
 namespace Application.Handlers.Complaints
 {
-    public class GetComplaintsBtLocationHandler
+    public class GetComplaintsByLocationHandler
         : IRequestHandler<GetComplaintsBtLocationQuery, Result<List<ComplaintsListDTO>>>
     {
         private readonly IConfiguration _configuration;
         private readonly DataContext _context;
 
-        public GetComplaintsBtLocationHandler(IConfiguration configuration, DataContext context)
+        public GetComplaintsByLocationHandler(IConfiguration configuration, DataContext context)
         {
             _configuration = configuration;
             _context = context;
