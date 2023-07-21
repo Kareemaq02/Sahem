@@ -71,6 +71,11 @@ namespace Application.Handlers.Complaints
                 var complaintAttachments = new List<ComplaintAttachment>();
                 foreach (var media in lstMedia)
                 {
+                    if (media == null || media.fileMedia == null)
+                    {
+                        await transaction.RollbackAsync();
+                        return Result<InsertComplaintDTO>.Failure("File was not received (null).");
+                    }
                     string extension = Path.GetExtension(media.fileMedia.FileName);
                     string fileName = $"{DateTime.UtcNow.Ticks}{extension}";
                     string directory = _configuration["FilesPath"];
