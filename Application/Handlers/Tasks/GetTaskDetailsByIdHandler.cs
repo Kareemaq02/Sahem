@@ -32,7 +32,7 @@ namespace Application.Handlers.Tasks
              from ta in _context.TaskAttachments
                  select new MediaDTO
                      {
-                         strMediaRef = ta.strMediaRef,
+                         strMediaRef = File.Exists(ta.strMediaRef) ? Convert.ToBase64String(File.ReadAllBytes(ta.strMediaRef)) : string.Empty,
                           blnIsVideo = ta.blnIsVideo
                      };
 
