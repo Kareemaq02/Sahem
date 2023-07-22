@@ -1,4 +1,4 @@
-// ignore_for_file: constant_identifier_names, depend_on_referenced_packages, unnecessary_null_comparison
+// ignore_for_file: constant_identifier_names, depend_on_referenced_packages, unnecessary_null_comparison, library_private_types_in_public_api, use_key_in_widget_constructors, use_build_context_synchronously, duplicate_ignore, unused_element
 import '../../API/file_complaint_request.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
@@ -141,9 +141,7 @@ void initState() {
                   Pin(size: 40.0, end: 20.0),
                   child:
                       // Adobe XD layer: 'report' (shape)
-                      Container( child:
-                    Icon(Icons.report_gmailerrorred_outlined,color:Color(0xff2a0340)),
-                  ),
+                      const Icon(Icons.report_gmailerrorred_outlined,color:Color(0xff2a0340)),
                 ),
               ],
             ),
@@ -164,7 +162,7 @@ void initState() {
           fit: BoxFit.fill,
         ),
       ),
-      Positioned.fill(
+      const Positioned.fill(
         child: Align(
           alignment: Alignment.center,
           child: Text(
@@ -204,8 +202,8 @@ void initState() {
                 InkWell(
               
                   onTap: () {
-                    Complaint _fileComplaint=Complaint();
-                    _fileComplaint.fileComplaint(1, 1, selectedMediaFiles,"trial");
+                    Complaint fileComplaint=Complaint();
+                    fileComplaint.fileComplaint(1, 1, selectedMediaFiles,"trial");
                  
                  
                    // const XDPublicFeed1();
@@ -302,7 +300,7 @@ void initState() {
                   Pin(size: 45.0, start: 60.0),
                   child:  Text(
                     currentAddress!,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 15,
                       color: Color(0xff2a0340),
@@ -314,11 +312,9 @@ void initState() {
                   Pin(size: 50.0, end: 0.0),
                   child:
                       // Adobe XD layer: 'location' (shape)
-                      Container(child:
-                   Icon(Icons.location_on,color: Color((0xff2a0340)),
-                     
-                   ),
-                  ),
+                      const Icon(Icons.location_on,color: Color((0xff2a0340)),
+                        
+                      ),
                 ),
               ],
             ),
@@ -334,7 +330,7 @@ void initState() {
               
                
                   onTap :(){
-                Navigator.push(context,MaterialPageRoute(builder: (context) =>  XDComplaints1()));
+                Navigator.push(context,MaterialPageRoute(builder: (context) =>  const XDComplaints1()));
                   } ,
                 
               
@@ -366,7 +362,7 @@ void initState() {
         children: [
            if (selectedMediaFiles != null)
       ...selectedMediaFiles.map((mediaFile) {
-        return Container(
+        return SizedBox(
           width: 80,
           height: 80,
           child: Image.file(

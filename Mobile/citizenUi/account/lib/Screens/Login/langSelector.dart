@@ -1,8 +1,5 @@
 
-
-
-
-
+// ignore_for_file: file_names, use_build_context_synchronously, avoid_print
 
 import 'package:account/Repository/language.dart';
 import 'package:account/Repository/language_constants.dart';
@@ -30,8 +27,8 @@ return
             underline: const SizedBox(),
             onChanged: (Language? language) async {
               if (language != null) {
-                Locale _locale = await setLocale(language.languageCode);
-                MyApp.setLocale(context, _locale);
+                Locale locale = await setLocale(language.languageCode);
+                MyApp.setLocale(context, locale);
                 print(languagea);
                  languagea=language.languageCode ;
                  arr=language.name;
@@ -62,13 +59,13 @@ return
             padding: const EdgeInsets.only(left: 8.0),
             child: Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.language,
                   color: Colors.white,
                 ),
                 Text(
                   languagea=='en'? languagea :arr,
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                 ),
               ],
             ),

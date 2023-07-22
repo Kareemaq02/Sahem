@@ -1,5 +1,4 @@
 // ignore_for_file: avoid_print, unused_local_variablimport 'dart:convert';
-import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 
@@ -58,7 +57,6 @@ class Complaint {
       
 
       if (response.statusCode == 200) {
-        Map<String, dynamic> jsonResponse = jsonDecode(responseJson);
         print(responseJson);
         print('Complaint assigned successfully.');
       } else {

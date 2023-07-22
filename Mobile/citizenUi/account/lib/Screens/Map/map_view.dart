@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, depend_on_referenced_packages, implementation_imports
+
 import 'package:account/API/map_complaints.dart';
 import 'package:account/Repository/mapLinks.dart';
 import 'package:account/Screens/Map/makerMap.dart';
@@ -7,11 +9,10 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as map2;
 import 'package:flutter_map/plugin_api.dart' as a;
 import 'package:flutter_map/src/layer/marker_layer.dart' as map;
-import 'package:flutter_map/src/layer/marker_layer.dart';
 import 'package:latlong2/latlong.dart';
 
 class FullMap extends StatefulWidget {
-  const FullMap({key});
+  const FullMap({super.key});
 
   @override
   State createState() => FullMapState();
@@ -19,7 +20,7 @@ class FullMap extends StatefulWidget {
 
 class FullMapState extends State<FullMap> with TickerProviderStateMixin {
 
-getUsersComplaint _complaintApi = getUsersComplaint();
+final getUsersComplaint _complaintApi = getUsersComplaint();
  List<ComplaintModel2> _complaints = [];
 bool showCards = false; 
 map2.MapboxMap? mapboxMap;
@@ -42,13 +43,6 @@ void _fetchComplaints() async {
 }
 
 
-  _onMapCreated(map2.MapboxMap mapboxMap) {
-    this.mapboxMap = mapboxMap;
-
-     setState(() {
-      showCards = false; 
-    });
-  }
 
 late final MapController mapController;
 
@@ -65,7 +59,7 @@ late final MapController mapController;
    @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title:Text('View Compalints'),centerTitle: true,backgroundColor: (Color(0xff223e6d)),
+      appBar: AppBar(title:const Text('View Compalints'),centerTitle: true,backgroundColor: (const Color(0xff223e6d)),
                                      ),
       
       body: Stack(
@@ -177,7 +171,7 @@ late final MapController mapController;
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      item.strComplaintTypeEn ?? '',
+                                      item.strComplaintTypeEn,
                                       style: const TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold,
@@ -202,7 +196,7 @@ late final MapController mapController;
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(10),
                               child: Image.asset(
-                                'assets/street.jpg' ?? '',
+                                'assets/street.jpg',
                                 fit: BoxFit.cover,
                               ),
                             ),

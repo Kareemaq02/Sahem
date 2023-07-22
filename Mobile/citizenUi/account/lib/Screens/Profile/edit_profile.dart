@@ -32,7 +32,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           ),
           onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) => XDProfile()));
+                builder: (BuildContext context) => const XDProfile()));
           },
         ),
         actions: [
@@ -74,7 +74,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   OutlinedButton(
                     onPressed: () {
                        Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => XDProfile()));
+                      builder: (BuildContext context) => const XDProfile()));
                     },
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -102,9 +102,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         newLocation.text,
                       );
                  Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) => XDProfile()));
+                builder: (BuildContext context) => const XDProfile()));
                     },
-                    style: ElevatedButton.styleFrom(primary: Color(0xff6f407d),),
+                    style: ElevatedButton.styleFrom(primary: const Color(0xff6f407d),),
                     child: const Text(
                       "SAVE",
                       style: TextStyle(

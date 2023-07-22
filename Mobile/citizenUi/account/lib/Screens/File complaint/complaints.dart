@@ -63,7 +63,7 @@ class XDComplaints extends StatelessWidget {
               links: [
                 PageLinkInfo(
                   duration: 0,
-                  pageBuilder: () => XDComplaints1(),
+                  pageBuilder: () => const XDComplaints1(),
                 ),
               ],
               child: Stack(
@@ -207,7 +207,7 @@ class XDComplaints extends StatelessWidget {
               links: [
                 PageLinkInfo(
                   duration: 0,
-                  pageBuilder: () => XDPublicFeed1(),
+                  pageBuilder: () => const XDPublicFeed1(),
                 ),
               ],
               child: SvgPicture.string(

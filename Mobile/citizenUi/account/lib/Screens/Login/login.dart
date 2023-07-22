@@ -1,7 +1,6 @@
-// ignore_for_file: constant_identifier_names, unused_element, depend_on_referenced_packages, prefer_typing_uninitialized_variables, unnecessary_new, library_private_types_in_public_api, avoid_print, unused_local_variable
+// ignore_for_file: constant_identifier_names, unused_element, depend_on_referenced_packages, prefer_typing_uninitialized_variables, unnecessary_new, library_private_types_in_public_api, avoid_print, unused_local_variable, non_constant_identifier_names
 
 import 'package:account/Repository/language_constants.dart';
-import 'package:account/Screens/Login/langSelector.dart';
 import 'package:account/Screens/Registration/register.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
@@ -29,6 +28,8 @@ class XDLogin extends StatefulWidget {
 }
 
 class _XDLoginState extends State<XDLogin> {
+
+  
   
   @override
   Widget build(BuildContext context) {
@@ -41,8 +42,8 @@ class _XDLoginState extends State<XDLogin> {
          
 
           //pasowrd box
-         BoxForm(context,0.4200,usernameController,"Email",Icons.email_outlined),
-         BoxForm(context,0.5600,passwordController,"Password",Icons.lock),
+         BoxForm(context,0.4200,usernameController,"Email",Icons.email_outlined,false),
+         BoxForm(context,0.5600,passwordController,"Password",Icons.lock,true),
 
          //forgetpassword
           Pinned.fromPins(
@@ -102,7 +103,7 @@ class _XDLoginState extends State<XDLogin> {
                 // Adobe XD layer: 'Login Button' (group)
                 InkWell(
                   onTap: () {
-                    //_sendToServer();
+                   
                      UserLogin user=UserLogin();
                      user.login(usernameController.text,passwordController.text,context);
                   } ,
@@ -223,20 +224,7 @@ class _XDLoginState extends State<XDLogin> {
     );
   }
 
-    _sendToServer() {
-    if (_key.currentState!.validate() || _key2.currentState!.validate()) {
-      // No any error in validation
-      _key.currentState!.save();
-       _key2.currentState!.save();
-      
-      print("Email $_password");
-    } else {
-      // validation error
-      setState(() {
-        _validate = true;
-      });
-    }
-  }
+   
 
   
 }
@@ -262,41 +250,11 @@ const String _svg_pmvna3 =
 const String _svg_anq0p =
     '<svg viewBox="370.0 18.5 17.0 10.7" ><path transform="translate(370.0, 18.48)" d="M 16.00020027160645 10.6668004989624 L 15.00029945373535 10.6668004989624 C 14.44894981384277 10.6668004989624 14.00039958953857 10.2182502746582 14.00039958953857 9.666900634765625 L 14.00039958953857 0.9998999834060669 C 14.00039958953857 0.4485500156879425 14.44894981384277 0 15.00029945373535 0 L 16.00020027160645 0 C 16.55154991149902 0 17.00010108947754 0.4485500156879425 17.00010108947754 0.9998999834060669 L 17.00010108947754 9.666900634765625 C 17.00010108947754 10.2182502746582 16.55154991149902 10.6668004989624 16.00020027160645 10.6668004989624 Z M 11.33369922637939 10.6668004989624 L 10.33290004730225 10.6668004989624 C 9.781549453735352 10.6668004989624 9.332999229431152 10.2182502746582 9.332999229431152 9.666900634765625 L 9.332999229431152 3.333600044250488 C 9.332999229431152 2.782249927520752 9.781549453735352 2.333699941635132 10.33290004730225 2.333699941635132 L 11.33369922637939 2.333699941635132 C 11.88504981994629 2.333699941635132 12.33360004425049 2.782249927520752 12.33360004425049 3.333600044250488 L 12.33360004425049 9.666900634765625 C 12.33360004425049 10.2182502746582 11.88504981994629 10.6668004989624 11.33369922637939 10.6668004989624 Z M 6.666300296783447 10.6668004989624 L 5.666399955749512 10.6668004989624 C 5.115049839019775 10.6668004989624 4.666500091552734 10.2182502746582 4.666500091552734 9.666900634765625 L 4.666500091552734 5.66640043258667 C 4.666500091552734 5.115050315856934 5.115049839019775 4.666500091552734 5.666399955749512 4.666500091552734 L 6.666300296783447 4.666500091552734 C 7.218140125274658 4.666500091552734 7.667099952697754 5.115050315856934 7.667099952697754 5.66640043258667 L 7.667099952697754 9.666900634765625 C 7.667099952697754 10.2182502746582 7.218140125274658 10.6668004989624 6.666300296783447 10.6668004989624 Z M 1.999799966812134 10.6668004989624 L 0.9998999834060669 10.6668004989624 C 0.4485500156879425 10.6668004989624 0 10.2182502746582 0 9.666900634765625 L 0 7.667100429534912 C 0 7.115260124206543 0.4485500156879425 6.666300296783447 0.9998999834060669 6.666300296783447 L 1.999799966812134 6.666300296783447 C 2.55115008354187 6.666300296783447 2.99970006942749 7.115260124206543 2.99970006942749 7.667100429534912 L 2.99970006942749 9.666900634765625 C 2.99970006942749 10.2182502746582 2.55115008354187 10.6668004989624 1.999799966812134 10.6668004989624 Z" fill="#ffffff" stroke="none" stroke-width="1" stroke-miterlimit="10" stroke-linecap="butt" /></svg>';
 
-
-// String? validateEmail(String? value) {
-//     String pattern =
-//         r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$'; // email validation regex pattern
-//     RegExp regex = RegExp(pattern);
-//      if (value!.isEmpty) {
-//       return "Email is Required";
-//      }
-//     if (!regex.hasMatch(usernameController.text)) {
-//       return 'Please enter a valid email address';
-//     } else {
-//       return null;
-//     }
-//   }
-
-
-  // String? validatePassword(String? value) {
-  //   String pattern =
-  //      r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%\^&\*])[A-Za-z\d!@#\$%\^&\*]{8,}$'; // passowrd validation regex pattern
-  //   RegExp regex = RegExp(pattern);
-  //    if (value!.length == 0) {
-  //     return "Password is Required";
-  //     if(code==401){
-  //       return "Password is not correct.";
-  //     }
-  //      else {
-  //     return null;
-  //   }
-  //   }
-  // }
   
 
 
   //TextField Box Desgin
- Widget BoxForm(context,mid,controller,String label,IconData iconName){
+ Widget BoxForm(context,mid,controller,String label,IconData iconName,bool isSecured){
   return Form(
    // key: _key,
     autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -310,14 +268,32 @@ const String _svg_anq0p =
                 Padding(
                 padding: const EdgeInsets.fromLTRB(0.0, 30.0, 0.0, 0.0),child:
                 TextFormField( 
-                // validator: (value)=>validateEmail(value),
+                  obscureText: isSecured,
+                 validator: (value){
+                  if(isSecured==false){
+                     if (value!.isEmpty || !value.contains('@')) {
+                     return 'Please enter a valid email address.';
+                       }
+                 return null;
+                
+                  }
+                 else{
+                  if (value!.isEmpty || value.length < 7) {
+                    return 'Password must be at least 7 characters long.';
+                       }
+                   return null;
+                  }
+                
+                  }  ,  
+                    onSaved:(newValue) {
+                 _email=newValue!;
+                },    
+                 
                 controller: controller,
-                //  onSaved:(newValue) {
-                //  _email=newValue!;
-                // },
+               
                 decoration: InputDecoration(
                   prefixIcon:
-                        Icon(iconName,color: Color(0xff6f407d),size: 25,),
+                        Icon(iconName,color: const Color(0xff6f407d),size: 25,),
                 
                 filled: true,
                 fillColor: Colors.white,
@@ -325,7 +301,7 @@ const String _svg_anq0p =
                
                 enabledBorder: OutlineInputBorder(
                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(
+                borderSide: const BorderSide(
                    width: 1,
                 color: Color(0xff6f407d),
                 ),
@@ -360,4 +336,10 @@ const String _svg_anq0p =
             ],
             ),
   )]));
+
+
+
+  
  }
+
+  

@@ -1,6 +1,7 @@
+// ignore_for_file: avoid_print, prefer_typing_uninitialized_variables, file_names
+
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'login_request.dart';
 
 
 

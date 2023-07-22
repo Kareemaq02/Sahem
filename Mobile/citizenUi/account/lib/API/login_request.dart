@@ -1,11 +1,9 @@
 
-
-// ignore_for_file: avoid_print, use_build_context_synchronously
+// ignore_for_file: avoid_print, use_build_context_synchronously, unnecessary_string_escapes
 
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Screens/Login/login.dart';
@@ -14,7 +12,7 @@ import '../Screens/Home/public_feed.dart';
 
 
 
- String token2="";
+ late String token2;
 
 class UserLogin{
   
@@ -57,10 +55,33 @@ class UserLogin{
         ),
       );
 
-      final userData = await fetchUserData(token2);
-      print(userData);
+      // final userData = await fetchUserData(token2);
+      // print(userData);
       return response.statusCode;
     } 
+     else if (response.statusCode == 401){
+      showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(
+          response.body=="\"User doesn't exist.\"" ? "User does\'t exist " :"Password is not correct",
+          style: const TextStyle(color: Colors.blue),
+        ),
+        content: const Text("please enter again"),
+        actions: <Widget>[
+          ElevatedButton(
+            child: const Text('Okay'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          )
+        ],
+      ),
+
+    );
+    return response.statusCode;
+    } 
+   
     else {
       print('Login failed');
       return response.statusCode;
@@ -73,25 +94,25 @@ class UserLogin{
 }
 
 // Fetching user data using the token
-Future<Map<String, dynamic>> fetchUserData(String token) async {
-  try {
-    final response = await http.get(
-      Uri.parse('https://10.0.2.2:5000/api/account/userdata/'),
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
-    );
+// Future<Map<String, dynamic>> fetchUserData(String token) async {
+//   try {
+//     final response = await http.get(
+//       Uri.parse('https://10.0.2.2:5000/api/account/userdata/'),
+//       headers: {
+//         'Authorization': 'Bearer $token',
+//       },
+//     );
 
-    if (response.statusCode == 200) {
-      var data = jsonDecode(response.body);
-      return data;
-    } else {
-      throw Exception('Failed to fetch user data');
-    }
-  } catch (e) {
-    throw Exception(e.toString());
-  }
-}
+//     if (response.statusCode == 200) {
+//       var data = jsonDecode(response.body);
+//       return data;
+//     } else {
+//       throw Exception('Failed to fetch user data');
+//     }
+//   } catch (e) {
+//     throw Exception(e.toString());
+//   }
+// }
   
 
 
