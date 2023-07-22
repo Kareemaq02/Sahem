@@ -1,4 +1,5 @@
 ﻿using Application.Core;
+using Domain.DataModels.Complaints;
 using Domain.DataModels.Intersections;
 using Domain.DataModels.User;
 using MediatR;
@@ -35,6 +36,17 @@ namespace Application.Handlers.Complaints
                 .Where(u => u.UserName == request.strUserName)
                 .Select(u => u.Id)
                 .SingleOrDefaultAsync(cancellationToken: cancellationToken);
+
+            var complaintIds = await _context.Complaints
+                .Where(c => c.intUserID == userId)
+                .Select(c => c.intId)
+                .ToListAsync();
+
+            foreach (var id in complaintIds)
+            {
+                if (request.intComplaintID == id)
+                    return Result<int>.Failure("User can't vote for their own complaint.");
+            }
 
             await _context.ComplaintVoters.AddAsync(
                 new ComplaintVoters { intComplaintId = request.intComplaintID, intUserId = userId }
