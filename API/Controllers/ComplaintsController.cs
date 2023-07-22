@@ -90,6 +90,20 @@ namespace API.Controllers
             );
         }
 
+        [HttpPost("votedown/{intComplaintId}")] // .../api/complaints/vote
+        public async Task<IActionResult> InsertDonwVote(int intComplaintId)
+        {
+            string authHeader = Request.Headers["Authorization"];
+            JwtSecurityTokenHandler tokenHandler = new();
+            JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
+
+            string strUserName = jwtToken.Claims.First(c => c.Type == "username").Value;
+
+            return HandleResult(
+                await Mediator.Send(new InsertDownVoteCommand(intComplaintId, strUserName))
+            );
+        }
+
         [HttpPost("voteremove/{intComplaintId}")] // .../api/complaints/voteremove/...
         public async Task<IActionResult> RemoveVote(int intComplaintId)
         {
