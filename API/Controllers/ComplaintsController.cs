@@ -14,7 +14,13 @@ namespace API.Controllers
         [HttpGet] // .../api/complaints
         public async Task<IActionResult> GetComplaintsList()
         {
-            return HandleResult(await Mediator.Send(new GetComplaintsListQuery()));
+            string authHeader = Request.Headers["Authorization"];
+            JwtSecurityTokenHandler tokenHandler = new();
+            JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
+
+            var strUserName = jwtToken.Claims.First(c => c.Type == "username").Value;
+
+            return HandleResult(await Mediator.Send(new GetComplaintsListQuery(strUserName)));
         }
 
         [HttpGet("{id}")] // .../api/complaints/...

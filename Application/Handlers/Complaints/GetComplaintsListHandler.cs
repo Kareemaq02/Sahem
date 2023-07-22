@@ -1,6 +1,7 @@
 ﻿using Application.Core;
 using Application.Queries.Complaints;
 using Domain.ClientDTOs.Complaint;
+using Domain.Helpers;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -22,11 +23,17 @@ namespace Application.Handlers.Complaints
             CancellationToken cancellationToken
         )
         {
+            var userId = await _context.Users
+                .Where(u => u.UserName == request.strUserName)
+                .Select(u => u.Id)
+                .SingleOrDefaultAsync();
+
             var query =
                 from c in _context.Complaints
                 join u in _context.Users on c.intUserID equals u.Id
                 join ct in _context.ComplaintTypes on c.intTypeId equals ct.intId
                 join cs in _context.ComplaintStatus on c.intStatusId equals cs.intId
+                join cp in _context.ComplaintPrivacy on c.intPrivacyId equals cp.intId
                 select new
                 {
                     Complaint = c,
@@ -34,7 +41,21 @@ namespace Application.Handlers.Complaints
                     ComplaintTypeEn = ct.strNameEn,
                     ComplaintTypeAr = ct.strNameAr,
                     ComplaintGrade = ct.decGrade,
-                    Status = cs.strName
+                    Status = cs.strName,
+                    privacyId = cp.intId,
+                    privacyStrAr = cp.strNameAr,
+                    privacyStrEn = cp.strNameEn,
+                    latLng = _context.ComplaintAttachments
+                        .AsNoTracking()
+                        .Where(ca => ca.intComplaintId == c.intId)
+                        .Select(ca => new LatLng { decLat = ca.decLat, decLng = ca.decLng })
+                        .FirstOrDefault(),
+                    UpVotes = _context.ComplaintVoters
+                        .AsNoTracking()
+                        .Count(cv => cv.intComplaintId == c.intId && !cv.blnIsDownVote),
+                    DownVotes = _context.ComplaintVoters
+                        .AsNoTracking()
+                        .Count(cv => cv.intComplaintId == c.intId && cv.blnIsDownVote)
                 };
 
             var result = await query
@@ -50,16 +71,26 @@ namespace Application.Handlers.Complaints
                             strComment = c.Complaint.strComment,
                             strComplaintTypeAr = c.ComplaintTypeAr,
                             strStatus = c.Status,
+                            intPrivacyId = c.privacyId,
+                            strPrivacyAr = c.privacyStrAr,
+                            strPrivacyEn = c.privacyStrEn,
+                            intVoted = _context.ComplaintVoters
+                                .AsNoTracking()
+                                .Where(
+                                    cv =>
+                                        cv.intComplaintId == c.Complaint.intId
+                                        && cv.intUserId == userId
+                                )
+                                .Select(cv => cv.blnIsDownVote ? -1 : 1)
+                                .FirstOrDefault(),
+                            intVotersCount = c.UpVotes - c.DownVotes,
+                            latLng = c.latLng,
                             decPriority =
                                 c.ComplaintGrade
                                 * (
-                                    (
-                                        c.Complaint.intReminder
-                                        + _context.ComplaintVoters
-                                            .AsNoTracking()
-                                            .Where(cv => cv.intComplaintId == c.Complaint.intId)
-                                            .Count()
-                                    ) + (DateTime.UtcNow.Ticks - c.Complaint.dtmDateCreated.Ticks)
+                                    c.Complaint.intReminder
+                                    + (c.UpVotes - c.DownVotes)
+                                    + (DateTime.UtcNow.Ticks - c.Complaint.dtmDateCreated.Ticks)
                                 )
                         }
                 )
