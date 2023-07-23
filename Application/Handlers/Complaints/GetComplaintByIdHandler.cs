@@ -37,7 +37,7 @@ namespace Application.Handlers.Complaints
                 select new
                 {
                     Complaint = c,
-                    UserName = u.UserName,
+                    u.UserName,
                     ComplaintTypeEn = ct.strNameEn,
                     ComplaintTypeAr = ct.strNameAr,
                     ComplaintGrade = ct.decGrade,
@@ -45,17 +45,11 @@ namespace Application.Handlers.Complaints
                     privacyId = cp.intId,
                     privacyStrAr = cp.strNameAr,
                     privacyStrEn = cp.strNameEn,
-                    latLng = _context.ComplaintAttachments
-                        .AsNoTracking()
-                        .Where(ca => ca.intComplaintId == c.intId)
+                    latLng = c.Attachments
                         .Select(ca => new LatLng { decLat = ca.decLat, decLng = ca.decLng })
                         .FirstOrDefault(),
-                    UpVotes = _context.ComplaintVoters
-                        .AsNoTracking()
-                        .Count(cv => cv.intComplaintId == c.intId && !cv.blnIsDownVote),
-                    DownVotes = _context.ComplaintVoters
-                        .AsNoTracking()
-                        .Count(cv => cv.intComplaintId == c.intId && cv.blnIsDownVote)
+                    UpVotes = c.Voters.Count(cv => !cv.blnIsDownVote),
+                    DownVotes = c.Voters.Count(cv => cv.blnIsDownVote)
                 };
 
             var result = await query
