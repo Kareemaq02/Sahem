@@ -89,7 +89,7 @@ namespace API.Controllers
         {
             return HandleResult(await Mediator.Send(new DeleteComplaintCommand(id)));
         }
-        
+
         [Authorize]
         [HttpGet("completed/public")] // .../api/complaints/completed/public
         public async Task<IActionResult> GetCompletedComplaintsUser()
@@ -115,5 +115,15 @@ namespace API.Controllers
 
             return HandleResult(await Mediator.Send(new UpdateComplaintCommand(updateComplaintDTO, id)));
         }
+
+        [HttpGet("statuses/{id}")] // .../api/complaints/statuses/id
+
+        public async Task<IActionResult> GetComplaintStatuses(int id)
+        {
+            return HandleResult(await Mediator.Send(new GetComplaintStatusesQuery(id)));
+        }
+
+
+
     }
 }
