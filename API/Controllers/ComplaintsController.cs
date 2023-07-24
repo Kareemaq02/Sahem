@@ -6,13 +6,14 @@ using Application.Queries.Complaints;
 using Domain.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Application.Commands;
+using Application.Core;
 
 namespace API.Controllers
 {
     public class ComplaintsController : BaseApiController
     {
         [HttpGet] // .../api/complaints
-        public async Task<IActionResult> GetComplaintsList()
+        public async Task<IActionResult> GetComplaintsList([FromQuery] PagingParams pagingParams)
         {
             string authHeader = Request.Headers["Authorization"];
             JwtSecurityTokenHandler tokenHandler = new();
@@ -20,7 +21,9 @@ namespace API.Controllers
 
             var strUserName = jwtToken.Claims.First(c => c.Type == "username").Value;
 
-            return HandleResult(await Mediator.Send(new GetComplaintsListQuery(strUserName)));
+            return HandleResult(
+                await Mediator.Send(new GetComplaintsListQuery(pagingParams, strUserName))
+            );
         }
 
         [HttpGet("{id}")] // .../api/complaints/...
@@ -36,9 +39,14 @@ namespace API.Controllers
         }
 
         [HttpPost("location")] // .../api/complaints/location
-        public async Task<IActionResult> GetComplaintsByLocation(LatLng latLng)
+        public async Task<IActionResult> GetComplaintsByLocation(
+            [FromQuery] PagingParams pagingParams,
+            LatLng latLng
+        )
         {
-            return HandleResult(await Mediator.Send(new GetComplaintsBtLocationQuery(latLng)));
+            return HandleResult(
+                await Mediator.Send(new GetComplaintsByLocationQuery(pagingParams, latLng))
+            );
         }
 
         [HttpPost] // .../api/complaints

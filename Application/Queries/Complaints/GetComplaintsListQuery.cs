@@ -5,6 +5,6 @@ using MediatR;
 
 namespace Application.Queries.Complaints
 {
-    public record GetComplaintsListQuery(string strUserName)
-        : IRequest<Result<List<ComplaintsListDTO>>>;
+    public record GetComplaintsListQuery(PagingParams PagingParams, string strUserName)
+        : IRequest<Result<PagedList<ComplaintsListDTO>>>;
 }

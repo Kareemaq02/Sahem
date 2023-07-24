@@ -9,7 +9,7 @@ using Persistence;
 namespace Application.Handlers.Complaints
 {
     public class GetComplaintsListHandler
-        : IRequestHandler<GetComplaintsListQuery, Result<List<ComplaintsListDTO>>>
+        : IRequestHandler<GetComplaintsListQuery, Result<PagedList<ComplaintsListDTO>>>
     {
         private readonly DataContext _context;
 
@@ -18,7 +18,7 @@ namespace Application.Handlers.Complaints
             _context = context;
         }
 
-        public async Task<Result<List<ComplaintsListDTO>>> Handle(
+        public async Task<Result<PagedList<ComplaintsListDTO>>> Handle(
             GetComplaintsListQuery request,
             CancellationToken cancellationToken
         )
@@ -52,8 +52,10 @@ namespace Application.Handlers.Complaints
                     DownVotes = c.Voters.Count(cv => cv.blnIsDownVote)
                 };
 
-            var result = await query
+            // NOT OPTIMIZED USE OTHER REFERENCES FOR HELP
+            var queryObject = await query
                 .AsNoTracking()
+                .OrderBy(q => q.Complaint.intId)
                 .Select(
                     c =>
                         new ComplaintsListDTO
@@ -82,24 +84,31 @@ namespace Application.Handlers.Complaints
                                 )
                         }
                 )
-                .ToListAsync(cancellationToken);
+                .ToListAsync(cancellationToken: cancellationToken);
 
-            if (result.Count > 0)
+            if (queryObject.Count > 0)
             {
-                decimal minPriority = result.Min(c => c.decPriority);
-                decimal maxPriority = result.Max(c => c.decPriority);
+                decimal minPriority = queryObject.Min(c => c.decPriority);
+                decimal maxPriority = queryObject.Max(c => c.decPriority);
                 decimal range = maxPriority - minPriority;
 
                 if (range > 0)
                 {
-                    foreach (var complaint in result)
+                    foreach (var complaint in queryObject)
                     {
                         complaint.decPriority = (complaint.decPriority - minPriority) / range;
                     }
                 }
             }
 
-            return Result<List<ComplaintsListDTO>>.Success(result);
+            // NOT OPTIMIZED USE OTHER REFERENCES FOR HELP
+            var result = await PagedList<ComplaintsListDTO>.CreateAsync(
+                queryObject,
+                request.PagingParams.PageNumber,
+                request.PagingParams.PageSize
+            );
+
+            return Result<PagedList<ComplaintsListDTO>>.Success(result);
         }
     }
 }
