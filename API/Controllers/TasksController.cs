@@ -21,9 +21,9 @@ namespace API.Controllers
         }
 
         [HttpGet("users")] // .../api/tasks/users
-        public async Task<IActionResult> GetWorkersList()
+        public async Task<IActionResult> GetWorkersList([FromQuery] PagingParams pagingParams)
         {
-            return HandleResult(await Mediator.Send(new GetWorkersListQuery()));
+            return HandleResult(await Mediator.Send(new GetWorkersListQuery(pagingParams)));
         }
 
         [HttpPost("types")] // .../api/tasks/types
