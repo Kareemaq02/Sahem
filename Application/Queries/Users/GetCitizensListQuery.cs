@@ -5,5 +5,6 @@ using MediatR;
 
 namespace Application.Queries.Users
 {
-    public record GetCitizensListQuery() : IRequest<Result<List<CitizenDTO>>>;
+    public record GetCitizensListQuery(PagingParams pagingParams)
+        : IRequest<Result<PagedList<CitizenDTO>>>;
 }
