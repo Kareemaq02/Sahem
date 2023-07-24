@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api, deprecated_member_use// ignore_for_file: library_private_types_in_public_api, deprecated_member_use
+// ignore_for_file: library_private_types_in_public_api, deprecated_member_use// ignore_for_file: library_private_types_in_public_api, deprecated_member_use, avoid_print
 
 import 'package:account/Screens/Profile/profile.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +13,7 @@ class EditProfilePage extends StatefulWidget {
   
 
 
-   EditProfilePage({Key? key,required this.username,required this.email,required this.phone}) : super(key: key); // Added "Key?" type to the key parameter
+   const EditProfilePage({Key? key,required this.username,required this.email,required this.phone}) : super(key: key); // Added "Key?" type to the key parameter
 
   @override
   _EditProfilePageState createState() => _EditProfilePageState();

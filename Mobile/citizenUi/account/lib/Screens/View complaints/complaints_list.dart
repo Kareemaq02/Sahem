@@ -412,7 +412,7 @@ class ReusableRow extends StatelessWidget {
   final String id;
  
 
-   ReusableRow({
+   const ReusableRow({
     Key? key,
     required this.comment,
     required this.status,

@@ -165,11 +165,11 @@ void initState() {
       ),
        Positioned.fill(
         child: Padding(
-          padding:EdgeInsetsDirectional.only(start: 10,top: 20),
+          padding:const EdgeInsetsDirectional.only(start: 10,top: 20),
           child: Text(
 
             commentController.text,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.normal,
               color: Colors.black,
