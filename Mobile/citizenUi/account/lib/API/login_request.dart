@@ -12,7 +12,7 @@ import '../Screens/Home/public_feed.dart';
 
 
 
- late String token2;
+  var token2="";
 
 class UserLogin{
   
@@ -34,14 +34,12 @@ class UserLogin{
         "strPassword": password,
       }),
     );
-    print(response.body);
-    responseMessage=response.body;
-    //print(responseMessage);
-    print(response.statusCode);
-    print(response.headers);
+ 
 
     if (response.statusCode == 200) {
-      token2 = jsonDecode(response.body);
+      
+     token2 = jsonDecode(response.body).toString();
+      
       print(token2);
       print('Login successful');
 

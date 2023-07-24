@@ -346,7 +346,16 @@ class _XDProfileState extends State<XDProfile> {
                         offset: const Offset(200.0, 40.0),
                         child:  InkWell(
                           onTap:() {
-                             Navigator.push(context,MaterialPageRoute(builder: (context) => const EditProfilePage()),);
+                             Navigator.push(context,MaterialPageRoute(builder: (context) =>  
+                             EditProfilePage(
+                              username:userInfo.strFirstName!,
+                              //email instead
+                              email:userInfo.strUsername!,
+                              //password:userInfo.strFirstName!,
+                             // location:userInfo.strFirstName!,
+                              phone:userInfo.strPhoneNumber!,
+
+                             )),);
                           },
                           child:
                         const Icon(Icons.edit,color: Colors.white,),

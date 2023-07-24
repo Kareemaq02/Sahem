@@ -9,6 +9,7 @@ import 'package:geolocator/geolocator.dart';
 import 'complaints1.dart';
 
 class XDComplaints2 extends StatefulWidget {
+  
   const XDComplaints2({key});
 
  
@@ -162,14 +163,15 @@ void initState() {
           fit: BoxFit.fill,
         ),
       ),
-      const Positioned.fill(
-        child: Align(
-          alignment: Alignment.center,
+       Positioned.fill(
+        child: Padding(
+          padding:EdgeInsetsDirectional.only(start: 10,top: 20),
           child: Text(
-            'Hello',
+
+            commentController.text,
             style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
+              fontSize: 15,
+              fontWeight: FontWeight.normal,
               color: Colors.black,
             ),
           ),
@@ -203,7 +205,7 @@ void initState() {
               
                   onTap: () {
                     Complaint fileComplaint=Complaint();
-                    fileComplaint.fileComplaint(1, 1, selectedMediaFiles,"trial");
+                    fileComplaint.fileComplaint(1, 1, selectedMediaFiles,commentController.text);
                  
                  
                    // const XDPublicFeed1();
@@ -330,7 +332,7 @@ void initState() {
               
                
                   onTap :(){
-                Navigator.push(context,MaterialPageRoute(builder: (context) =>  const XDComplaints1()));
+                Navigator.pop(context,MaterialPageRoute(builder: (context) =>  const XDComplaints1()));
                   } ,
                 
               
@@ -342,17 +344,7 @@ void initState() {
               fit: BoxFit.fill,
             ),
           )),
-          Pinned.fromPins(
-            Pin(size: 287.0, end: 62.0),
-            Pin(size: 288.0, start: 39.0),
-            child:
-                // Adobe XD layer: 'photo' (shape)
-                Container(
-              decoration: const BoxDecoration(
-                
-              ),
-            ),
-          ),
+        
           Align(
             alignment: const Alignment(-0.500, -0.800),
             child:

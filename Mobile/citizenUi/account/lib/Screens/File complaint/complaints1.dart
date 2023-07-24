@@ -15,9 +15,9 @@ import '../../API/login_request.dart';
 import 'package:http/http.dart' as http;
 
  List<MediaFile> selectedMediaFiles = [];
-
+TextEditingController commentController = TextEditingController();
   //late DropDownValue dropdown=DropDownValue(1, " ");
-  TextEditingController commentController = TextEditingController();
+  
 
 class XDComplaints1 extends StatefulWidget {
   const XDComplaints1({key});
@@ -113,7 +113,7 @@ Future<void> getImages(BuildContext context) async {
   Widget build(BuildContext context) {
     
     return Scaffold(
-      
+      resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xffffffff),
       body: Stack(
         children: <Widget>[
