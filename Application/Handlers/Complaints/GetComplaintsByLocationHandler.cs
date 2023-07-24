@@ -10,7 +10,7 @@ using Persistence;
 namespace Application.Handlers.Complaints
 {
     public class GetComplaintsByLocationHandler
-        : IRequestHandler<GetComplaintsBtLocationQuery, Result<List<ComplaintsListDTO>>>
+        : IRequestHandler<GetComplaintsByLocationQuery, Result<PagedList<ComplaintsListDTO>>>
     {
         private readonly IConfiguration _configuration;
         private readonly DataContext _context;
@@ -21,8 +21,8 @@ namespace Application.Handlers.Complaints
             _context = context;
         }
 
-        public async Task<Result<List<ComplaintsListDTO>>> Handle(
-            GetComplaintsBtLocationQuery request,
+        public async Task<Result<PagedList<ComplaintsListDTO>>> Handle(
+            GetComplaintsByLocationQuery request,
             CancellationToken cancellationToken
         )
         {
@@ -68,7 +68,8 @@ namespace Application.Handlers.Complaints
                         .ToList(),
                 };
 
-            var result = await query
+            // NOT OPTIMIZED USE OTHER REFERENCES FOR HELP
+            var queryObject = await query
                 .AsNoTracking()
                 .Where(cg => cg.Privacy == 2)
                 .Select(
@@ -92,7 +93,7 @@ namespace Application.Handlers.Complaints
                 .ToListAsync(cancellationToken);
 
             var fixedResult = new List<ComplaintsListDTO>();
-            foreach (var item in result)
+            foreach (var item in queryObject)
             {
                 if (
                     HaversineHelper.HaversineDistance(request.latLng, item.latLng)
@@ -101,7 +102,14 @@ namespace Application.Handlers.Complaints
                     fixedResult.Add(item);
             }
 
-            return Result<List<ComplaintsListDTO>>.Success(fixedResult);
+            // NOT OPTIMIZED USE OTHER REFERENCES FOR HELP
+            var result = await PagedList<ComplaintsListDTO>.CreateAsync(
+                fixedResult,
+                request.PagingParams.PageNumber,
+                request.PagingParams.PageSize
+            );
+
+            return Result<PagedList<ComplaintsListDTO>>.Success(result);
         }
     }
 }
