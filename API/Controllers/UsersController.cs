@@ -23,9 +23,9 @@ namespace API.Controllers
     {
         [Authorize]
         [HttpGet("citizens")] // .../api/users/citizens
-        public async Task<IActionResult> GetCitizensList([FromQuery] PagingParams pagingParams)
+        public async Task<IActionResult> GetCitizensList([FromQuery] UsersFilter filter)
         {
-            return HandleResult(await Mediator.Send(new GetCitizensListQuery(pagingParams)));
+            return HandleResult(await Mediator.Send(new GetCitizensListQuery(filter)));
         }
 
         [Authorize]
