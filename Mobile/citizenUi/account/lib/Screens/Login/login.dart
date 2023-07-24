@@ -269,25 +269,25 @@ const String _svg_anq0p =
                 padding: const EdgeInsets.fromLTRB(0.0, 30.0, 0.0, 0.0),child:
                 TextFormField( 
                   obscureText: isSecured,
-                 validator: (value){
-                  if(isSecured==false){
-                     if (value!.isEmpty || !value.contains('@')) {
-                     return 'Please enter a valid email address.';
-                       }
-                 return null;
+                //  validator: (value){
+                //   if(isSecured==false){
+                //      if (value!.isEmpty || !value.contains('@')) {
+                //      return 'Please enter a valid email address.';
+                //        }
+                //  return null;
                 
-                  }
-                 else{
-                  if (value!.isEmpty || value.length < 7) {
-                    return 'Password must be at least 7 characters long.';
-                       }
-                   return null;
-                  }
+                //   }
+                //  else{
+                //   if (value!.isEmpty || value.length < 7) {
+                //     return 'Password must be at least 7 characters long.';
+                //        }
+                //    return null;
+                //   }
                 
-                  }  ,  
-                    onSaved:(newValue) {
-                 _email=newValue!;
-                },    
+                //   }  ,  
+                //     onSaved:(newValue) {
+                //  _email=newValue!;
+                // },    
                  
                 controller: controller,
                
