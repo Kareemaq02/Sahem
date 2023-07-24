@@ -4,6 +4,5 @@ using MediatR;
 
 namespace Application.Queries.Tasks
 {
-    public record GetTasksListQuery(PagingParams PagingParams)
-        : IRequest<Result<PagedList<TaskListDTO>>>;
+    public record GetTasksListQuery(TasksFilter filter) : IRequest<Result<PagedList<TaskListDTO>>>;
 }

@@ -15,9 +15,9 @@ namespace API.Controllers
     public class TasksController : BaseApiController
     {
         [HttpGet] // .../api/tasks
-        public async Task<IActionResult> GetTasksList([FromQuery] PagingParams PagingParams)
+        public async Task<IActionResult> GetTasksList([FromQuery] TasksFilter filter)
         {
-            return HandleResult(await Mediator.Send(new GetTasksListQuery(PagingParams)));
+            return HandleResult(await Mediator.Send(new GetTasksListQuery(filter)));
         }
 
         [HttpGet("users")] // .../api/tasks/users
