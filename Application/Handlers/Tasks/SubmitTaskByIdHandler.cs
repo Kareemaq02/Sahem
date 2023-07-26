@@ -37,75 +37,94 @@ namespace Application.Handlers.Complaints
         )
         {
             var submitTaskDTO = request.SubmitTaskDTO;
-            var lstMedia = submitTaskDTO.lstMedia;
             var userId = await _context.Users
                 .Where(u => u.UserName == submitTaskDTO.strUserName)
                 .Select(u => u.Id)
                 .SingleOrDefaultAsync();
 
-            using var transaction = await _context.Database.BeginTransactionAsync(
-                cancellationToken
-            );
-            try
+            var isLeader = _context.TaskMembers.Any(tm => tm.intTaskId == request.id && tm.intWorkerId == userId
+             && tm.blnIsLeader == true);
+
+            if (isLeader)
             {
-                var task = await _context.Tasks.FindAsync(request.id);
 
-                task.dtmDateLastModified = DateTime.UtcNow;
-                task.intLastModifiedBy = userId;
-                task.strComment = submitTaskDTO.strComment;
-                task.intStatusId = (int)TasksConstant.taskStatus.waitingEvaluation;
-                await _context.SaveChangesAsync(cancellationToken);
+                var lstMedia = submitTaskDTO.lstMedia;
 
-                if (lstMedia.Count == 0)
+
+                using var transaction = await _context.Database.BeginTransactionAsync(
+                    cancellationToken
+                );
+                try
+                {
+
+                    var task = await _context.Tasks.FindAsync(request.id);
+
+                    if (task.intStatusId != (int)TasksConstant.taskStatus.waitingEvaluation ||
+                        task.intStatusId != (int)TasksConstant.taskStatus.completed)
+                    {
+
+                        task.dtmDateLastModified = DateTime.UtcNow;
+                        task.intLastModifiedBy = userId;
+                        task.strComment = submitTaskDTO.strComment;
+                        task.intStatusId = (int)TasksConstant.taskStatus.waitingEvaluation;
+                        await _context.SaveChangesAsync(cancellationToken);
+
+                        if (lstMedia.Count == 0)
+                        {
+                            await transaction.RollbackAsync();
+                            return Result<SubmitTaskDTO>.Failure("No file was Uploaded.");
+                        }
+
+                        var taskAttatchments = new List<WorkTaskAttachment>();
+                        foreach (var media in lstMedia)
+                        {
+                            string extension = Path.GetExtension(media.fileMedia.FileName);
+                            string fileName = $"{DateTime.UtcNow.Ticks}{extension}";
+                            string directory = _configuration["FilesPath"];
+                            string path = Path.Join(
+                                DateTime.UtcNow.Year.ToString(),
+                                DateTime.UtcNow.Month.ToString(),
+                                DateTime.UtcNow.Day.ToString(),
+                                request.id.ToString()
+                            );
+                            string filePath = Path.Join(directory, path, fileName);
+
+                            // Create directory if it doesn't exist
+                            Directory.CreateDirectory(Path.Combine(directory, path));
+
+                            // Create file
+                            using var stream = File.Create(filePath);
+                            await media.fileMedia.CopyToAsync(stream, cancellationToken);
+
+                            taskAttatchments.Add(
+                                new WorkTaskAttachment
+                                {
+                                    intTaskId = request.id,
+                                    strMediaRef = filePath,
+                                    blnIsVideo = media.blnIsVideo,
+                                    dtmDateCreated = DateTime.UtcNow,
+                                    intCreatedBy = userId
+                                }
+                            );
+                        }
+
+                        await _context.TaskAttachments.AddRangeAsync(taskAttatchments);
+                        await _context.SaveChangesAsync(cancellationToken);
+                        await transaction.CommitAsync();
+                    }
+                    else
+                        return Result<SubmitTaskDTO>.Failure("The task has already been submitted");
+                }
+                catch (Exception)
                 {
                     await transaction.RollbackAsync();
-                    return Result<SubmitTaskDTO>.Failure("No file was Uploaded.");
+                    return Result<SubmitTaskDTO>.Failure("Unknown Error");
                 }
 
-                var taskAttatchments = new List<WorkTaskAttachment>();
-                foreach (var media in lstMedia)
-                {
-                    string extension = Path.GetExtension(media.fileMedia.FileName);
-                    string fileName = $"{DateTime.UtcNow.Ticks}{extension}";
-                    string directory = _configuration["FilesPath"];
-                    string path = Path.Join(
-                        DateTime.UtcNow.Year.ToString(),
-                        DateTime.UtcNow.Month.ToString(),
-                        DateTime.UtcNow.Day.ToString(),
-                        request.id.ToString()
-                    );
-                    string filePath = Path.Join(directory, path, fileName);
-
-                    // Create directory if it doesn't exist
-                    Directory.CreateDirectory(Path.Combine(directory, path));
-
-                    // Create file
-                    using var stream = File.Create(filePath);
-                    await media.fileMedia.CopyToAsync(stream, cancellationToken);
-
-                    taskAttatchments.Add(
-                        new WorkTaskAttachment
-                        {
-                            intTaskId = request.id,
-                            strMediaRef = filePath,
-                            blnIsVideo = media.blnIsVideo,
-                            dtmDateCreated = DateTime.UtcNow,
-                            intCreatedBy = userId
-                        }
-                    );
-                }
-
-                await _context.TaskAttachments.AddRangeAsync(taskAttatchments);
-                await _context.SaveChangesAsync(cancellationToken);
-                await transaction.CommitAsync();
+                return Result<SubmitTaskDTO>.Success(submitTaskDTO);
             }
-            catch (Exception)
-            {
-                await transaction.RollbackAsync();
-                return Result<SubmitTaskDTO>.Failure("Unknown Error");
-            }
-
-            return Result<SubmitTaskDTO>.Success(submitTaskDTO);
+            else
+                return Result<SubmitTaskDTO>.Failure("Only the leader can submit the task");
         }
     }
 }
