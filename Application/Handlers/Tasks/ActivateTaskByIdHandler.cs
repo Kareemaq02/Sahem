@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Application.Commands;
 using Domain.DataModels.Tasks;
+using Domain.Resources;
 
 public class ActivateTaskByIdHandler : IRequestHandler<ActivateTaskCommand, Result<Unit>>
 {
@@ -48,6 +49,7 @@ public class ActivateTaskByIdHandler : IRequestHandler<ActivateTaskCommand, Resu
                 task.blnIsActivated = true;
                 task.dtmDateLastModified = DateTime.UtcNow;
                 task.intLastModifiedBy = userId;
+                task.intStatusId = (int)TasksConstant.taskStatus.inProgress;
 
                 await _context.SaveChangesAsync(cancellationToken);
                 return Result<Unit>.Success(Unit.Value);
