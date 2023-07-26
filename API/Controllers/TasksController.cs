@@ -9,6 +9,7 @@ using Application.Queries.Complaints;
 using Application.Handlers.Tasks;
 using Application.Commands;
 using Org.BouncyCastle.Crypto.Operators;
+using Domain.ClientDTOs.Complaint;
 
 namespace API.Controllers
 {
@@ -103,6 +104,18 @@ namespace API.Controllers
 
             return HandleResult(await Mediator.Send(new ActivateTaskCommand(id, username)));
 
+        }
+
+        [HttpPost("submit/{id}")] // .../api/tasks/submit/id
+        public async Task<IActionResult> SubmitTask( [FromForm] SubmitTaskDTO submitTaskDTO, int id)
+        {
+            string authHeader = Request.Headers["Authorization"];
+            JwtSecurityTokenHandler tokenHandler = new();
+            JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
+
+            submitTaskDTO.strUserName = jwtToken.Claims.First(c => c.Type == "username").Value;
+
+            return HandleResult(await Mediator.Send(new SubmitTaskCommand(submitTaskDTO, id)));
         }
 
     }
