@@ -56,6 +56,8 @@ namespace Application.Handlers.Tasks
                 workersList = g.Select(x => new TaskWorkerDTO
                 {
                     intId = x.Worker.Id,
+                    strFirstName = x.Worker.UserInfo.strFirstName,
+                    strLastName = x.Worker.UserInfo.strLastName,
                     isLeader = x.blnIsLeader,
                 }).Distinct().ToList()
             };

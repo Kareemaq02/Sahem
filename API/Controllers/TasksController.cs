@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Application.Queries.Complaints;
 using Application.Handlers.Tasks;
 using Application.Commands;
+using Org.BouncyCastle.Crypto.Operators;
 
 namespace API.Controllers
 {
@@ -88,6 +89,20 @@ namespace API.Controllers
             updateTaskDTO.strUserName = jwtToken.Claims.First(c => c.Type == "username").Value;
 
             return HandleResult(await Mediator.Send(new UpdateTaskCommand(updateTaskDTO, id)));
+        }
+
+        [Authorize]
+        [HttpPut("activate/{id}")] //.../api/tasks/activate/id
+        public async Task<IActionResult> ActivateTask(int id, string username)
+        {
+            string authHeader = Request.Headers["Authorization"];
+            JwtSecurityTokenHandler tokenHandler = new();
+            JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
+
+            username = jwtToken.Claims.First(c => c.Type == "username").Value;
+
+            return HandleResult(await Mediator.Send(new ActivateTaskCommand(id, username)));
+
         }
 
     }
