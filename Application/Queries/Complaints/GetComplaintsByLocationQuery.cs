@@ -1,10 +1,10 @@
 ﻿using Application.Core;
 using Domain.ClientDTOs.Complaint;
-using Domain.DataModels.Complaints;
+using Domain.Helpers;
 using MediatR;
 
 namespace Application.Queries.Complaints
 {
-    public record GetComplaintsListQuery(ComplaintsFilter filter, string strUserName)
+    public record GetComplaintsByLocationQuery(PagingParams PagingParams, LatLng latLng)
         : IRequest<Result<PagedList<ComplaintsListDTO>>>;
 }

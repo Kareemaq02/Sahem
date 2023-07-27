@@ -9,9 +9,12 @@ namespace Domain.ClientDTOs.Complaint
         public string strUserName { get; set; }
         public DateTime dtmDateCreated { get; set; }
         public DateTime dtmDateFinished { get; set; }
+        public int intTypeId { get; set; }
+
         public string strComplaintTypeEn { get; set; }
         public string strComplaintTypeAr { get; set; }
         public string strComment { get; set; }
+        public int intStatusId { get; set; }
         public string strStatus { get; set; }
         public int intPrivacyId { get; set; }
         public string strPrivacyAr { get; set; }

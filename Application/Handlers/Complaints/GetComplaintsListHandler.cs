@@ -2,6 +2,7 @@
 using Application.Queries.Complaints;
 using Domain.ClientDTOs.Complaint;
 using Domain.Helpers;
+using LinqKit;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -9,7 +10,7 @@ using Persistence;
 namespace Application.Handlers.Complaints
 {
     public class GetComplaintsListHandler
-        : IRequestHandler<GetComplaintsListQuery, Result<List<ComplaintsListDTO>>>
+        : IRequestHandler<GetComplaintsListQuery, Result<PagedList<ComplaintsListDTO>>>
     {
         private readonly DataContext _context;
 
@@ -18,7 +19,7 @@ namespace Application.Handlers.Complaints
             _context = context;
         }
 
-        public async Task<Result<List<ComplaintsListDTO>>> Handle(
+        public async Task<Result<PagedList<ComplaintsListDTO>>> Handle(
             GetComplaintsListQuery request,
             CancellationToken cancellationToken
         )
@@ -38,10 +39,12 @@ namespace Application.Handlers.Complaints
                 {
                     Complaint = c,
                     u.UserName,
+                    c.intTypeId,
                     ComplaintTypeEn = ct.strNameEn,
                     ComplaintTypeAr = ct.strNameAr,
                     ComplaintGrade = ct.decGrade,
                     Status = cs.strName,
+                    statusId = cs.intId,
                     privacyId = cp.intId,
                     privacyStrAr = cp.strNameAr,
                     privacyStrEn = cp.strNameEn,
@@ -52,8 +55,10 @@ namespace Application.Handlers.Complaints
                     DownVotes = c.Voters.Count(cv => cv.blnIsDownVote)
                 };
 
-            var result = await query
+            // NOT OPTIMIZED USE OTHER REFERENCES FOR HELP
+            var queryObject = await query
                 .AsNoTracking()
+                .OrderBy(q => q.Complaint.intId)
                 .Select(
                     c =>
                         new ComplaintsListDTO
@@ -61,9 +66,11 @@ namespace Application.Handlers.Complaints
                             intComplaintId = c.Complaint.intId,
                             strUserName = c.UserName,
                             dtmDateCreated = c.Complaint.dtmDateCreated,
+                            intTypeId = c.intTypeId,
                             strComplaintTypeEn = c.ComplaintTypeEn,
-                            strComment = c.Complaint.strComment,
                             strComplaintTypeAr = c.ComplaintTypeAr,
+                            strComment = c.Complaint.strComment,
+                            intStatusId = c.statusId,
                             strStatus = c.Status,
                             intPrivacyId = c.privacyId,
                             strPrivacyAr = c.privacyStrAr,
@@ -82,24 +89,59 @@ namespace Application.Handlers.Complaints
                                 )
                         }
                 )
-                .ToListAsync(cancellationToken);
+                .ToListAsync();
 
-            if (result.Count > 0)
+            if (queryObject.Count > 0)
             {
-                decimal minPriority = result.Min(c => c.decPriority);
-                decimal maxPriority = result.Max(c => c.decPriority);
+                decimal minPriority = queryObject.Min(c => c.decPriority);
+                decimal maxPriority = queryObject.Max(c => c.decPriority);
                 decimal range = maxPriority - minPriority;
 
                 if (range > 0)
                 {
-                    foreach (var complaint in result)
+                    foreach (var complaint in queryObject)
                     {
                         complaint.decPriority = (complaint.decPriority - minPriority) / range;
                     }
                 }
             }
 
-            return Result<List<ComplaintsListDTO>>.Success(result);
+            // Filter in-memory ONLY FOR GENERAL PRIORITY
+            if (request.filter.lstComplaintStatusIds.Count > 0)
+            {
+                var predicate = PredicateBuilder.New<ComplaintsListDTO>();
+                foreach (var filter in request.filter.lstComplaintStatusIds)
+                {
+                    var tempFilter = filter;
+                    predicate = predicate.Or(q => q.intStatusId == tempFilter);
+                }
+                queryObject = queryObject.Where(predicate).ToList();
+            }
+
+            if (request.filter.lstComplaintTypeIds.Count > 0)
+            {
+                var predicate = PredicateBuilder.New<ComplaintsListDTO>();
+                foreach (var filter in request.filter.lstComplaintTypeIds)
+                {
+                    var tempFilter = filter;
+                    predicate = predicate.Or(q => q.intTypeId == tempFilter);
+                }
+                queryObject = queryObject.Where(predicate).ToList();
+            }
+
+            if (request.filter.dtmDateCreated > DateTime.MinValue)
+                queryObject = queryObject
+                    .Where(q => q.dtmDateCreated >= request.filter.dtmDateCreated)
+                    .ToList();
+
+            // NOT OPTIMIZED USE OTHER REFERENCES FOR HELP
+            var result = await PagedList<ComplaintsListDTO>.CreateAsync(
+                queryObject,
+                request.filter.PageNumber,
+                request.filter.PageSize
+            );
+
+            return Result<PagedList<ComplaintsListDTO>>.Success(result);
         }
     }
 }

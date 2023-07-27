@@ -8,21 +8,22 @@ using Microsoft.AspNetCore.Authorization;
 using Application.Queries.Complaints;
 using Application.Handlers.Tasks;
 using Application.Commands;
+using Application.Core;
 
 namespace API.Controllers
 {
     public class TasksController : BaseApiController
     {
         [HttpGet] // .../api/tasks
-        public async Task<IActionResult> GetTasksList()
+        public async Task<IActionResult> GetTasksList([FromQuery] TasksFilter filter)
         {
-            return HandleResult(await Mediator.Send(new GetTasksListQuery()));
+            return HandleResult(await Mediator.Send(new GetTasksListQuery(filter)));
         }
 
         [HttpGet("users")] // .../api/tasks/users
-        public async Task<IActionResult> GetWorkersList()
+        public async Task<IActionResult> GetWorkersList([FromQuery] PagingParams pagingParams)
         {
-            return HandleResult(await Mediator.Send(new GetWorkersListQuery()));
+            return HandleResult(await Mediator.Send(new GetWorkersListQuery(pagingParams)));
         }
 
         [HttpPost("types")] // .../api/tasks/types
@@ -54,27 +55,25 @@ namespace API.Controllers
 
             return HandleResult(await Mediator.Send(new InsertTaskCommand(taskDTO, id)));
         }
-        
+
         [HttpDelete("delete/{id}")] // .../api/tasks/delete/id
         public async Task<IActionResult> DeleteTasks(int id)
         {
             return HandleResult(await Mediator.Send(new DeleteTaskCommand(id)));
         }
-       
+
         [Authorize]
-        [HttpGet("worker/{id}")]   //api/tasks/worker/id
+        [HttpGet("worker/{id}")] //api/tasks/worker/id
         public async Task<IActionResult> GetWorkerTasks(int id)
         {
             return HandleResult(await Mediator.Send(new GetTasksByWorkerIdQuery(id)));
-        
         }
 
         [Authorize]
-        [HttpGet("details/{id}")]   //api/tasks/details/id
+        [HttpGet("details/{id}")] //api/tasks/details/id
         public async Task<IActionResult> GetTaskDetails(int id)
         {
             return HandleResult(await Mediator.Send(new GetTaskDetailsByIdQuery(id)));
-
         }
 
         [Authorize]
@@ -89,6 +88,5 @@ namespace API.Controllers
 
             return HandleResult(await Mediator.Send(new UpdateTaskCommand(updateTaskDTO, id)));
         }
-
     }
 }
