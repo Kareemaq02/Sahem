@@ -1,9 +1,19 @@
 import axios from "../../../Common/Utils/AxiosAgent";
+import { DateFormatterEn } from "../../../Common/Utils/DateFormatter";
 
 export const GetTasksApi = async () => {
-  try{
-    return await axios.get("api/tasks")
+  try {
+    const response = await axios.get("api/tasks");
+    return response.data.map((item) => ({
+      id: item.taskID,
+      admin: item.adminUsername,
+      cost: 0,
+      type: item.strTypeNameEn,
+      dateScheduled: DateFormatterEn(item.scheduledDate),
+      deadline: DateFormatterEn(item.deadlineDate),
+      status: item.strTaskStatus,
+    }));
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };

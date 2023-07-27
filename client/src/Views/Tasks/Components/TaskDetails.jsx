@@ -25,7 +25,7 @@ const MuiAvatarGroup = styled(AvatarGroup)(({ theme }) => ({
   },
 }));
 
-const TaskDetails = ({ theme, taskId }) => {
+const TaskDetails = ({ theme, taskData }) => {
   return (
     <Box>
       <Stack spacing={2}>
@@ -46,14 +46,18 @@ const TaskDetails = ({ theme, taskId }) => {
             gap="0.5rem"
           >
             <Storage />
-            {taskId}
+            {taskData.taskId}
           </Typography>
         </FlexBetween>
         <FlexBetween>
           <Typography variant="h5" color={theme.palette.grey[500]}>
             Status
           </Typography>
-          <Chip label="Completed" color="primary" variant="outlined" />
+          <Chip
+            label={taskData.taskStatus}
+            color="primary"
+            variant="outlined"
+          />
         </FlexBetween>
         <FlexBetween>
           <Typography variant="h5" color={theme.palette.grey[500]}>
@@ -61,11 +65,9 @@ const TaskDetails = ({ theme, taskId }) => {
           </Typography>
           <Box>
             <MuiAvatarGroup max={4}>
-              <Avatar>A</Avatar>
-              <Avatar>M</Avatar>
-              <Avatar>A</Avatar>
-              <Avatar>W</Avatar>
-              <Avatar>S</Avatar>
+              {taskData.members.map((member) => (
+                <Avatar>{member}</Avatar>
+              ))}
             </MuiAvatarGroup>
           </Box>
         </FlexBetween>
@@ -76,7 +78,7 @@ const TaskDetails = ({ theme, taskId }) => {
           <Chip
             variant="outlined"
             avatar={<Avatar>F</Avatar>}
-            label="Firas S."
+            label={taskData.admin}
             sx={{
               "& .MuiChip-label": { color: theme.palette.grey[500] },
             }}
@@ -89,7 +91,7 @@ const TaskDetails = ({ theme, taskId }) => {
           <Chip
             variant="outlined"
             icon={<CalendarMonth color="primary" />}
-            label="16 Apr, 2023"
+            label={taskData.date}
             color="primary"
           />
         </FlexBetween>
