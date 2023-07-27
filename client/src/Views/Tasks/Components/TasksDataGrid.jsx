@@ -21,12 +21,12 @@ function StatusColor(status) {
   }
 }
 
-const TasksDataGrid = ({ EvaluateTask }) => {
+const TasksDataGrid = ({ EvaluateTask, deleteTasks }) => {
   const theme = useTheme();
   const columns = [
     {
       field: "button",
-      headerName: "Action",
+      headerName: "Evaluate",
       renderCell: (params) => (
         <IconButton
           variant="contained"
@@ -72,6 +72,20 @@ const TasksDataGrid = ({ EvaluateTask }) => {
             backgroundColor: "rgba(0,0,0,0.05)",
           }}
         />
+      ),
+    },
+
+    {
+      field: "Action",
+      headerName: "Action",
+      renderCell: (params) => (
+        <IconButton
+          variant="contained"
+          color="primary"
+          onClick={() => deleteTasks(params.row.taskId)}
+        >
+          Delete
+        </IconButton>
       ),
     },
   ];
