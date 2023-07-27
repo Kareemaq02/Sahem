@@ -111,9 +111,21 @@ namespace Persistence
             {
                 var complaintPrivacy = new List<ComplaintPrivacy>
                 {
-                    new ComplaintPrivacy { strName = ConstantsDB.ComplaintPrivacyTypes.Private },
-                    new ComplaintPrivacy { strName = ConstantsDB.ComplaintPrivacyTypes.Public },
-                    new ComplaintPrivacy { strName = ConstantsDB.ComplaintPrivacyTypes.Any },
+                    new ComplaintPrivacy
+                    {
+                        strNameEn = ConstantsDB.ComplaintPrivacyTypes.PrivateEn,
+                        strNameAr = ConstantsDB.ComplaintPrivacyTypes.PrivateAr
+                    },
+                    new ComplaintPrivacy
+                    {
+                        strNameEn = ConstantsDB.ComplaintPrivacyTypes.PublicEN,
+                        strNameAr = ConstantsDB.ComplaintPrivacyTypes.PublicAr
+                    },
+                    new ComplaintPrivacy
+                    {
+                        strNameEn = ConstantsDB.ComplaintPrivacyTypes.AnyEN,
+                        strNameAr = ConstantsDB.ComplaintPrivacyTypes.AnyAr
+                    },
                 };
                 await context.ComplaintPrivacy.AddRangeAsync(complaintPrivacy);
             }
@@ -253,10 +265,7 @@ namespace Persistence
                 strNameAr = strAr,
                 strNameEn = strEn,
                 decGrade = 1.0M,
-                intPrivacyId = context.ComplaintPrivacy
-                    .Where(q => q.strName == "any")
-                    .FirstOrDefault()
-                    .intId,
+                intPrivacyId = 3,
                 intCreatedBy = 1,
                 dtmDateCreated = DateTime.Now,
                 intLastModifiedBy = 1,

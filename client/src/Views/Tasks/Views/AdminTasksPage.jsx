@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
+import { deleteTasks } from "../Service/DeleteTask";
 
 // Mui
 import {
@@ -78,6 +79,14 @@ const AdminTasksPage = () => {
           setTaskPhotos(data.photos);
           setTaskData({ taskId: id, ...data, admin: admin, photos: null });
           setDrawerOpen(true);
+        }}
+        deleteTasks={async (taskId) => {
+          const success = await deleteTasks(taskId);
+          if (success) {
+            setTaskId((prevTasks) =>
+              prevTasks.filter((task) => task.id !== taskId)
+            );
+          }
         }}
       />
       <SwipeableDrawer

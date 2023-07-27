@@ -1,11 +1,13 @@
 
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:account/API/view_complaint_request.dart';
 import 'package:flutter/material.dart';
 
 class ComplaintDetailsScreen extends StatefulWidget {
   final List<ComplaintModel> complaints;
 
-  ComplaintDetailsScreen({required this.complaints});
+  const ComplaintDetailsScreen({super.key, required this.complaints});
 
   @override
   _ComplaintViewState createState() => _ComplaintViewState();
@@ -16,17 +18,11 @@ class _ComplaintViewState extends State<ComplaintDetailsScreen> {
 
   int selectedIndex = 0;
   
- 
-
-
-
   @override
   Widget build(BuildContext context) {
     ComplaintModel complaint = widget.complaints.first;
-    
-
-
- List<String> getImageUrls() {
+   
+  List<String> getImageUrls() {
   List<String> imageUrls = [];
   for (var media in complaint.lstMedia) {
     imageUrls.add(media); // Add the media (URL) to the list
@@ -40,7 +36,7 @@ class _ComplaintViewState extends State<ComplaintDetailsScreen> {
     return SafeArea(
       top: true,
       child: Align(
-        alignment: AlignmentDirectional(0, 0),
+        alignment: const AlignmentDirectional(0, 0),
         child: 
         
         Container(
@@ -58,9 +54,9 @@ class _ComplaintViewState extends State<ComplaintDetailsScreen> {
                
                 Navigator.pop(context); // Go back to the previous screen
               },
-              child: Text('Go Back'),
+              child: const Text('Go Back'),
             ),
-              Container(
+              SizedBox(
                 height: 180,
                 child: Stack(
                   children: [
@@ -89,9 +85,9 @@ class _ComplaintViewState extends State<ComplaintDetailsScreen> {
                   ],
                 ),
               ),
-              SizedBox(height: 16),
-              Divider(),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
+              const Divider(),
+              const SizedBox(height: 16),
               _buildDetailsContainer(
                 complaintId: complaint.intId.toString(),
                 complaintType: complaint.strComplaintTypeEn.toString(),
@@ -110,7 +106,7 @@ class _ComplaintViewState extends State<ComplaintDetailsScreen> {
   Widget _buildImageCard(String imagePath) {
     return Container(
       width: 200,
-      margin: EdgeInsets.symmetric(horizontal: 5),
+      margin: const EdgeInsets.symmetric(horizontal: 5),
       child: Card(
         elevation: 2,
         child: Image.asset(
@@ -125,7 +121,7 @@ class _ComplaintViewState extends State<ComplaintDetailsScreen> {
     Color dotColor =
         index == selectedIndex ? Colors.black : Colors.grey.shade400;
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 6),
       child: CircleAvatar(
         radius: 6,
         backgroundColor: dotColor,
@@ -142,24 +138,24 @@ class _ComplaintViewState extends State<ComplaintDetailsScreen> {
     String address="",
   }) {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: Card(
         elevation: 2,
         child: Padding(
-          padding: EdgeInsets.all(1),
+          padding: const EdgeInsets.all(1),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildDetailRow("Complaint ID", complaintId),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               _buildDetailRow("Complaint Type", complaintType),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               _buildDetailRow("Time Created", timeCreated),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               _buildDetailRow("Time Finished", timeFinished),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               _buildDetailRow("Status", status),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               _buildDetailRow("Address", address),
             ],
           ),
@@ -176,7 +172,7 @@ class _ComplaintViewState extends State<ComplaintDetailsScreen> {
           flex: 1,
           child: Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.bold,
             ),
@@ -186,7 +182,7 @@ class _ComplaintViewState extends State<ComplaintDetailsScreen> {
           flex: 2,
           child: Text(
             value,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 14,
               color: Colors.black54,
             ),

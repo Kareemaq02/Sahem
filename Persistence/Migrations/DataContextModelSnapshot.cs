@@ -88,10 +88,15 @@ namespace Persistence.Migrations
                         .HasColumnType("int")
                         .HasColumnName("ID");
 
-                    b.Property<string>("strName")
+                    b.Property<string>("strNameAr")
                         .IsRequired()
                         .HasColumnType("longtext")
-                        .HasColumnName("NAME");
+                        .HasColumnName("NAME_AR");
+
+                    b.Property<string>("strNameEn")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("NAME_EN");
 
                     b.HasKey("intId");
 
@@ -217,6 +222,10 @@ namespace Persistence.Migrations
                     b.Property<int>("intComplaintId")
                         .HasColumnType("int")
                         .HasColumnName("COMPLAINT_ID");
+
+                    b.Property<bool>("blnIsDownVote")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("IS_DOWN_VOTE");
 
                     b.HasKey("intUserId", "intComplaintId");
 
@@ -928,14 +937,14 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.DataModels.Intersections.ComplaintsStatuses", b =>
                 {
-                    b.HasOne("Domain.DataModels.Complaints.ComplaintStatus", "ComplaintStatus")
-                        .WithMany("Complaints")
+                    b.HasOne("Domain.DataModels.Complaints.Complaint", "Complaint")
+                        .WithMany("Statuses")
                         .HasForeignKey("intComplaintId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.DataModels.Complaints.Complaint", "Complaint")
-                        .WithMany("Statuses")
+                    b.HasOne("Domain.DataModels.Complaints.ComplaintStatus", "ComplaintStatus")
+                        .WithMany("Complaints")
                         .HasForeignKey("intStatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

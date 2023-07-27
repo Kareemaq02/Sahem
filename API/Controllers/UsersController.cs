@@ -1,5 +1,6 @@
 ﻿using API.Services;
 using Application;
+using Application.Core;
 using Application.Queries.Departments;
 using Application.Queries.Users;
 using Domain.ClientDTOs.User;
@@ -18,14 +19,13 @@ using System.Security.Claims;
 
 namespace API.Controllers
 {
-   
     public class UsersController : BaseApiController
     {
         [Authorize]
         [HttpGet("citizens")] // .../api/users/citizens
-        public async Task<IActionResult> GetCitizensList()
+        public async Task<IActionResult> GetCitizensList([FromQuery] UsersFilter filter)
         {
-            return HandleResult(await Mediator.Send(new GetCitizensListQuery()));
+            return HandleResult(await Mediator.Send(new GetCitizensListQuery(filter)));
         }
 
         [Authorize]
@@ -37,7 +37,6 @@ namespace API.Controllers
 
         [Authorize]
         [HttpPut("verify/{id}")] //.../api/users/verify/id
-
         public async Task<IActionResult> VerifyUserById(int id)
         {
             return HandleResult(await Mediator.Send(new VerifyUserByIdCommand(id)));
@@ -45,22 +44,21 @@ namespace API.Controllers
 
         [Authorize]
         [HttpPut("unverify/{id}")] //.../api/users/unverify/id
-
-        public async Task<IActionResult> unverifyUserById(int id)
+        public async Task<IActionResult> UnverifyUserById(int id)
         {
             return HandleResult(await Mediator.Send(new UnverifyUserByIdCommand(id)));
         }
 
         [Authorize]
         [HttpPut("blacklist/{id}")] //.../api/users/blacklist/id
-        public async Task<IActionResult> blacklistUserById(int id)
+        public async Task<IActionResult> BlacklistUserById(int id)
         {
             return HandleResult(await Mediator.Send(new BlacklistUserByIdCommand(id)));
         }
 
         [Authorize]
         [HttpPut("whitelist/{id}")] //.../api/users/whitelist/id
-        public async Task<IActionResult> whitelistUserById(int id)
+        public async Task<IActionResult> WhitelistUserById(int id)
         {
             return HandleResult(await Mediator.Send(new WhitelistUserByIdCommand(id)));
         }

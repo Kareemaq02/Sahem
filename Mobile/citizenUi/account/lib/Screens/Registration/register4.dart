@@ -8,16 +8,20 @@ import 'package:adobe_xd/pinned.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../API/signup_request.dart';
+import '../../Validation/validations.dart';
 import '../Login/login.dart';
 
-String registrationNumberConcat=RegNumberController1.text+'/'+RegNumberController2.text;
+String registrationNumberConcat='${RegNumberController1.text}/${RegNumberController2.text}';
 
 class XDRegister4 extends StatelessWidget {
 
 
-  const XDRegister4({
+   XDRegister4({
     Key? key,
   }) : super(key: key);
+
+   final Validation _validation=Validation();
+   
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -232,19 +236,7 @@ class XDRegister4 extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(0.0, 24.0, 0.0, 0.0),child:
                 TextFormField(
                   controller: _usernameCon,
-                 validator: (value) {
-        if (value == null || value.isEmpty) {
-          flag2=true;
-          return 'Username is required.';
-        }
-        if (!RegExp(r'^[a-z][a-z0-9_.-]*$').hasMatch(value)) {
-          flag2=true;
-          return 'Invalid username. Usernames must start with a letter. Allowed characters are a-z (only lower case), 0-9, _, - (dash), and .(dot).';
-        }
-        else {
-          flag2=false;
-          return null;} // Return null if the value is valid
-      },
+                 validator: _validation.validateUsername,
                 decoration: InputDecoration(
                 filled: true,
                fillColor: Colors.white,
@@ -303,7 +295,7 @@ class XDRegister4 extends StatelessWidget {
                Padding(
                 padding: const EdgeInsets.fromLTRB(0.0, 24.0, 0.0, 0.0),child:
                 TextFormField(
-                 validator: validateEmail,
+                 validator: _validation.validateEmail,
                  keyboardType: TextInputType.emailAddress,
                  controller: _emailController,
                 decoration: InputDecoration(
@@ -422,27 +414,9 @@ class XDRegister4 extends StatelessWidget {
         ],
       ),
     );
-  }
+  }}
   
-String? validateEmail(String? value) {
-    String pattern =
-       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+"; // email validation regex pattern
-    RegExp regex = RegExp(pattern);
-     if (value!.isEmpty) {
-      flag1=true;
-      return "Email is Required";
-     }
-    if (!regex.hasMatch(_emailController.text)) {
-       flag1=true;
-      return 'Please enter a valid email address';
-    } else {
-      flag1=false;
-      return null;
-    }
-  }
 
-
-}
 
 const String _svg_nrpqt7 =
     '<svg viewBox="29.7 3.7 1.3 4.0" ><path transform="translate(29.67, 3.67)" d="M 0 0 L 0 4 C 0.8047311305999756 3.661223411560059 1.328037977218628 2.873133182525635 1.328037977218628 2 C 1.328037977218628 1.126866698265076 0.8047311305999756 0.3387765288352966 0 0" fill="#ffffff" fill-opacity="0.4" stroke="none" stroke-width="1" stroke-opacity="0.4" stroke-miterlimit="10" stroke-linecap="butt" /></svg>';

@@ -11,9 +11,12 @@
 
         public static class ComplaintPrivacyTypes
         {
-            public const string Private = "private";
-            public const string Public = "public";
-            public const string Any = "any";
+            public const string PrivateEn = "private";
+            public const string PublicEN = "public";
+            public const string AnyEN = "any";
+            public const string PrivateAr = "خاص";
+            public const string PublicAr = "عام";
+            public const string AnyAr = "كل";
         }
 
         public static class ComplaintStatusTypes

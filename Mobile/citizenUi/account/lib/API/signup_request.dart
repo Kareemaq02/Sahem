@@ -1,5 +1,5 @@
 
-// ignore_for_file: avoid_print, unused_local_variable
+// ignore_for_file: avoid_print, unused_local_variable, use_build_context_synchronously
 
 import 'dart:convert';
 import 'dart:io';
@@ -61,7 +61,7 @@ String registrationNumber,String nationalIDNumber,BuildContext context) async {
     var fName = jsonResponse['strFirstName'];
     var lName = jsonResponse['strLastName'];
     print('Signup successful. Welcome, $fName $lName!');
-     Navigator.push(context,MaterialPageRoute(builder: (context) => XDLogin()),);
+     Navigator.push(context,MaterialPageRoute(builder: (context) => const XDLogin()),);
 
   } else {
     print('Signup failed. Status code: ${response.statusCode}');

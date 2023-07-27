@@ -1,20 +1,19 @@
-// ignore_for_file: depend_on_referenced_packages, constant_identifier_names, unused_element
-
-import 'dart:convert';
-
+// ignore_for_file: depend_on_referenced_packages, constant_identifier_names, unused_element, library_private_types_in_public_api, prefer_typing_uninitialized_variables, use_build_context_synchronously, duplicate_ignore
+import 'package:account/API/get_complaints_ByLocation.dart';
+import 'package:account/Screens/Map/map_view.dart';
 import 'package:account/Screens/Profile/profile.dart';
+import 'package:account/Widgets/likeButton.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import '../../API/login_request.dart';
 import '../../API/view_complaint_request.dart';
 import '../File complaint/complaints1.dart';
 import '../View complaints/complaints_list.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../Map/map.dart'; 
-import 'package:http/http.dart' as http;
-import '../File complaint/complaints2.dart';
+
+
 class XDPublicFeed1 extends StatefulWidget {
   const XDPublicFeed1({Key? key}) : super(key: key);
 
@@ -25,36 +24,17 @@ class XDPublicFeed1 extends StatefulWidget {
 class _XDPublicFeed1State extends State<XDPublicFeed1> {
   
   late List<ComplaintModel> complaints;
+  late var address;
 
   @override
   void initState() {
-   _getCurrentPosition();
+
    super.initState();
   
-   // fetchComplaints(_currentPosition!.latitude,_currentPosition!.longitude);
     
    
   }
 
-Future<List<dynamic>> fetchComplaints(double latitude, double longitude) async {
-  final response = await http.post(
-    Uri.parse('https://10.0.2.2:5000/api/complaints/location'),
-    headers: {
-      'Authorization': 'Bearer $token2',
-      'Content-Type': 'application/json',
-    },
-    body: jsonEncode({
-      'decLat': latitude,
-      'decLng': longitude,
-    }),
-  );
-
-  if (response.statusCode == 200) {
-    return jsonDecode(response.body.toString());
-  } else {
-    throw Exception('Failed to fetch complaints');
-  }
-}
 
 
 
@@ -102,12 +82,27 @@ Future<List<dynamic>> fetchComplaints(double latitude, double longitude) async {
     await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
         .then((Position position) {
       setState(() => _currentPosition = position);
-     // _getAddressFromLatLng(_currentPosition!);
+     
     }).catchError((e) {
       debugPrint(e);
     });
     
   }
+
+   Future<void> _getAddressFromLatLng(double latitude, double longitude) async {
+    await placemarkFromCoordinates(
+            _currentPosition!.latitude, _currentPosition!.longitude)
+        .then((List<Placemark> placemarks) {
+      Placemark place = placemarks[0];
+      setState(() {
+        currentAddress =
+            '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}, ${place.postalCode}';
+      });
+    }).catchError((e) {
+      debugPrint(e);
+    });
+  }
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -115,214 +110,8 @@ Future<List<dynamic>> fetchComplaints(double latitude, double longitude) async {
       backgroundColor: const Color(0xffffffff),
       body: Stack(
         children: <Widget>[
-          Pinned.fromPins(
-            Pin(start: 18.0, end: 18.0),
-            Pin(size: 343.0, start: 113.0),
-            child:
-                // Adobe XD layer: 'Post 1' (group)
-                Stack(
-              children: <Widget>[
-                // Adobe XD layer: 'Card' (shape)
-                Container(
-                  decoration: BoxDecoration(
-                    color: const Color(0xffffffff),
-                    borderRadius: BorderRadius.circular(10.0),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color(0x21465883),
-                        offset: Offset(0, 0),
-                        blurRadius: 2,
-                      ),
-                    ],
-                  ),
-                ),
-                Pinned.fromPins(
-                  Pin(start: 0.0, end: 0.0),
-                  Pin(size: 183.0, start: 0.0),
-                  child:
-                      // Adobe XD layer: 'Photo' (shape)
-                      Container(
-                    decoration: const BoxDecoration(
-                      color: Color(0xff6f407d),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10.0),
-                        topRight: Radius.circular(10.0),
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(14.0, 15.0, 10.3, 5.0),
-                  child:
-                      // Adobe XD layer: 'Data' (group)
-                      Stack(
-                    children: <Widget>[
-                      const Align(
-                        alignment: Alignment(-1.0, 0.139),
-                        child: SizedBox(
-                          width: 90.0,
-                          height: 14.0,
-                          child: Text(
-                            'Hussain Ghanem',
-                            style: TextStyle(
-                              fontFamily: 'Euclid Circular A',
-                              fontSize: 11,
-                              color: Color(0xff6f407d),
-                              fontWeight: FontWeight.w700,
-                            ),
-                            softWrap: false,
-                          ),
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: SizedBox(
-                          width: 57.0,
-                          height: 20.0,
-                          child:
-                              // Adobe XD layer: 'Status' (group)
-                              Stack(
-                            children: <Widget>[
-                              // Adobe XD layer: 'StatusBox' (shape)
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: const Color(0xffffffff),
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                              ),
-                              const Align(
-                                alignment: Alignment(0.0, 0.111),
-                                child: SizedBox(
-                                  width: 35.0,
-                                  height: 11.0,
-                                  child: Text(
-                                    'Pending',
-                                    style: TextStyle(
-                                      fontFamily: 'Euclid Circular A',
-                                      fontSize: 9,
-                                      color: Color(0xfffeb25b),
-                                    ),
-                                    softWrap: false,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const Align(
-                        alignment: Alignment.bottomLeft,
-                        child: SizedBox(
-                          width: 124.0,
-                          height: 10.0,
-                          child: Text(
-                            'Taj LifeStyle Center, Amman 11183',
-                            style: TextStyle(
-                              fontFamily: 'Euclid Circular A',
-                              fontSize: 8,
-                              color: Color(0xff92a5c6),
-                              fontWeight: FontWeight.w300,
-                            ),
-                            softWrap: false,
-                          ),
-                        ),
-                      ),
-                      Pinned.fromPins(
-                        Pin(size: 214.0, end: 11.7),
-                        Pin(size: 10.0, end: 0.0),
-                        child:
-                            // Adobe XD layer: 'Datetime' (group)
-                            Stack(
-                          children: <Widget>[
-                            Pinned.fromPins(
-                              Pin(size: 43.0, start: 0.0),
-                              Pin(start: 0.0, end: 1.0),
-                              child: const Text(
-                                '20/Jan/2023',
-                                style: TextStyle(
-                                  fontFamily: 'Euclid Circular A',
-                                  fontSize: 7,
-                                  color: Color(0xff92a5c6),
-                                  fontWeight: FontWeight.w300,
-                                ),
-                                softWrap: false,
-                              ),
-                            ),
-                            const Align(
-                              alignment: Alignment.bottomRight,
-                              child: SizedBox(
-                                width: 25.0,
-                                height: 8.0,
-                                child: Text(
-                                  '12:00 pm',
-                                  style: TextStyle(
-                                    fontFamily: 'Euclid Circular A',
-                                    fontSize: 6,
-                                    color: Color(0xff92a5c6),
-                                    fontWeight: FontWeight.w300,
-                                  ),
-                                  softWrap: false,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Align(
-                        alignment: const Alignment(1.0, 0.247),
-                        child: SizedBox(
-                          width: 26.0,
-                          height: 44.0,
-                          child: Stack(
-                            children: <Widget>[
-                              Pinned.fromPins(
-                                Pin(start: 3.0, end: 3.7),
-                                Pin(size: 14.0, end: 0.0),
-                                child: const Text(
-                                  '754',
-                                  style: TextStyle(
-                                    fontFamily: 'Euclid Circular A',
-                                    fontSize: 11,
-                                    color: Color(0xff6f407d),
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  softWrap: false,
-                                ),
-                              ),
-                              Pinned.fromPins(
-                                Pin(start: 0.0, end: 0.0),
-                                Pin(size: 26.6, start: 0.0),
-                                child:
-                                    // Adobe XD layer: 'VoteIcon' (shape)
-                                    SvgPicture.string(
-                                  _svg_yrzequ,
-                                  allowDrawingOutsideViewBox: true,
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Pinned.fromPins(
-                        Pin(start: 2.0, end: 41.7),
-                        Pin(size: 90.0, end: 35.0),
-                        child: const Text(
-                          'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500.',
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 15,
-                            color: Color(0xff000000),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              
-              ],
-            ),
-          ),
+         
+         // Page title 
           Pinned.fromPins(
             Pin(start: 18.0, end: 27.0),
             Pin(size: 34.0, start: 56.0),
@@ -388,206 +177,50 @@ Future<List<dynamic>> fetchComplaints(double latitude, double longitude) async {
             ),
           ),
          
-          Pinned.fromPins(
-            Pin(start: 18.0, end: 18.0),
-            Pin(size: 343.0, end: 117.0),
-            child:
-                // Adobe XD layer: 'Post 1' (group)
-                Stack(
-              children: <Widget>[
-                // Adobe XD layer: 'Card' (shape)
-                Container(
-                  decoration: BoxDecoration(
-                    color: const Color(0xffffffff),
-                    borderRadius: BorderRadius.circular(10.0),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color(0x21465883),
-                        offset: Offset(0, 0),
-                        blurRadius: 2,
-                      ),
-                    ],
-                  ),
-                ),
-                Pinned.fromPins(
-                  Pin(start: 0.0, end: 0.0),
-                  Pin(size: 183.0, start: 0.0),
-                  child:
-                      // Adobe XD layer: 'Photo' (shape)
-                      Container(
-                    decoration: const BoxDecoration(
-                      color: Color(0xff6f407d),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10.0),
-                        topRight: Radius.circular(10.0),
-                      ),
-                    ),
-                  ),
-                ),
-                Pinned.fromPins(
-                  Pin(start: 14.0, end: 10.3),
-                  Pin(size: 149.1, end: 5.0),
-                  child:
-                      // Adobe XD layer: 'Data' (group)
-                      Stack(
-                    children: <Widget>[
-                      Pinned.fromPins(
-                        Pin(size: 90.0, start: 0.0),
-                        Pin(size: 14.0, start: 2.1),
-                        child: const Text(
-                          'ruba',
-                          style: TextStyle(
-                            fontFamily: 'Euclid Circular A',
-                            fontSize: 11,
-                            color: Color(0xff6f407d),
-                            fontWeight: FontWeight.w700,
-                          ),
-                          softWrap: false,
-                        ),
-                      ),
-                      const Align(
-                        alignment: Alignment.bottomLeft,
-                        child: SizedBox(
-                          width: 124.0,
-                          height: 10.0,
-                          child: Text(
-                            'Taj LifeStyle Center, Amman 11183',
-                            style: TextStyle(
-                              fontFamily: 'Euclid Circular A',
-                              fontSize: 8,
-                              color: Color(0xff92a5c6),
-                              fontWeight: FontWeight.w300,
-                            ),
-                            softWrap: false,
-                          ),
-                        ),
-                      ),
-                      Pinned.fromPins(
-                        Pin(size: 214.0, end: 11.7),
-                        Pin(size: 10.0, end: 0.0),
-                        child:
-                            // Adobe XD layer: 'Datetime' (group)
-                            Stack(
-                          children: <Widget>[
-                            Pinned.fromPins(
-                              Pin(size: 43.0, start: 0.0),
-                              Pin(start: 0.0, end: 1.0),
-                              child: const Text(
-                                '20/Jan/2023',
-                                style: TextStyle(
-                                  fontFamily: 'Euclid Circular A',
-                                  fontSize: 7,
-                                  color: Color(0xff92a5c6),
-                                  fontWeight: FontWeight.w300,
-                                ),
-                                softWrap: false,
-                              ),
-                            ),
-                            const Align(
-                              alignment: Alignment.bottomRight,
-                              child: SizedBox(
-                                width: 25.0,
-                                height: 8.0,
-                                child: Text(
-                                  '12:00 pm',
-                                  style: TextStyle(
-                                    fontFamily: 'Euclid Circular A',
-                                    fontSize: 6,
-                                    color: Color(0xff92a5c6),
-                                    fontWeight: FontWeight.w300,
-                                  ),
-                                  softWrap: false,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: SizedBox(
-                          width: 26.0,
-                          height: 44.0,
-                          child: Stack(
-                            children: <Widget>[
-                              Pinned.fromPins(
-                                Pin(start: 3.0, end: 3.7),
-                                Pin(size: 14.0, end: 0.0),
-                                child: const Text(
-                                  '754',
-                                  style: TextStyle(
-                                    fontFamily: 'Euclid Circular A',
-                                    fontSize: 11,
-                                    color: Color(0xff6f407d),
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  softWrap: false,
-                                ),
-                              ),
-                              Pinned.fromPins(
-                                Pin(start: 0.0, end: 0.0),
-                                Pin(size: 26.6, start: 0.0),
-                                child:
-                                    // Adobe XD layer: 'VoteIcon' (shape)
-                                    SvgPicture.string(
-                                  _svg_u7gglt,
-                                  allowDrawingOutsideViewBox: true,
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Pinned.fromPins(
-                        Pin(start: 2.0, end: 41.7),
-                        Pin(size: 90.0, middle: 0.4077),
-                        child: const Text(
-                          'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500.',
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 15,
-                            color: Color(0xff000000),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+         //complaint Post
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 65.0,left: 10,bottom: 140),
+            child: FutureBuilder<List<dynamic>>(
+            future: getComplaintsByLocation(31.961899172907753, 35.86508730906701),
+            builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasData) {
+            var data = snapshot.data;
+            return ListView.builder(
+              itemCount: data!.length,
+              itemBuilder: (BuildContext context, int index) {
+             
+             
+                return post1(context,
+                intComplaintId:data[index]['intComplaintId'].toString(),
+                strStatus:data[index]['strStatus'].toString(),
+                strUserName:data[index]['strUserName'].toString(),
+                dtmDateCreated: data[index]['dtmDateCreated'].toString(),
+                 intVotersCount: data[index]['intVotersCount'],
+                 strComplaintTypeEn: data[index]['strComplaintTypeEn'].toString(),
+                 strComment: data[index]['StrComment'].toString(),
+                address: "amman",
                 
-                Pinned.fromPins(
-                  Pin(size: 57.0, start: 14.0),
-                  Pin(size: 20.0, start: 15.0),
-                  child:
-                      // Adobe XD layer: 'Status' (group)
-                      Stack(
-                    children: <Widget>[
-                      // Adobe XD layer: 'StatusBox' (shape)
-                      Container(
-                        decoration: BoxDecoration(
-                          color: const Color(0xffffffff),
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                      ),
-                      Pinned.fromPins(
-                        Pin(start: 8.0, end: 7.0),
-                        Pin(size: 11.0, middle: 0.5556),
-                        child: const Text(
-                          'Approved',
-                          style: TextStyle(
-                            fontFamily: 'Euclid Circular A',
-                            fontSize: 9,
-                            color: Color(0xff6f407d),
-                          ),
-                          softWrap: false,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+                
+                );
+              
+              },
+            ); // Render the widget if the API call is successful
+                } else {
+            return const Text('No complaints found'); // Render an error message if the API call returns an empty list
+                }
+              } else {
+                return const CircularProgressIndicator(); // Show a progress indicator while the API call is in progress
+              }
+            },
           ),
+          ),
+        ),
+         
+
+
+         //bottom navigator
           Pinned.fromPins(
             Pin(start: 0.0, end: 0.0),
             Pin(size: 172.0, end: 0.0),
@@ -724,6 +357,8 @@ Future<List<dynamic>> fetchComplaints(double latitude, double longitude) async {
                     ),
                   ),
                 ),
+
+               //bottom navigator 
                 Pinned.fromPins(
                   Pin(size: 39.0, middle: 0.7715),
                   Pin(size: 35.0, end: 18.6),
@@ -782,7 +417,7 @@ Future<List<dynamic>> fetchComplaints(double latitude, double longitude) async {
                         InkWell(
                       onTap: () {
                           
-                          Navigator.push(context,MaterialPageRoute(builder: (context) =>  XDComplaints1()));
+                          Navigator.push(context,MaterialPageRoute(builder: (context) =>  const XDComplaints1()));
                       },             
                       child: Stack(
                         children: <Widget>[
@@ -847,7 +482,7 @@ Future<List<dynamic>> fetchComplaints(double latitude, double longitude) async {
                           links: [
                             PageLinkInfo(
                               duration: 0,
-                              pageBuilder: () => const XDMap_(),
+                              pageBuilder: () => const FullMap(),
                             ),
                           ],
                           child: SvgPicture.string(
@@ -935,3 +570,244 @@ const String _svg_p8s453 =
     '<svg viewBox="0.0 0.0 26.0 26.0" ><path transform="translate(-3.0, -3.0)" d="M 28.27777862548828 2.999999761581421 L 28.04666709899902 3.043332815170288 L 20.33333206176758 6.033331871032715 L 11.66666603088379 2.999999761581421 L 3.519999742507935 5.744444847106934 C 3.216666460037231 5.845555305480957 2.999999761581421 6.105555534362793 2.999999761581421 6.437777519226074 L 2.999999761581421 28.27777862548828 C 2.999999761581421 28.68222236633301 3.317777872085571 29 3.722221612930298 29 L 3.953333616256714 28.9566650390625 L 11.66666603088379 25.9666633605957 L 20.33333206176758 29 L 28.4799976348877 26.25555610656738 C 28.78333282470703 26.15444564819336 29 25.89444351196289 29 25.56222343444824 L 29 3.722221612930298 C 29 3.317777872085571 28.68222236633301 2.999999761581421 28.27777862548828 2.999999761581421 Z M 20.33333206176758 26.11111068725586 L 11.66666603088379 23.06332969665527 L 11.66666603088379 5.888888359069824 L 20.33333206176758 8.936665534973145 L 20.33333206176758 26.11111068725586 Z" fill="#bbc7db" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
 const String _svg_j1pel9 =
     '<svg viewBox="0.7 8.0 29.6 25.2" ><path transform="translate(-1.27, 5.0)" d="M 13.85300064086914 28.1876220703125 L 13.85300064086914 19.29787445068359 L 19.77949523925781 19.29787445068359 L 19.77949523925781 28.1876220703125 L 27.1876220703125 28.1876220703125 L 27.1876220703125 16.33462524414062 L 31.63249969482422 16.33462524414062 L 16.81625175476074 2.999999523162842 L 1.999999523162842 16.33462524414062 L 6.444873809814453 16.33462524414062 L 6.444873809814453 28.1876220703125 L 13.85300064086914 28.1876220703125 Z" fill="#6f407d" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
+
+Widget post1(BuildContext context,  
+{
+required String dtmDateCreated,
+required String strComplaintTypeEn,
+required String strComment,
+required int intVotersCount,
+required String strStatus,
+required String strUserName,
+required var address,
+required var intComplaintId,
+
+
+
+}) {
+  return
+   Padding(
+    padding: const EdgeInsets.only(top:20.0,right:10),
+    child: Container(
+            decoration: BoxDecoration(
+              color: const Color(0xffffffff),
+              borderRadius: BorderRadius.circular(10.0),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color.fromARGB(255, 108, 107, 107),
+                  offset: Offset(0, 0),
+                  blurRadius: 5,
+                ),
+              ],
+            ),
+          child:
+    
+    Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        // Card
+       
+  
+        // Photo
+        Stack(
+         
+          children: <Widget>[
+             Container(
+              height: 183.0,
+         decoration: const BoxDecoration(
+           color: Color(0xff6f407d),
+           borderRadius: BorderRadius.only(
+             topLeft: Radius.circular(10.0),
+             topRight: Radius.circular(10.0),
+           ),
+         ),
+              child: Image.asset('assets/icons/pothole.jpg',fit:BoxFit.fill,),
+        ),
+            // StatusBox
+    MediaQuery(
+    data: MediaQuery.of(context), child:
+  
+     Padding(
+     padding: const EdgeInsets.all(8.0),
+     child: Container(
+      height: 15,
+      width: 50,
+                
+                  decoration: BoxDecoration(
+                    color: const Color(0xffffffff),
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+               child:
+            
+            //status
+                  Text(
+                  
+                  strStatus,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontFamily: 'Euclid Circular A',
+                    fontSize: 12,
+                    color: Color(0xff6f407d),
+                  ),
+                  softWrap: false,
+                ),
+                    ),
+     ),
+          ),],
+        ),
+        
+  
+        // Data
+    const SizedBox(height: 10,),
+        Row(
+          children: [
+            //username
+             Text(
+              strUserName,
+              style:const  TextStyle(
+                fontFamily: 'Euclid Circular A',
+                fontSize: 13,
+                color: Color(0xff6f407d),
+                fontWeight: FontWeight.w700,
+              ),
+              softWrap: false,
+            ),
+          const Spacer(),
+            Align(
+                alignment: Alignment.topRight,
+                child: SizedBox(
+                  width: 75.0,
+                  height: 65.0,
+                  child: Column(
+                    children: <Widget>[
+                         // VoteIcon
+
+                        like(intVotersCount,intComplaintId),
+                     
+                    
+                    ],
+                  ),
+                ),
+              ),
+          ],
+        ),
+  
+  
+         // Description
+               Padding(
+                padding:const  EdgeInsets.only(left: 2.0, right: 41.7,bottom: 30),
+                child: Text(
+                '$strComplaintTypeEn\n${strComment=="" ? strComment : 'Uneven road surface due to pothole - hazardous conditions!'}',
+
+                  style: const TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 15,
+                    color: Color(0xff000000),
+                  ),
+                ),
+              ),
+          const SizedBox(height: 1,),
+  
+          Padding(
+            padding: const EdgeInsets.only(bottom: 15.0,left: 5),
+            child: Row(children: [
+            // address
+              Align(
+                  alignment: Alignment.bottomLeft,
+                  child: SizedBox(
+                    width: 124.0,
+                    height: 10.0,
+                    child: Text(
+                      address,
+                      style: const TextStyle(
+                        fontFamily: 'Euclid Circular A',
+                        fontSize: 10,
+                        color: Color(0xff92a5c6),
+                        fontWeight: FontWeight.bold,
+                      ),
+                      softWrap: false,
+                    ),
+                  ),
+                ),
+                   
+             const SizedBox(width: 18,),
+                // date
+                 Align(
+                  alignment: Alignment.bottomRight,
+                  child: Text(
+                    dtmDateCreated.toString().substring(0,10),
+                    style: const TextStyle(
+                      fontFamily: 'Euclid Circular A',
+                      fontSize: 10,
+                      color: Color(0xff92a5c6),
+                      fontWeight: FontWeight.bold,
+                    ),
+                    softWrap: false,
+                  ),),
+              const SizedBox(width: 40,),
+                //time
+                 Align(
+                        alignment: Alignment.bottomRight,
+                        child: Text(
+                           dtmDateCreated.toString().substring(11,17),
+                          style:const   TextStyle(
+                            fontFamily: 'Euclid Circular A',
+                            fontSize: 10,
+                            color: Color(0xff92a5c6),
+                             fontWeight: FontWeight.bold,
+                          ),
+                          softWrap: false,
+                        ),
+                      ),
+            
+                   ],),
+          )
+             
+  
+       
+  
+      
+  
+        //       // Vote count
+        //       Align(
+        //         alignment: Alignment.topRight,
+        //         child: SizedBox(
+        //           width: 26.0,
+        //           height: 44.0,
+        //           child: Stack(
+        //             children: <Widget>[
+        //               Text(
+        //                 '754',
+        //                 style: TextStyle(
+        //                   fontFamily: 'Euclid Circular A',
+        //                   fontSize: 11,
+        //                   color: Color(0xff6f407d),
+        //                   fontWeight: FontWeight.w500,
+        //                 ),
+        //                 softWrap: false,
+        //               ),
+  
+        //               // VoteIcon
+        //               SvgPicture.string(
+        //                 _svg_u7gglt,
+        //                 allowDrawingOutsideViewBox: true,
+        //                 fit: BoxFit.fill,
+        //               ),
+        //             ],
+        //           ),
+        //         ),
+        //       ),
+  
+             
+        //     ],
+        //   ),
+        // ),
+  
+        // // Status box
+        
+      ],
+    ),
+    ),
+  );
+}

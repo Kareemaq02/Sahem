@@ -1,4 +1,4 @@
-// ignore_for_file: constant_identifier_names, unused_element, unused_import, depend_on_referenced_packages, avoid_print
+// ignore_for_file: constant_identifier_names, unused_element, unused_import, depend_on_referenced_packages, avoid_print, library_private_types_in_public_api
 
 import 'dart:convert';
 
@@ -15,13 +15,14 @@ import '../../Repository/language_constants.dart';
 late String dropdownValue;
 late List<String> dropdownItems;
 Map<String, String> _nationalities = {};
+TextEditingController nationalityController=TextEditingController();
 
 Future<void> loadNationalities() async {
   final jsonString = await rootBundle.loadString('assets/data.json');
   final Map<String, dynamic> jsonMap = json.decode(jsonString);
   print(jsonMap.length);
   jsonMap.forEach((key, value) {
-    _nationalities[key] = key.toString();
+    _nationalities[key] = value.toString();
 
   });
 }
@@ -38,7 +39,8 @@ class XDRegister2 extends StatefulWidget {
 class _XDRegister2State extends State<XDRegister2> {
 
 
-void initState() {
+@override
+  void initState() {
   super.initState();
   loadNationalities();
   dropdownValue=_nationalities.keys.first;
@@ -66,7 +68,7 @@ void initState() {
               children: <Widget>[
                 InkWell(
                   onTap: () {
-            Navigator.push(context,MaterialPageRoute(builder: (context) =>  const XDRegister4()),
+            Navigator.push(context,MaterialPageRoute(builder: (context) =>   XDRegister4()),
   );
                   },
                   child:               // Adobe XD layer: 'Login' (shape)
@@ -83,7 +85,7 @@ void initState() {
                   Pin(start: 16.0, end: 15.0),
                   child:  Text(
                     translation(context).next,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 30,
                       color: Color(0xffffffff),
@@ -110,19 +112,20 @@ Padding(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Text(
-        translation(context).idType,
-        style: TextStyle(
+        translation(context).nationality,
+        style: const TextStyle(
           fontFamily: 'Poppins',
           fontSize: 15,
           color: Color(0xff6f407d),
         ),
       ),
-      SizedBox(height: 10,),
+      const SizedBox(height: 10,),
       TypeAheadFormField<String>(
-        initialValue: dropdownValue,
+        initialValue: null,
+       
         autovalidateMode: AutovalidateMode.onUserInteraction,
         textFieldConfiguration: TextFieldConfiguration(
-          
+          controller: nationalityController,
           decoration: InputDecoration(
             filled: true,
             fillColor: Colors.white,
@@ -166,12 +169,13 @@ Padding(
         onSuggestionSelected: (suggestion) {
           setState(() {
             dropdownValue = suggestion;
-            
-            
+            nationalityController.text=suggestion;
+
+      
           });
         },
         
-         getImmediateSuggestions: false, 
+         getImmediateSuggestions: true, 
          // added this line
       ),
       

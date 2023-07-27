@@ -2,18 +2,21 @@
 
 import 'package:account/Screens/Registration/register.dart';
 import 'package:account/Screens/Registration/register4.dart';
+import 'package:account/Validation/validations.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:flutter/services.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import '../../Repository/language_constants.dart';
+
+
 String IdField="National number";
 late String _nationalNumber;
 late String _idNumber;
 late String _registrationNumber1;
 late String _registrationNumber2;
+Validation _validation=Validation();
 
 
 TextEditingController NationalNumController = TextEditingController();
@@ -21,11 +24,9 @@ TextEditingController IDNumbberController = TextEditingController();
 TextEditingController RegNumberController1 = TextEditingController();
 TextEditingController RegNumberController2= TextEditingController();
 GlobalKey nationalNumKey = GlobalKey();
-// GlobalKey<FormState> _key22 = new GlobalKey();
-// GlobalKey<FormState> _key33 = new GlobalKey();
-// GlobalKey<FormState> _key32 = new GlobalKey();
-bool _validate1 = false;
 
+
+bool _validate1 = false;
 List<String> dropdownItems = ['Select Here','National ID Number','registration Number'];
 String dropdownValue = dropdownItems.first;
 class XDRegister1 extends StatefulWidget {
@@ -121,7 +122,7 @@ class _XDRegister1State extends State<XDRegister1> {
                   controller: NationalNumController,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   maxLength: 10,
-                  validator:inputValidate,
+                  validator:_validation.inputValidate,
                   onSaved:(newValue) =>  _nationalNumber = newValue!,
                   keyboardType: TextInputType.number,
                 decoration: InputDecoration(
@@ -348,14 +349,6 @@ const String _svg_h30c0y =
 
 
 
-   String? inputValidate(String? value) {
-     if (value!.isEmpty) {
-      return "Field is Required";
-    } else {
-      return null;
-    }
-  }
-
 
   
  
@@ -381,7 +374,7 @@ const String _svg_h30c0y =
         controller: RegNumberController1,
         maxLength: 3,
         keyboardType: TextInputType.number,
-        validator:inputValidate,
+        validator:_validation.inputValidate,
         onSaved: (newValue) => _registrationNumber1=newValue!,
         decoration: InputDecoration(
           counterText: '',
@@ -433,7 +426,7 @@ const String _svg_h30c0y =
        TextFormField(
          controller: RegNumberController2,
         maxLength: 3,
-        validator: inputValidate,
+        validator: _validation.inputValidate,
         onSaved: (newValue) => _registrationNumber2=newValue!,
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
@@ -498,7 +491,7 @@ const String _svg_h30c0y =
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   maxLength:  dropdownValue==dropdownItems[2] ? 10 :6 ,
                   validator: 
-                   inputValidate,
+                   _validation.inputValidate,
                    onSaved: (newValue) => _idNumber=newValue!,
                   
                   keyboardType: TextInputType.number,

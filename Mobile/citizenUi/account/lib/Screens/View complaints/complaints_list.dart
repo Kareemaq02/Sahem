@@ -1,20 +1,17 @@
 // ignore_for_file: prefer_const_constructors, depend_on_referenced_packages, duplicate_ignore, unused_element, constant_identifier_names, library_private_types_in_public_api, avoid_print
 
 import 'dart:convert';
-
-import 'package:account/API/view_complaint_request.dart';
+import 'package:account/API/view_complaint_request.dart' as api;
+import 'package:account/Screens/View%20complaints/complaints_details.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Screens/Home/public_feed.dart';
-
 import 'package:adobe_xd/pinned.dart';
-import '../../API/login_request.dart';
+//import '../../API/login_request.dart';
 import 'package:adobe_xd/page_link.dart';
-// ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'complaints_details.dart';
 
 
 
@@ -28,7 +25,7 @@ class XDComplaintsList extends StatefulWidget {
 }
 
 class _XDComplaintsListState extends State<XDComplaintsList> {
-  late List<ComplaintModel> complaints;
+  late List<api.ComplaintModel> complaints;
 
   @override
   void initState() {
@@ -37,16 +34,19 @@ class _XDComplaintsListState extends State<XDComplaintsList> {
     super.initState();
    
   }
-
+ String token23='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFidXJ1bW1hbm4iLCJmaXJzdE5hbWUiOiJydWJhIiwibGFzdE5hbWUiOiJhYnVydW1tYW4iLCJwaG9uZU51bWJlciI6IjA3OTg5ODk5OTkiLCJ1c2VyVHlwZSI6InVzZXIiLCJuYmYiOjE2ODg4ODc4MTEsImV4cCI6MTY5MTQ3OTgxMSwiaWF0IjoxNjg4ODg3ODExfQ.nK7fewOq3b9HCXNwJLAWd3Q9Xx8JGP-8-KOY_EPomxk';
 Future<List<dynamic>> fetchComplaints() async {
   final response = await http.get(Uri.parse("https://10.0.2.2:5000/api/complaints/user"),
    headers: {
-          'Authorization': 'Bearer $token2',
+          'Authorization': 'Bearer $token23',
         }
   );
+      print(response.body);
+     print(response.statusCode);
   if (response.statusCode == 200) {
+
     print("ok");
-     print(token2);
+    // print(token2);
    // print(jsonDecode(response.body.toString()));
     return jsonDecode(response.body.toString());
   } else {
@@ -79,7 +79,7 @@ Future<List<dynamic>> fetchComplaints() async {
                     
                  
                     if (snapshot.hasData) {
-                     var data = snapshot.data;
+                     var data = snapshot.data as List<dynamic>?;
                       return ListView.builder(
                          itemCount: data != null ? data.length : 0,
                         itemBuilder: (context, index) {
@@ -87,7 +87,7 @@ Future<List<dynamic>> fetchComplaints() async {
                             Column(
                               children: [
                           
-                          ReusableRow( comment: data![index]['strComment'].toString(),type: data![index]['strComplaintTypeEn'].toString(),status: data![index]['strStatus'].toString(),date: data![index]['dtmDateCreated'].toString(), id: data![index]['intComplaintId'].toString(),),
+                          ReusableRow( comment: data![index]['strComment'].toString(),type: data[index]['strComplaintTypeEn'].toString(),status: data[index]['strStatus'].toString(),date: data[index]['dtmDateCreated'].toString(), id: data[index]['intComplaintId'].toString(),),
                           //ReusableRow( value: data[index]['strStatus'].toString(),),
                                
                               ],
@@ -412,7 +412,7 @@ class ReusableRow extends StatelessWidget {
   final String id;
  
 
-   ReusableRow({
+   const ReusableRow({
     Key? key,
     required this.comment,
     required this.status,
@@ -557,9 +557,10 @@ class ReusableRow extends StatelessWidget {
         );
       },
      openBuilder: (context, closeContainer) {
-  getUserComplaint a = getUserComplaint();
-  Future<List<ComplaintModel>> complaintFuture = a.getComplaintById(id);
-  return FutureBuilder<List<ComplaintModel>>(
+  api.getUserComplaint a = api.getUserComplaint();
+  Future<List<api.ComplaintModel>> complaintFuture = a.getComplaintById(id);
+  
+  return FutureBuilder<List<api.ComplaintModel>>(
     future: complaintFuture,
     builder: (context, snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) {
@@ -567,7 +568,7 @@ class ReusableRow extends StatelessWidget {
       } else if (snapshot.hasError) {
         return Text('Error: ${snapshot.error}');
       } else if (snapshot.hasData) {
-        List<ComplaintModel> complaints = snapshot.data!;
+        List<api.ComplaintModel> complaints = snapshot.data!;
         return ComplaintDetailsScreen(
           complaints: complaints,
         );

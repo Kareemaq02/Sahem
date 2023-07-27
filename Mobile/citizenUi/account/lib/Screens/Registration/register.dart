@@ -1,6 +1,7 @@
 // ignore_for_file: constant_identifier_names, unused_element, non_constant_identifier_names, camel_case_types, library_private_types_in_public_api, unnecessary_null_comparison, prefer_const_constructors
 
 import 'package:account/Screens/Registration/register1.dart';
+import 'package:account/Validation/validations.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:adobe_xd/page_link.dart';
@@ -12,6 +13,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 late String fName,lName,Phone;
  enum nationalitySelection{Jordanian,forign}
  var selectedNationality=nationalitySelection.Jordanian;
+ Validation _validation=Validation();
 
   TextEditingController FnameController = TextEditingController();
   TextEditingController LnameController = TextEditingController();
@@ -142,7 +144,8 @@ class _XDRegisterState extends State<XDRegister> {
                 Padding(
                 padding: const EdgeInsets.fromLTRB(0.0, 24.0, 0.0, 0.0),child:
                 TextFormField(
-                validator: inputValidate,
+                keyboardType: TextInputType.name,
+                validator: _validation.validateName,
                  onSaved:(newValue) => fName = newValue!,
                   controller: FnameController,
                 decoration: InputDecoration(
@@ -203,8 +206,9 @@ class _XDRegisterState extends State<XDRegister> {
                 Padding(
                 padding: const EdgeInsets.fromLTRB(0.0, 24.0, 0.0, 0.0),child:
                 TextFormField(
+                  keyboardType: TextInputType.name,
                   controller: LnameController,
-                  validator: inputValidate,
+                  validator:_validation.validateName,
                  onSaved:(newValue) =>  lName= newValue!,
                 decoration: InputDecoration(
                 filled: true,
@@ -263,8 +267,9 @@ class _XDRegisterState extends State<XDRegister> {
                 Padding(
                 padding: const EdgeInsets.fromLTRB(0.0, 24.0, 0.0, 0.0),child:
                  TextFormField(
+                  keyboardType: TextInputType.phone,
                   controller:PhoneController,
-                  validator: inputValidate,
+                  validator: _validation.validateMobile,
                   maxLength: 10,
                  onSaved:(newValue) => Phone =newValue!,
                 decoration: InputDecoration(
@@ -473,10 +478,3 @@ const String _svg_gg6p5 =
 
 
 
- String? inputValidate(String? value) {
-     if (value!.isEmpty) {
-      return "Field is Required";
-    } else {
-      return null;
-    }
-  }

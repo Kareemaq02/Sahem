@@ -1,29 +1,63 @@
-// ignore_for_file: constant_identifier_names, duplicate_ignore, unused_element, depend_on_referenced_packages
+// ignore_for_file: constant_identifier_names, duplicate_ignore, unused_element, depend_on_referenced_packages, library_private_types_in_public_api, avoid_print
 
-import 'package:account/Screens/Home/public_feed.dart';
+import 'package:account/API/user_info_request.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
-import '../View complaints/complaints_list.dart';
+import '../../Widgets/bottom_navBat.dart';
 import 'edit_profile.dart';
-import '../Login/login.dart';
-import '../Map/map.dart';
-import 'package:adobe_xd/page_link.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-String usernameInfo="";
-String emailInfo="";
-String phoneInfo="";
-String locationInfo="";
 
-class XDProfile extends StatelessWidget {
-  const XDProfile({
-    Key? key,
-  }) : super(key: key);
+
+
+class XDProfile extends StatefulWidget {
+  
+ const XDProfile({Key? key}) : super(key: key);
+
+
+  @override
+  _XDProfileState createState() => _XDProfileState();
+}
+
+class _XDProfileState extends State<XDProfile> {
+
+
+
+   List<UserInfoModel> _userInfo=[];
+  getUserInfo user=getUserInfo();
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserInfo("520");
+  }
+
+
+    Future<void> _fetchUserInfo(String userId) async {
+    try {
+      List<UserInfoModel> userInfo = await user.getUserInfoById(userId);
+      setState(() {
+        _userInfo = userInfo;
+        print(_userInfo);
+      });
+    } catch (error) {
+      // Handle error here, such as showing an error message to the user
+      print("Error fetching user info: $error");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+   
+    if (_userInfo.isEmpty) {
+    // Show a loading indicator while fetching data
+    return const Center(child: CircularProgressIndicator());}
+      UserInfoModel userInfo = _userInfo[0];
     return Scaffold(
       backgroundColor: const Color(0xffffffff),
-      body: Stack(
+      body:
+         
+      Stack(
         children: <Widget>[
           SizedBox(
             width: 430.0,
@@ -81,154 +115,9 @@ class XDProfile extends StatelessWidget {
                     // Adobe XD layer: 'Profile' (group)
                     Stack(
                   children: <Widget>[
-                    Pinned.fromPins(
-                      Pin(start: 0.0, end: 0.0),
-                      Pin(size: 77.0, end: 0.0),
-                      child:
-                          // Adobe XD layer: 'Notifications' (group)
-                          Stack(
-                        children: <Widget>[
-                          // Adobe XD layer: 'NotificationsBox' (shape)
-                          Container(
-                            width: 430.0,
-                            height: 77.0,
-                            color: const Color(0xffffffff),
-                          ),
-                          Transform.translate(
-                            offset: const Offset(34.0, 15.0),
-                            child:
-                                // Adobe XD layer: 'NotificationsLabel' (text)
-                                const Text(
-                              'Receive notifications',
-                              style: TextStyle(
-                                fontFamily: 'Euclid Circular A',
-                                fontSize: 14,
-                                color: Color(0x5992a5c6),
-                                letterSpacing: -0.14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              softWrap: false,
-                            ),
-                          ),
-                          Transform.translate(
-                            offset: const Offset(34.0, 41.0),
-                            child:
-                                // Adobe XD layer: 'Notifications' (text)
-                                const Text(
-                              'Enabled',
-                              style: TextStyle(
-                                fontFamily: 'Euclid Circular A',
-                                fontSize: 16,
-                                color: Color(0xff2a0340),
-                                letterSpacing: -0.16,
-                              ),
-                              softWrap: false,
-                            ),
-                          ),
-                          Pinned.fromPins(
-                            Pin(size: 46.0, end: 30.0),
-                            Pin(size: 24.0, middle: 0.5094),
-                            child:
-                                // Adobe XD layer: 'NotificationsEdit' (group)
-                                Stack(
-                              children: <Widget>[
-                                // Adobe XD layer: 'Switch' (shape)
-                                Container(
-                                  width: 46.0,
-                                  height: 24.0,
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xff2a0340),
-                                    borderRadius: BorderRadius.circular(20.0),
-                                  ),
-                                ),
-                                Transform.translate(
-                                  offset: const Offset(24.0, 2.0),
-                                  child: Transform.rotate(
-                                    angle: 3.1416,
-                                    child:
-                                        // Adobe XD layer: 'SwitchKnob' (shape)
-                                        Container(
-                                      width: 20.0,
-                                      height: 20.0,
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xffffffff),
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
-                                        border: Border.all(
-                                            width: 1.0,
-                                            color: const Color(0xff6f407d)),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Pinned.fromPins(
-                      Pin(start: 0.0, end: 0.0),
-                      Pin(size: 77.0, end: 77.0),
-                      child:
-                          // Adobe XD layer: 'Password' (group)
-                          Stack(
-                        children: <Widget>[
-                          // Adobe XD layer: 'PasswordBox' (shape)
-                          Container(
-                            width: 430.0,
-                            height: 77.0,
-                            color: const Color(0xffffffff),
-                          ),
-                          Transform.translate(
-                            offset: const Offset(366.0, 30.0),
-                            child:
-                                // Adobe XD layer: 'PasswordEdit' (text)
-                                const Text(
-                              'Edit',
-                              style: TextStyle(
-                                fontFamily: 'Euclid Circular A',
-                                fontSize: 14,
-                                color: Color(0xff2a0340),
-                                letterSpacing: -0.14,
-                              ),
-                              softWrap: false,
-                            ),
-                          ),
-                          Transform.translate(
-                            offset: const Offset(34.0, 40.0),
-                            child:
-                                // Adobe XD layer: 'Password' (text)
-                                const Text(
-                              '●●●●●●●●',
-                              style: TextStyle(
-                                fontFamily: 'Euclid Circular A',
-                                fontSize: 16,
-                                color: Color(0xff2a0340),
-                                letterSpacing: -0.16,
-                              ),
-                              softWrap: false,
-                            ),
-                          ),
-                          Transform.translate(
-                            offset: const Offset(34.0, 15.0),
-                            child:
-                                // Adobe XD layer: 'PasswordLabel' (text)
-                                const Text(
-                              'Password',
-                              style: TextStyle(
-                                fontFamily: 'Euclid Circular A',
-                                fontSize: 14,
-                                color: Color(0x5992a5c6),
-                                letterSpacing: -0.14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              softWrap: false,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                
+                 
+                    //location
                     Pinned.fromPins(
                       Pin(start: 0.0, end: 0.0),
                       Pin(size: 77.0, middle: 0.6859),
@@ -242,21 +131,7 @@ class XDProfile extends StatelessWidget {
                             height: 77.0,
                             color: const Color(0xffffffff),
                           ),
-                          Transform.translate(
-                            offset: const Offset(366.0, 30.0),
-                            child:
-                                // Adobe XD layer: 'LocationEdit' (text)
-                                const Text(
-                              'Edit',
-                              style: TextStyle(
-                                fontFamily: 'Euclid Circular A',
-                                fontSize: 14,
-                                color: Color(0xff2a0340),
-                                letterSpacing: -0.14,
-                              ),
-                              softWrap: false,
-                            ),
-                          ),
+                        
                           Transform.translate(
                             offset: const Offset(34.0, 41.0),
                             child:
@@ -291,41 +166,19 @@ class XDProfile extends StatelessWidget {
                         ],
                       ),
                     ),
+                   //Phonenumber
                     Pinned.fromPins(
                       Pin(start: 0.0, end: 0.0),
                       Pin(size: 77.0, middle: 0.5288),
                       child:
-                          // Adobe XD layer: 'Phonenumber' (group)
                           Stack(
                         children: <Widget>[
-                          // Adobe XD layer: 'PhonenumberBox' (shape)
-                          Container(
-                            width: 430.0,
-                            height: 77.0,
-                            color: const Color(0xffffffff),
-                          ),
-                          Transform.translate(
-                            offset: const Offset(366.0, 30.0),
-                            child:
-                                // Adobe XD layer: 'PhonenumberEdit' (text)
-                                const Text(
-                              'Edit',
-                              style: TextStyle(
-                                fontFamily: 'Euclid Circular A',
-                                fontSize: 14,
-                                color: Color(0xff2a0340),
-                                letterSpacing: -0.14,
-                              ),
-                              softWrap: false,
-                            ),
-                          ),
                           Transform.translate(
                             offset: const Offset(34.0, 41.0),
                             child:
-                                // Adobe XD layer: 'Phonenumber' (text)
-                                const Text(
-                              '0797383352',
-                              style: TextStyle(
+                                 Text(
+                              userInfo.strPhoneNumber!,
+                              style: const TextStyle(
                                 fontFamily: 'Euclid Circular A',
                                 fontSize: 16,
                                 color: Color(0xff2a0340),
@@ -353,6 +206,7 @@ class XDProfile extends StatelessWidget {
                         ],
                       ),
                     ),
+                    //email
                     Pinned.fromPins(
                       Pin(start: 0.0, end: 0.0),
                       Pin(size: 77.0, middle: 0.3717),
@@ -386,9 +240,9 @@ class XDProfile extends StatelessWidget {
                             offset: const Offset(34.0, 41.0),
                             child:
                                 // Adobe XD layer: 'Email' (text)
-                                const Text(
-                              'fake.email@mail.com',
-                              style: TextStyle(
+                                 Text(
+                              userInfo.strUsername!,
+                              style: const TextStyle(
                                 fontFamily: 'Euclid Circular A',
                                 fontSize: 16,
                                 color: Color(0xff2a0340),
@@ -415,11 +269,12 @@ class XDProfile extends StatelessWidget {
                         ],
                       ),
                     ),
+                    // Adobe XD layer: 'Username' (group)
                     Pinned.fromPins(
                       Pin(start: 0.0, end: 0.0),
                       Pin(size: 77.0, middle: 0.2147),
                       child:
-                          // Adobe XD layer: 'Username' (group)
+                          
                           Stack(
                         children: <Widget>[
                           // Adobe XD layer: 'UsernameBox' (shape)
@@ -444,12 +299,13 @@ class XDProfile extends StatelessWidget {
                               softWrap: false,
                             ),
                           ),
+                          // Adobe XD layer: 'Username' (text)
                           Transform.translate(
                             offset: const Offset(34.0, 41.0),
                             child:
-                                // Adobe XD layer: 'Username' (text)
+                                
                                 Text(
-                               usernameController.text,
+                               userInfo.strUsername!,
                               style: const TextStyle(
                                 fontFamily: 'Euclid Circular A',
                                 fontSize: 16,
@@ -490,18 +346,27 @@ class XDProfile extends StatelessWidget {
                         offset: const Offset(200.0, 40.0),
                         child:  InkWell(
                           onTap:() {
-                             Navigator.push(context,MaterialPageRoute(builder: (context) => EditProfilePage()),);
+                             Navigator.push(context,MaterialPageRoute(builder: (context) =>  
+                             EditProfilePage(
+                              username:userInfo.strFirstName!,
+                              //email instead
+                              email:userInfo.strUsername!,
+                              //password:userInfo.strFirstName!,
+                             // location:userInfo.strFirstName!,
+                              phone:userInfo.strPhoneNumber!,
+
+                             )),);
                           },
                           child:
                         const Icon(Icons.edit,color: Colors.white,),
 
                              ),),
                             // Adobe XD layer: 'FullNameDisplay' (text)
-                            const SizedBox(
+                             SizedBox(
                               width: 218.0,
                               child: Text(
-                                'Hussain Ghanem',
-                                style: TextStyle(
+                                '${userInfo.strFirstName!} ${userInfo.strLastName!}',
+                                style: const TextStyle(
                                   fontFamily: 'Euclid Circular A',
                                   fontSize: 27,
                                   color: Color(0xffffffff),
@@ -509,7 +374,7 @@ class XDProfile extends StatelessWidget {
                                   fontWeight: FontWeight.w700,
                                   height: 1.1851851851851851,
                                 ),
-                                textHeightBehavior: TextHeightBehavior(
+                                textHeightBehavior: const TextHeightBehavior(
                                     applyHeightToFirstAscent: false),
                                 textAlign: TextAlign.center,
                                 softWrap: false,
@@ -519,18 +384,18 @@ class XDProfile extends StatelessWidget {
                               offset: const Offset(26.0, 43.0),
                               child:
                                   // Adobe XD layer: 'UsernameDisplay' (text)
-                                  const SizedBox(
+                                   SizedBox(
                                 width: 166.0,
                                 child: Text(
-                                  'ID: 2000335796',
-                                  style: TextStyle(
+                                  'ID:${userInfo.strNationalId!}',
+                                  style: const TextStyle(
                                     fontFamily: 'Euclid Circular A',
                                     fontSize: 16,
                                     color: Color(0xffdcdcdc),
                                     letterSpacing: -0.16,
                                     height: 1.375,
                                   ),
-                                  textHeightBehavior: TextHeightBehavior(
+                                  textHeightBehavior: const TextHeightBehavior(
                                       applyHeightToFirstAscent: false),
                                   textAlign: TextAlign.center,
                                   softWrap: false,
@@ -546,321 +411,14 @@ class XDProfile extends StatelessWidget {
               ),
             ),
           ),
-          Pinned.fromPins(
-            Pin(start: 0.0, end: 0.0),
-            Pin(size: 172.0, end: 0.0),
-            child:
-                // Adobe XD layer: 'NavBar' (group)
-                Stack(
-              children: <Widget>[
-                Pinned.fromPins(
-                  Pin(start: 0.0, end: 0.0),
-                  Pin(startFraction: 0.0, endFraction: 0.1201),
-                  child: Transform.rotate(
-                    angle: 3.1416,
-                    child:
-                        // Adobe XD layer: 'Gradiant' (shape)
-                        Container(
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment(0.0, 0.978),
-                          end: Alignment(0.0, -0.987),
-                          colors: [
-                            Color(0x00ffffff),
-                            Color(0xe4828282)
-                          ],
-                          stops: [0.0, 1.0],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0.0, 46.0, 0.0, 0.0),
-                  child:
-                      // Adobe XD layer: 'Bar' (group)
-                      Stack(
-                    children: <Widget>[
-                      Align(
-                        alignment: Alignment.topCenter,
-                        child: SizedBox(
-                          width: 75.0,
-                          height: 74.0,
-                          child:
-                              // Adobe XD layer: 'Button' (group)
-                              Stack(
-                            children: <Widget>[
-                              // Adobe XD layer: 'ButtonFill' (shape)
-                              Container(
-                                decoration: BoxDecoration(
-                                  gradient: const LinearGradient(
-                                    begin: Alignment(0.0, -1.0),
-                                    end: Alignment(0.0, 1.0),
-                                    colors: [
-                                      Color(0xff2a0340),
-                                      Color(0xff223e6d)
-                                    ],
-                                    stops: [0.0, 1.0],
-                                  ),
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.elliptical(9999.0, 9999.0)),
-                                  border: Border.all(
-                                      width: 4.0,
-                                      color: const Color(0xffffffff)),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                      color: Color(0x29000000),
-                                      offset: Offset(0, 3),
-                                      blurRadius: 40,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Pinned.fromPins(
-                        Pin(start: 0.0, end: 0.0),
-                        Pin(size: 77.0, end: 0.0),
-                        child:
-                            // Adobe XD layer: 'BottomBar' (shape)
-                            SvgPicture.string(
-                          _svg_qn9i8,
-                          allowDrawingOutsideViewBox: true,
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Pinned.fromPins(
-                  Pin(size: 26.1, end: 28.7),
-                  Pin(size: 35.1, end: 18.6),
-                  child:
-                      // Adobe XD layer: 'Profile' (group)
-                      Stack(
-                    children: <Widget>[
-                      Pinned.fromPins(
-                        Pin(start: 2.0, end: 2.0),
-                        Pin(size: 9.0, end: 0.0),
-                        child:
-                            // Adobe XD layer: 'Label' (text)
-                            const Text(
-                          'Profile',
-                          style: TextStyle(
-                            fontFamily: 'Euclid Circular A',
-                            fontSize: 7,
-                            color: Color(0xff6f407d),
-                            fontWeight: FontWeight.w700,
-                            height: 0.7142857142857143,
-                          ),
-                          textHeightBehavior: TextHeightBehavior(
-                              applyHeightToFirstAscent: false),
-                          softWrap: false,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 9.0),
-                        child: SizedBox.expand(
-                            child:
-                                // Adobe XD layer: 'Profile' (shape)
-                                SvgPicture.string(
-                          _svg_wt915,
-                          allowDrawingOutsideViewBox: true,
-                          fit: BoxFit.fill,
-                        )),
-                      ),
-                    ],
-                  ),
-                ),
-                Pinned.fromPins(
-                  Pin(size: 39.0, middle: 0.7715),
-                  Pin(size: 35.0, end: 18.6),
-                  child:
-                      // Adobe XD layer: 'Complaints' (group)
-                      PageLink(
-                    links: [
-                      PageLinkInfo(
-                        duration: 0,
-                        pageBuilder: () => const XDComplaintsList(),
-                      ),
-                    ],
-                    child: Stack(
-                      children: <Widget>[
-                        Pinned.fromPins(
-                          Pin(start: 0.0, end: 0.0),
-                          Pin(size: 9.0, end: 0.0),
-                          child:
-                              // Adobe XD layer: 'Label' (text)
-                              const Text(
-                            'Complaints',
-                            style: TextStyle(
-                              fontFamily: 'Euclid Circular A',
-                              fontSize: 7,
-                              color: Color(0xffbbc7db),
-                              fontWeight: FontWeight.w700,
-                              height: 0.7142857142857143,
-                            ),
-                            textHeightBehavior: TextHeightBehavior(
-                                applyHeightToFirstAscent: false),
-                            softWrap: false,
-                          ),
-                        ),
-                        Pinned.fromPins(
-                          Pin(start: 6.5, end: 6.5),
-                          Pin(size: 26.0, start: 0.0),
-                          child:
-                              // Adobe XD layer: 'ComplaintsIcon' (shape)
-                              SvgPicture.string(
-                            _svg_btlkna,
-                            allowDrawingOutsideViewBox: true,
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: const Alignment(0.0, -0.062),
-                  child: SizedBox(
-                    width: 34.0,
-                    height: 31.0,
-                    child:
-                        // Adobe XD layer: 'FillComplaintIcon' (group)
-                        Stack(
-                      children: <Widget>[
-                        Pinned.fromPins(
-                          Pin(size: 1.0, middle: 0.5153),
-                          Pin(start: 0.0, end: 0.0),
-                          child: SvgPicture.string(
-                            _svg_xph1jx,
-                            allowDrawingOutsideViewBox: true,
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                        Pinned.fromPins(
-                          Pin(start: 0.0, end: 0.0),
-                          Pin(size: 1.0, middle: 0.5165),
-                          child: SvgPicture.string(
-                            _svg_o6ekv6,
-                            allowDrawingOutsideViewBox: true,
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Pinned.fromPins(
-                  Pin(size: 26.0, middle: 0.2711),
-                  Pin(size: 35.0, end: 17.0),
-                  child:
-                      // Adobe XD layer: 'Map' (group)
-                      PageLink(
-                    links: [
-                      PageLinkInfo(
-                        duration: 0,
-                        pageBuilder: () => const XDMap_(),
-                      ),
-                    ],
-                    child: Stack(
-                      children: <Widget>[
-                        const Align(
-                          alignment: Alignment.bottomCenter,
-                          child: SizedBox(
-                            width: 15.0,
-                            height: 9.0,
-                            child:
-                                // Adobe XD layer: 'Label' (text)
-                                Text(
-                              'Map',
-                              style: TextStyle(
-                                fontFamily: 'Euclid Circular A',
-                                fontSize: 7,
-                                color: Color(0xffbbc7db),
-                                fontWeight: FontWeight.w700,
-                                height: 0.7142857142857143,
-                              ),
-                              textHeightBehavior: TextHeightBehavior(
-                                  applyHeightToFirstAscent: false),
-                              softWrap: false,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 9.0),
-                          child: SizedBox.expand(
-                              child:
-                                  // Adobe XD layer: 'Map' (shape)
-                                  SvgPicture.string(
-                            _svg_p8s453,
-                            allowDrawingOutsideViewBox: true,
-                            fit: BoxFit.fill,
-                          )),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Pinned.fromPins(
-                  Pin(size: 29.6, start: 34.7),
-                  Pin(size: 36.6, end: 17.0),
-                  child:
-                      // Adobe XD layer: 'Home' (group)
-                      PageLink(
-                    links: [
-                      PageLinkInfo(
-                        duration: 0,
-                        pageBuilder: () => const XDPublicFeed1(),
-                      ),
-                    ],
-                    child: Stack(
-                      children: <Widget>[
-                        Pinned.fromPins(
-                          Pin(start: 2.3, end: 2.4),
-                          Pin(size: 11.0, end: 0.0),
-                          child:
-                              // Adobe XD layer: 'Label' (text)
-                              const Text(
-                            'Home',
-                            style: TextStyle(
-                              fontFamily: 'Euclid Circular A',
-                              fontSize: 9,
-                              color: Color(0xffbbc7db),
-                              fontWeight: FontWeight.w700,
-                              height: 0.6666666666666666,
-                            ),
-                            textHeightBehavior: TextHeightBehavior(
-                                applyHeightToFirstAscent: false),
-                            softWrap: false,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 11.5),
-                          child: SizedBox.expand(
-                              child:
-                                  // Adobe XD layer: 'HomeIcon' (shape)
-                                  SvgPicture.string(
-                            _svg_ax8kh6,
-                            allowDrawingOutsideViewBox: true,
-                            fit: BoxFit.fill,
-                          )),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+         
+          BottomNavBar(),
          
         ],
-      ),
-    );
+      ));}
   }
-}
+  
+
 
 // ignore: constant_identifier_names
 const String _svg_tllar =

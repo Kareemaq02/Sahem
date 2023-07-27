@@ -122,12 +122,12 @@ namespace Persistence
                 .Entity<ComplaintsStatuses>()
                 .HasOne(q => q.Complaint)
                 .WithMany(q => q.Statuses)
-                .HasForeignKey(q => q.intStatusId);
+                .HasForeignKey(q => q.intComplaintId);
             builder
                 .Entity<ComplaintsStatuses>()
                 .HasOne(q => q.ComplaintStatus)
                 .WithMany(q => q.Complaints)
-                .HasForeignKey(q => q.intComplaintId);
+                .HasForeignKey(q => q.intStatusId);
 
             // Complaint_Attachment table
             builder.Entity<ComplaintAttachment>(

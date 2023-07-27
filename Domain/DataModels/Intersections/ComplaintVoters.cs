@@ -16,5 +16,8 @@ namespace Domain.DataModels.Intersections
         [ForeignKey("Complaint")]
         public int intComplaintId { get; set; }
         public Complaint Complaint { get; set; }
+
+        [Column("IS_DOWN_VOTE")]
+        public Boolean blnIsDownVote { get; set; }
     }
 }

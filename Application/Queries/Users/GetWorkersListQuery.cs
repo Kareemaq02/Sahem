@@ -5,5 +5,6 @@ using MediatR;
 
 namespace Application.Queries.Users
 {
-    public record GetWorkersListQuery() : IRequest<Result<List<WorkerDTO>>>;
+    public record GetWorkersListQuery(PagingParams PagingParams)
+        : IRequest<Result<PagedList<WorkerDTO>>>;
 }

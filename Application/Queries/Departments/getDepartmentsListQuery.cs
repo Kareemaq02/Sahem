@@ -4,5 +4,5 @@ using MediatR;
 
 namespace Application.Queries.Departments
 {
-    public record GetDepartmentsListQuery() : IRequest<Result<List<DepartmentDTO>>>;
+    public record GetDepartmentsListQuery() : IRequest<Result<List<DepartmentListDTO>>>;
 }
