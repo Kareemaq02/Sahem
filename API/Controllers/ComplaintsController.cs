@@ -13,7 +13,7 @@ namespace API.Controllers
     public class ComplaintsController : BaseApiController
     {
         [HttpGet] // .../api/complaints
-        public async Task<IActionResult> GetComplaintsList([FromQuery] PagingParams pagingParams)
+        public async Task<IActionResult> GetComplaintsList([FromQuery] ComplaintsFilter filter)
         {
             string authHeader = Request.Headers["Authorization"];
             JwtSecurityTokenHandler tokenHandler = new();
@@ -22,7 +22,7 @@ namespace API.Controllers
             var strUserName = jwtToken.Claims.First(c => c.Type == "username").Value;
 
             return HandleResult(
-                await Mediator.Send(new GetComplaintsListQuery(pagingParams, strUserName))
+                await Mediator.Send(new GetComplaintsListQuery(filter, strUserName))
             );
         }
 

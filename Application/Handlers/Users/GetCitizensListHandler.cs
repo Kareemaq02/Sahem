@@ -45,10 +45,21 @@ namespace Application.Handlers.Users
                 )
                 .AsQueryable();
 
+            // Filter
+            if (request.filter.blnIsVerified)
+                queryObject = queryObject.Where(
+                    q => q.boolIsVerified == request.filter.blnIsVerified
+                );
+
+            if (request.filter.blnIsBlacklisted)
+                queryObject = queryObject.Where(
+                    q => q.boolIsBlacklisted == request.filter.blnIsBlacklisted
+                );
+
             var result = await PagedList<CitizenDTO>.CreateAsync(
                 queryObject,
-                request.pagingParams.PageNumber,
-                request.pagingParams.PageSize
+                request.filter.PageNumber,
+                request.filter.PageSize
             );
             return Result<PagedList<CitizenDTO>>.Success(result);
         }
