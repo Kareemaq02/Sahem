@@ -61,6 +61,14 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new InsertComplaintCommand(complaintDTO)));
         }
 
+        [HttpPut("refile")] // .../api/complaints
+        public async Task<IActionResult> RefileComplaint( int ID)
+        {
+            return HandleResult(await Mediator.Send(new RefileComplaintCommand(ID)));
+        }
+
+
+
         [HttpGet("user")] // .../api/complaints/user
         public async Task<IActionResult> GetComplaintsByUser()
         {
