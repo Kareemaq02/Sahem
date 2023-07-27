@@ -10,13 +10,13 @@ using Persistence;
 
 namespace Application.Handlers.Complaints
 {
-    public class InsertVoteHandler : IRequestHandler<InsertVoteCommand, Result<int>>
+    public class InsertDownVoteHandler : IRequestHandler<InsertDownVoteCommand, Result<int>>
     {
         private readonly DataContext _context;
         private readonly IConfiguration _configuration;
         public readonly UserManager<ApplicationUser> _userManager;
 
-        public InsertVoteHandler(
+        public InsertDownVoteHandler(
             DataContext context,
             IConfiguration configuration,
             UserManager<ApplicationUser> userManager
@@ -28,7 +28,7 @@ namespace Application.Handlers.Complaints
         }
 
         public async Task<Result<int>> Handle(
-            InsertVoteCommand request,
+            InsertDownVoteCommand request,
             CancellationToken cancellationToken
         )
         {
@@ -51,9 +51,9 @@ namespace Application.Handlers.Complaints
             await _context.ComplaintVoters.AddAsync(
                 new ComplaintVoters
                 {
-                    intComplaintId = request.intComplaintID,
                     intUserId = userId,
-                    blnIsDownVote = false
+                    intComplaintId = request.intComplaintID,
+                    blnIsDownVote = true
                 }
             );
             await _context.SaveChangesAsync();

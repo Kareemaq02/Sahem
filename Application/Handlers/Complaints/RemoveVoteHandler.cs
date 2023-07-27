@@ -1,6 +1,4 @@
 ﻿using Application.Core;
-using Domain.DataModels.Complaints;
-using Domain.DataModels.Intersections;
 using Domain.DataModels.User;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -10,13 +8,13 @@ using Persistence;
 
 namespace Application.Handlers.Complaints
 {
-    public class InsertVoteHandler : IRequestHandler<InsertVoteCommand, Result<int>>
+    public class RemoveVoteHandler : IRequestHandler<RemoveVoteCommand, Result<int>>
     {
         private readonly DataContext _context;
         private readonly IConfiguration _configuration;
         public readonly UserManager<ApplicationUser> _userManager;
 
-        public InsertVoteHandler(
+        public RemoveVoteHandler(
             DataContext context,
             IConfiguration configuration,
             UserManager<ApplicationUser> userManager
@@ -28,7 +26,7 @@ namespace Application.Handlers.Complaints
         }
 
         public async Task<Result<int>> Handle(
-            InsertVoteCommand request,
+            RemoveVoteCommand request,
             CancellationToken cancellationToken
         )
         {
@@ -37,25 +35,11 @@ namespace Application.Handlers.Complaints
                 .Select(u => u.Id)
                 .SingleOrDefaultAsync(cancellationToken: cancellationToken);
 
-            var complaintIds = await _context.Complaints
-                .Where(c => c.intUserID == userId)
-                .Select(c => c.intId)
-                .ToListAsync();
-
-            foreach (var id in complaintIds)
-            {
-                if (request.intComplaintID == id)
-                    return Result<int>.Failure("User can't vote for their own complaint.");
-            }
-
-            await _context.ComplaintVoters.AddAsync(
-                new ComplaintVoters
-                {
-                    intComplaintId = request.intComplaintID,
-                    intUserId = userId,
-                    blnIsDownVote = false
-                }
+            var complaintVote = await _context.ComplaintVoters.FirstOrDefaultAsync(
+                cv => cv.intUserId == userId && cv.intComplaintId == request.intComplaintID
             );
+
+            _context.ComplaintVoters.Remove(complaintVote);
             await _context.SaveChangesAsync();
 
             return Result<int>.Success(request.intComplaintID);

@@ -10,8 +10,12 @@ namespace Domain.DataModels.Complaints
         [Key]
         public int intId { get; set; }
 
-        [Column("NAME")]
+        [Column("NAME_AR")]
         [Required]
-        public string strName { get; set; }
+        public string strNameAr { get; set; }
+
+        [Column("NAME_EN")]
+        [Required]
+        public string strNameEn { get; set; }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Domain.ClientDTOs.Complaint
+﻿using Domain.Helpers;
+
+namespace Domain.ClientDTOs.Complaint
 {
     public class ComplaintViewDTO
     {
@@ -11,11 +13,11 @@
         public string strComment { get; set; }
         public string strStatus { get; set; }
         public int intPrivacyId { get; set; }
+        public string strPrivacyAr { get; set; }
+        public string strPrivacyEn { get; set; }
         public int intVotersCount { get; set; }
-        public decimal decLat { get; set; }
-        public decimal decLng { get; set; }
-        public Decimal decPriority { get; set; }
-        public List<String> lstMedia { get; set; }
-        public Boolean blnIsVideo { get; set; }
+        public int intVoted { get; set; }
+        public LatLng latLng { get; set; }
+        public List<Media> lstMedia { get; set; }
     }
 }

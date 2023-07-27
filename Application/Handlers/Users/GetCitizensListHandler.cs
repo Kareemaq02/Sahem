@@ -10,7 +10,7 @@ using Domain.Resources;
 namespace Application.Handlers.Users
 {
     public class GetCitizensListHandler
-        : IRequestHandler<GetCitizensListQuery, Result<List<CitizenDTO>>>
+        : IRequestHandler<GetCitizensListQuery, Result<PagedList<CitizenDTO>>>
     {
         private readonly DataContext _context;
 
@@ -19,13 +19,14 @@ namespace Application.Handlers.Users
             _context = context;
         }
 
-        public async Task<Result<List<CitizenDTO>>> Handle(
+        public async Task<Result<PagedList<CitizenDTO>>> Handle(
             GetCitizensListQuery request,
             CancellationToken cancellationToken
         )
         {
-            List<CitizenDTO> result = await _context.Users
+            var queryObject = _context.Users
                 .Where(q => q.intUserTypeId == (int)UsersConstant.userTypes.user)
+                .OrderBy(q => q.Id)
                 .Join(
                     _context.UserInfos,
                     u => u.Id,
@@ -42,8 +43,25 @@ namespace Application.Handlers.Users
                             boolIsBlacklisted = u.blnIsBlacklisted
                         }
                 )
-                .ToListAsync();
-            return Result<List<CitizenDTO>>.Success(result);
+                .AsQueryable();
+
+            // Filter
+            if (request.filter.blnIsVerified)
+                queryObject = queryObject.Where(
+                    q => q.boolIsVerified == request.filter.blnIsVerified
+                );
+
+            if (request.filter.blnIsBlacklisted)
+                queryObject = queryObject.Where(
+                    q => q.boolIsBlacklisted == request.filter.blnIsBlacklisted
+                );
+
+            var result = await PagedList<CitizenDTO>.CreateAsync(
+                queryObject,
+                request.filter.PageNumber,
+                request.filter.PageSize
+            );
+            return Result<PagedList<CitizenDTO>>.Success(result);
         }
     }
 }
