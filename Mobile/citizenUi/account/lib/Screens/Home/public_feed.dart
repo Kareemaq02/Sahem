@@ -1,8 +1,4 @@
-// ignore_for_file: depend_on_referenced_packages, constant_identifier_names, unused_element
-
-import 'dart:convert';
-
-
+// ignore_for_file: depend_on_referenced_packages, constant_identifier_names, unused_element, library_private_types_in_public_api, prefer_typing_uninitialized_variables, use_build_context_synchronously, duplicate_ignore
 import 'package:account/API/get_complaints_ByLocation.dart';
 import 'package:account/Screens/Map/map_view.dart';
 import 'package:account/Screens/Profile/profile.dart';
@@ -11,14 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import '../../API/login_request.dart';
 import '../../API/view_complaint_request.dart';
 import '../File complaint/complaints1.dart';
 import '../View complaints/complaints_list.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../Map/map.dart'; 
-import 'package:http/http.dart' as http;
+
 
 class XDPublicFeed1 extends StatefulWidget {
   const XDPublicFeed1({Key? key}) : super(key: key);
@@ -30,38 +24,17 @@ class XDPublicFeed1 extends StatefulWidget {
 class _XDPublicFeed1State extends State<XDPublicFeed1> {
   
   late List<ComplaintModel> complaints;
-  late var Address;
+  late var address;
 
   @override
   void initState() {
-  // _getCurrentPosition();
-   // getComplaintsByLocation(31.961899172907753, 35.86508730906701 );
+
    super.initState();
   
-   // fetchComplaints(_currentPosition!.latitude,_currentPosition!.longitude);
     
    
   }
 
-// Future<List<dynamic>> fetchComplaints(double latitude, double longitude) async {
-//   final response = await http.post(
-//     Uri.parse('https://10.0.2.2:5000/api/complaints/location'),
-//     headers: {
-//       'Authorization': 'Bearer $token2',
-//       'Content-Type': 'application/json',
-//     },
-//     body: jsonEncode({
-//       'decLat': latitude,
-//       'decLng': longitude,
-//     }),
-//   );
-
-//   if (response.statusCode == 200) {
-//     return jsonDecode(response.body.toString());
-//   } else {
-//     throw Exception('Failed to fetch complaints');
-//   }
-// }
 
 
 
@@ -220,13 +193,13 @@ class _XDPublicFeed1State extends State<XDPublicFeed1> {
              
              
                 return post1(context,
-                intComplaintId:data![index]['intComplaintId'].toString(),
-                strStatus:data![index]['strStatus'].toString(),
-                strUserName:data![index]['strUserName'].toString(),
-                dtmDateCreated: data![index]['dtmDateCreated'].toString(),
-                 intVotersCount: data![index]['intVotersCount'],
-                 strComplaintTypeEn: data![index]['strComplaintTypeEn'].toString(),
-                 strComment: data![index]['StrComment'].toString(),
+                intComplaintId:data[index]['intComplaintId'].toString(),
+                strStatus:data[index]['strStatus'].toString(),
+                strUserName:data[index]['strUserName'].toString(),
+                dtmDateCreated: data[index]['dtmDateCreated'].toString(),
+                 intVotersCount: data[index]['intVotersCount'],
+                 strComplaintTypeEn: data[index]['strComplaintTypeEn'].toString(),
+                 strComment: data[index]['StrComment'].toString(),
                 address: "amman",
                 
                 
@@ -641,8 +614,7 @@ required var intComplaintId,
          
           children: <Widget>[
              Container(
-              child: Image.asset('assets/icons/pothole.jpg',fit:BoxFit.fill,),
-         height: 183.0,
+              height: 183.0,
          decoration: const BoxDecoration(
            color: Color(0xff6f407d),
            borderRadius: BorderRadius.only(
@@ -650,6 +622,7 @@ required var intComplaintId,
              topRight: Radius.circular(10.0),
            ),
          ),
+              child: Image.asset('assets/icons/pothole.jpg',fit:BoxFit.fill,),
         ),
             // StatusBox
     MediaQuery(
@@ -725,8 +698,7 @@ required var intComplaintId,
                Padding(
                 padding:const  EdgeInsets.only(left: 2.0, right: 41.7,bottom: 30),
                 child: Text(
-                strComplaintTypeEn + '\n' +
-             (strComment=="" ? strComment : 'Uneven road surface due to pothole - hazardous conditions!'),
+                '$strComplaintTypeEn\n${strComment=="" ? strComment : 'Uneven road surface due to pothole - hazardous conditions!'}',
 
                   style: const TextStyle(
                     fontFamily: 'Poppins',
@@ -735,7 +707,7 @@ required var intComplaintId,
                   ),
                 ),
               ),
-          SizedBox(height: 1,),
+          const SizedBox(height: 1,),
   
           Padding(
             padding: const EdgeInsets.only(bottom: 15.0,left: 5),
@@ -748,7 +720,7 @@ required var intComplaintId,
                     height: 10.0,
                     child: Text(
                       address,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontFamily: 'Euclid Circular A',
                         fontSize: 10,
                         color: Color(0xff92a5c6),
@@ -759,7 +731,7 @@ required var intComplaintId,
                   ),
                 ),
                    
-             SizedBox(width: 18,),
+             const SizedBox(width: 18,),
                 // date
                  Align(
                   alignment: Alignment.bottomRight,
@@ -773,7 +745,7 @@ required var intComplaintId,
                     ),
                     softWrap: false,
                   ),),
-              SizedBox(width: 40,),
+              const SizedBox(width: 40,),
                 //time
                  Align(
                         alignment: Alignment.bottomRight,

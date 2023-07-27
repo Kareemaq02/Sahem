@@ -1,4 +1,4 @@
-// ignore_for_file: depend_on_referenced_packages, constant_identifier_names, unused_element, unnecessary_null_comparison, library_private_types_in_public_api
+// ignore_for_file: depend_on_referenced_packages, constant_identifier_names, unused_element, unnecessary_null_comparison, library_private_types_in_public_api, avoid_print, use_build_context_synchronously, use_key_in_widget_constructors
 
 import 'dart:convert';
 import 'dart:io';
@@ -15,9 +15,9 @@ import '../../API/login_request.dart';
 import 'package:http/http.dart' as http;
 
  List<MediaFile> selectedMediaFiles = [];
-
+TextEditingController commentController = TextEditingController();
   //late DropDownValue dropdown=DropDownValue(1, " ");
-  TextEditingController commentController = TextEditingController();
+  
 
 class XDComplaints1 extends StatefulWidget {
   const XDComplaints1({key});
@@ -101,7 +101,7 @@ Future<void> getImages(BuildContext context) async {
     setState(() {});
    
   } else {
-    Navigator.pop(context,MaterialPageRoute(builder: (context) =>  XDPublicFeed1()));
+    Navigator.pop(context,MaterialPageRoute(builder: (context) =>  const XDPublicFeed1()));
     // ScaffoldMessenger.of(context).showSnackBar(
     //   const SnackBar(content: Text('Nothing is selected')),);
     
@@ -113,7 +113,7 @@ Future<void> getImages(BuildContext context) async {
   Widget build(BuildContext context) {
     
     return Scaffold(
-      
+      resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xffffffff),
       body: Stack(
         children: <Widget>[
@@ -196,14 +196,14 @@ Future<void> getImages(BuildContext context) async {
                contentPadding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
                border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-             borderSide: BorderSide(
+             borderSide: const BorderSide(
              width: 1,
              color: Color(0xff6f407d),
              ),
             ),
            enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(6),
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
         width: 1,
         color:  Color(0xff6f407d),
          ),
@@ -242,7 +242,7 @@ Future<void> getImages(BuildContext context) async {
                 InkWell(
               
                 onTap:(){
-                Navigator.push(context,MaterialPageRoute(builder: (context) => XDComplaints2()),);
+                Navigator.push(context,MaterialPageRoute(builder: (context) => const XDComplaints2()),);
                 },
                 
               
@@ -314,7 +314,7 @@ Future<void> getImages(BuildContext context) async {
                   Pin(size: 31.3, end: 55.8),
                   child:
                   InkWell(
-                  child:  Icon(Icons.add,
+                  child:  const Icon(Icons.add,
                     color: Colors.white,
                     size: 45,),
 
@@ -348,7 +348,7 @@ Future<void> getImages(BuildContext context) async {
               links: [
                 PageLinkInfo(
                   duration: 0,
-                  pageBuilder: () => XDPublicFeed1(),
+                  pageBuilder: () => const XDPublicFeed1(),
                 ),
               ],
               child:
@@ -364,13 +364,13 @@ Future<void> getImages(BuildContext context) async {
   alignment: const Alignment(-0.561, -0.286),
   child: Column(
     children: [
-      SizedBox(height: 120),
+      const SizedBox(height: 120),
      Wrap(
   spacing: 13,
   children: [
     if (selectedMediaFiles != null)
       ...selectedMediaFiles.map((mediaFile) {
-        return Container(
+        return SizedBox(
           width: 80,
           height: 80,
           child: Image.file(

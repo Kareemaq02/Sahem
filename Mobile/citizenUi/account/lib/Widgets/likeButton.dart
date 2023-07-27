@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable, file_names, prefer_const_constructors
+
 import 'package:account/API/vote_complaint.dart';
 import 'package:flutter/material.dart';
 import 'package:like_button/like_button.dart' ;
@@ -7,11 +9,7 @@ Widget like(count,comlaintID){
   return 
   LikeButton(
     likeBuilder: (isLiked) {
-        VoteComplaint a=VoteComplaint();
-           a.sendVoteRequest(comlaintID).then((response) {
-            // Handle the API response if needed
-          });
-        
+       
       return Icon(
         Icons.volunteer_activism,
         size: 30,
@@ -26,8 +24,20 @@ Widget like(count,comlaintID){
       if(count==0){
         result=Text("Vote",);
       }
+      return null;
       
     },
+   onTap: (isLiked) async {
+      if (!isLiked) {
+        VoteComplaint a = VoteComplaint();
+       
+         await a.sendVoteRequest(comlaintID);
+       
+      }
+      return !isLiked;
+    },
+        
+    
    
     );
   

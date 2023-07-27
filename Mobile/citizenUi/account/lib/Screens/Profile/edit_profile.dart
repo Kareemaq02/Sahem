@@ -1,11 +1,19 @@
-// ignore_for_file: library_private_types_in_public_api, deprecated_member_use// ignore_for_file: library_private_types_in_public_api, deprecated_member_use
+// ignore_for_file: library_private_types_in_public_api, deprecated_member_use// ignore_for_file: library_private_types_in_public_api, deprecated_member_use, avoid_print
 
 import 'package:account/Screens/Profile/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:account/API/edit_user_info_request.dart';
 
 class EditProfilePage extends StatefulWidget {
-  const EditProfilePage({Key? key}) : super(key: key); // Added "Key?" type to the key parameter
+ final String username;
+ final  String email;
+ final  String phone;
+ // String location;
+ // String password;
+  
+
+
+   const EditProfilePage({Key? key,required this.username,required this.email,required this.phone}) : super(key: key); // Added "Key?" type to the key parameter
 
   @override
   _EditProfilePageState createState() => _EditProfilePageState();
@@ -18,9 +26,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
   TextEditingController newPhone = TextEditingController();
   TextEditingController newLocation = TextEditingController();
   TextEditingController newPassword = TextEditingController();
+   
 
   @override
   Widget build(BuildContext context) {
+    print(newUsername.text);
+   
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -32,7 +43,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           ),
           onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) => XDProfile()));
+                builder: (BuildContext context) => const XDProfile()));
           },
         ),
         actions: [
@@ -63,9 +74,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
               const SizedBox(
                 height: 35,
               ),
-              buildTextField("Username", "aburumman", false, newUsername),
+              buildTextField("Username", widget.username, false, newUsername),
               buildTextField("E-mail", "ruba@gmail.com", false, newEmail),
-              buildTextField("Phone Number", "0778619015", false, newPhone),
+              buildTextField("Phone Number",widget.phone, false, newPhone),
               buildTextField("Password", "********", true, newPassword),
               buildTextField("Location", "Amman-Jordan", false, newLocation),
               Row(
@@ -74,7 +85,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   OutlinedButton(
                     onPressed: () {
                        Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => XDProfile()));
+                      builder: (BuildContext context) => const XDProfile()));
                     },
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -101,10 +112,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         newPhone.text,
                         newLocation.text,
                       );
+                       print(newPhone.text);
                  Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) => XDProfile()));
+                builder: (BuildContext context) => const XDProfile()));
                     },
-                    style: ElevatedButton.styleFrom(primary: Color(0xff6f407d),),
+                    style: ElevatedButton.styleFrom(primary: const Color(0xff6f407d),),
                     child: const Text(
                       "SAVE",
                       style: TextStyle(
