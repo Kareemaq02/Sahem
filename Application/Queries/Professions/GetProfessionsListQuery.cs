@@ -4,5 +4,5 @@ using MediatR;
 
 namespace Application.Queries.Professions
 {
-    public record GetProfessionsListQuery() : IRequest<Result<List<ProfessionDTO>>>;
+    public record GetProfessionsListQuery() : IRequest<Result<List<ProfessionListDTO>>>;
 }

@@ -8,7 +8,7 @@ using Persistence;
 namespace Application.Handlers.Departments
 {
     public class GetDepartmentsListHandler
-        : IRequestHandler<GetDepartmentsListQuery, Result<List<DepartmentDTO>>>
+        : IRequestHandler<GetDepartmentsListQuery, Result<List<DepartmentListDTO>>>
     {
         private readonly DataContext _context;
 
@@ -17,23 +17,24 @@ namespace Application.Handlers.Departments
             _context = context;
         }
 
-        public async Task<Result<List<DepartmentDTO>>> Handle(
+        public async Task<Result<List<DepartmentListDTO>>> Handle(
             GetDepartmentsListQuery request,
             CancellationToken cancellationToken
         )
         {
-            List<DepartmentDTO> result = await _context.Departments
+            List<DepartmentListDTO> result = await _context.Departments
                 .Select(
                     q =>
-                        new DepartmentDTO
+                        new DepartmentListDTO
                         {
+                            intId = q.intId,
                             strNameAr = q.strNameAr,
                             strNameEn = q.strNameEn,
                         }
                 )
                 .ToListAsync();
 
-            return Result<List<DepartmentDTO>>.Success(result);
+            return Result<List<DepartmentListDTO>>.Success(result);
         }
     }
 }

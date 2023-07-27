@@ -88,6 +88,13 @@ namespace Application.Handlers.Tasks
                 var predicate = PredicateBuilder.New<TaskListDTO>();
                 foreach (var filter in request.filter.lstTaskStatusIds)
                 {
+                    intId = x.Worker.Id,
+                    strFirstName = x.Worker.UserInfo.strFirstName,
+                    strLastName = x.Worker.UserInfo.strLastName,
+                    isLeader = x.blnIsLeader,
+                }).Distinct().ToList()
+            };
+            
                     var tempFilter = filter;
                     predicate = predicate.Or(q => q.intTaskStatusId == tempFilter);
                 }

@@ -11,8 +11,8 @@ namespace Application.Handlers.Tasks
         public DateTime scheduledDate { get; set; }
         public DateTime deadlineDate { get; set; }
         public string strComment { get; set; }
-        public List<TaskWorkerDTO> workersList { get; set; }
-        public string strTaskTypeEng { get; set; }
+        public List<TaskWorkerDTO> workersList { get; set; } = new List<TaskWorkerDTO>();
+        public int intTaskTypeId { get; set; }
 
     }
 }

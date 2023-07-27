@@ -35,6 +35,12 @@ namespace Application.Handlers.LookUps
         {
             var professionDTO = request.ProfessionDTO;
 
+            if (_context.Professions.Any(p => p.strNameEn == professionDTO.strNameEn
+               || p.strNameAr == professionDTO.strNameAr))
+            {
+                return Result<ProfessionDTO>.Failure("Profession Name Already exists");
+            }
+
             int userId = await _context.Users
                 .Where(q => q.UserName == professionDTO.strUserName)
                 .Select(q => q.Id)
