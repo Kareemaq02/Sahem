@@ -6,27 +6,47 @@ using Application.Queries.Complaints;
 using Domain.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Application.Commands;
+using Application.Core;
 
 namespace API.Controllers
 {
     public class ComplaintsController : BaseApiController
     {
         [HttpGet] // .../api/complaints
-        public async Task<IActionResult> GetComplaintsList()
+        public async Task<IActionResult> GetComplaintsList([FromQuery] ComplaintsFilter filter)
         {
-            return HandleResult(await Mediator.Send(new GetComplaintsListQuery()));
+            string authHeader = Request.Headers["Authorization"];
+            JwtSecurityTokenHandler tokenHandler = new();
+            JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
+
+            var strUserName = jwtToken.Claims.First(c => c.Type == "username").Value;
+
+            return HandleResult(
+                await Mediator.Send(new GetComplaintsListQuery(filter, strUserName))
+            );
         }
 
         [HttpGet("{id}")] // .../api/complaints/...
         public async Task<IActionResult> GetComplaintById(int id)
         {
-            return HandleResult(await Mediator.Send(new GetComplaintByIdQuery(id)));
+            string authHeader = Request.Headers["Authorization"];
+            JwtSecurityTokenHandler tokenHandler = new();
+            JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
+
+            var strUserName = jwtToken.Claims.First(c => c.Type == "username").Value;
+
+            return HandleResult(await Mediator.Send(new GetComplaintByIdQuery(strUserName, id)));
         }
 
         [HttpPost("location")] // .../api/complaints/location
-        public async Task<IActionResult> GetComplaintsByLocation(LatLng latLng)
+        public async Task<IActionResult> GetComplaintsByLocation(
+            [FromQuery] PagingParams pagingParams,
+            LatLng latLng
+        )
         {
-            return HandleResult(await Mediator.Send(new GetComplaintsBtLocationQuery(latLng)));
+            return HandleResult(
+                await Mediator.Send(new GetComplaintsByLocationQuery(pagingParams, latLng))
+            );
         }
 
         [HttpPost] // .../api/complaints
@@ -59,15 +79,21 @@ namespace API.Controllers
         }
 
         [HttpPost("CreateType")] // .../api/complaints/CreateType
-        public async Task<IActionResult> InsertComplaintType([FromForm] InsertComplaintTypeDTO insertComplaintTypeDTO)
+        public async Task<IActionResult> InsertComplaintType(
+            [FromForm] InsertComplaintTypeDTO insertComplaintTypeDTO
+        )
         {
             string authHeader = Request.Headers["Authorization"];
             JwtSecurityTokenHandler tokenHandler = new();
             JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
 
-            insertComplaintTypeDTO.strUserName = jwtToken.Claims.First(c => c.Type == "username").Value;
+            insertComplaintTypeDTO.strUserName = jwtToken.Claims
+                .First(c => c.Type == "username")
+                .Value;
 
-            return HandleResult(await Mediator.Send(new InsertComplaintTypeCommand(insertComplaintTypeDTO)));
+            return HandleResult(
+                await Mediator.Send(new InsertComplaintTypeCommand(insertComplaintTypeDTO))
+            );
         }
 
         [HttpPost("vote/{intComplaintId}")] // .../api/complaints/vote
@@ -81,6 +107,34 @@ namespace API.Controllers
 
             return HandleResult(
                 await Mediator.Send(new InsertVoteCommand(intComplaintId, strUserName))
+            );
+        }
+
+        [HttpPost("votedown/{intComplaintId}")] // .../api/complaints/vote
+        public async Task<IActionResult> InsertDonwVote(int intComplaintId)
+        {
+            string authHeader = Request.Headers["Authorization"];
+            JwtSecurityTokenHandler tokenHandler = new();
+            JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
+
+            string strUserName = jwtToken.Claims.First(c => c.Type == "username").Value;
+
+            return HandleResult(
+                await Mediator.Send(new InsertDownVoteCommand(intComplaintId, strUserName))
+            );
+        }
+
+        [HttpPost("voteremove/{intComplaintId}")] // .../api/complaints/voteremove/...
+        public async Task<IActionResult> RemoveVote(int intComplaintId)
+        {
+            string authHeader = Request.Headers["Authorization"];
+            JwtSecurityTokenHandler tokenHandler = new();
+            JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
+
+            string strUserName = jwtToken.Claims.First(c => c.Type == "username").Value;
+
+            return HandleResult(
+                await Mediator.Send(new RemoveVoteCommand(intComplaintId, strUserName))
             );
         }
 
@@ -105,7 +159,10 @@ namespace API.Controllers
         }
 
         [HttpPut("update/{id}")] // .../api/complaints/update/id
-        public async Task<IActionResult> UpdateComplaint(int id, UpdateComplaintDTO updateComplaintDTO)
+        public async Task<IActionResult> UpdateComplaint(
+            int id,
+            UpdateComplaintDTO updateComplaintDTO
+        )
         {
             string authHeader = Request.Headers["Authorization"];
             JwtSecurityTokenHandler tokenHandler = new();
@@ -113,7 +170,9 @@ namespace API.Controllers
 
             updateComplaintDTO.strUserName = jwtToken.Claims.First(c => c.Type == "username").Value;
 
-            return HandleResult(await Mediator.Send(new UpdateComplaintCommand(updateComplaintDTO, id)));
+            return HandleResult(
+                await Mediator.Send(new UpdateComplaintCommand(updateComplaintDTO, id))
+            );
         }
 
         [HttpGet("statuses/{id}")] // .../api/complaints/statuses/id

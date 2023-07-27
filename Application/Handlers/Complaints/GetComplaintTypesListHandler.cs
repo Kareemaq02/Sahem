@@ -1,8 +1,6 @@
 ﻿using Application.Core;
 using Application.Queries.Complaints;
 using Domain.ClientDTOs.Complaint;
-using Domain.ClientDTOs.Task;
-using Domain.DataModels.Complaints;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -25,19 +23,39 @@ namespace Application.Handlers.Complaints
         )
         {
             var query =
-            from t in _context.ComplaintTypes
-            join p in _context.ComplaintPrivacy on t.intPrivacyId equals p.intId
-            select new ComplaintTypeDTO
-            {
-                decGrade = t.decGrade,
-                intDepartmentId = t.intDepartmentId,
-                strPrivacy = p.strName,
-                strNameAr = t.strNameAr,
-                strNameEn = t.strNameEn
-            };
+                from t in _context.ComplaintTypes
+                join p in _context.ComplaintPrivacy on t.intPrivacyId equals p.intId
+                select new
+                {
+                    t.decGrade,
+                    t.intId,
+                    t.intDepartmentId,
+                    intPrivacyId = p.intId,
+                    strPrivacyAr = p.strNameAr,
+                    strPrivacyEn = p.strNameEn,
+                    t.strNameAr,
+                    t.strNameEn,
+                    t.blnIsDeleted
+                };
 
-            var result = await query.ToListAsync();
-
+            var result = await query
+                .AsNoTracking()
+                .Where(ct => !ct.blnIsDeleted)
+                .Select(
+                    t =>
+                        new ComplaintTypeDTO
+                        {
+                            decGrade = t.decGrade,
+                            intTypeId = t.intId,
+                            intDepartmentId = t.intDepartmentId,
+                            intPrivacyId = t.intPrivacyId,
+                            strPrivacyEn = t.strPrivacyEn,
+                            strPrivacyAr = t.strPrivacyAr,
+                            strNameAr = t.strNameAr,
+                            strNameEn = t.strNameEn
+                        }
+                )
+                .ToListAsync(cancellationToken);
 
             return Result<List<ComplaintTypeDTO>>.Success(result);
         }

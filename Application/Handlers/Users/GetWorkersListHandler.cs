@@ -1,5 +1,6 @@
 ﻿using Application.Core;
 using Application.Queries.Users;
+using Domain.ClientDTOs.Task;
 using Domain.ClientDTOs.User;
 using Domain.DataModels.User;
 using MediatR;
@@ -9,7 +10,7 @@ using Persistence;
 namespace Application.Handlers.Users
 {
     public class GetWorkersListHandler
-        : IRequestHandler<GetWorkersListQuery, Result<List<WorkerDTO>>>
+        : IRequestHandler<GetWorkersListQuery, Result<PagedList<WorkerDTO>>>
     {
         private readonly DataContext _context;
 
@@ -18,13 +19,14 @@ namespace Application.Handlers.Users
             _context = context;
         }
 
-        public async Task<Result<List<WorkerDTO>>> Handle(
+        public async Task<Result<PagedList<WorkerDTO>>> Handle(
             GetWorkersListQuery request,
             CancellationToken cancellationToken
         )
         {
-            List<WorkerDTO> result = await _context.Users
+            var queryObject = _context.Users
                 .Where(q => q.intUserTypeId == 2)
+                .OrderBy(q => q.Id)
                 .Join(
                     _context.UserInfos,
                     u => u.Id,
@@ -38,8 +40,15 @@ namespace Application.Handlers.Users
                             strPhoneNumber = ui.strPhoneNumber
                         }
                 )
-                .ToListAsync();
-            return Result<List<WorkerDTO>>.Success(result);
+                .AsQueryable();
+
+            var result = await PagedList<WorkerDTO>.CreateAsync(
+                queryObject,
+                request.PagingParams.PageNumber,
+                request.PagingParams.PageSize
+            );
+
+            return Result<PagedList<WorkerDTO>>.Success(result);
         }
     }
 }

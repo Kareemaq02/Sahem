@@ -1,12 +1,10 @@
 ﻿using Application.Core;
 using Application.Queries.Complaints;
 using Domain.ClientDTOs.Complaint;
-using Domain.DataModels.Complaints;
+using Domain.Helpers;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
-using System.IO;
 
 namespace Application.Handlers.Complaints
 {
@@ -25,51 +23,74 @@ namespace Application.Handlers.Complaints
             CancellationToken cancellationToken
         )
         {
-            var result = await _context.Complaints
-                .Where(q => q.intId == request.Id)
-                .Join(
-                    _context.Users,
-                    c => c.intUserID,
-                    u => u.Id,
-                    (c, u) => new { Complaint = c, User = u }
-                )
-                .Join(
-                    _context.ComplaintTypes,
-                    c => c.Complaint.intTypeId,
-                    ct => ct.intId,
-                    (c, ct) => new { Complaint = c, ComplaintType = ct }
-                )
-                .Join(
-                    _context.ComplaintAttachments,
-                    c => c.Complaint.Complaint.intId,
-                    ca => ca.intComplaintId,
-                    (c, ca) =>
-                        new
-                        {
-                            c.Complaint,
-                            c.ComplaintType,
-                            ComplaintAttachment = ca
-                        }
-                )
+            var userId = await _context.Users
+                .Where(u => u.UserName == request.strUserName)
+                .Select(u => u.Id)
+                .SingleOrDefaultAsync();
+
+            var query =
+                from c in _context.Complaints
+                join u in _context.Users on c.intUserID equals u.Id
+                join ct in _context.ComplaintTypes on c.intTypeId equals ct.intId
+                join cs in _context.ComplaintStatus on c.intStatusId equals cs.intId
+                join cp in _context.ComplaintPrivacy on c.intPrivacyId equals cp.intId
+                select new
+                {
+                    Complaint = c,
+                    u.UserName,
+                    ComplaintTypeEn = ct.strNameEn,
+                    ComplaintTypeAr = ct.strNameAr,
+                    ComplaintGrade = ct.decGrade,
+                    Status = cs.strName,
+                    privacyId = cp.intId,
+                    privacyStrAr = cp.strNameAr,
+                    privacyStrEn = cp.strNameEn,
+                    latLng = c.Attachments
+                        .Select(ca => new LatLng { decLat = ca.decLat, decLng = ca.decLng })
+                        .FirstOrDefault(),
+                    UpVotes = c.Voters.Count(cv => !cv.blnIsDownVote),
+                    DownVotes = c.Voters.Count(cv => cv.blnIsDownVote)
+                };
+
+            var result = await query
+                .AsNoTracking()
+                .Where(c => c.Complaint.intId == request.Id)
                 .Select(
                     c =>
                         new ComplaintViewDTO
                         {
-                            intComplaintId = c.Complaint.Complaint.intId,
-                            strUserName = c.Complaint.User.UserName,
-                            dtmDateCreated = c.Complaint.Complaint.dtmDateCreated,
-                            strComplaintTypeEn = c.ComplaintType.strNameEn,
-                            strComplaintTypeAr = c.ComplaintType.strNameAr,
-                            lstMedia = c.Complaint.Complaint.Attachments
-                                    .Select(
-                                        a =>
-                                           File.Exists(a.strMediaRef)? Convert.ToBase64String(File.ReadAllBytes(a.strMediaRef)): string.Empty
-                                    )
-                                    .ToList(),
-                            blnIsVideo = c.ComplaintAttachment.blnIsVideo
+                            intComplaintId = c.Complaint.intId,
+                            strUserName = c.UserName,
+                            dtmDateCreated = c.Complaint.dtmDateCreated,
+                            strComplaintTypeEn = c.ComplaintTypeEn,
+                            strComplaintTypeAr = c.ComplaintTypeAr,
+                            lstMedia = c.Complaint.Attachments
+                                .Select(
+                                    ca =>
+                                        new Media
+                                        {
+                                            Data = File.Exists(ca.strMediaRef)
+                                                ? Convert.ToBase64String(
+                                                    File.ReadAllBytes(ca.strMediaRef)
+                                                )
+                                                : string.Empty,
+                                            IsVideo = ca.blnIsVideo
+                                        }
+                                )
+                                .ToList(),
+                            strStatus = c.Status,
+                            strComment = c.Complaint.strComment,
+                            intPrivacyId = c.privacyId,
+                            strPrivacyAr = c.privacyStrAr,
+                            strPrivacyEn = c.privacyStrEn,
+                            intVoted = c.Complaint.Voters
+                                .Select(cv => cv.blnIsDownVote ? -1 : 1)
+                                .FirstOrDefault(),
+                            intVotersCount = c.UpVotes - c.DownVotes,
+                            latLng = c.latLng,
                         }
                 )
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(cancellationToken);
 
             if (result == null)
             {

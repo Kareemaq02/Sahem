@@ -1,6 +1,8 @@
 
 
 
+// ignore_for_file: constant_identifier_names, unused_element, file_names, depend_on_referenced_packages, non_constant_identifier_names
+
 import 'package:account/Screens/Home/public_feed.dart';
 import 'package:account/Screens/View%20complaints/complaints_list.dart';
 import 'package:adobe_xd/page_link.dart';

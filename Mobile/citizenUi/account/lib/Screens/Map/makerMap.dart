@@ -1,8 +1,7 @@
 
-import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
+// ignore_for_file: non_constant_identifier_names, depend_on_referenced_packages, file_names
+
 import 'package:latlong2/latlong.dart';
-import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 
 
 

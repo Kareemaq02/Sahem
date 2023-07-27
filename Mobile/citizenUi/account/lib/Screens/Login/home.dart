@@ -1,4 +1,4 @@
-// ignore_for_file: constant_identifier_names, unused_element
+// ignore_for_file: constant_identifier_names, unused_element, library_private_types_in_public_api, no_leading_underscores_for_local_identifiers, use_build_context_synchronously, avoid_print
 
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
@@ -129,13 +129,13 @@ class _XDHomeState extends State<XDHome> {
                 padding: const EdgeInsets.only(left: 8.0),
                   child: Row(
                       children: [
-                     Icon(
+                     const Icon(
                        Icons.language,
                        color: Colors.white,
                      ),
                 Text(
                   languagea=='en'? languagea :arr,
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                 ),
               ],
             ),
