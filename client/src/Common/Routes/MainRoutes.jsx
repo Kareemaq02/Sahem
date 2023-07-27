@@ -24,6 +24,12 @@ const InsertTaskType = Loadable(lazy(() => import("../../Views/TaskType/InsertTa
 const InsertComplaintType = Loadable(lazy(() => import("../../Views/ComplaintsType/InsertComplaintType")));
 const InsertDepartmentType = Loadable(lazy(() => import("../../Views/Department/InsertDepartmentType")));
 const InsertProffession = Loadable(lazy(() => import("../../Views/Proffessions/InsertProffession")));
+const GeneralComplaints = Loadable(lazy(() => import("../../Views/GeneralComplaints/index")));
+const Users = Loadable(lazy(() => import("../../Views/ViewUsers/index")));
+const Workers = Loadable(lazy(() => import("../../Views/ViewWorkers/index")));
+const MapIndex = Loadable(lazy(() => import("../../Views/GeneralComplaints/mapIndex")));
+
+
 
 
 const Admin = "admin";
@@ -53,11 +59,47 @@ const MainRoutes = {
       ),
     },
     {
+      path: "users",
+      element: (
+        <PermissionsHelper
+          allowedRoles={[Admin]}
+          element={<Users />}
+        />
+      ),
+    },
+    {
+      path: "workers",
+      element: (
+        <PermissionsHelper
+          allowedRoles={[Admin]}
+          element={<Workers />}
+        />
+      ),
+    },
+    {
       path: "tasks",
       element: (
         <PermissionsHelper
           allowedRoles={[Admin, Worker]}
           element={<EvaluateTask />}
+        />
+      ),
+    },
+    {
+      path: "generalcomplaints",
+      element: (
+        <PermissionsHelper
+          allowedRoles={[Admin, User]}
+          element={<GeneralComplaints />}
+        />
+      ),
+    },
+    {
+      path: "mapcomplaints",
+      element: (
+        <PermissionsHelper
+          allowedRoles={[Admin, User]}
+          element={<MapIndex />}
         />
       ),
     },

@@ -24,9 +24,6 @@ const AdminMenus = [
     icon: <HomeOutlined />,
   },
   {
-    text: "Department",
-  },
-  {
     text: "Complaints",
     path: "/auth/complaints",
     icon: <ContentPaste />,
@@ -56,6 +53,11 @@ const AdminMenus = [
   {
     text: "Workers",
     path: "/auth/workers",
+    icon: <Groups2Outlined />,
+  },
+  {
+    text: "Users",
+    path: "/auth/users",
     icon: <Groups2Outlined />,
   },
   {
@@ -103,6 +105,11 @@ const AdminMenus = [
     path: "/auth/proffession",
     icon: <AssignmentIndOutlined />,
     children: [
+      {
+        text: "Proffession",
+        path: "/auth/proffession",
+        icon: <InsertPageBreakIcon />,
+      },
       {
         text: "Insert Proffession",
         path: "/auth/insert-proffession",
@@ -161,9 +168,6 @@ const WorkerMenus = [
     icon: <HomeOutlined />,
   },
   {
-    text: "Views",
-  },
-  {
     text: "General Complaints",
     path: "/auth/generalcomplaints",
     icon: <Public />,
@@ -194,9 +198,6 @@ const UserMenus = [
     icon: <HomeOutlined />,
   },
   {
-    text: "Views",
-  },
-  {
     text: "General Complaints",
     path: "/auth/generalcomplaints",
     icon: <Public />,
@@ -208,7 +209,7 @@ const UserMenus = [
       },
       {
         text: "Map View",
-        path: "/auth/mapgeneralcomplaints",
+        path: "/auth/mapcomplaints",
         icon: <Map />,
       },
     ],

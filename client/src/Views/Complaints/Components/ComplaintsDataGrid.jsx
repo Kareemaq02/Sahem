@@ -95,6 +95,7 @@ const ComplaintsDataGrid = ({ AddComplaint, data }) => {
       ),
     },
     { field: "dtmDateCreated", headerName: "Date Created", flex: 1 },
+    { field: "strComment", headerName: "User Comment", flex: 1 },
     {
       field: "strStatus",
       headerName: "Status",
