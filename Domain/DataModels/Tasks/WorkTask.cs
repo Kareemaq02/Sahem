@@ -80,6 +80,9 @@ namespace Domain.DataModels.Tasks
         [Column("IS_DELETED")]
         public Boolean blnIsDeleted { get; set; }
 
+        [Column("IS_ACTIVATED")]
+        public Boolean blnIsActivated { get; set; }
+
         // Relations
         public ICollection<WorkTaskMembers> Workers { get; set; }
 

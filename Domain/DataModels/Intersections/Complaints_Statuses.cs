@@ -12,8 +12,8 @@ namespace Domain.DataModels.Intersections
         public int intComplaintId { get; set; }
         public Complaint Complaint { get; set; }
 
-        [ForeignKey("User")]
         [Column("STATUS_ID")]
+        [ForeignKey("ComplaintStatus")]
         public int intStatusId { get; set; }
         public ComplaintStatus ComplaintStatus { get; set; }
 

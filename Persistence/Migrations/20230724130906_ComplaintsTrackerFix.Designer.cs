@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -10,9 +11,11 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230724130906_ComplaintsTrackerFix")]
+    partial class ComplaintsTrackerFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -88,15 +91,10 @@ namespace Persistence.Migrations
                         .HasColumnType("int")
                         .HasColumnName("ID");
 
-                    b.Property<string>("strNameAr")
+                    b.Property<string>("strName")
                         .IsRequired()
                         .HasColumnType("longtext")
-                        .HasColumnName("NAME_AR");
-
-                    b.Property<string>("strNameEn")
-                        .IsRequired()
-                        .HasColumnType("longtext")
-                        .HasColumnName("NAME_EN");
+                        .HasColumnName("NAME");
 
                     b.HasKey("intId");
 
@@ -222,10 +220,6 @@ namespace Persistence.Migrations
                     b.Property<int>("intComplaintId")
                         .HasColumnType("int")
                         .HasColumnName("COMPLAINT_ID");
-
-                    b.Property<bool>("blnIsDownVote")
-                        .HasColumnType("tinyint(1)")
-                        .HasColumnName("IS_DOWN_VOTE");
 
                     b.HasKey("intUserId", "intComplaintId");
 
