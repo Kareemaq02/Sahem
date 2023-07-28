@@ -4,6 +4,5 @@ using MediatR;
 
 namespace Application
 {
-    public record InsertTaskCommand(TaskDTO TaskDTO, int Id)
-        : IRequest<Result<TaskDTO>>;
+    public record InsertTaskCommand(TaskDTO TaskDTO, int Id) : IRequest<Result<TaskDTO>>;
 }

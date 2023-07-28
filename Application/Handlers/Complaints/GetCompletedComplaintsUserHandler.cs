@@ -29,8 +29,9 @@ namespace Application.Handlers.Complaints
                 join u in _context.Users on c.intUserID equals u.Id
                 join ct in _context.ComplaintTypes on c.intTypeId equals ct.intId
                 join cs in _context.ComplaintStatus on c.intStatusId equals cs.intId
-                where c.intStatusId == (int)ComplaintsConstant.complaintStatus.completed
-                && c.intPrivacyId == (int)ComplaintsConstant.complaintPrivacy.privacyPublic
+                where
+                    c.intStatusId == (int)ComplaintsConstant.complaintStatus.completed
+                    && c.intPrivacyId == (int)ComplaintsConstant.complaintPrivacy.privacyPublic
                 select new
                 {
                     Complaint = c,

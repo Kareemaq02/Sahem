@@ -12,6 +12,3 @@ namespace Domain.ClientDTOs.Evaluation
         public TaskDTO taskDTO { get; set; }
     }
 }
-
-
-

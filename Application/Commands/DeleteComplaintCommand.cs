@@ -4,6 +4,5 @@ using MediatR;
 
 namespace Application
 {
-    public record DeleteComplaintCommand(int Id)
-        : IRequest<Result<Unit>>;
+    public record DeleteComplaintCommand(int Id) : IRequest<Result<Unit>>;
 }

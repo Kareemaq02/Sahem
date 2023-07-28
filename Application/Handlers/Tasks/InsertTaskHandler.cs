@@ -10,8 +10,6 @@ using Microsoft.EntityFrameworkCore;
 using Domain.Resources;
 using Domain.DataModels.Complaints;
 
-
-
 namespace Application.Handlers.Tasks
 {
     public class InsertTaskHandler : IRequestHandler<InsertTaskCommand, Result<TaskDTO>>
@@ -19,10 +17,7 @@ namespace Application.Handlers.Tasks
         private readonly DataContext _context;
         public readonly UserManager<ApplicationUser> _userManager;
 
-        public InsertTaskHandler(
-            DataContext context,
-            UserManager<ApplicationUser> userManager
-        )
+        public InsertTaskHandler(DataContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
@@ -40,13 +35,12 @@ namespace Application.Handlers.Tasks
             int userId = await _context.Users
                 .Where(q => q.UserName == taskDTO.strUserName)
                 .Select(q => q.Id)
-                .FirstOrDefaultAsync();                            
+                .FirstOrDefaultAsync();
             int taskType = await _context.Complaints
                 .Where(q => q.intId == request.Id)
                 .Select(q => q.intTypeId)
                 .FirstOrDefaultAsync();
 
-            
             try
             {
                 var task = new WorkTask //Date Activated and Date Finished should be null
@@ -114,7 +108,6 @@ namespace Application.Handlers.Tasks
                     };
 
                     await _context.TasksComplaints.AddAsync(taskComplaint);
-
 
                     var complaint = new Complaint { intId = request.Id };
                     _context.Complaints.Attach(complaint);

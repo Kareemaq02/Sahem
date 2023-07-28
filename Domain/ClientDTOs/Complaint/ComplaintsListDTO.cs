@@ -10,7 +10,6 @@ namespace Domain.ClientDTOs.Complaint
         public DateTime dtmDateCreated { get; set; }
         public DateTime dtmDateFinished { get; set; }
         public int intTypeId { get; set; }
-
         public string strComplaintTypeEn { get; set; }
         public string strComplaintTypeAr { get; set; }
         public string strComment { get; set; }

@@ -13,7 +13,10 @@ public class UnverifyUserByIdHandler : IRequestHandler<UnverifyUserByIdCommand, 
         _context = context;
     }
 
-    public async Task<Result<Unit>> Handle(UnverifyUserByIdCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Unit>> Handle(
+        UnverifyUserByIdCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {

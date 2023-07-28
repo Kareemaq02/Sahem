@@ -6,9 +6,7 @@ using Application.Queries.Tasks;
 using Application.Queries.Users;
 using Microsoft.AspNetCore.Authorization;
 using Application.Queries.Complaints;
-using Application.Handlers.Tasks;
 using Application.Commands;
-using Domain.ClientDTOs.Complaint;
 using Application.Core;
 
 namespace API.Controllers
@@ -89,7 +87,7 @@ namespace API.Controllers
 
             return HandleResult(await Mediator.Send(new UpdateTaskCommand(updateTaskDTO, id)));
         }
-        
+
         [Authorize]
         [HttpPut("activate/{id}")] //.../api/tasks/activate/id
         public async Task<IActionResult> ActivateTask(int id, string username)
@@ -101,11 +99,10 @@ namespace API.Controllers
             username = jwtToken.Claims.First(c => c.Type == "username").Value;
 
             return HandleResult(await Mediator.Send(new ActivateTaskCommand(id, username)));
-
         }
 
         [HttpPost("submit/{id}")] // .../api/tasks/submit/id
-        public async Task<IActionResult> SubmitTask( [FromForm] SubmitTaskDTO submitTaskDTO, int id)
+        public async Task<IActionResult> SubmitTask([FromForm] SubmitTaskDTO submitTaskDTO, int id)
         {
             string authHeader = Request.Headers["Authorization"];
             JwtSecurityTokenHandler tokenHandler = new();
@@ -115,6 +112,5 @@ namespace API.Controllers
 
             return HandleResult(await Mediator.Send(new SubmitTaskCommand(submitTaskDTO, id)));
         }
-
     }
 }

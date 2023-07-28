@@ -13,8 +13,7 @@ using Persistence;
 
 namespace Application.Handlers.Complaints
 {
-    public class SubmitTaskByIdHandler
-        : IRequestHandler<SubmitTaskCommand, Result<SubmitTaskDTO>>
+    public class SubmitTaskByIdHandler : IRequestHandler<SubmitTaskCommand, Result<SubmitTaskDTO>>
     {
         private readonly DataContext _context;
         private readonly IConfiguration _configuration;
@@ -42,27 +41,27 @@ namespace Application.Handlers.Complaints
                 .Select(u => u.Id)
                 .SingleOrDefaultAsync();
 
-            var isLeader = _context.TaskMembers.Any(tm => tm.intTaskId == request.id && tm.intWorkerId == userId
-             && tm.blnIsLeader == true);
+            var isLeader = _context.TaskMembers.Any(
+                tm =>
+                    tm.intTaskId == request.id && tm.intWorkerId == userId && tm.blnIsLeader == true
+            );
 
             if (isLeader)
             {
-
                 var lstMedia = submitTaskDTO.lstMedia;
-
 
                 using var transaction = await _context.Database.BeginTransactionAsync(
                     cancellationToken
                 );
                 try
                 {
-
                     var task = await _context.Tasks.FindAsync(request.id);
 
-                    if (task.intStatusId != (int)TasksConstant.taskStatus.waitingEvaluation ||
-                        task.intStatusId != (int)TasksConstant.taskStatus.completed)
+                    if (
+                        task.intStatusId != (int)TasksConstant.taskStatus.waitingEvaluation
+                        || task.intStatusId != (int)TasksConstant.taskStatus.completed
+                    )
                     {
-
                         task.dtmDateLastModified = DateTime.UtcNow;
                         task.intLastModifiedBy = userId;
                         task.strComment = submitTaskDTO.strComment;

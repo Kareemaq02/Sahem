@@ -11,7 +11,8 @@ using Domain.ClientDTOs.Evaluation;
 
 namespace Application.Handlers.Evaluations
 {
-    public class SetTaskAsCompletedHandler : IRequestHandler<CompleteTaskCommand, Result<EvaluationDTO>>
+    public class SetTaskAsCompletedHandler
+        : IRequestHandler<CompleteTaskCommand, Result<EvaluationDTO>>
     {
         private readonly DataContext _context;
         public readonly UserManager<ApplicationUser> _userManager;
@@ -26,8 +27,8 @@ namespace Application.Handlers.Evaluations
         }
 
         public async Task<Result<EvaluationDTO>> Handle(
-         CompleteTaskCommand request,
-         CancellationToken cancellationToken
+            CompleteTaskCommand request,
+            CancellationToken cancellationToken
         )
         {
             var completedDTO = new EvaluationDTO
@@ -36,7 +37,6 @@ namespace Application.Handlers.Evaluations
                 decRating = request.CompletedDTO.decRating
             };
             using var transaction = await _context.Database.BeginTransactionAsync();
-            
 
             try
             {
@@ -57,9 +57,9 @@ namespace Application.Handlers.Evaluations
             try
             {
                 var complaintIds = await _context.TasksComplaints
-                .Where(q => q.intTaskId == request.Id)
-                .Select(q => q.intComplaintId)
-                .ToListAsync();
+                    .Where(q => q.intTaskId == request.Id)
+                    .Select(q => q.intComplaintId)
+                    .ToListAsync();
 
                 foreach (var x in complaintIds)
                 {
@@ -76,10 +76,8 @@ namespace Application.Handlers.Evaluations
                 await transaction.RollbackAsync();
                 return Result<EvaluationDTO>.Failure("Failed to update complaint status.");
             }
-           
 
             return Result<EvaluationDTO>.Success(completedDTO);
         }
-
     }
 }

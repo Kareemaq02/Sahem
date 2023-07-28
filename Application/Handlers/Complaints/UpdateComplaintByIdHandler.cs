@@ -1,5 +1,4 @@
 ﻿using Application.Core;
-using Application;
 using Domain.ClientDTOs.Complaint;
 using MediatR;
 using Persistence;
@@ -9,37 +8,35 @@ using Domain.DataModels.User;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Application.Commands;
-using Domain.ClientDTOs.User;
-using Org.BouncyCastle.Asn1.Ocsp;
 using Domain.Resources;
-using Domain.DataModels.Tasks;
 
-public class UpdateComplaintByIdHandler : IRequestHandler<UpdateComplaintCommand, Result<UpdateComplaintDTO>>
+public class UpdateComplaintByIdHandler
+    : IRequestHandler<UpdateComplaintCommand, Result<UpdateComplaintDTO>>
 {
     private readonly DataContext _context;
     private readonly IConfiguration _configuration;
     public readonly UserManager<ApplicationUser> _userManager;
 
     public UpdateComplaintByIdHandler(
-            DataContext context,
-            IConfiguration configuration,
-            UserManager<ApplicationUser> userManager
-        )
+        DataContext context,
+        IConfiguration configuration,
+        UserManager<ApplicationUser> userManager
+    )
     {
         _context = context;
         _configuration = configuration;
         _userManager = userManager;
-
     }
 
-    public async Task<Result<UpdateComplaintDTO>> Handle(UpdateComplaintCommand request, CancellationToken cancellationToken)
+    public async Task<Result<UpdateComplaintDTO>> Handle(
+        UpdateComplaintCommand request,
+        CancellationToken cancellationToken
+    )
     {
-
         var userId = await _context.Users
-               .Where(u => u.UserName == request.UpdateComplaintDTO.strUserName)
-               .Select(u => u.Id)
-               .SingleOrDefaultAsync(cancellationToken: cancellationToken);
-
+            .Where(u => u.UserName == request.UpdateComplaintDTO.strUserName)
+            .Select(u => u.Id)
+            .SingleOrDefaultAsync(cancellationToken: cancellationToken);
 
         var newComplaintComment = request.UpdateComplaintDTO.strComment;
         var newComplaintType = request.UpdateComplaintDTO.strComplaintTypeEn;
@@ -49,8 +46,6 @@ public class UpdateComplaintByIdHandler : IRequestHandler<UpdateComplaintCommand
             strComment = newComplaintComment,
             strComplaintTypeEn = newComplaintType
         };
-
-
 
         // transaction start...
 
@@ -64,11 +59,10 @@ public class UpdateComplaintByIdHandler : IRequestHandler<UpdateComplaintCommand
 
             if (complaintStatus == (int)ComplaintsConstant.complaintStatus.pending)
             {
-
                 var complaintTypeId = await _context.ComplaintTypes
-                .Where(c => c.strNameEn == request.UpdateComplaintDTO.strComplaintTypeEn)
-                .Select(c => c.intId)
-                .FirstOrDefaultAsync(cancellationToken);
+                    .Where(c => c.strNameEn == request.UpdateComplaintDTO.strComplaintTypeEn)
+                    .Select(c => c.intId)
+                    .FirstOrDefaultAsync(cancellationToken);
 
                 var complaint = new Complaint { intId = request.Id };
                 _context.Complaints.Attach(complaint);
@@ -86,10 +80,6 @@ public class UpdateComplaintByIdHandler : IRequestHandler<UpdateComplaintCommand
             return Result<UpdateComplaintDTO>.Failure("Failed to update complaint.");
         }
 
-
-
         return Result<UpdateComplaintDTO>.Success(UpdateComplaintDTO);
-
-
     }
 }

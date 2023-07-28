@@ -1,21 +1,15 @@
 ﻿using Application.Core;
-using Application;
-using Domain.ClientDTOs.Complaint;
 using MediatR;
 using Persistence;
-using Domain.DataModels.Complaints;
 using Microsoft.AspNetCore.Identity;
 using Domain.DataModels.User;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Application.Commands;
-using Domain.ClientDTOs.User;
-using Org.BouncyCastle.Asn1.Ocsp;
 using Domain.Resources;
 using Domain.DataModels.Tasks;
-using Domain.ClientDTOs.Task;
 using Domain.DataModels.Intersections;
-using Application.Handlers.Tasks;
+using Domain.ClientDTOs.Task;
 
 public class UpdateTaskByIdHandler : IRequestHandler<UpdateTaskCommand, Result<UpdateTaskDTO>>
 {
@@ -24,22 +18,25 @@ public class UpdateTaskByIdHandler : IRequestHandler<UpdateTaskCommand, Result<U
     public readonly UserManager<ApplicationUser> _userManager;
 
     public UpdateTaskByIdHandler(
-            DataContext context,
-            IConfiguration configuration,
-            UserManager<ApplicationUser> userManager
-        )
+        DataContext context,
+        IConfiguration configuration,
+        UserManager<ApplicationUser> userManager
+    )
     {
         _context = context;
         _configuration = configuration;
         _userManager = userManager;
     }
 
-    public async Task<Result<UpdateTaskDTO>> Handle(UpdateTaskCommand request, CancellationToken cancellationToken)
+    public async Task<Result<UpdateTaskDTO>> Handle(
+        UpdateTaskCommand request,
+        CancellationToken cancellationToken
+    )
     {
         var userId = await _context.Users
-               .Where(u => u.UserName == request.updateTaskDTO.strUserName)
-               .Select(u => u.Id)
-               .SingleOrDefaultAsync(cancellationToken: cancellationToken);
+            .Where(u => u.UserName == request.updateTaskDTO.strUserName)
+            .Select(u => u.Id)
+            .SingleOrDefaultAsync(cancellationToken: cancellationToken);
 
         /*    var newTaskStartDate = request.updateTaskDTO.scheduledDate;
             var newTaskDeadlineDate = request.updateTaskDTO.deadlineDate;
@@ -47,7 +44,7 @@ public class UpdateTaskByIdHandler : IRequestHandler<UpdateTaskCommand, Result<U
             var newWorkersList = request.updateTaskDTO.workersList;
             var newTaskTypeId = request.updateTaskDTO.intTaskTypeId;*/
 
-        var UpdateTaskDTO = new UpdateTaskDTO{ };
+        var UpdateTaskDTO = new UpdateTaskDTO { };
 
         // transaction start...
         using var transaction = await _context.Database.BeginTransactionAsync();
@@ -59,7 +56,10 @@ public class UpdateTaskByIdHandler : IRequestHandler<UpdateTaskCommand, Result<U
                 .Select(c => c.intStatusId)
                 .FirstOrDefaultAsync(cancellationToken);
 
-            if (taskStatus != (int)TasksConstant.taskStatus.waitingEvaluation && taskStatus != (int)TasksConstant.taskStatus.completed)
+            if (
+                taskStatus != (int)TasksConstant.taskStatus.waitingEvaluation
+                && taskStatus != (int)TasksConstant.taskStatus.completed
+            )
             {
                 var task = new WorkTask { intId = request.Id };
                 _context.Tasks.Attach(task);
@@ -70,14 +70,12 @@ public class UpdateTaskByIdHandler : IRequestHandler<UpdateTaskCommand, Result<U
                     UpdateTaskDTO.intTaskTypeId = request.updateTaskDTO.intTaskTypeId;
                 }
 
-
-
                 if (!string.IsNullOrWhiteSpace(request.updateTaskDTO.strComment))
                 {
                     task.strComment = request.updateTaskDTO.strComment;
                     UpdateTaskDTO.strComment = request.updateTaskDTO.strComment;
                 }
-                
+
                 task.intLastModifiedBy = (int)userId;
 
                 if (request.updateTaskDTO.deadlineDate != DateTime.MinValue)
@@ -89,7 +87,8 @@ public class UpdateTaskByIdHandler : IRequestHandler<UpdateTaskCommand, Result<U
                 if (request.updateTaskDTO.scheduledDate != DateTime.MinValue)
                 {
                     task.dtmDateScheduled = request.updateTaskDTO.scheduledDate;
-                    UpdateTaskDTO.scheduledDate = request.updateTaskDTO.scheduledDate; ;
+                    UpdateTaskDTO.scheduledDate = request.updateTaskDTO.scheduledDate;
+                    ;
                 }
 
                 await _context.SaveChangesAsync(cancellationToken);
@@ -106,11 +105,14 @@ public class UpdateTaskByIdHandler : IRequestHandler<UpdateTaskCommand, Result<U
 
         try
         {
-            if (request.updateTaskDTO.workersList != null && request.updateTaskDTO.workersList.Count != 0)
+            if (
+                request.updateTaskDTO.workersList != null
+                && request.updateTaskDTO.workersList.Count != 0
+            )
             {
                 var oldWorkersList = await _context.TaskMembers
-                 .Where(tm => tm.intTaskId == request.Id)
-                 .ToListAsync();
+                    .Where(tm => tm.intTaskId == request.Id)
+                    .ToListAsync();
 
                 _context.TaskMembers.RemoveRange(oldWorkersList);
                 UpdateTaskDTO.workersList = request.updateTaskDTO.workersList;
@@ -151,8 +153,6 @@ public class UpdateTaskByIdHandler : IRequestHandler<UpdateTaskCommand, Result<U
                 }
             }
         }
-
-            
         catch (Exception)
         {
             await transaction.RollbackAsync();
@@ -161,8 +161,6 @@ public class UpdateTaskByIdHandler : IRequestHandler<UpdateTaskCommand, Result<U
 
         await _context.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync();
-
-
 
         return Result<UpdateTaskDTO>.Success(UpdateTaskDTO);
     }

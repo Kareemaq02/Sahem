@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Identity;
 using Domain.DataModels.User;
 using Microsoft.Extensions.Configuration;
 
-
 public class InsertTaskTypeHandler : IRequestHandler<InsertTaskTypeCommand, Result<TaskTypeDTO>>
 {
     private readonly DataContext _context;
@@ -16,20 +15,21 @@ public class InsertTaskTypeHandler : IRequestHandler<InsertTaskTypeCommand, Resu
     public readonly UserManager<ApplicationUser> _userManager;
 
     public InsertTaskTypeHandler(
-            DataContext context,
-            IConfiguration configuration,
-            UserManager<ApplicationUser> userManager
-        )
+        DataContext context,
+        IConfiguration configuration,
+        UserManager<ApplicationUser> userManager
+    )
     {
         _context = context;
         _configuration = configuration;
         _userManager = userManager;
-
     }
 
-    public async Task<Result<TaskTypeDTO>> Handle(InsertTaskTypeCommand request, CancellationToken cancellationToken)
+    public async Task<Result<TaskTypeDTO>> Handle(
+        InsertTaskTypeCommand request,
+        CancellationToken cancellationToken
+    )
     {
-
         var taskTypeDTO = request.TaskTypeDTO;
 
         var user = await _userManager.FindByNameAsync(taskTypeDTO.strUserName);
@@ -48,8 +48,6 @@ public class InsertTaskTypeHandler : IRequestHandler<InsertTaskTypeCommand, Resu
 
         await _context.TaskTypes.AddAsync(taskType, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
-
-      
 
         return Result<TaskTypeDTO>.Success(taskTypeDTO);
     }

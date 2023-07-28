@@ -13,7 +13,10 @@ public class BlacklistUserByIdHandler : IRequestHandler<BlacklistUserByIdCommand
         _context = context;
     }
 
-    public async Task<Result<Unit>> Handle(BlacklistUserByIdCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Unit>> Handle(
+        BlacklistUserByIdCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {

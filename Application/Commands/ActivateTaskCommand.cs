@@ -4,6 +4,5 @@ using MediatR;
 
 namespace Application.Commands
 {
-    public record ActivateTaskCommand(int Id, string username)
-        : IRequest<Result<Unit>>;
+    public record ActivateTaskCommand(int Id, string username) : IRequest<Result<Unit>>;
 }

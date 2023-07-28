@@ -9,8 +9,6 @@ namespace API.Controllers
 {
     public class ProfessionsController : BaseApiController
     {
-
-
         [HttpPost] // .../api/professions
         public async Task<IActionResult> InsertDepartment([FromForm] ProfessionDTO professionDTO)
         {
@@ -28,7 +26,5 @@ namespace API.Controllers
         {
             return HandleResult(await Mediator.Send(new GetProfessionsListQuery()));
         }
-
-
     }
 }

@@ -1,5 +1,4 @@
-﻿
-namespace Domain.Resources
+﻿namespace Domain.Resources
 {
     public static class ComplaintsConstant
     {
@@ -14,12 +13,12 @@ namespace Domain.Resources
             completed = 7,
             refiled = 8
         }
-        public enum complaintPrivacy {
+
+        public enum complaintPrivacy
+        {
             privacyPrivate = 1,
             privacyPublic = 2,
             privacyAny = 3,
-
         }
     }
 }
-

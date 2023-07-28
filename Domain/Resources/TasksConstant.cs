@@ -1,5 +1,4 @@
-﻿
-namespace Domain.Resources
+﻿namespace Domain.Resources
 {
     public static class TasksConstant
     {
@@ -11,8 +10,6 @@ namespace Domain.Resources
             failed = 4,
             incomplete = 5,
             completed = 6,
-
         }
     }
 }
-

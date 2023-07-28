@@ -13,7 +13,10 @@ public class WhitelistUserByIdHandler : IRequestHandler<WhitelistUserByIdCommand
         _context = context;
     }
 
-    public async Task<Result<Unit>> Handle(WhitelistUserByIdCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Unit>> Handle(
+        WhitelistUserByIdCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {

@@ -16,18 +16,15 @@ namespace Application.Handlers.Evaluations
         private readonly DataContext _context;
         public readonly UserManager<ApplicationUser> _userManager;
 
-        public SetTaskAsFailedHandler(
-            DataContext context,
-            UserManager<ApplicationUser> userManager
-        )
+        public SetTaskAsFailedHandler(DataContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
         }
 
         public async Task<Result<EvaluationDTO>> Handle(
-         FailTaskCommand request,
-         CancellationToken cancellationToken
+            FailTaskCommand request,
+            CancellationToken cancellationToken
         )
         {
             var failedDTO = new EvaluationDTO
@@ -36,7 +33,6 @@ namespace Application.Handlers.Evaluations
                 decRating = request.FailedDTO.decRating
             };
             using var transaction = await _context.Database.BeginTransactionAsync();
-            
 
             try
             {
@@ -57,9 +53,9 @@ namespace Application.Handlers.Evaluations
             try
             {
                 int complaintId = await _context.TasksComplaints
-                .Where(q => q.intTaskId == request.Id)
-                .Select(q => q.intComplaintId)
-                .FirstOrDefaultAsync();
+                    .Where(q => q.intTaskId == request.Id)
+                    .Select(q => q.intComplaintId)
+                    .FirstOrDefaultAsync();
 
                 var complaint = new Complaint { intId = complaintId };
                 _context.Complaints.Attach(complaint);
@@ -72,10 +68,8 @@ namespace Application.Handlers.Evaluations
                 await transaction.RollbackAsync();
                 return Result<EvaluationDTO>.Failure("Failed to update complaint status.");
             }
-           
 
             return Result<EvaluationDTO>.Success(failedDTO);
         }
-
     }
 }

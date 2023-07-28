@@ -3,6 +3,5 @@ using MediatR;
 
 namespace Application
 {
-    public record VerifyUserByIdCommand(int Id)
-        : IRequest<Result<Unit>>;
+    public record VerifyUserByIdCommand(int Id) : IRequest<Result<Unit>>;
 }

@@ -3,6 +3,5 @@ using MediatR;
 
 namespace Application
 {
-    public record BlacklistUserByIdCommand(int Id)
-        : IRequest<Result<Unit>>;
+    public record BlacklistUserByIdCommand(int Id) : IRequest<Result<Unit>>;
 }

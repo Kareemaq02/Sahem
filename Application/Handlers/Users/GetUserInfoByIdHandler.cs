@@ -39,19 +39,18 @@ namespace Application.Handlers.Complaints
                     u =>
                         new DetailedUserDTO
                         {
-                           intId = u.User.Id,
-                           strUsername = u.User.UserName,
-                           strFirstName = u.UserInfo.strFirstName,
-                           strLastName = u.UserInfo.strLastName,
-                           strNationalId = u.UserInfo.strNationalId,
-                           strPhoneNumber= u.UserInfo.strPhoneNumber,
-                           strNationalIdNumber = u.UserInfo.strNationalIdNumber,
-                           strPassportNumber = u.UserInfo.strPassportNumber,
-                           strRegistrationNumber = u.UserInfo.strRegistrationNumber,
-                           boolIsActive = u.User.blnIsActive,
-                           boolIsBlacklisted = u.User.blnIsBlacklisted,
-                           boolIsVerified = u.User.blnIsVerified,
-
+                            intId = u.User.Id,
+                            strUsername = u.User.UserName,
+                            strFirstName = u.UserInfo.strFirstName,
+                            strLastName = u.UserInfo.strLastName,
+                            strNationalId = u.UserInfo.strNationalId,
+                            strPhoneNumber = u.UserInfo.strPhoneNumber,
+                            strNationalIdNumber = u.UserInfo.strNationalIdNumber,
+                            strPassportNumber = u.UserInfo.strPassportNumber,
+                            strRegistrationNumber = u.UserInfo.strRegistrationNumber,
+                            boolIsActive = u.User.blnIsActive,
+                            boolIsBlacklisted = u.User.blnIsBlacklisted,
+                            boolIsVerified = u.User.blnIsVerified,
                         }
                 )
                 .FirstOrDefaultAsync();

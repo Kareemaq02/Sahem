@@ -1,5 +1,4 @@
-﻿
-namespace Domain.Resources
+﻿namespace Domain.Resources
 {
     public static class UsersConstant
     {
@@ -11,4 +10,3 @@ namespace Domain.Resources
         }
     }
 }
-

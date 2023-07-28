@@ -9,6 +9,5 @@ using System.Threading.Tasks;
 
 namespace Application
 {
-    public record DeleteTaskCommand(int Id)
-        : IRequest<Result<Unit>>;
+    public record DeleteTaskCommand(int Id) : IRequest<Result<Unit>>;
 }

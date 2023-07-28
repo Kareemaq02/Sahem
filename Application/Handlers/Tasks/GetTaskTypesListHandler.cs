@@ -23,7 +23,7 @@ namespace Application.Handlers.Complaints
         )
         {
             List<TaskTypeDTO> result = await _context.TaskTypes
-                .Where(q => q.blnIsDeleted!=true)
+                .Where(q => q.blnIsDeleted != true)
                 .Select(
                     q =>
                         new TaskTypeDTO

@@ -10,6 +10,3 @@ namespace Domain.ClientDTOs.Evaluation
         public decimal decRating { get; set; }
     }
 }
-
-
-

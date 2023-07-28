@@ -16,7 +16,10 @@ namespace Application.Handlers
             _context = context;
         }
 
-        public async Task<Result<Unit>> Handle(DeleteComplaintCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>> Handle(
+            DeleteComplaintCommand request,
+            CancellationToken cancellationToken
+        )
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
@@ -29,8 +32,8 @@ namespace Application.Handlers
                 if (complaintStatus == (int)ComplaintsConstant.complaintStatus.pending)
                 {
                     var complaintAttachments = await _context.ComplaintAttachments
-                         .Where(ca => ca.intComplaintId == request.Id)
-                         .ToListAsync(cancellationToken);
+                        .Where(ca => ca.intComplaintId == request.Id)
+                        .ToListAsync(cancellationToken);
 
                     _context.ComplaintAttachments.RemoveRange(complaintAttachments);
                     await _context.SaveChangesAsync(cancellationToken);
@@ -43,8 +46,6 @@ namespace Application.Handlers
                 await transaction.RollbackAsync();
                 return Result<Unit>.Failure("Failed to delete complaint.");
             }
-
-
 
             try
             {

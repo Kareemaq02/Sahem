@@ -1,14 +1,10 @@
 ﻿using Application.Core;
 using Application.Queries.Tasks;
-using Domain.ClientDTOs.Complaint;
 using Domain.ClientDTOs.Task;
 using Domain.ClientDTOs.User;
-using Domain.DataModels.Tasks;
 using LinqKit;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Persistence;
-using System.Linq;
 
 namespace Application.Handlers.Tasks
 {
@@ -63,7 +59,13 @@ namespace Application.Handlers.Tasks
                     strTaskStatus = g.Key.TaskStatus,
                     workersList = g.Select(
                             x =>
-                                new TaskWorkerDTO { intId = x.Worker.Id, isLeader = x.blnIsLeader, }
+                                new TaskWorkerDTO
+                                {
+                                    intId = x.Worker.Id,
+                                    strFirstName = x.Worker.UserInfo.strFirstName,
+                                    strLastName = x.Worker.UserInfo.strLastName,
+                                    isLeader = x.blnIsLeader,
+                                }
                         )
                         .Distinct()
                         .ToList()
@@ -88,13 +90,6 @@ namespace Application.Handlers.Tasks
                 var predicate = PredicateBuilder.New<TaskListDTO>();
                 foreach (var filter in request.filter.lstTaskStatusIds)
                 {
-                    intId = x.Worker.Id,
-                    strFirstName = x.Worker.UserInfo.strFirstName,
-                    strLastName = x.Worker.UserInfo.strLastName,
-                    isLeader = x.blnIsLeader,
-                }).Distinct().ToList()
-            };
-            
                     var tempFilter = filter;
                     predicate = predicate.Or(q => q.intTaskStatusId == tempFilter);
                 }

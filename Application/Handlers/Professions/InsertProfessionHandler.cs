@@ -35,8 +35,13 @@ namespace Application.Handlers.LookUps
         {
             var professionDTO = request.ProfessionDTO;
 
-            if (_context.Professions.Any(p => p.strNameEn == professionDTO.strNameEn
-               || p.strNameAr == professionDTO.strNameAr))
+            if (
+                _context.Professions.Any(
+                    p =>
+                        p.strNameEn == professionDTO.strNameEn
+                        || p.strNameAr == professionDTO.strNameAr
+                )
+            )
             {
                 return Result<ProfessionDTO>.Failure("Profession Name Already exists");
             }
@@ -59,8 +64,6 @@ namespace Application.Handlers.LookUps
 
             await _context.Professions.AddAsync(profession, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
-
-
 
             return Result<ProfessionDTO>.Success(professionDTO);
         }

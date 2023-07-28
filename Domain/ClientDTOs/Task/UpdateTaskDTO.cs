@@ -1,8 +1,7 @@
 ﻿using Domain.ClientDTOs.User;
 using System.Text.Json.Serialization;
 
-
-namespace Application.Handlers.Tasks
+namespace Domain.ClientDTOs.Task
 {
     public class UpdateTaskDTO
     {
@@ -13,6 +12,5 @@ namespace Application.Handlers.Tasks
         public string strComment { get; set; }
         public List<TaskWorkerDTO> workersList { get; set; } = new List<TaskWorkerDTO>();
         public int intTaskTypeId { get; set; }
-
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Domain.ClientDTOs.User;
 
-
 namespace Domain.ClientDTOs.Task
 {
     public class WorkerTaskDTO
@@ -17,6 +16,5 @@ namespace Domain.ClientDTOs.Task
         public string strTaskStatus { get; set; }
         public bool blnIsTaskLeader { get; set; }
         public List<TaskWorkerDTO> workersList { get; set; }
-
     }
 }

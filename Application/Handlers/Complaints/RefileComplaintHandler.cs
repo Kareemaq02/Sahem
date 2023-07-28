@@ -12,9 +12,7 @@ namespace Application.Handlers.Complaints
     {
         private readonly DataContext _context;
 
-        public RefileComplaintHandler(
-            DataContext context
-        )
+        public RefileComplaintHandler(DataContext context)
         {
             _context = context;
         }
@@ -31,11 +29,9 @@ namespace Application.Handlers.Complaints
 
             if (complaintStatus == (int)ComplaintsConstant.complaintStatus.completed)
             {
-
                 var complaint = new Complaint { intId = request.ID };
                 _context.Complaints.Attach(complaint);
                 complaint.intStatusId = (int)ComplaintsConstant.complaintStatus.waitingEvaluation;
-
 
                 await _context.SaveChangesAsync(cancellationToken);
             }

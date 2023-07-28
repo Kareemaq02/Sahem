@@ -1,5 +1,4 @@
 ﻿using Application.Core;
-using Domain.DataModels.Complaints;
 using Domain.DataModels.Tasks;
 using Domain.Resources;
 using MediatR;
@@ -17,7 +16,10 @@ namespace Application.Handlers
             _context = context;
         }
 
-        public async Task<Result<Unit>> Handle(DeleteTaskCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>> Handle(
+            DeleteTaskCommand request,
+            CancellationToken cancellationToken
+        )
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
@@ -30,8 +32,8 @@ namespace Application.Handlers
                 if (TasksStatus == (int)TasksConstant.taskStatus.inactive)
                 {
                     var taskAttachments = await _context.TaskAttachments
-                         .Where(ca => ca.intTaskId == request.Id)
-                         .ToListAsync(cancellationToken);
+                        .Where(ca => ca.intTaskId == request.Id)
+                        .ToListAsync(cancellationToken);
 
                     _context.TaskAttachments.RemoveRange(taskAttachments);
                     await _context.SaveChangesAsync(cancellationToken);
@@ -44,7 +46,6 @@ namespace Application.Handlers
                 await transaction.RollbackAsync();
                 return Result<Unit>.Failure("Failed to delete task.");
             }
-
 
             try
             {
@@ -60,7 +61,6 @@ namespace Application.Handlers
                 await transaction.RollbackAsync();
                 return Result<Unit>.Failure("Failed to delete task.");
             }
-
 
             try
             {

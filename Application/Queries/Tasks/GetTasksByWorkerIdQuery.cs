@@ -4,6 +4,5 @@ using MediatR;
 
 namespace Application.Queries.Tasks
 {
-    public record GetTasksByWorkerIdQuery(int id)
-        : IRequest<Result<List<WorkerTaskDTO>>>;
+    public record GetTasksByWorkerIdQuery(int id) : IRequest<Result<List<WorkerTaskDTO>>>;
 }

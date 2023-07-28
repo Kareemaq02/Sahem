@@ -13,7 +13,10 @@ public class VerifyUserByIdHandler : IRequestHandler<VerifyUserByIdCommand, Resu
         _context = context;
     }
 
-    public async Task<Result<Unit>> Handle(VerifyUserByIdCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Unit>> Handle(
+        VerifyUserByIdCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {

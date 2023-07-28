@@ -35,15 +35,19 @@ namespace Application.Handlers.LookUps
         {
             var departmentDTO = request.DepartmentDTO;
 
-            if (_context.Departments.Any(d => d.strNameEn == request.DepartmentDTO.strNameEn
-              || d.strNameAr == request.DepartmentDTO.strNameAr))
+            if (
+                _context.Departments.Any(
+                    d =>
+                        d.strNameEn == request.DepartmentDTO.strNameEn
+                        || d.strNameAr == request.DepartmentDTO.strNameAr
+                )
+            )
                 return Result<DepartmentDTO>.Failure("Department Name Already exists");
 
             int userId = await _context.Users
                 .Where(q => q.UserName == departmentDTO.strUserName)
                 .Select(q => q.Id)
                 .FirstOrDefaultAsync();
-
 
             var department = new Department
             {
@@ -58,8 +62,6 @@ namespace Application.Handlers.LookUps
 
             await _context.Departments.AddAsync(department, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
-
-
 
             return Result<DepartmentDTO>.Success(departmentDTO);
         }

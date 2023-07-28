@@ -11,11 +11,10 @@ using Domain.ClientDTOs.Evaluation;
 using Application.Handlers.Tasks;
 using Domain.ClientDTOs.Task;
 
-
-
 namespace Application.Handlers.Evaluations
 {
-    public class SetTaskAsIncompletedHandler : IRequestHandler<IncompleteTaskCommand, Result<IncompleteDTO>>
+    public class SetTaskAsIncompletedHandler
+        : IRequestHandler<IncompleteTaskCommand, Result<IncompleteDTO>>
     {
         private readonly InsertTaskHandler _insertTaskHandler;
         private readonly DataContext _context;
@@ -33,8 +32,8 @@ namespace Application.Handlers.Evaluations
         }
 
         public async Task<Result<IncompleteDTO>> Handle(
-         IncompleteTaskCommand request,
-         CancellationToken cancellationToken
+            IncompleteTaskCommand request,
+            CancellationToken cancellationToken
         )
         {
             var taskDTO = new TaskDTO
@@ -52,7 +51,6 @@ namespace Application.Handlers.Evaluations
                 decRating = request.IncompleteDTO.decRating,
                 taskDTO = taskDTO
             };
-            
 
             using var transaction = await _context.Database.BeginTransactionAsync();
 
@@ -75,9 +73,9 @@ namespace Application.Handlers.Evaluations
             try
             {
                 int complaintId = await _context.TasksComplaints
-                .Where(q => q.intTaskId == request.Id)
-                .Select(q => q.intComplaintId)
-                .FirstOrDefaultAsync();
+                    .Where(q => q.intTaskId == request.Id)
+                    .Select(q => q.intComplaintId)
+                    .FirstOrDefaultAsync();
 
                 var complaint = new Complaint { intId = complaintId };
                 _context.Complaints.Attach(complaint);
@@ -91,10 +89,12 @@ namespace Application.Handlers.Evaluations
                 return Result<IncompleteDTO>.Failure("Failed to update complaint status.");
             }
 
-            var insertResult = await _insertTaskHandler.Handle(new InsertTaskCommand(taskDTO, request.Id), cancellationToken);
+            var insertResult = await _insertTaskHandler.Handle(
+                new InsertTaskCommand(taskDTO, request.Id),
+                cancellationToken
+            );
 
             return Result<IncompleteDTO>.Success(incompleteDTO);
         }
-
     }
 }

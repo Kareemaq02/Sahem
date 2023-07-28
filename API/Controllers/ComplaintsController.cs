@@ -62,12 +62,10 @@ namespace API.Controllers
         }
 
         [HttpPut("refile")] // .../api/complaints
-        public async Task<IActionResult> RefileComplaint( int ID)
+        public async Task<IActionResult> RefileComplaint(int ID)
         {
             return HandleResult(await Mediator.Send(new RefileComplaintCommand(ID)));
         }
-
-
 
         [HttpGet("user")] // .../api/complaints/user
         public async Task<IActionResult> GetComplaintsByUser()
@@ -184,13 +182,9 @@ namespace API.Controllers
         }
 
         [HttpGet("statuses/{id}")] // .../api/complaints/statuses/id
-
         public async Task<IActionResult> GetComplaintStatuses(int id)
         {
             return HandleResult(await Mediator.Send(new GetComplaintStatusesQuery(id)));
         }
-
-
-
     }
 }

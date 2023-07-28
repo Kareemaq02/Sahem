@@ -4,5 +4,5 @@ using MediatR;
 
 namespace Application.Queries.Complaints
 {
-	public record GetTaskDetailsByIdQuery(int Id) : IRequest<Result<DetailedTaskDTO>>;
+    public record GetTaskDetailsByIdQuery(int Id) : IRequest<Result<DetailedTaskDTO>>;
 }
