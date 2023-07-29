@@ -186,5 +186,23 @@ namespace API.Controllers
         {
             return HandleResult(await Mediator.Send(new GetComplaintStatusesQuery(id)));
         }
+
+        [HttpPut("remind/{id}")] // .../api/complaints/remind/id
+        public async Task<IActionResult> IncrementComplaintReminder(
+            int id,
+            string username
+        )
+        {
+            string authHeader = Request.Headers["Authorization"];
+            JwtSecurityTokenHandler tokenHandler = new();
+            JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
+
+            username = jwtToken.Claims.First(c => c.Type == "username").Value;
+
+            return HandleResult(
+                await Mediator.Send(new IncrementComplaintReminderCommand(id, username))
+            );
+        }
+
     }
 }
