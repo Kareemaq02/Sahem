@@ -12,18 +12,13 @@ public class IncrementComplaintReminderHandler
     : IRequestHandler<IncrementComplaintReminderCommand, Result<Unit>>
 {
     private readonly DataContext _context;
-    private readonly IConfiguration _configuration;
-    public readonly UserManager<ApplicationUser> _userManager;
 
     public IncrementComplaintReminderHandler(
         DataContext context,
-        IConfiguration configuration,
         UserManager<ApplicationUser> userManager
     )
     {
         _context = context;
-        _configuration = configuration;
-        _userManager = userManager;
     }
 
     public async Task<Result<Unit>> Handle(
