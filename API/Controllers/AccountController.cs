@@ -114,6 +114,57 @@ namespace API.Controllers
                 return BadRequest();
             }
         }
+        [HttpPost("register/worker")]
+        public async Task<ActionResult<string>> RegisterWorker(RegisterDTO register)
+        {
+            // If fails, return error code and stop executing
+            var validation = await ValidateUserInput(register);
+            if (validation is BadRequestObjectResult)
+            {
+                return validation;
+            }
+
+            // START TRANSACTION
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                EntityEntry<UserInfo> userInfo = await InsertUserInfo(register);
+                await _context.SaveChangesAsync();
+
+                // Query user type
+                UserType userType = await _context.UserTypes
+                    .Where(q => q.strName == ConstantsDB.UserTypes.Worker)
+                    .FirstOrDefaultAsync();
+
+                // Create User
+                ApplicationUser user =
+                    new()
+                    {
+                        UserName = register.strUsername.ToLower(),
+                        intUserTypeId = userType.intId,
+                        intUserInfoId = userInfo.Entity.intId,
+                        UserInfo = userInfo.Entity
+                    };
+
+                var result = await _userManager.CreateAsync(user, register.strPassword);
+
+                if (result.Succeeded)
+                {
+                    await transaction.CommitAsync();
+                    return _tokenService.CreateToken(user);
+                }
+
+                // Rollback changes if failed
+                await transaction.RollbackAsync();
+                return BadRequest(result.Errors);
+            }
+            catch (Exception)
+            {
+                await transaction.RollbackAsync();
+                // Display error
+                return BadRequest();
+            }
+        }
 
         [Authorize]
         [HttpPost("refresh")]
