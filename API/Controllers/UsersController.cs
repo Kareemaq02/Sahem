@@ -1,6 +1,7 @@
 ﻿using API.Services;
 using Application;
 using Application.Core;
+using Application.Queries.Complaints;
 using Application.Queries.Departments;
 using Application.Queries.Users;
 using Domain.ClientDTOs.User;
@@ -36,6 +37,13 @@ namespace API.Controllers
         }
 
         [Authorize]
+        [HttpGet("worker/{id}")] // .../api/users/id
+        public async Task<IActionResult> GetWorkerInfoById(int id)
+        {
+            return HandleResult(await Mediator.Send(new GetWorkerInfoByIdQuery(id)));
+        }
+
+        [Authorize]
         [HttpPut("verify/{id}")] //.../api/users/verify/id
         public async Task<IActionResult> VerifyUserById(int id)
         {
@@ -61,6 +69,13 @@ namespace API.Controllers
         public async Task<IActionResult> WhitelistUserById(int id)
         {
             return HandleResult(await Mediator.Send(new WhitelistUserByIdCommand(id)));
+        }
+
+
+        [HttpGet("workers/available")] //api/users/workers/available
+        public async Task<IActionResult> GetAvailableWorkersList(DateTime startDate, DateTime endDate)
+        {
+            return HandleResult(await Mediator.Send(new GetAvailableWorkersListQuery(startDate,endDate)));
         }
     }
 }
