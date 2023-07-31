@@ -114,8 +114,8 @@ namespace API.Controllers
                 return BadRequest();
             }
         }
-        [HttpPost("register/worker")]
-        public async Task<ActionResult<string>> RegisterWorker(RegisterDTO register)
+        [HttpPost("register/employee")]
+        public async Task<ActionResult<string>> RegisterEmployee(RegisterDTO register, bool isAdmin)
         {
             // If fails, return error code and stop executing
             var validation = await ValidateUserInput(register);
@@ -131,10 +131,21 @@ namespace API.Controllers
                 EntityEntry<UserInfo> userInfo = await InsertUserInfo(register);
                 await _context.SaveChangesAsync();
 
+                UserType userType;
                 // Query user type
-                UserType userType = await _context.UserTypes
-                    .Where(q => q.strName == ConstantsDB.UserTypes.Worker)
-                    .FirstOrDefaultAsync();
+                if (isAdmin)
+                {
+                        userType = await _context.UserTypes
+                        .Where(q => q.strName == ConstantsDB.UserTypes.Admin)
+                        .FirstOrDefaultAsync();
+                }
+                else
+                {
+                             userType = await _context.UserTypes
+                            .Where(q => q.strName == ConstantsDB.UserTypes.Worker)
+                            .FirstOrDefaultAsync();
+                }
+
 
                 // Create User
                 ApplicationUser user =
