@@ -11,10 +11,10 @@ Widget like(count,comlaintID){
     likeBuilder: (isLiked) {
        
       return Icon(
-        Icons.volunteer_activism,
+        Icons.volunteer_activism_rounded,
         size: 30,
         color: isLiked? Colors.purple:Colors.grey,
-
+        
       );
     },
     likeCount:count,
@@ -30,9 +30,12 @@ Widget like(count,comlaintID){
    onTap: (isLiked) async {
       if (!isLiked) {
         VoteComplaint a = VoteComplaint();
-       
          await a.sendVoteRequest(comlaintID);
-       
+      }
+      else{
+        VoteComplaint a = VoteComplaint();
+         await a.RemoveVoteRequest(comlaintID);
+      
       }
       return !isLiked;
     },

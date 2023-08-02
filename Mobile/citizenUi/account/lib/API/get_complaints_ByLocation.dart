@@ -37,24 +37,24 @@ class PublicComplaintModel {
     required this.decPriority,
   });
 
-  factory PublicComplaintModel.fromJson(Map<String, dynamic> json) {
-    return PublicComplaintModel(
-      intComplaintId: json['intComplaintId'],
-      strUserName: json['strUserName'],
-      dtmDateCreated: json['dtmDateCreated'],
-      dtmDateFinished: json['dtmDateFinished'],
-      strComplaintTypeEn: json['strComplaintTypeEn'],
-      strComplaintTypeAr: json['strComplaintTypeAr'],
-      strComment: json['strComment'],
-      strStatus: json['strStatus'],
-      intPrivacyId: json['intPrivacyId'],
-      intVotersCount: json['intVotersCount'],
-      decLat: json['decLat'],
-      decLng: json['decLng'],
-      decPriority: json['decPriority'],
+//   factory PublicComplaintModel.fromJson(Map<String, dynamic> json) {
+//     return PublicComplaintModel(
+//       intComplaintId: json['intComplaintId'],
+//       strUserName: json['strUserName'],
+//       dtmDateCreated: json['dtmDateCreated'],
+//       dtmDateFinished: json['dtmDateFinished'],
+//       strComplaintTypeEn: json['strComplaintTypeEn'],
+//       strComplaintTypeAr: json['strComplaintTypeAr'],
+//       strComment: json['strComment'],
+//       strStatus: json['strStatus'],
+//       intPrivacyId: json['intPrivacyId'],
+//       intVotersCount: json['intVotersCount'],
+//       decLat: json['decLat'],
+//       decLng: json['decLng'],
+//       decPriority: json['decPriority'],
     
-    );
-  }
+//     );
+//   }
 }
 
 
@@ -70,8 +70,8 @@ Future<List<dynamic>> getComplaintsByLocation(double decLat, double decLng) asyn
 
     body : body,
   );
-print(response.body);
-print(response.statusCode);
+// print(response.body);
+// print(response.statusCode);
   if (response.statusCode == 200) {
     List<dynamic> complaints = json.decode(response.body);
     return complaints;

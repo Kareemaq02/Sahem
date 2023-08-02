@@ -1,8 +1,12 @@
 // ignore_for_file: depend_on_referenced_packages, constant_identifier_names, unused_element, library_private_types_in_public_api, prefer_typing_uninitialized_variables, use_build_context_synchronously, duplicate_ignore
 import 'package:account/API/get_complaints_ByLocation.dart';
+import 'package:account/API/get_complaints_types.dart';
 import 'package:account/Screens/Map/map_view.dart';
 import 'package:account/Screens/Profile/profile.dart';
+import 'package:account/Widgets/complaintPost.dart';
+import 'package:account/Widgets/fiter.dart';
 import 'package:account/Widgets/likeButton.dart';
+import 'package:filter_list/filter_list.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:geocoding/geocoding.dart';
@@ -22,7 +26,7 @@ class XDPublicFeed1 extends StatefulWidget {
 }
 
 class _XDPublicFeed1State extends State<XDPublicFeed1> {
-  
+    List<ComplaintType>? selectedUserList = [];
   late List<ComplaintModel> complaints;
   late var address;
 
@@ -107,120 +111,70 @@ class _XDPublicFeed1State extends State<XDPublicFeed1> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xffffffff),
-      body: Stack(
-        children: <Widget>[
-         
-         // Page title 
-          Pinned.fromPins(
-            Pin(start: 18.0, end: 27.0),
-            Pin(size: 34.0, start: 56.0),
-            child:
-                // Adobe XD layer: 'Header' (group)
-                Stack(
-              children: <Widget>[
-                Pinned.fromPins(
-                  Pin(size: 236.0, start: 0.0),
-                  Pin(start: 0.0, end: 0.0),
-                  child: const Text(
-                    'Public Complaints',
-                    style: TextStyle(
-                      fontFamily: 'Euclid Circular A',
-                      fontSize: 27,
-                      color: Color(0xff6f407d),
-                      fontWeight: FontWeight.w700,
-                    ),
-                    softWrap: false,
-                  ),
-                ),
-                Align(
-                  alignment: const Alignment(1.0, 0.3),
-                  child: SizedBox(
-                    width: 41.0,
-                    height: 14.0,
-                    child:
-                        // Adobe XD layer: 'Filter' (group)
-                        Stack(
-                      children: <Widget>[
-                        Pinned.fromPins(
-                          Pin(size: 26.0, end: 0.0),
-                          Pin(start: 0.0, end: 0.0),
-                          child: const Text(
-                            'Filter',
-                            style: TextStyle(
-                              fontFamily: 'Euclid Circular A',
-                              fontSize: 11,
-                              color: Color(0xff92a5c6),
-                              height: 1,
-                            ),
-                            textHeightBehavior: TextHeightBehavior(
-                                applyHeightToFirstAscent: false),
-                            softWrap: false,
-                          ),
-                        ),
-                        Pinned.fromPins(
-                          Pin(size: 9.2, start: 0.0),
-                          Pin(start: 3.3, end: 2.5),
-                          child:
-                              // Adobe XD layer: 'Icon feather-filter' (shape)
-                              SvgPicture.string(
-                            _svg_sn4rg,
-                            allowDrawingOutsideViewBox: true,
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-         
-         //complaint Post
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 65.0,left: 10,bottom: 140),
-            child: FutureBuilder<List<dynamic>>(
-            future: getComplaintsByLocation(31.961899172907753, 35.86508730906701),
-            builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                if (snapshot.hasData) {
-            var data = snapshot.data;
-            return ListView.builder(
-              itemCount: data!.length,
-              itemBuilder: (BuildContext context, int index) {
-             
-             
-                return post1(context,
-                intComplaintId:data[index]['intComplaintId'].toString(),
-                strStatus:data[index]['strStatus'].toString(),
-                strUserName:data[index]['strUserName'].toString(),
-                dtmDateCreated: data[index]['dtmDateCreated'].toString(),
-                 intVotersCount: data[index]['intVotersCount'],
-                 strComplaintTypeEn: data[index]['strComplaintTypeEn'].toString(),
-                 strComment: data[index]['StrComment'].toString(),
-                address: "amman",
-                
-                
-                );
-              
-              },
-            ); // Render the widget if the API call is successful
-                } else {
-            return const Text('No complaints found'); // Render an error message if the API call returns an empty list
-                }
-              } else {
-                return const CircularProgressIndicator(); // Show a progress indicator while the API call is in progress
-              }
-            },
-          ),
-          ),
+  appBar: AppBar(
+    backgroundColor: Colors.white,
+    title: Text(
+      'Public Complaints',
+      style: TextStyle(
+        fontFamily: 'Euclid Circular A',
+        fontSize: 27,
+        color: Color(0xff6f407d),
+        fontWeight: FontWeight.w700,
+      ),
+    ),
+    actions: [
+      IconButton(
+        onPressed: () {
+         // _openFilterDialog();
+          Navigator.push(context,MaterialPageRoute(builder: (context) =>  const TypeFilter()));
+        },
+        icon: Icon(
+          Icons.filter_list_alt,
+          size: 26,
+          color: Color(0xff92a5c6),
         ),
-         
+      ),
+    ],
+  ),
+  body: 
+  Stack(
+    children: [
+      Padding(
+        padding: const EdgeInsets.only(top: 5.0, left: 10, bottom: 140),
+        child: FutureBuilder<List<dynamic>>(
+          future: getComplaintsByLocation(31.961899172907753, 35.86508730906701),
+          builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasData) {
+                var data = snapshot.data;
+                return ListView.builder(
+                  itemCount: data!.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return post1(
+                      context,
+                      intComplaintId: data[index]['intComplaintId'].toString(),
+                      strStatus: data[index]['strStatus'].toString(),
+                      strUserName: data[index]['strUserName'].toString(),
+                      dtmDateCreated: data[index]['dtmDateCreated'].toString(),
+                      intVotersCount: data[index]['intVotersCount'],
+                      strComplaintTypeEn: data[index]['strComplaintTypeEn'].toString(),
+                      strComment: data[index]['StrComment'].toString(),
+                      address: "amman",
+                    );
+                  },
+                );
+              } else {
+                return Center(child: Text('No complaints found'));
+              }
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
+          },
+        ),
+      ),
+  
 
-
-         //bottom navigator
+      //bottom navigator
           Pinned.fromPins(
             Pin(start: 0.0, end: 0.0),
             Pin(size: 172.0, end: 0.0),
@@ -538,8 +492,47 @@ class _XDPublicFeed1State extends State<XDPublicFeed1> {
               ],
             ),
           ),
-        ],
-      ),
+    
+    ],),
+);
+
+      
+         
+
+
+       
+    
+  }
+   ComplaintTypeRequest type=ComplaintTypeRequest();
+  Future<void> _openFilterDialog() async {
+   List<ComplaintType> complaintTypes = await type.getAllCategory();
+    await FilterListDialog.display<ComplaintType>(
+      context,
+      hideSelectedTextCount: true,
+      themeData: FilterListThemeData(context),
+      headlineText: 'Select Users',
+      height: 500,
+      useSafeArea: true,
+
+      listData: complaintTypes,
+      selectedListData: selectedUserList,
+      choiceChipLabel: (item) => item!.strNameAr,
+      validateSelectedItem: (list, val) => list!.contains(val),
+      controlButtons: [ControlButtonType.All, ControlButtonType.Reset],
+      onItemSearch: (user, query) {
+        /// When search query change in search bar then this method will be called
+        ///
+        /// Check if items contains query
+        return user.strNameAr!.toLowerCase().contains(query.toLowerCase());
+      },
+
+      onApplyButtonClick: (list) {
+        setState(() {
+          selectedUserList = List.from(list!);
+        });
+        Navigator.pop(context);
+      },
+
     );
   }
 }
@@ -571,243 +564,14 @@ const String _svg_p8s453 =
 const String _svg_j1pel9 =
     '<svg viewBox="0.7 8.0 29.6 25.2" ><path transform="translate(-1.27, 5.0)" d="M 13.85300064086914 28.1876220703125 L 13.85300064086914 19.29787445068359 L 19.77949523925781 19.29787445068359 L 19.77949523925781 28.1876220703125 L 27.1876220703125 28.1876220703125 L 27.1876220703125 16.33462524414062 L 31.63249969482422 16.33462524414062 L 16.81625175476074 2.999999523162842 L 1.999999523162842 16.33462524414062 L 6.444873809814453 16.33462524414062 L 6.444873809814453 28.1876220703125 L 13.85300064086914 28.1876220703125 Z" fill="#6f407d" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
 
-Widget post1(BuildContext context,  
-{
-required String dtmDateCreated,
-required String strComplaintTypeEn,
-required String strComment,
-required int intVotersCount,
-required String strStatus,
-required String strUserName,
-required var address,
-required var intComplaintId,
 
+Widget filterPage (){
+  return Container(
+   width: 200,
+   height:400,
+   child: Column(
+    children: [
 
-
-}) {
-  return
-   Padding(
-    padding: const EdgeInsets.only(top:20.0,right:10),
-    child: Container(
-            decoration: BoxDecoration(
-              color: const Color(0xffffffff),
-              borderRadius: BorderRadius.circular(10.0),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color.fromARGB(255, 108, 107, 107),
-                  offset: Offset(0, 0),
-                  blurRadius: 5,
-                ),
-              ],
-            ),
-          child:
-    
-    Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        // Card
-       
-  
-        // Photo
-        Stack(
-         
-          children: <Widget>[
-             Container(
-              height: 183.0,
-         decoration: const BoxDecoration(
-           color: Color(0xff6f407d),
-           borderRadius: BorderRadius.only(
-             topLeft: Radius.circular(10.0),
-             topRight: Radius.circular(10.0),
-           ),
-         ),
-              child: Image.asset('assets/icons/pothole.jpg',fit:BoxFit.fill,),
-        ),
-            // StatusBox
-    MediaQuery(
-    data: MediaQuery.of(context), child:
-  
-     Padding(
-     padding: const EdgeInsets.all(8.0),
-     child: Container(
-      height: 15,
-      width: 50,
-                
-                  decoration: BoxDecoration(
-                    color: const Color(0xffffffff),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-               child:
-            
-            //status
-                  Text(
-                  
-                  strStatus,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontFamily: 'Euclid Circular A',
-                    fontSize: 12,
-                    color: Color(0xff6f407d),
-                  ),
-                  softWrap: false,
-                ),
-                    ),
-     ),
-          ),],
-        ),
-        
-  
-        // Data
-    const SizedBox(height: 10,),
-        Row(
-          children: [
-            //username
-             Text(
-              strUserName,
-              style:const  TextStyle(
-                fontFamily: 'Euclid Circular A',
-                fontSize: 13,
-                color: Color(0xff6f407d),
-                fontWeight: FontWeight.w700,
-              ),
-              softWrap: false,
-            ),
-          const Spacer(),
-            Align(
-                alignment: Alignment.topRight,
-                child: SizedBox(
-                  width: 75.0,
-                  height: 65.0,
-                  child: Column(
-                    children: <Widget>[
-                         // VoteIcon
-
-                        like(intVotersCount,intComplaintId),
-                     
-                    
-                    ],
-                  ),
-                ),
-              ),
-          ],
-        ),
-  
-  
-         // Description
-               Padding(
-                padding:const  EdgeInsets.only(left: 2.0, right: 41.7,bottom: 30),
-                child: Text(
-                '$strComplaintTypeEn\n${strComment=="" ? strComment : 'Uneven road surface due to pothole - hazardous conditions!'}',
-
-                  style: const TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 15,
-                    color: Color(0xff000000),
-                  ),
-                ),
-              ),
-          const SizedBox(height: 1,),
-  
-          Padding(
-            padding: const EdgeInsets.only(bottom: 15.0,left: 5),
-            child: Row(children: [
-            // address
-              Align(
-                  alignment: Alignment.bottomLeft,
-                  child: SizedBox(
-                    width: 124.0,
-                    height: 10.0,
-                    child: Text(
-                      address,
-                      style: const TextStyle(
-                        fontFamily: 'Euclid Circular A',
-                        fontSize: 10,
-                        color: Color(0xff92a5c6),
-                        fontWeight: FontWeight.bold,
-                      ),
-                      softWrap: false,
-                    ),
-                  ),
-                ),
-                   
-             const SizedBox(width: 18,),
-                // date
-                 Align(
-                  alignment: Alignment.bottomRight,
-                  child: Text(
-                    dtmDateCreated.toString().substring(0,10),
-                    style: const TextStyle(
-                      fontFamily: 'Euclid Circular A',
-                      fontSize: 10,
-                      color: Color(0xff92a5c6),
-                      fontWeight: FontWeight.bold,
-                    ),
-                    softWrap: false,
-                  ),),
-              const SizedBox(width: 40,),
-                //time
-                 Align(
-                        alignment: Alignment.bottomRight,
-                        child: Text(
-                           dtmDateCreated.toString().substring(11,17),
-                          style:const   TextStyle(
-                            fontFamily: 'Euclid Circular A',
-                            fontSize: 10,
-                            color: Color(0xff92a5c6),
-                             fontWeight: FontWeight.bold,
-                          ),
-                          softWrap: false,
-                        ),
-                      ),
-            
-                   ],),
-          )
-             
-  
-       
-  
-      
-  
-        //       // Vote count
-        //       Align(
-        //         alignment: Alignment.topRight,
-        //         child: SizedBox(
-        //           width: 26.0,
-        //           height: 44.0,
-        //           child: Stack(
-        //             children: <Widget>[
-        //               Text(
-        //                 '754',
-        //                 style: TextStyle(
-        //                   fontFamily: 'Euclid Circular A',
-        //                   fontSize: 11,
-        //                   color: Color(0xff6f407d),
-        //                   fontWeight: FontWeight.w500,
-        //                 ),
-        //                 softWrap: false,
-        //               ),
-  
-        //               // VoteIcon
-        //               SvgPicture.string(
-        //                 _svg_u7gglt,
-        //                 allowDrawingOutsideViewBox: true,
-        //                 fit: BoxFit.fill,
-        //               ),
-        //             ],
-        //           ),
-        //         ),
-        //       ),
-  
-             
-        //     ],
-        //   ),
-        // ),
-  
-        // // Status box
-        
-      ],
-    ),
-    ),
+    ]),
   );
 }

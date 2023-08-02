@@ -1,6 +1,3 @@
-
-// ignore_for_file: file_names
-
 import 'package:account/Widgets/likeButton.dart';
 import 'package:flutter/material.dart';
 
@@ -197,6 +194,48 @@ required var intComplaintId,
                    ],),
           )
              
+  
+       
+  
+      
+  
+        //       // Vote count
+        //       Align(
+        //         alignment: Alignment.topRight,
+        //         child: SizedBox(
+        //           width: 26.0,
+        //           height: 44.0,
+        //           child: Stack(
+        //             children: <Widget>[
+        //               Text(
+        //                 '754',
+        //                 style: TextStyle(
+        //                   fontFamily: 'Euclid Circular A',
+        //                   fontSize: 11,
+        //                   color: Color(0xff6f407d),
+        //                   fontWeight: FontWeight.w500,
+        //                 ),
+        //                 softWrap: false,
+        //               ),
+  
+        //               // VoteIcon
+        //               SvgPicture.string(
+        //                 _svg_u7gglt,
+        //                 allowDrawingOutsideViewBox: true,
+        //                 fit: BoxFit.fill,
+        //               ),
+        //             ],
+        //           ),
+        //         ),
+        //       ),
+  
+             
+        //     ],
+        //   ),
+        // ),
+  
+        // // Status box
+        
       ],
     ),
     ),

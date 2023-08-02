@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'package:account/API/get_complaints_types.dart';
 import 'package:account/Screens/File%20complaint/complaints2.dart';
 import 'package:account/Screens/Home/public_feed.dart';
 import 'package:flutter/material.dart';
@@ -36,8 +37,9 @@ class XDComplaints1 extends StatefulWidget {
   late DropDownValue dropdown=DropDownValue(1, " ");
   late int intType;
   List<DropDownValue> items = [];
-  late Future<List<Map<String, dynamic>>>_futureData;
+  late Future<List<ComplaintType>>_futureData;
   String language="strNameAr";
+  ComplaintTypeRequest type=ComplaintTypeRequest();
 
 
 @override
@@ -46,15 +48,16 @@ void initState() {
     getImages(context);
   });
   super.initState();
-    _futureData=getAllCategory();
+
+    _futureData=type.getAllCategory();
    _initializeData();
  
 }
 
   void _initializeData() async {
-  final data = await getAllCategory();
+  final data = await type.getAllCategory();
   setState(() {
-    items = data.map((item) => DropDownValue(item["intId"], item[language])).toList();
+    items = data.map((item) => DropDownValue(item.intTypeId, item.strNameAr)).toList();
     dropdown = items[0];
     print(items[0]);
   });
@@ -62,28 +65,7 @@ void initState() {
 
 
 //fetch classification
- Future<List<Map<String, dynamic>>> getAllCategory() async {
-   
-   
-  var baseUrl = "https://10.0.2.2:5000/api/complaints/types";
-  http.Response response = await http.get(Uri.parse(baseUrl),
-   headers: {
-          'Authorization': 'Bearer $token2',
-        }
-  );
 
-
-  if (response.statusCode == 200) {
-    var jsonData = json.decode(response.body) as List;
-    return jsonData.map((element) => {
-      "intId": element["intId"],
-      "strNameAr": element["strNameAr"],
-      "strNameEn": element["strNameEn"]
-    }).toList();
-  } else {
-    throw response.statusCode;
-  }
-}
 
 
 Future<void> getImages(BuildContext context) async {
@@ -125,7 +107,7 @@ Future<void> getImages(BuildContext context) async {
               children: <Widget>[
 
             // DropdownButton(),
-                 FutureBuilder<List<Map<String, dynamic>>>(
+                 FutureBuilder<List<ComplaintType>>(
           //move getAllCategory on page load
            future: _futureData,
           builder: (context, snapshot) {
@@ -133,8 +115,8 @@ Future<void> getImages(BuildContext context) async {
          var data = snapshot.data!;
          var items =  data.map((item) {
           return DropdownMenuItem(
-            value:  DropDownValue(item["intId"], item[language]) ,
-            child: Text(item[language]),
+            value:  DropDownValue(item.intTypeId, item.strNameAr) ,
+            child: Text(item.strNameAr),
           );
         }).toList();
 
