@@ -61,7 +61,7 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new InsertComplaintCommand(complaintDTO)));
         }
 
-        [HttpPut("refile")] // .../api/complaints
+        [HttpPut("refile")] // .../api/complaints/refile
         public async Task<IActionResult> RefileComplaint(int ID)
         {
             return HandleResult(await Mediator.Send(new RefileComplaintCommand(ID)));
@@ -202,6 +202,13 @@ namespace API.Controllers
             return HandleResult(
                 await Mediator.Send(new IncrementComplaintReminderCommand(id, username))
             );
+        }
+
+    
+        [HttpGet("status/list")] // .../api/complaints/status/list
+        public async Task<IActionResult> GetComplaintStatusTypes()
+        {
+            return HandleResult(await Mediator.Send(new GetComplaintStatusTypesListQuery()));
         }
 
     }
