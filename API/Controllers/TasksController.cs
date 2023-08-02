@@ -125,5 +125,11 @@ namespace API.Controllers
 
             return HandleResult(await Mediator.Send(new GetLoggedInWorkerTasksQuery(username)));
         }
+
+        [HttpGet("status/list")] // .../api/tasks/status/list
+        public async Task<IActionResult> GetTaskStatusTypes()
+        {
+            return HandleResult(await Mediator.Send(new GetTaskStatusTypesListQuery()));
+        }
     }
 }
