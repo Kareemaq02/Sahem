@@ -10,6 +10,7 @@ import '../Login/login.dart';
 import 'register2.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_svg/flutter_svg.dart';
+
 late String fName,lName,Phone;
  enum nationalitySelection{Jordanian,forign}
  var selectedNationality=nationalitySelection.Jordanian;
