@@ -3,11 +3,16 @@ import 'package:account/Repository/color.dart';
 import 'package:arabic_font/arabic_font.dart';
 import 'package:flutter/material.dart';
 
-Widget FieldContainer(String fieldName,bool isVisible,fieldIcon,inputController)
+Widget FieldContainer(context,String fieldName,bool isVisible,fieldIcon,inputController)
 {
+  final double screenWidth = MediaQuery.of(context).size.width;
+  final double screenHeight = MediaQuery.of(context).size.height;
+  final double containerWidth = screenWidth * 0.75; 
+  final double containerHeight = 45;
+
   return   Container(
-              height:49 ,
-              width: 240,
+              height:containerHeight ,
+              width: containerWidth,
               decoration:
                BoxDecoration(
                 borderRadius:const BorderRadius.all(Radius.circular(50)),
@@ -26,7 +31,7 @@ Widget FieldContainer(String fieldName,bool isVisible,fieldIcon,inputController)
                 decoration: 
                  InputDecoration(
                   hintTextDirection: TextDirection.rtl,
-                  hintStyle: const TextStyle(color:AppColor.main,fontSize:12.5,fontFamily:ArabicFont.elMessiri),
+                  hintStyle: const TextStyle(color:AppColor.main,fontSize:11, fontFamily:'DroidArabicKufi', ),
                   hintText:fieldName,
                   suffixIcon: Icon(fieldIcon,color:AppColor.main,size: 20,),
                   border: InputBorder.none,

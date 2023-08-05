@@ -7,9 +7,9 @@ Widget text(text,color){
               text,
               textDirection: TextDirection.rtl,
               style: TextStyle(
-                fontSize: 12,
+              fontSize: 9,
               color:color,
-              fontFamily:ArabicFont.reemKufi 
+              fontFamily:'DroidArabicKufi', 
               ),
   
               ),

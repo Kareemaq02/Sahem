@@ -1,9 +1,6 @@
 // ignore_for_file: constant_identifier_names, unused_element, library_private_types_in_public_api, no_leading_underscores_for_local_identifiers, use_build_context_synchronously, avoid_print
 
-import 'dart:math';
-
 import 'package:account/Repository/color.dart';
-import 'package:account/Screens/Home/public_feed.dart';
 import 'package:account/Screens/Login/login.dart';
 import 'package:account/Screens/Registration/register.dart';
 import 'package:account/Widgets/bottonContainer.dart';

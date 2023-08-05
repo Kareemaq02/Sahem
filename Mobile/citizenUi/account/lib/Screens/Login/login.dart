@@ -48,14 +48,14 @@ class _XDLoginState extends State<XDLogin> {
               children: [
                 Container(width: 55,height: 100,decoration: const BoxDecoration(color: Colors.grey,shape: BoxShape.circle),),
                 const SizedBox(width: 10,),
-                const Text('Logobrand',style: TextStyle(fontWeight: FontWeight.w100,fontSize: 20),),
+                const Text('Logobrand',style: TextStyle( fontFamily:'DroidArabicKufi',fontWeight: FontWeight.w100,fontSize: 20),),
               ],
             ),
             const SizedBox(height: 30,),
-        FieldContainer('اسم المستخدم' ,false,Icons.account_circle,usernameController
+        FieldContainer(context,'اسم المستخدم' ,false,Icons.account_circle,usernameController
         ),
            const SizedBox(height: 20,),
-         FieldContainer( ' كلمة السر' ,true,Icons.lock_outline,passwordController
+         FieldContainer( context,' كلمة السر' ,true,Icons.lock_outline,passwordController
         ),
            const SizedBox(height: 15,),
        Row(
@@ -66,7 +66,7 @@ class _XDLoginState extends State<XDLogin> {
           child: 
            text("نسيت كلمة السر؟",AppColor.main,),
         ),
-        SizedBox(width: MediaQuery.of(context).padding.left + 50,),
+        SizedBox(width: MediaQuery.of(context).padding.left +35,),
        
          text("تذكر تسجيل الدخول",AppColor.main,),
          const SizedBox(width: 2.5,),
@@ -85,7 +85,7 @@ class _XDLoginState extends State<XDLogin> {
         const SizedBox(height: 10,),
        
        BottonContainer("الدخول",Colors.white, AppColor.main,240,context,true,user.login(usernameController.text,passwordController.text,context)),
-       const SizedBox(height: 15,),
+       //const SizedBox(height: 10,),
        Row(
         mainAxisAlignment: MainAxisAlignment.center,
          children: [
@@ -111,37 +111,6 @@ class _XDLoginState extends State<XDLogin> {
 
 
 
-
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-//           Login Button
-//           Pinned.fromPins(
-//             Pin(start: 63.0, end: 62.0),
-//             Pin(size: 71.0, middle: 0.8300),
-//             child:
-//                 Adobe XD layer: 'Login Button' (group)
-//                 InkWell(
-//                   onTap: () {
-                   
-//                      UserLogin user=UserLogin();
-//                      user.login(usernameController.text,passwordController.text,context);
-//                   } ,
-//             
-//      
-   
 
  
 
