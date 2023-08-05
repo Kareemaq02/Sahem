@@ -32,8 +32,8 @@ Widget toggleLang() {
       borderColor: AppColor.main, // Make sure AppColor.main is defined
       borderRadius: BorderRadius.circular(20),
       children: <Widget>[
-        Text('En',style: TextStyle(fontSize: 10),),
-        Text('ع',style: TextStyle(fontSize: 10),),
+        const Text('En',style: TextStyle(fontSize: 10),),
+        const Text('ع',style: TextStyle(fontSize: 10),),
       ],
       isSelected: _isSelected,
       color: Colors.grey,

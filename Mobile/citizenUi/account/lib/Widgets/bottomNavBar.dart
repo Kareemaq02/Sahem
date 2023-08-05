@@ -1,4 +1,6 @@
 
+// ignore_for_file: must_be_immutable, unused_local_variable
+
 import 'package:account/Repository/color.dart';
 import 'package:account/Screens/Home/public_feed.dart';
 import 'package:account/Screens/Map/map_view.dart';
@@ -43,19 +45,19 @@ class _BottomNavBarState extends State<BottomNavBar1> {
     switch (_selectedIndex) {
       case 0:
        
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => XDPublicFeed1()));
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const XDPublicFeed1()));
         break;
       case 1:
        
-       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => FullMap()));    
+       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const FullMap()));    
          break;
       case 2:
          
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => XDComplaintsList())); 
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const XDComplaintsList())); 
         break;
       case 3:
        
-       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Profile()));
+       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const Profile()));
         break;
     }
    

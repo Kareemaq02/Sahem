@@ -80,13 +80,17 @@ class _ProfileState extends State<Profile> {
           ),),
      ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.only(top:8.0,bottom: 8.0),
         child: Expanded(
           child: SingleChildScrollView(
             child: Column(
               children: [
                 
-                InfoBox( '${userInfo.strFirstName!} ${userInfo.strLastName!}',),
+              Padding(
+                padding: const EdgeInsets.only(right:8.0,left: 8.0),
+                child: InfoBox( '${userInfo.strFirstName!} ${userInfo.strLastName!}',),
+              ),
+              SizedBox(height: 10,),
               DataBox('أسم المستخدم',textButtn,userInfo.strUsername!,),
               DataBox("البريد الالكتروني",textButtn,userInfo.strUsername!,),
               DataBox("رقم الهاتف",textButtn,userInfo.strPhoneNumber!,),

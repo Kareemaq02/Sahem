@@ -1,7 +1,6 @@
 import 'package:account/Widgets/checkBox.dart';
 import 'package:account/Widgets/fieldContainer.dart';
 import 'package:account/Widgets/text.dart';
-import 'package:arabic_font/arabic_font.dart' as a;
 import 'package:account/API/login_request.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Screens/Registration/register.dart';
@@ -90,7 +89,7 @@ class _XDLoginState extends State<XDLogin> {
         mainAxisAlignment: MainAxisAlignment.center,
          children: [
            text(" تسجيل حساب جديد " ,AppColor.main),
-             TextButton(onPressed: () =>navigatorCostum(context,XDRegister()),child:text("ليس لديك حساب؟",AppColor.secondary),
+             TextButton(onPressed: () =>navigatorCostum(context,const XDRegister()),child:text("ليس لديك حساب؟",AppColor.secondary),
        )],
        ),
       ]

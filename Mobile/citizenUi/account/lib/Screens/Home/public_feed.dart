@@ -46,7 +46,7 @@ class _XDPublicFeed1State extends State<XDPublicFeed1> {
       leading: Container(
           width:double.infinity,
           height:50,
-          decoration: BoxDecoration(border: Border(bottom: BorderSide(color:Colors.lime))),
+          decoration: const BoxDecoration(border: Border(bottom: BorderSide(color:Colors.lime))),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,

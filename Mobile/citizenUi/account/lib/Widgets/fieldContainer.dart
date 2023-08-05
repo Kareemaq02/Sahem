@@ -1,12 +1,10 @@
 
 import 'package:account/Repository/color.dart';
-import 'package:arabic_font/arabic_font.dart';
 import 'package:flutter/material.dart';
 
 Widget FieldContainer(context,String fieldName,bool isVisible,fieldIcon,inputController)
 {
   final double screenWidth = MediaQuery.of(context).size.width;
-  final double screenHeight = MediaQuery.of(context).size.height;
   final double containerWidth = screenWidth * 0.75; 
   final double containerHeight = 45;
 

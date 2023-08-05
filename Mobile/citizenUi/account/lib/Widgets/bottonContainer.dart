@@ -1,5 +1,6 @@
+// ignore_for_file: file_names, non_constant_identifier_names
+
 import 'package:account/Repository/color.dart';
-import 'package:account/Screens/Login/login.dart';
 import 'package:flutter/material.dart';
 
 Widget BottonContainer(String text,textColor,Color boxColor,double width,BuildContext context,bool apiFlag,PageName,[Future<dynamic>? onPressed])
