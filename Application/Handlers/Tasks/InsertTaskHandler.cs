@@ -67,7 +67,7 @@ namespace Application.Handlers.Tasks
                         await transaction.RollbackAsync();
                         return Result<TaskDTO>.Failure("No Members were added");
                     }
-
+                    int i = 0;
                     foreach (var worker in workersList)
                     {
                         var user2 = await _context.Users.FindAsync(worker.intId);
@@ -76,9 +76,27 @@ namespace Application.Handlers.Tasks
                             await transaction.RollbackAsync();
                             return Result<TaskDTO>.Failure($"Invalid user id: {worker.intId}");
                         }
+                         if (user2.intUserTypeId!=(int)UsersConstant.userTypes.worker)
+                        {
+                            await transaction.RollbackAsync();
+                            return Result<TaskDTO>.Failure($"Invalid worker id: {worker.intId}");
+                        }
 
+                        var workerNameQuery = from user in _context.UserInfos
+                                              where user.intId == worker.intId
+                                              select new
+                                              {
+                                                  user.strFirstName,
+                                                  user.strLastName
+                                              };
+                        var workerUser = await workerNameQuery.FirstOrDefaultAsync();
+
+                        taskDTO.workersList.ElementAt(i).strFirstName = workerUser.strFirstName;
+                        taskDTO.workersList.ElementAt(i).strLastName = workerUser.strLastName;
+                        i++;
                         var taskWorker = new WorkTaskMembers
                         {
+
                             intWorkerId = worker.intId,
                             intTaskId = taskEntity.Entity.intId,
                             blnIsLeader = worker.isLeader
@@ -106,6 +124,8 @@ namespace Application.Handlers.Tasks
                         intTaskId = taskEntity.Entity.intId,
                         intComplaintId = request.Id
                     };
+
+
 
                     await _context.TasksComplaints.AddAsync(taskComplaint);
 
