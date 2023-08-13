@@ -1,0 +1,13 @@
+.filterStyle{
+    border-radius: 25px;
+}
+
+h4 {
+    padding: 4px;
+}
+
+.stay{
+    width: 80%;
+    float: left;
+    overflow: hidden;
+}

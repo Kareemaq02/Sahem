@@ -1,31 +1,52 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, Typography, IconButton, Box, Chip } from "@mui/material";
-import { ThumbDown, ThumbUp } from "@mui/icons-material";
+import { ThumbDown, ThumbUp, ThumbUpOutlined, ThumbDownOutlined} from "@mui/icons-material";
 import { FlexBetween } from "../../../Common/Components/FlexBetween";
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 
 // Import the SetVote function
-import SetVote from "../Service/SetVoteApi";
+import { SetVote, getVoteStatus, setDownvote, removeVote } from "../Service/SetVoteApi";
+
+// css style
+import "../Style/style.css"
 
 const ComplaintPost = ({ data }) => {
+    const [complaintData, setComplaintData] = useState(data);
+    const [loggedInUser, setLoggedInUser] = useState(null);
 
 
-    const handleUpvote = async (complaintId) => {
-        console.log(complaintId)
+
+    const handleVote = async (complaintId, isDownvote) => {
         try {
-            const result = await SetVote(complaintId);
-            console.log(result); // Optional: Handle the result as needed
+            if (isDownvote) {
+                // If it's a downvote, call the setDownvote function
+                await setDownvote(complaintId);
+            } else {
+                // If it's an upvote, call the SetVote function
+                await SetVote(complaintId);
+            }
+
+            // After voting, update the complaintData state to reflect the new vote status
+            const updatedData = complaintData.map((complaint) => {
+                if (complaint.intComplaintId === complaintId) {
+                    // Toggle the vote status
+                    complaint.isDownVote = !isDownvote;
+                    complaint.intVotersCount += isDownvote ? 1 : -1;
+                }
+                return complaint;
+            });
+
+            setComplaintData(updatedData);
         } catch (error) {
             console.error(error);
         }
     };
 
-
     return (
 
         <Box sx={{ display: "grid", gap: 2, width: '100%' }}>
             {data.map((complaint) => (
-                <Card key={complaint.intComplaintID}>
+                <Card key={complaint.intComplaintId} className="filterStyle">
                     <CardContent>
                         <Typography variant="h3" component="div">
                             <FlexBetween>
@@ -48,15 +69,16 @@ const ComplaintPost = ({ data }) => {
                         <div>
                             <IconButton
                                 aria-label="Upvote"
-                                onClick={() => handleUpvote(complaint.intComplaintID)}
+                                onClick={() => handleVote(complaint.intComplaintId, false)}
                             >
-                                <ThumbUp />
+                                {complaint.isDownVote === false ? <ThumbUp /> : <ThumbUpOutlined />}
                             </IconButton>
                             <span>{complaint.intVotersCount}</span>
                             <IconButton
                                 aria-label="Downvote"
+                                onClick={() => handleVote(complaint.intComplaintId, true)}
                             >
-                                <ThumbDown />
+                                {complaint.isDownVote === true ? <ThumbDown /> : <ThumbDownOutlined />}
                             </IconButton>
                         </div>
                     </CardContent>
