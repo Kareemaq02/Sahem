@@ -9,11 +9,11 @@ import {
 const WorkerTaskDataGrid = ({data,EvaluateTask}) => {
 
     const columns = [
-        {field: "taskID", headerName: "ID", flex:0.5},
-        { field: "adminUsername", headerName: "Admin Name", flex: 0.5 },
-        { field: "strTaskStatus", headerName: "Status", flex: 0.5 },
-        { field: "activatedDate", activatedDate: "scheduledDate", flex: 0.5 },
-        { field: "finishedDate", headerName: "finishedDate", flex: 0.5 },
+        {field: "id", headerName: "ID", flex:0.5},
+        { field: "admin", headerName: "Admin Name", flex: 0.5 },
+        { field: "status", headerName: "Status", flex: 0.5 },
+        { field: "dateScheduled", activatedDate: "scheduledDate", flex: 0.5 },
+        { field: "deadline", headerName: "finishedDate", flex: 0.5 },
         {
             field: "button",
             headerName: "Action",
@@ -21,7 +21,7 @@ const WorkerTaskDataGrid = ({data,EvaluateTask}) => {
               <IconButton
                 variant="contained"
                 color="primary"
-                onClick={() => EvaluateTask(params.row.taskID)}
+                onClick={() => EvaluateTask(params.row.id)}
               >
                 <CheckCircleOutline />
               </IconButton>
@@ -34,7 +34,7 @@ const WorkerTaskDataGrid = ({data,EvaluateTask}) => {
             <DataGrid
                 rows={data}
                 columns={columns}
-                getRowId={(row) => row.taskID }
+                getRowId={(row) => row.id }
                 components={{ Toolbar: GridToolbar }}
                 density="compact"
             />
