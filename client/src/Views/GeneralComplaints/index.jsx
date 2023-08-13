@@ -5,14 +5,9 @@ import NotFoundPage from "../NotFound"
 
 function Home() {
     const userType = IdentityHelper.UserData.userType;
-    switch(userType) {
-        case "admin":
-            return <NotFoundPage />;
-        case "user":
-            return <CitizenViewComplaints />;
-        default:
-            return <NotFoundPage />;
-    }
+    return(
+        <CitizenViewComplaints />
+    )
 }
 
 export default Home
