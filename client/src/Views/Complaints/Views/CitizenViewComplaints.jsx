@@ -58,7 +58,7 @@ const CitizenViewComplaints = () => {
 
   return (
     <div>
-      <Typography variant="h1">View Complaints</Typography>
+      <Typography variant="h1">View My Complaints</Typography>
       <ComplaintsDataGrid
         data={FormatDate()}
         deleteComplaint={async (complaintId) => {
