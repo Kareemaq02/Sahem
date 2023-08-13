@@ -16,6 +16,7 @@ import {
 } from "@mui/icons-material";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import InsertPageBreakIcon from "@mui/icons-material/Add";
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 
 const AdminMenus = [
   {
@@ -188,6 +189,11 @@ const WorkerMenus = [
     text: "Tasks",
     path: "/auth/tasks",
     icon: <AssignmentIndOutlined />,
+  },
+  {
+    text: "My Tasks",
+    path: "/auth/mytasks",
+    icon: <AssignmentTurnedInIcon />,
   },
 ];
 
