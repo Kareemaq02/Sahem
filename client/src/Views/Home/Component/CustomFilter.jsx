@@ -129,10 +129,8 @@ const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange }) => {
             <Box sx={{ padding: 2, width: '100%', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <FormSlider />
             </Box>
-
-
-        </Paper>
-    );
+    </Paper>
+  );
 };
 
 export default CustomFilter;
