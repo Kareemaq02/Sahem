@@ -15,6 +15,10 @@ namespace Domain.DataModels.Complaints
         [Required]
         public string strName { get; set; }
 
+        [Column("NAME_AR")]
+        [Required]
+        public string strNameAr { get; set; }
+
         // Relations
         public ICollection<ComplaintsStatuses> Complaints { get; set; }
     }

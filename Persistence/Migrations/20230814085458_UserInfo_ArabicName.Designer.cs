@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -10,9 +11,11 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230814085458_UserInfo_ArabicName")]
+    partial class UserInfo_ArabicName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -114,11 +117,6 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("NAME");
-
-                    b.Property<string>("strNameAr")
-                        .IsRequired()
-                        .HasColumnType("longtext")
-                        .HasColumnName("NAME_AR");
 
                     b.HasKey("intId");
 
@@ -536,11 +534,6 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("NAME");
-
-                    b.Property<string>("strNameAr")
-                        .IsRequired()
-                        .HasColumnType("longtext")
-                        .HasColumnName("NAME_AR");
 
                     b.HasKey("intId");
 
