@@ -55,7 +55,7 @@ class _ProfileState extends State<Profile> {
       resizeToAvoidBottomInset: false,
       floatingActionButton:const CustomActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar:BottomNavBar1(0),
+      bottomNavigationBar:BottomNavBar1(3),
        appBar: AppBar(
       backgroundColor: Colors.white,
       leadingWidth: double.infinity,
@@ -94,9 +94,9 @@ class _ProfileState extends State<Profile> {
               DataBox('أسم المستخدم',textButtn,userInfo.strUsername!,),
               DataBox("البريد الالكتروني",textButtn,userInfo.strUsername!,),
               DataBox("رقم الهاتف",textButtn,userInfo.strPhoneNumber!,),
-              DataBox("كلمة المرور",textButtn,""),
-              DataBox("استلام الاشعارات",switchV,""),
-              DataBox("اللغة",toggleLang,""),
+              DataBox("كلمة المرور",textButtn,"********"),
+              DataBox("استلام الاشعارات",switchV,"غير مفعل"),
+              DataBox("اللغة",toggleLang,"العربية"),
                    
               ],),
           ),

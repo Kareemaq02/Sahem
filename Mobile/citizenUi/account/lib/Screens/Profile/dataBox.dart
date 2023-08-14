@@ -8,7 +8,7 @@ Widget DataBox(String label,widget,data){
     padding: const EdgeInsets.only(top: 6.0),
     child: Container(
       width: double.infinity,
-      height:70,
+      height:60,
       decoration: const BoxDecoration(
         color: Colors.white,
         //border: Border(bottom: BorderSide(color: AppColor.main,width: 6,),),
@@ -68,7 +68,7 @@ Widget InfoBox(name){
   return Container(
     width: double.infinity,
     height: 80,
-    decoration:  BoxDecoration(
+    decoration:  const BoxDecoration(
       color: Colors.white,
     border: Border(bottom: BorderSide(color: AppColor.main,width: 6,),),
      //borderRadius:BorderRadius.circular(10),
@@ -77,20 +77,20 @@ Widget InfoBox(name){
     // ],
     ),
   
-    child: Column(
+    child: const Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
       Text(
        'ربى أبورمان',
         textAlign: TextAlign.center,
-        style: const TextStyle(
+        style: TextStyle(
         color: AppColor.main,
         fontSize: 20,
         fontFamily:'DroidArabicKufi',
         ),
       ),
   
-      const Text(
+      Text(
         'الرقم الوطني: 20201501023',
         textDirection: TextDirection.rtl,
         textAlign: TextAlign.center,

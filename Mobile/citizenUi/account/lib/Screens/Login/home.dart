@@ -24,7 +24,7 @@ class _XDHomeState extends State<XDHome> {
   Widget build(BuildContext context) {
     return Scaffold(
       
-      backgroundColor: const Color(0xffffffff),
+      backgroundColor: AppColor.background,
       body:   
         Center(
        

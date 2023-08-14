@@ -51,6 +51,7 @@ dependencies:
   flutter_map: ^1.1.1
   like_button: ^2.0.5
   arabic_font: ^0.0.9
+  readmore: ^2.2.0
   
   
 
