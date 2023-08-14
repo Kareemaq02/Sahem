@@ -131,5 +131,4 @@ namespace API.Controllers
         {
             return HandleResult(await Mediator.Send(new GetTaskStatusTypesListQuery()));
         }
-    }
 }

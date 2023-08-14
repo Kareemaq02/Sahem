@@ -3,12 +3,11 @@ import React, { useState, useEffect } from "react";
 //axios
 import axios from "../../../Common/Utils/AxiosAgent";
 
-
 // Mui
 import { Typography, SwipeableDrawer } from "@mui/material";
 
 // Project Imports
-import { GetUserComplaints } from "../Service/GetUserComplaints";
+// import { GetUserComplaints } from "../Service/GetUserComplaints";
 import ComplaintsDataGrid from "../Components/UserComplaintsDataGrid";
 import ComplaintEvaluation from "../Components/ComplaintEvaluation";
 import TaskCreation from "../../TaskCreation";
@@ -23,13 +22,13 @@ const CitizenViewComplaints = () => {
   const [approved, setApproved] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  useEffect(() => {
-    const setComplaintsView = async () => {
-      const response = await GetUserComplaints();
-      setComplaints(response);
-    };
-    setComplaintsView();
-  }, []);
+  // useEffect(() => {
+  //   const setComplaintsView = async () => {
+  //     // const response = await GetUserComplaints();
+  //     setComplaints(response);
+  //   };
+  //   setComplaintsView();
+  // }, []);
 
   const FormatDate = () => {
     return complaints.map((complaint) => ({
@@ -58,7 +57,7 @@ const CitizenViewComplaints = () => {
 
   return (
     <div>
-      <Typography variant="h1">View Complaints</Typography>
+      <Typography variant="h1">View My Complaints</Typography>
       <ComplaintsDataGrid
         data={FormatDate()}
         deleteComplaint={async (complaintId) => {

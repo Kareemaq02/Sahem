@@ -83,8 +83,13 @@ namespace Application.Handlers.Tasks
                     strTaskStatus = g.Key.TaskStatus,
                     workersList = g.Select(
                             x =>
-                                new TaskWorkerDTO { intId = x.Worker.Id, isLeader = x.blnIsLeader,
-                                    strFirstName = x.Worker.UserInfo.strFirstName, strLastName = x.Worker.UserInfo.strLastName}
+                                new TaskWorkerDTO
+                                {
+                                    intId = x.Worker.Id,
+                                    isLeader = x.blnIsLeader,
+                                    strFirstName = x.Worker.UserInfo.strFirstName,
+                                    strLastName = x.Worker.UserInfo.strLastName
+                                }
                         )
                         .Distinct()
                         .ToList(),
