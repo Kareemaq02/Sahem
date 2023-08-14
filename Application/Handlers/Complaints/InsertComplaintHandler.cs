@@ -82,8 +82,10 @@ namespace Application.Handlers.Complaints
                     let complaintLatLng = new LatLng { decLat = ca.decLat, decLng = ca.decLng }
                     let distance = Math.Sqrt(Math.Pow((double)(targetLatLng.decLat-complaintLatLng.decLat),2)
                     + Math.Pow((double)(targetLatLng.decLng - complaintLatLng.decLng), 2))
-                    where (distance <= radius && c.dtmDateCreated > DateTime.Now.AddHours(-24)
-                    && c.intUserID == userId)
+                    where (distance <= radius 
+                    && c.dtmDateCreated > DateTime.Now.AddHours(-24)
+                    && c.intUserID == userId
+                    && c.intTypeId == request.ComplaintDTO.intTypeId)
                     select c;
 
                 var similarComplaintsCount= await query.CountAsync();
