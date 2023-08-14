@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -10,9 +11,11 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230814101731_merged_attachments")]
+    partial class merged_attachments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -241,23 +244,6 @@ namespace Persistence.Migrations
                     b.HasIndex("intComplaintId");
 
                     b.ToTable("complaints_voters");
-                });
-
-            modelBuilder.Entity("Domain.DataModels.Intersections.ComplaintWatchers", b =>
-                {
-                    b.Property<int>("intUserId")
-                        .HasColumnType("int")
-                        .HasColumnName("USER_ID");
-
-                    b.Property<int>("intComplaintId")
-                        .HasColumnType("int")
-                        .HasColumnName("COMPLAINT_ID");
-
-                    b.HasKey("intUserId", "intComplaintId");
-
-                    b.HasIndex("intComplaintId");
-
-                    b.ToTable("complaints_watchers");
                 });
 
             modelBuilder.Entity("Domain.DataModels.Intersections.ComplaintsStatuses", b =>
@@ -947,25 +933,6 @@ namespace Persistence.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Domain.DataModels.Intersections.ComplaintWatchers", b =>
-                {
-                    b.HasOne("Domain.DataModels.Complaints.Complaint", "Complaint")
-                        .WithMany("Watchers")
-                        .HasForeignKey("intComplaintId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.DataModels.User.ApplicationUser", "User")
-                        .WithMany("ComplaintsWatched")
-                        .HasForeignKey("intUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Complaint");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Domain.DataModels.Intersections.ComplaintsStatuses", b =>
                 {
                     b.HasOne("Domain.DataModels.Complaints.Complaint", "Complaint")
@@ -1167,8 +1134,6 @@ namespace Persistence.Migrations
                     b.Navigation("Tasks");
 
                     b.Navigation("Voters");
-
-                    b.Navigation("Watchers");
                 });
 
             modelBuilder.Entity("Domain.DataModels.Complaints.ComplaintStatus", b =>
@@ -1196,8 +1161,6 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.DataModels.User.ApplicationUser", b =>
                 {
                     b.Navigation("Complaints");
-
-                    b.Navigation("ComplaintsWatched");
 
                     b.Navigation("Departments");
 

@@ -16,6 +16,12 @@ namespace Domain.DataModels.User
         [Column("LAST_NAME")]
         public string strLastName { get; set; }
 
+        [Column("FIRST_NAME_AR")]
+        public string strFirstNameAr { get; set; }
+
+        [Column("LAST_NAME_AR")]
+        public string strLastNameAr { get; set; }
+
         [Column("PHONE_NUMBER")]
         public string strPhoneNumber { get; set; }
 

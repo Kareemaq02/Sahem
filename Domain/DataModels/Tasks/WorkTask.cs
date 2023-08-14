@@ -86,7 +86,6 @@ namespace Domain.DataModels.Tasks
         // Relations
         public ICollection<WorkTaskMembers> Workers { get; set; }
 
-        public ICollection<WorkTaskAttachment> Attachments { get; set; }
         public ICollection<WorkTaskComplaints> Complaints { get; set; }
     }
 }

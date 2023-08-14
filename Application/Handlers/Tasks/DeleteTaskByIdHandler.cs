@@ -29,16 +29,7 @@ namespace Application.Handlers
                     .Select(c => c.intStatusId)
                     .FirstOrDefaultAsync(cancellationToken);
 
-                if (TasksStatus == (int)TasksConstant.taskStatus.inactive)
-                {
-                    var taskAttachments = await _context.TaskAttachments
-                        .Where(ca => ca.intTaskId == request.Id)
-                        .ToListAsync(cancellationToken);
-
-                    _context.TaskAttachments.RemoveRange(taskAttachments);
-                    await _context.SaveChangesAsync(cancellationToken);
-                }
-                else
+                if (TasksStatus != (int)TasksConstant.taskStatus.inactive)
                     return Result<Unit>.Failure("Failed to delete the task.");
             }
             catch (DbUpdateException)
