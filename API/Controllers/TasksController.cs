@@ -122,7 +122,6 @@ namespace API.Controllers
 
             username = jwtToken.Claims.First(c => c.Type == "username").Value;
 
-
             return HandleResult(await Mediator.Send(new GetLoggedInWorkerTasksQuery(username)));
         }
 
@@ -131,4 +130,5 @@ namespace API.Controllers
         {
             return HandleResult(await Mediator.Send(new GetTaskStatusTypesListQuery()));
         }
+    }
 }
