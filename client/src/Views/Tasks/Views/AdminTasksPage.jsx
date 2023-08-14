@@ -82,11 +82,11 @@ const AdminTasksPage = () => {
         }}
         deleteTasks={async (taskId) => {
           const success = await deleteTasks(taskId);
-          if (success) {
-            setTaskId((prevTasks) =>
-              prevTasks.filter((task) => task.id !== taskId)
-            );
-          }
+          // if (success) {
+          //   setTaskId((prevTasks) =>
+          //     prevTasks.filter((task) => task.id !== taskId)
+          //   );
+          // }
         }}
       />
       <SwipeableDrawer

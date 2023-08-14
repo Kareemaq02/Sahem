@@ -23,7 +23,7 @@ import { AddCircleOutline, ArrowCircleUp } from "@mui/icons-material/";
 import ClearIcon from "@mui/icons-material/Clear";
 import EditIcon from "@mui/icons-material/Edit";
 import axios from "../../../Common/Utils/AxiosAgent";
-import ComplaintsTypesApi from "../Service/GetComplaintTypesApi";
+// import ComplaintsTypesApi from "../Service/GetComplaintTypesApi";
 
 function StatusColor(status) {
   switch (status) {
@@ -56,18 +56,18 @@ const ComplaintsDataGrid = ({ editComplaint, deleteComplaint, data }) => {
   });
   const [complaintTypes, setComplaintTypes] = useState([]);
 
-  useEffect(() => {
-    const fetchComplaintTypes = async () => {
-      try {
-        const response = await ComplaintsTypesApi();
-        setComplaintTypes(response.data);
-      } catch (error) {
-        console.error("Failed to fetch complaint types:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchComplaintTypes = async () => {
+  //     try {
+  //       const response = await ComplaintsTypesApi();
+  //       setComplaintTypes(response.data);
+  //     } catch (error) {
+  //       console.error("Failed to fetch complaint types:", error);
+  //     }
+  //   };
 
-    fetchComplaintTypes();
-  }, []);
+  //   fetchComplaintTypes();
+  // }, []);
 
   const handleOpenEditDialog = (complaint) => {
     setSelectedComplaint(complaint);
