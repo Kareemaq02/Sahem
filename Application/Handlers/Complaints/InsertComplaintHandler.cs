@@ -3,6 +3,7 @@ using Domain.ClientDTOs.Complaint;
 using Domain.DataModels.Complaints;
 using Domain.DataModels.Intersections;
 using Domain.DataModels.User;
+using Domain.Helpers;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -68,6 +69,32 @@ namespace Application.Handlers.Complaints
                     return Result<InsertComplaintDTO>.Failure("No file was Uploaded.");
                 }
 
+                 double radius = 0.0002245;
+                var targetLatLng = new LatLng
+                {
+                    decLat = (decimal)request.ComplaintDTO.lstMedia.ElementAt(0).decLat,
+                    decLng = (decimal)request.ComplaintDTO.lstMedia.ElementAt(0).decLng,
+                };
+
+                var query = 
+                    from c in _context.Complaints
+                    join ca in _context.ComplaintAttachments on c.intId equals ca.intComplaintId
+                    let complaintLatLng = new LatLng { decLat = ca.decLat, decLng = ca.decLng }
+                    let distance = Math.Sqrt(Math.Pow((double)(targetLatLng.decLat-complaintLatLng.decLat),2)
+                    + Math.Pow((double)(targetLatLng.decLng - complaintLatLng.decLng), 2))
+                    where (distance <= radius && c.dtmDateCreated > DateTime.Now.AddHours(-24)
+                    && c.intUserID == userId)
+                    select c;
+
+                var similarComplaintsCount= await query.CountAsync();
+
+                if (similarComplaintsCount > 3)
+                {
+                    await transaction.RollbackAsync();
+                    return Result<InsertComplaintDTO>.Failure("You have already submitted 3 complaints" +
+                        " in the same are within the last 24 hours");
+
+                }
                 var complaintAttachments = new List<ComplaintAttachment>();
                 foreach (var media in lstMedia)
                 {
