@@ -55,11 +55,6 @@ namespace Persistence
             var taskEntity = await context.Tasks.AddAsync(task);
             await context.SaveChangesAsync();
 
-            await context.TaskAttachments.AddAsync(
-                CreateTaskAttachment(taskEntity.Entity.intId, dateCreated, admin.Id)
-            );
-            await context.SaveChangesAsync();
-
             var complaintsCount = context.Complaints.Count();
             var complaintRand = random.Next(1, complaintsCount + 1);
 
@@ -97,22 +92,6 @@ namespace Persistence
                     }
                 );
             }
-        }
-
-        private static WorkTaskAttachment CreateTaskAttachment(
-            int taskId,
-            DateTime dateCreated,
-            int adminId
-        )
-        {
-            return new WorkTaskAttachment
-            {
-                intTaskId = taskId,
-                strMediaRef = @"C:\Fake\Path\Files\test.jpg",
-                intCreatedBy = adminId,
-                dtmDateCreated = dateCreated,
-                blnIsVideo = false,
-            };
         }
     }
 }

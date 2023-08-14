@@ -38,5 +38,9 @@ namespace Domain.DataModels.Intersections
         [Column("IS_VIDEO")]
         [Required]
         public Boolean blnIsVideo { get; set; }
+
+        [Column("IS_FROM_WORKER")]
+        [Required]
+        public Boolean blnIsFromWorker { get; set; }
     }
 }

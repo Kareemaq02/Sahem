@@ -27,7 +27,8 @@ namespace Application.Handlers.Tasks
         )
         {
             var lstMediaQuery =
-                from ta in _context.TaskAttachments
+                from ta in _context.ComplaintAttachments
+                where ta.blnIsFromWorker == true
                 select new MediaDTO
                 {
                     strMediaRef = File.Exists(ta.strMediaRef)

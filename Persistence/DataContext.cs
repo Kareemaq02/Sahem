@@ -134,11 +134,6 @@ namespace Persistence
                 q => q.HasKey(q => new { q.intComplaintId, q.strMediaRef })
             );
 
-            // Tasks_Attachments table
-            builder.Entity<WorkTaskAttachment>(
-                q => q.HasKey(q => new { q.intTaskId, q.strMediaRef })
-            );
-
             // Task_Members intersection table
             builder.Entity<WorkTaskMembers>(q => q.HasKey(q => new { q.intWorkerId, q.intTaskId }));
             builder
@@ -218,7 +213,6 @@ namespace Persistence
         public DbSet<WorkTaskType> TaskTypes { get; set; }
         public DbSet<WorkTaskMembers> TaskMembers { get; set; }
         public DbSet<WorkTaskComplaints> TasksComplaints { get; set; }
-        public DbSet<WorkTaskAttachment> TaskAttachments { get; set; }
 
         // Departments DataSets
         public DbSet<Department> Departments { get; set; }
