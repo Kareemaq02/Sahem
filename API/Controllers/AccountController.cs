@@ -276,6 +276,8 @@ namespace API.Controllers
                 {
                     strFirstName = register.strFirstName.ToLower(),
                     strLastName = register.strLastName.ToLower(),
+                    strFirstNameAr = register.strFirstNameAr,
+                    strLastNameAr = register.strLastNameAr,
                     strPhoneNumber = register.strPhonenumber,
                     strNationalId = register.strNationalId,
                     strNationalIdNumber = register.strNationalIdNumber?.ToUpper(),

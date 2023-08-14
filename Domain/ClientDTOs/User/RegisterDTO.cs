@@ -39,6 +39,20 @@ namespace Domain.ClientDTOs.User
 
         [AllowNull]
         [RegularExpression(
+            @"^[\u0600-\u06FF]{2,}$",
+            ErrorMessage = "Name must be longer than 2 characters."
+        )]
+        public string strFirstNameAr { get; set; }
+
+        [AllowNull]
+        [RegularExpression(
+            @"^[\u0600-\u06FF]{2,}$",
+            ErrorMessage = "Name must be longer than 2 characters."
+        )]
+        public string strLastNameAr { get; set; }
+
+        [AllowNull]
+        [RegularExpression(
             @"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$",
             ErrorMessage = "The Email field is not a valid e-mail address."
         )]
