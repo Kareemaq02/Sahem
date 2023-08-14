@@ -134,6 +134,19 @@ namespace Application.Handlers.Complaints
                     .Where(q => q.dtmDateCreated >= request.filter.dtmDateCreated)
                     .ToList();
 
+            if (request.filter.lstComplaintPrivacyIds.Count > 0)
+            { 
+                var predicate = PredicateBuilder.New<ComplaintsListDTO>();
+                foreach (var filter in request.filter.lstComplaintPrivacyIds)
+                {
+                    var tempFilter = filter;
+                    predicate = predicate.Or(q => q.intPrivacyId == tempFilter);
+
+                }
+                queryObject = queryObject.Where(predicate).ToList();
+            
+            }
+
             // NOT OPTIMIZED USE OTHER REFERENCES FOR HELP
             var result = await PagedList<ComplaintsListDTO>.CreateAsync(
                 queryObject,

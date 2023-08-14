@@ -61,7 +61,7 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new InsertComplaintCommand(complaintDTO)));
         }
 
-        [HttpPut("refile")] // .../api/complaints
+        [HttpPut("refile")] // .../api/complaints/refile
         public async Task<IActionResult> RefileComplaint(int ID)
         {
             return HandleResult(await Mediator.Send(new RefileComplaintCommand(ID)));
@@ -186,5 +186,30 @@ namespace API.Controllers
         {
             return HandleResult(await Mediator.Send(new GetComplaintStatusesQuery(id)));
         }
+
+        [HttpPut("remind/{id}")] // .../api/complaints/remind/id
+        public async Task<IActionResult> IncrementComplaintReminder(
+            int id,
+            string username
+        )
+        {
+            string authHeader = Request.Headers["Authorization"];
+            JwtSecurityTokenHandler tokenHandler = new();
+            JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
+
+            username = jwtToken.Claims.First(c => c.Type == "username").Value;
+
+            return HandleResult(
+                await Mediator.Send(new IncrementComplaintReminderCommand(id, username))
+            );
+        }
+
+    
+        [HttpGet("status/list")] // .../api/complaints/status/list
+        public async Task<IActionResult> GetComplaintStatusTypes()
+        {
+            return HandleResult(await Mediator.Send(new GetComplaintStatusTypesListQuery()));
+        }
+
     }
 }

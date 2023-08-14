@@ -76,6 +76,7 @@ namespace Application.Handlers.Tasks
                             await transaction.RollbackAsync();
                             return Result<TaskDTO>.Failure($"Invalid user id: {worker.intId}");
                         }
+                        
                         if (user2.intUserTypeId != (int)UsersConstant.userTypes.worker)
                         {
                             await transaction.RollbackAsync();
