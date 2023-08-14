@@ -26,13 +26,16 @@ namespace Application.Handlers.Tasks
             var query =
                 from t in _context.Tasks
                 join u in _context.Users on t.intAdminId equals u.Id
+                join ui in _context.UserInfos on u.intUserInfoId equals ui.intId
                 join tT in _context.TaskTypes on t.intTypeId equals tT.intId
                 join ts in _context.TaskStatus on t.intStatusId equals ts.intId
                 join tm in _context.TaskMembers on t.intId equals tm.intTaskId
                 group tm by new
                 {
                     TaskID = t.intId,
-                    Admin = u.UserName,
+                    AdminUsername = u.UserName,
+                    Admin = ui.strFirstName + " " + ui.strLastName,
+                    AdminAr = ui.strFirstNameAr + " " + ui.strLastNameAr,
                     TaskTypeID = tT.intId,
                     TaskTypeEn = tT.strNameEn,
                     TaskTypeAr = tT.strNameAr,
@@ -41,6 +44,7 @@ namespace Application.Handlers.Tasks
                     ScheduledDate = t.dtmDateScheduled,
                     DeadlineDate = t.dtmDateDeadline,
                     TaskStatus = ts.strName,
+                    TaskStatusAr = ts.strNameAr,
                     StatusId = ts.intId,
                 } into g
                 orderby g.Key.TaskID ascending
@@ -48,6 +52,8 @@ namespace Application.Handlers.Tasks
                 {
                     taskID = g.Key.TaskID,
                     adminUsername = g.Key.Admin,
+                    adminName = g.Key.Admin,
+                    adminNameAr = g.Key.AdminAr,
                     intTaskTypeId = g.Key.TaskTypeID,
                     strTypeNameEn = g.Key.TaskTypeEn,
                     strTypeNameAr = g.Key.TaskTypeAr,
@@ -57,6 +63,7 @@ namespace Application.Handlers.Tasks
                     deadlineDate = g.Key.DeadlineDate,
                     intTaskStatusId = g.Key.StatusId,
                     strTaskStatus = g.Key.TaskStatus,
+                    strTaskStatusAr = g.Key.TaskStatusAr,
                     workersList = g.Select(
                             x =>
                                 new TaskWorkerDTO
