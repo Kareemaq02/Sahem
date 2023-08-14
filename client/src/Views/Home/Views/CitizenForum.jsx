@@ -1,34 +1,57 @@
 import React, { useEffect, useState } from "react";
-import { Typography, Button, Box, Grid } from "@mui/material";
+import { Typography, Box, Grid, IconButton } from "@mui/material";
 import ComplaintPost from "../Component/ComplaintPost";
-import GetComplaintDetails from "../Service/GetComplaintDetails";
 import { FlexBetween } from "../../../Common/Components/FlexBetween";
-import CustomFilter from "../Component/CustomFilter"
+import CustomFilter from "../Component/CustomFilter";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import GetComplaintDetails from "../Service/GetComplaintDetails";
 
 function CitizenForum() {
   const [comDet, setCompDet] = useState([]);
-  const [complaintLimit, setComplaintLimit] = useState(20);
-  const [selectedCompId, setSelectedCompId] = useState(null);
+  const [pageSize, setPageSize] = useState(10);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [selectedComplaintTypes, setSelectedComplaintTypes] = useState([]);
+  const [selectedStatus, setSelectedStatus] = useState([]); 
+
 
   useEffect(() => {
-    const setViewComplaintDetails = async () => {
+    const fetchComplaints = async () => {
       try {
-        const response = await GetComplaintDetails();
+        const response = await GetComplaintDetails(
+          pageNumber,
+          pageSize,
+          selectedComplaintTypes,
+          selectedStatus,
+          null // Replace 'null' with the actual date value, if needed
+        );
         setCompDet(response.data);
       } catch (error) {
         console.error(error);
       }
     };
-    setViewComplaintDetails();
-  }, []);
 
-  const handleViewMore = () => {
-    setComplaintLimit((prevLimit) => prevLimit + 20);
+    fetchComplaints();
+  }, [pageNumber, pageSize, selectedComplaintTypes, selectedStatus]);
+
+
+
+  const handlePageChange = (direction) => {
+    if (direction === "prev" && pageNumber > 1) {
+      setPageNumber((prevPageNumber) => prevPageNumber - 1);
+    } else if (direction === "next") {
+      setPageNumber((prevPageNumber) => prevPageNumber + 1);
+    }
   };
 
-  const handleSelectComplaint = (compId) => {
-    setSelectedCompId(compId);
+  const handleComplaintTypesChange = (selectedComplaintTypeIds) => {
+    setSelectedComplaintTypes(selectedComplaintTypeIds);
   };
+
+  const handleComplaintStatusChange = (selectedStatusId) => {
+    setSelectedStatus(selectedStatusId);
+  };
+
 
   return (
     <div>
@@ -36,24 +59,33 @@ function CitizenForum() {
         Public Forum
       </Typography>
       <Grid container spacing={2}>
-        <Grid item xs={12} md={8}> {/* ComplaintPost component takes 8 columns on larger screens */}
+        <Grid item xs={12} md={8}>
           <FlexBetween>
-            <ComplaintPost data={comDet.slice(0, complaintLimit)} />
+            <ComplaintPost data={comDet} />
           </FlexBetween>
-          {complaintLimit < comDet.length && (
-            <Box display="flex" justifyContent="center" mt={2}>
-              <Button variant="contained" onClick={handleViewMore}>
-                View More
-              </Button>
-            </Box>
-          )}
-          <br/>
-          <br/>
+
+          <Box display="flex" justifyContent="center" mt={2} >
+            <IconButton onClick={() => handlePageChange("prev")} disabled={pageNumber === 1}>
+            <ArrowForwardIcon />
+            </IconButton>
+            <IconButton
+              onClick={() => handlePageChange("next")}
+              disabled={comDet.length < pageSize}
+            >
+              
+              <ArrowBackIcon />
+            </IconButton>
+
+          </Box>
         </Grid>
-        <Grid item xs={12} md={4}> {/* Filter component takes 4 columns on larger screens */}
-          <CustomFilter /> {/* Render the CustomFilter component */}
+
+        <Grid item xs={12} md={4}>
+          {/* Pass the handleComplaintTypesChange function as a prop */}
+          <CustomFilter onComplaintTypesChange={handleComplaintTypesChange} onComplaintStatusChange={handleComplaintStatusChange} />
         </Grid>
       </Grid>
+      <br />
+      <br />
     </div>
   );
 }

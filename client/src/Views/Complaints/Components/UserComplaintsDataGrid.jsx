@@ -23,8 +23,7 @@ import { AddCircleOutline, ArrowCircleUp } from "@mui/icons-material/";
 import ClearIcon from "@mui/icons-material/Clear";
 import EditIcon from "@mui/icons-material/Edit";
 import axios from "../../../Common/Utils/AxiosAgent";
-// import ComplaintsTypesApi from "../Service/GetComplaintTypesApi";
-
+import ComplaintsTypesApi from "../Service/ComplaintsTypesApi";
 function StatusColor(status) {
   switch (status) {
     case "pending":

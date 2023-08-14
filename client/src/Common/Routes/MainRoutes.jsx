@@ -27,7 +27,7 @@ const InsertProffession = Loadable(lazy(() => import("../../Views/Proffessions/I
 const GeneralComplaints = Loadable(lazy(() => import("../../Views/GeneralComplaints/index")));
 const Users = Loadable(lazy(() => import("../../Views/ViewUsers/index")));
 const Workers = Loadable(lazy(() => import("../../Views/ViewWorkers/index")));
-const MapIndex = Loadable(lazy(() => import("../../Views/GeneralComplaints/mapIndex")));
+const MyTask = Loadable(lazy(() => import("../../Views/MyTasks/index")));
 
 
 
@@ -89,17 +89,8 @@ const MainRoutes = {
       path: "generalcomplaints",
       element: (
         <PermissionsHelper
-          allowedRoles={[Admin, User]}
+          allowedRoles={[Admin, User,Worker]}
           element={<GeneralComplaints />}
-        />
-      ),
-    },
-    {
-      path: "mapcomplaints",
-      element: (
-        <PermissionsHelper
-          allowedRoles={[Admin, User]}
-          element={<MapIndex />}
         />
       ),
     },
@@ -118,6 +109,15 @@ const MainRoutes = {
         <PermissionsHelper
           allowedRoles={[Admin]}
           element={<InsertTaskType />}
+        />
+      ),
+    },
+    {
+      path: "mytasks",
+      element: (
+        <PermissionsHelper
+          allowedRoles={[Worker]}
+          element={<MyTask />}
         />
       ),
     },

@@ -7,7 +7,7 @@ import {
 import { AppBar, Chip, IconButton, Toolbar, useTheme } from "@mui/material";
 import { styled } from "@mui/system";
 import FaceIcon from '@mui/icons-material/Face';
-
+import "./style.css"
 
 // Project Imports
 import { FlexBetween } from "../../../Components/FlexBetween";
@@ -21,57 +21,53 @@ const Navbar = ({ user }) => {
   const { ToggleDisplayMode } = useContext(AppContext);
 
   // Custom styled Chip for the icon buttons
-  const IconChip = styled(Chip)({
-    borderRadius: "50%",
+  /*const IconChip = styled(Chip)({
+    borderRadius: '50%',
     padding: '25px',
-    backgroundColor: '##E1F1FD',
-    "& .MuiChip-avatar": {
-      borderRadius: "60%",
-      backgroundColor: '##E1F1FD',
-
+    backgroundColor: '#E1F1FD', // Corrected color value
+    '& .MuiChip-avatar': {
+      borderRadius: '50%', // Use '50%' to create a circular shape
+      backgroundColor: '#FFFFFF', // White background
     },
-  });
+  });*/
 
   return (
     <AppBar
       theme={theme}
       sx={{
-        height: "4rem",
+        height: "5rem",
         position: "static",
         background: "none",
         boxShadow: "none",
       }}
+      dir="rtl"
     >
       <Toolbar sx={{ justifyContent: "space-between" }}>
         {/* LEFT SIDE */}
         <FlexBetween />
         {/* RIGHT SIDE */}
-        <FlexBetween gap="1.5rem">
-          <IconChip
-            avatar={
-              <>
-                <IconButton onClick={ToggleDisplayMode}>
-                  {theme.palette.mode === "dark" ? (
-                    <DarkModeOutlined
-                      color="primary"
-                      sx={{ fontSize: "25px" }}
-                    />
-                  ) : (
-                    <LightModeOutlined
-                      color="#FFFFFF"
-                      sx={{ fontSize: "25px" }}
-                    />
-                  )}
-                </IconButton>
-                <IconButton>
-                  <SettingsOutlined color="primary" sx={{ fontSize: "25px", color: 'gray' }} />
-                </IconButton>
-                
-                <Chip sx={{p:1}} icon={<FaceIcon />} label={<AccountMenu user={user} sx={{color: '#18AAC9'}} />} variant="outlined" />
-              </>
-            }
-          />
-          
+        <FlexBetween gap="1.5rem" className="iconChip">
+          <div>
+            <IconButton onClick={ToggleDisplayMode}>
+              {theme.palette.mode === "dark" ? (
+                <DarkModeOutlined
+                  color="primary"
+                  sx={{ fontSize: "25px" }}
+                />
+              ) : (
+                <LightModeOutlined
+                  color="#FFFFFF"
+                  sx={{ fontSize: "25px" }}
+                />
+              )}
+            </IconButton>
+            <IconButton>
+              <SettingsOutlined color="primary" sx={{ fontSize: "25px", color: 'gray' }} />
+              <AccountMenu user={user} sx={{ color: '#18AAC9',  }} id="accMenue" />
+            </IconButton>
+
+          </div>
+
         </FlexBetween>
       </Toolbar>
     </AppBar>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Dialog, DialogTitle, DialogContent, Button, IconButton, Paper, Typography, Stack, Divider } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 //import "../index.css"
@@ -6,11 +6,39 @@ import SendIcon from '@mui/icons-material/Send';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { FlexBetween } from "../../../Common/Components/FlexBetween";
 import Switch from '@mui/material/Switch';
+import { BlackListUser } from "../Service/BlackListUser";
+import { WhiteListUser } from "../Service/WhiteListUser";
+import { VerifyUser } from "../Service/VerifyUser";
+import { UnVerifyUser } from "../Service/UnVerifyUser";
 
 
-const ShowUsersDataGrid = ({ data, id}) => {
+const ShowUsersDataGrid = ({ data, id }) => {
     const [open, setOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
+    const [blacklistUser, setBlacklistUser] = useState([]);
+    const [isBlacklistChecked, setIsBlacklistChecked] = useState(false);
+    const [isVerifyChecked, setIsVerifyChecked] = useState(false)
+
+
+    const setBlacklistUsers = async (userId) => {
+        await BlackListUser(userId);
+        setIsBlacklistChecked(true);
+    }
+
+    const setWhitelistUsers = async (userId) => {
+        await WhiteListUser(userId);
+        setIsBlacklistChecked(false)
+    }
+
+    const setVerifyUsers = async (userId) => {
+        await VerifyUser(userId);
+        setIsVerifyChecked(true);
+    }
+
+    const setUnVerifyUser = async (userId) => {
+        await UnVerifyUser(userId);
+        setIsVerifyChecked(false);
+    }
 
     const handleOpen = (user) => {
         setSelectedUser(user);
@@ -24,7 +52,7 @@ const ShowUsersDataGrid = ({ data, id}) => {
     const columns = [
         { field: "intId", headerName: "ID", flex: 0.5 },
         { field: "strUsername", headerName: "User Name", flex: 0.5 },
-        { 
+        {
             field: "name",
             headerName: "Name",
             flex: 0.5,
@@ -96,7 +124,7 @@ const ShowUsersDataGrid = ({ data, id}) => {
                                 <br />
                                 <Stack direction="row" spacing={2} sx={{ width: "90%" }}>
 
-                                    <Stack spacing={2} sx={{ flexGrow: 1 ,}}>
+                                    <Stack spacing={2} sx={{ flexGrow: 1, }}>
 
                                         <Typography>ID: <br />  {selectedUser.intId}</Typography>
                                         <Typography>First Name:<br /> {selectedUser.strFirstName}</Typography>
@@ -111,7 +139,25 @@ const ShowUsersDataGrid = ({ data, id}) => {
                                             <FlexBetween>
                                                 User will no longer be able to vote or report a complaint
 
-                                                <Switch />
+                                                <Switch
+                                                    checked={selectedUser?.boolIsBlacklisted === true}
+                                                    onChange={async (event) => {
+                                                        const newChecked = event.target.checked;
+                                                        setIsBlacklistChecked(newChecked);
+
+                                                        if (newChecked) {
+                                                            await setBlacklistUsers(selectedUser.intId);
+                                                        } else {
+                                                            await setWhitelistUsers(selectedUser.intId);
+                                                        }
+
+                                                        setSelectedUser(prevSelectedUser => ({
+                                                            ...prevSelectedUser,
+                                                            boolIsBlacklisted: newChecked
+                                                        }));
+                                                    }}
+                                                />
+
                                             </FlexBetween>
 
                                         </Typography>
@@ -124,7 +170,25 @@ const ShowUsersDataGrid = ({ data, id}) => {
                                             <FlexBetween>
                                                 Toggling this will make the user's reports have a higher over others
 
-                                                <Switch />
+                                                <Switch 
+                                                    checked = {selectedUser?.boolIsVerified === true}
+                                                    onChange={async (event) => {
+                                                        const newVerifyChecked = event.target.checked;
+                                                        setIsVerifyChecked(newVerifyChecked)
+
+                                                        if (newVerifyChecked) {
+                                                            await setVerifyUsers(selectedUser.intId);
+                                                        } else {
+                                                            await setUnVerifyUser(selectedUser.intId);
+                                                        }
+
+                                                        setSelectedUser(prevSelectedUser => ({
+                                                            ...prevSelectedUser,
+                                                            boolIsVerified: newVerifyChecked
+                                                        }));
+                                                    }}
+                                                
+                                                />
                                             </FlexBetween>
 
                                         </Typography>

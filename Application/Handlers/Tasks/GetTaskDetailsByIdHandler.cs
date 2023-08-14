@@ -41,6 +41,7 @@ namespace Application.Handlers.Tasks
             var query =
                 from t in _context.Tasks
                 join u in _context.Users on t.intAdminId equals u.Id
+                join ui in _context.UserInfos on u.intUserInfoId equals ui.intId
                 join tT in _context.TaskTypes on t.intTypeId equals tT.intId
                 join ts in _context.TaskStatus on t.intStatusId equals ts.intId
                 join tm in _context.TaskMembers on t.intId equals tm.intTaskId
@@ -59,7 +60,9 @@ namespace Application.Handlers.Tasks
                     DeadlineDate = t.dtmDateDeadline,
                     TaskStatus = ts.strName,
                     Cost = t.decCost,
-                    UserRating = t.decUserRating
+                    UserRating = t.decUserRating,
+                    AdminFirstName = ui.strFirstName,
+                    AdminLastName = ui.strLastName,
                 } into g
                 select new DetailedTaskDTO
                 {
@@ -70,6 +73,8 @@ namespace Application.Handlers.Tasks
                     activatedDate = g.Key.ActivationDate,
                     lastModifiedDate = g.Key.LastModifiedDate,
                     strComment = g.Key.Comment,
+                    strAdminFirstName = g.Key.AdminFirstName,
+                    strAdminLastName = g.Key.AdminLastName,
                     decCost = g.Key.Cost,
                     decUserRating = g.Key.UserRating,
                     finishedDate = g.Key.FinishedDate,
@@ -78,7 +83,13 @@ namespace Application.Handlers.Tasks
                     strTaskStatus = g.Key.TaskStatus,
                     workersList = g.Select(
                             x =>
-                                new TaskWorkerDTO { intId = x.Worker.Id, isLeader = x.blnIsLeader, }
+                                new TaskWorkerDTO
+                                {
+                                    intId = x.Worker.Id,
+                                    isLeader = x.blnIsLeader,
+                                    strFirstName = x.Worker.UserInfo.strFirstName,
+                                    strLastName = x.Worker.UserInfo.strLastName
+                                }
                         )
                         .Distinct()
                         .ToList(),
