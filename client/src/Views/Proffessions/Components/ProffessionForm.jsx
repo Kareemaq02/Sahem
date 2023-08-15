@@ -1,6 +1,6 @@
 import { FormProvider, useForm } from "react-hook-form";
 import FormTextField from "../../../Common/Components/UI/FormFields/FormTextField";
-import { Button } from "@mui/material";
+import { Button, Box, Typography } from "@mui/material";
 import ProffessionApi from "../Service/ProffessionApi";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -25,19 +25,34 @@ const ProffessionForm = () => {
     }
   };
   return (
-    <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit(onSubmit)}>
-        <FormTextField name="strNameAr" label="Arabic Name" />
-        <br />
-        <br />
-        <FormTextField name="strNameEn" label="English Name" />
-        <br />
-        <br />
-        <Button variant="contained" type="submit" sx={{ width: "100%" }}>
-          Add
-        </Button>
-      </form>
-    </FormProvider>
+    <Box
+      sx={{
+        width: '70%',
+        margin: '0 auto',
+        padding: '20px',
+        border: '1px solid #ccc',
+        borderRadius: '8px',
+        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+        // backgroundColor: '#f5f5f5',
+      }}
+    >
+      <Typography variant="h2" sx={{ marginBottom: '20px' }}>
+        Insert Proffession
+      </Typography>
+      <FormProvider {...methods}>
+        <form onSubmit={methods.handleSubmit(onSubmit)}>
+          <FormTextField name="strNameAr" label="Arabic Name" />
+          <br />
+          <br />
+          <FormTextField name="strNameEn" label="English Name" />
+          <br />
+          <br />
+          <Button variant="contained" type="submit" sx={{ width: '100%' }}>
+            Add
+          </Button>
+        </form>
+      </FormProvider>
+    </Box>
   );
 };
 
