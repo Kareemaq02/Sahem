@@ -1,8 +1,10 @@
 import 'package:account/API/user_info_request.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Screens/Profile/dataBox.dart';
+import 'package:account/Screens/Profile/logout.dart';
 import 'package:account/Screens/Profile/switchWidget.dart';
 import 'package:account/Screens/Profile/textButton.dart';
+import 'package:account/Widgets/appBar.dart';
 import 'package:account/Widgets/bottomNavBar.dart';
 import 'package:flutter/material.dart';
 
@@ -51,34 +53,12 @@ class _ProfileState extends State<Profile> {
 
    
     return  Scaffold(
-      backgroundColor: Colors.pink[50],
+      backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
       floatingActionButton:const CustomActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar:BottomNavBar1(3),
-       appBar: AppBar(
-      backgroundColor: Colors.white,
-      leadingWidth: double.infinity,
-      leading: Container(
-          width:double.infinity,
-          height:50,
-          decoration: const BoxDecoration(border: Border(bottom: BorderSide(color:Colors.lime,width: 2))),
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-              IconButton(onPressed:() { 
-              }, icon:const Icon(Icons.settings,color:AppColor.main,),),       
-              IconButton(onPressed:() { 
-              }, icon:const Icon(Icons.notifications,color:AppColor.main,),),
-              Spacer(),
-              const Text(" الإعدادات",style:TextStyle(color: AppColor.main,fontSize: 20,fontFamily:'DroidArabicKufi',)),
-      
-              ],),
-          ),),
-     ),
+       appBar:myAppBar(context,"الإعدادات",false,170),
       body: Padding(
         padding: const EdgeInsets.only(top:8.0,bottom: 8.0),
         child: Expanded(
@@ -97,8 +77,9 @@ class _ProfileState extends State<Profile> {
               DataBox("كلمة المرور",textButtn,"********"),
               DataBox("استلام الاشعارات",switchV,"غير مفعل"),
               DataBox("اللغة",toggleLang,"العربية"),
-                   
+             
               ],),
+              
           ),
         ),
       ),

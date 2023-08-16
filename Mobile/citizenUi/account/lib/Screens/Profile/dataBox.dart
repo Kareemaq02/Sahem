@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 Widget DataBox(String label,widget,data){
 
   return Padding(
-    padding: const EdgeInsets.only(top: 6.0),
+    padding: const EdgeInsets.only(top: 5.0),
     child: Container(
       width: double.infinity,
       height:60,
@@ -69,7 +69,7 @@ Widget InfoBox(name){
     width: double.infinity,
     height: 80,
     decoration:  const BoxDecoration(
-      color: Colors.white,
+    color: Colors.white,
     border: Border(bottom: BorderSide(color: AppColor.main,width: 6,),),
      //borderRadius:BorderRadius.circular(10),
     //   boxShadow: [
