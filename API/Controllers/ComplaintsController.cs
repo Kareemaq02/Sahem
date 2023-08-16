@@ -62,6 +62,20 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new InsertComplaintCommand(complaintDTO)));
         }
 
+        [HttpPost("similarComplaintCheck")] // .../api/complaints/similarComplaintCheck
+        public async Task<IActionResult> InsertComplaintWithSimilarityCheck
+            ([FromForm] InsertComplaintDTO complaintDTO)
+        {
+            string authHeader = Request.Headers["Authorization"];
+            JwtSecurityTokenHandler tokenHandler = new();
+            JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
+
+            complaintDTO.strUserName = jwtToken.Claims.First(c => c.Type == "username").Value;
+
+            return HandleResult(await Mediator.Send(new InsertComplaintWithSimilarityCheckCommand(complaintDTO)));
+        }
+
+
         [HttpPut("refile")] // .../api/complaints/refile
         public async Task<IActionResult> RefileComplaint(int ID)
         {
