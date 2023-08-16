@@ -7,6 +7,7 @@ using Domain.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Application.Commands;
 using Application.Core;
+using Domain.DataModels.Complaints;
 
 namespace API.Controllers
 {
@@ -24,6 +25,20 @@ namespace API.Controllers
 
             return HandleResult(
                 await Mediator.Send(new GetComplaintsListQuery(filter, strUserName, blnIncludePictures))
+            );
+        }
+
+        [HttpGet("mywatchlist")] // .../api/complaints/mywatchlist
+        public async Task<IActionResult> GetWatchedComplaintsList()
+        {
+            string authHeader = Request.Headers["Authorization"];
+            JwtSecurityTokenHandler tokenHandler = new();
+            JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
+
+            var strUserName = jwtToken.Claims.First(c => c.Type == "username").Value;
+
+            return HandleResult(
+                await Mediator.Send(new GetWatchedComplaintsQuery(strUserName))
             );
         }
 
@@ -50,7 +65,7 @@ namespace API.Controllers
             );
         }
 
-        [HttpPost] // .../api/complaints
+        [HttpPost] // .../api/complaints   //use in case user declines the similarity popup
         public async Task<IActionResult> InsertComplaint([FromForm] InsertComplaintDTO complaintDTO)
         {
             string authHeader = Request.Headers["Authorization"];
@@ -63,6 +78,7 @@ namespace API.Controllers
         }
 
         [HttpPost("similarComplaintCheck")] // .../api/complaints/similarComplaintCheck
+        //use on the first time the user clicks insert complaint
         public async Task<IActionResult> InsertComplaintWithSimilarityCheck
             ([FromForm] InsertComplaintDTO complaintDTO)
         {
@@ -73,6 +89,20 @@ namespace API.Controllers
             complaintDTO.strUserName = jwtToken.Claims.First(c => c.Type == "username").Value;
 
             return HandleResult(await Mediator.Send(new InsertComplaintWithSimilarityCheckCommand(complaintDTO)));
+        }
+
+        [HttpPost("upvote/addToWatchList/similar/{intComplaintId}")]
+        // .../api/complaints/upvote/addToWatchList/similar/(id goes here)
+        //use on the first time the user clicks insert complaint
+        public async Task<IActionResult> FileComplaintAsSimilar(int intComplaintId)
+        {
+            string authHeader = Request.Headers["Authorization"];
+            JwtSecurityTokenHandler tokenHandler = new();
+            JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
+
+            string strUserName = jwtToken.Claims.First(c => c.Type == "username").Value;
+
+            return HandleResult(await Mediator.Send(new FileComplaintAsSimilarCommand(strUserName, intComplaintId)));
         }
 
 
@@ -225,6 +255,22 @@ namespace API.Controllers
         {
             return HandleResult(await Mediator.Send(new GetComplaintStatusTypesListQuery()));
         }
+
+
+        [HttpPost("addToWatchlist/{intComplaintId}")] // .../api/complaints/addToWatchlist
+        public async Task<IActionResult> AddComplaintToWatchList
+            (int intComplaintId)
+        {
+            string authHeader = Request.Headers["Authorization"];
+            JwtSecurityTokenHandler tokenHandler = new();
+            JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
+
+            string strUserName = jwtToken.Claims.First(c => c.Type == "username").Value;
+
+            return HandleResult(await Mediator.Send(new AddComplaintToWatchListCommand(strUserName,intComplaintId)));
+        }
+
+
 
     }
 }
