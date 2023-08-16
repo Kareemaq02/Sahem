@@ -216,6 +216,7 @@ namespace Persistence
         public DbSet<ComplaintVoters> ComplaintVoters { get; set; }
         public DbSet<ComplaintAttachment> ComplaintAttachments { get; set; }
         public DbSet<ComplaintsStatuses> ComplaintsStatuses { get; set; }
+        public DbSet<ComplaintWatchers> ComplaintWatchers { get; set; }
 
         // Users DataSets
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
