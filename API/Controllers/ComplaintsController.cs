@@ -13,7 +13,8 @@ namespace API.Controllers
     public class ComplaintsController : BaseApiController
     {
         [HttpGet] // .../api/complaints
-        public async Task<IActionResult> GetComplaintsList([FromQuery] ComplaintsFilter filter)
+        public async Task<IActionResult> GetComplaintsList([FromQuery] ComplaintsFilter filter,
+            bool blnIncludePictures)
         {
             string authHeader = Request.Headers["Authorization"];
             JwtSecurityTokenHandler tokenHandler = new();
@@ -22,7 +23,7 @@ namespace API.Controllers
             var strUserName = jwtToken.Claims.First(c => c.Type == "username").Value;
 
             return HandleResult(
-                await Mediator.Send(new GetComplaintsListQuery(filter, strUserName))
+                await Mediator.Send(new GetComplaintsListQuery(filter, strUserName, blnIncludePictures))
             );
         }
 
@@ -60,6 +61,20 @@ namespace API.Controllers
 
             return HandleResult(await Mediator.Send(new InsertComplaintCommand(complaintDTO)));
         }
+
+        [HttpPost("similarComplaintCheck")] // .../api/complaints/similarComplaintCheck
+        public async Task<IActionResult> InsertComplaintWithSimilarityCheck
+            ([FromForm] InsertComplaintDTO complaintDTO)
+        {
+            string authHeader = Request.Headers["Authorization"];
+            JwtSecurityTokenHandler tokenHandler = new();
+            JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
+
+            complaintDTO.strUserName = jwtToken.Claims.First(c => c.Type == "username").Value;
+
+            return HandleResult(await Mediator.Send(new InsertComplaintWithSimilarityCheckCommand(complaintDTO)));
+        }
+
 
         [HttpPut("refile")] // .../api/complaints/refile
         public async Task<IActionResult> RefileComplaint(int ID)
