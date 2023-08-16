@@ -53,7 +53,11 @@ namespace Application.Handlers.Complaints
                         join ca in _context.ComplaintAttachments on c.intId equals ca.intComplaintId
                         let queryComplaintLatLng = new LatLng { decLat = ca.decLat, decLng = ca.decLng }
                         where (c.intTypeId == request.ComplaintDTO.intTypeId
-                        && c.intPrivacyId == (int)ComplaintsConstant.complaintPrivacy.privacyPublic)
+                        && c.intPrivacyId == (int)ComplaintsConstant.complaintPrivacy.privacyPublic
+                        && c.intStatusId == (int)ComplaintsConstant.complaintStatus.Scheduled
+                        || c.intStatusId == (int)ComplaintsConstant.complaintStatus.approved
+                        || c.intStatusId == (int)ComplaintsConstant.complaintStatus.inProgress
+                        || c.intStatusId == (int)ComplaintsConstant.complaintStatus.waitingEvaluation)
                         select new
                         {
                             Complaint = c,
