@@ -1,7 +1,6 @@
 
 // ignore_for_file: file_names
 
-import 'package:account/Widgets/likeButton.dart';
 import 'package:flutter/material.dart';
 
 Widget post1(BuildContext context,  
@@ -20,7 +19,7 @@ required var intComplaintId,
 }) {
   return
    Padding(
-    padding: const EdgeInsets.only(top:20.0,right:10),
+    padding: const EdgeInsets.only(top:50.0,right:10),
     child: Container(
             decoration: BoxDecoration(
               color: const Color(0xffffffff),
@@ -66,16 +65,13 @@ required var intComplaintId,
      child: Container(
       height: 15,
       width: 50,
-                
-                  decoration: BoxDecoration(
-                    color: const Color(0xffffffff),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-               child:
-            
-            //status
-                  Text(
-                  
+        decoration: BoxDecoration(
+        color: const Color(0xffffffff),
+        borderRadius: BorderRadius.circular(10.0),
+          ),
+        child:
+          //status
+                  Text( 
                   strStatus,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
@@ -107,22 +103,7 @@ required var intComplaintId,
               softWrap: false,
             ),
           const Spacer(),
-            Align(
-                alignment: Alignment.topRight,
-                child: SizedBox(
-                  width: 75.0,
-                  height: 65.0,
-                  child: Column(
-                    children: <Widget>[
-                         // VoteIcon
-
-                        like(intVotersCount,intComplaintId),
-                     
-                    
-                    ],
-                  ),
-                ),
-              ),
+          
           ],
         ),
   
@@ -143,56 +124,51 @@ required var intComplaintId,
           const SizedBox(height: 1,),
   
           Padding(
-            padding: const EdgeInsets.only(bottom: 15.0,left: 5),
-            child: Row(children: [
+            padding: const EdgeInsets.only(top: 1),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
             // address
-              Align(
-                  alignment: Alignment.bottomLeft,
-                  child: SizedBox(
-                    width: 124.0,
-                    height: 10.0,
-                    child: Text(
-                      address,
-                      style: const TextStyle(
-                        fontFamily: 'Euclid Circular A',
-                        fontSize: 10,
-                        color: Color(0xff92a5c6),
-                        fontWeight: FontWeight.bold,
-                      ),
-                      softWrap: false,
-                    ),
-                  ),
+              Text(
+                address,
+                style: const TextStyle(
+                  fontFamily: 'Euclid Circular A',
+                  fontSize: 10,
+                  color: Color(0xff92a5c6),
+                  fontWeight: FontWeight.bold,
                 ),
+                softWrap: false,
+              ),
                    
              const SizedBox(width: 18,),
-                // date
-                 Align(
-                  alignment: Alignment.bottomRight,
-                  child: Text(
-                    dtmDateCreated.toString().substring(0,10),
-                    style: const TextStyle(
-                      fontFamily: 'Euclid Circular A',
-                      fontSize: 10,
-                      color: Color(0xff92a5c6),
-                      fontWeight: FontWeight.bold,
-                    ),
-                    softWrap: false,
-                  ),),
-              const SizedBox(width: 40,),
-                //time
-                 Align(
-                        alignment: Alignment.bottomRight,
-                        child: Text(
-                           dtmDateCreated.toString().substring(11,17),
-                          style:const   TextStyle(
-                            fontFamily: 'Euclid Circular A',
-                            fontSize: 10,
-                            color: Color(0xff92a5c6),
-                             fontWeight: FontWeight.bold,
-                          ),
-                          softWrap: false,
-                        ),
-                      ),
+                
+              //    Align(
+              //     alignment: Alignment.bottomRight,
+              //     child: Text(
+              //       dtmDateCreated.toString().substring(0,10),
+              //       style: const TextStyle(
+              //         fontFamily: 'Euclid Circular A',
+              //         fontSize: 10,
+              //         color: Color(0xff92a5c6),
+              //         fontWeight: FontWeight.bold,
+              //       ),
+              //       softWrap: false,
+              //     ),),
+              // const SizedBox(width: 40,),
+              //   //time
+              //    Align(
+              //           alignment: Alignment.bottomRight,
+              //           child: Text(
+              //              dtmDateCreated.toString().substring(11,17),
+              //             style:const   TextStyle(
+              //               fontFamily: 'Euclid Circular A',
+              //               fontSize: 10,
+              //               color: Color(0xff92a5c6),
+              //                fontWeight: FontWeight.bold,
+              //             ),
+              //             softWrap: false,
+              //           ),
+              //         ),
             
                    ],),
           )

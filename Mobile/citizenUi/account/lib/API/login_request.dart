@@ -17,7 +17,7 @@ import '../Screens/Home/public_feed.dart';
 class UserLogin{
   
 
-  Future<int> login(String username, String password,BuildContext context) async {
+  Future<void> login(String username, String password,BuildContext context) async {
 
     print(username);
     print(password);
@@ -46,6 +46,7 @@ class UserLogin{
       // Save the token in shared preferences
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('token', token2);
+      print(token2);
 
        Navigator.of(context).pushReplacement(
         MaterialPageRoute(
@@ -55,8 +56,9 @@ class UserLogin{
 
       // final userData = await fetchUserData(token2);
       // print(userData);
-      return response.statusCode;
+     // return response.statusCode;
     } 
+
      else if (response.statusCode == 401){
       showDialog(
       context: context,
@@ -77,16 +79,16 @@ class UserLogin{
       ),
 
     );
-    return response.statusCode;
+   // return response.statusCode;
     } 
    
     else {
       print('Login failed');
-      return response.statusCode;
+      //return response.statusCode;
     }
   } catch (e) {
     print(e.toString());
-    return 0;
+   // return 0;
     
   }
 }
