@@ -243,5 +243,6 @@ namespace Persistence
         public DbSet<NotificationType> NotificationTypes { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<NotificationToken> NotificationTokens { get; set; }
     }
 }

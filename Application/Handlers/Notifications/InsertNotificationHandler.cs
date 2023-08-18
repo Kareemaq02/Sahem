@@ -7,7 +7,7 @@ using Persistence;
 
 namespace Application.Handlers.Notifications
 {
-    internal class InsertNotificationHandler
+    public class InsertNotificationHandler
         : IRequestHandler<InsertNotificationCommand, Result<Notification>>
     {
         private readonly DataContext _context;
