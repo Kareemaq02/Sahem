@@ -24,5 +24,9 @@ namespace Domain.DataModels.Notifications
         [Column("DATE_CREATED")]
         [Required]
         public DateTime dtmDateCreated { get; set; } = DateTime.UtcNow;
+
+        [Column("IS_READ")]
+        [Required]
+        public Boolean blnIsRead { get; set; }
     }
 }
