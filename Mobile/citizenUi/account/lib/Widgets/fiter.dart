@@ -73,7 +73,7 @@ class _TypeFilterState extends State<TypeFilter> {
         /// When search query change in search bar then this method will be called
         ///
         /// Check if items contains query
-        return user.strNameAr!.toLowerCase().contains(query.toLowerCase());
+        return user.strNameAr.toLowerCase().contains(query.toLowerCase());
       },
 
       onApplyButtonClick: (list) {

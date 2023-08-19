@@ -77,7 +77,8 @@ class _ProfileState extends State<Profile> {
               DataBox("كلمة المرور",textButtn,"********"),
               DataBox("استلام الاشعارات",switchV,"غير مفعل"),
               DataBox("اللغة",toggleLang,"العربية"),
-             
+             SizedBox(height: 10,),
+             logoutBox(context),
               ],),
               
           ),
