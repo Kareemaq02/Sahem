@@ -3,7 +3,6 @@
 import 'package:account/API/map_complaints.dart';
 import 'package:account/Repository/mapLinks.dart';
 import 'package:account/Screens/Map/makerMap.dart';
-import 'package:account/Widgets/bottom_navBat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as map2;
@@ -233,7 +232,7 @@ late final MapController mapController;
               },
             ),
           ),
-          BottomNavBar(),
+          
           ]));
 
 

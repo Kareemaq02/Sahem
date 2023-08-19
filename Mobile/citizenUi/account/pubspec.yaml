@@ -50,7 +50,8 @@ dependencies:
   animations: ^2.0.7
   flutter_map: ^1.1.1
   like_button: ^2.0.5
-  filter_list: ^1.0.2
+  arabic_font: ^0.0.9
+  readmore: ^2.2.0
   
   
 
@@ -74,6 +75,10 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
   generate: true
+  fonts:
+    - family: DroidArabicKufi
+      fonts:
+        - asset: fonts/Droid.Arabic.Kufi.ttf
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
@@ -111,3 +116,4 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+

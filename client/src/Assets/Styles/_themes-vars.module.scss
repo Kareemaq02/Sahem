@@ -1,22 +1,18 @@
 // paper & background
 $paper: #ffffff;
 $background: rgb(243, 246, 249);
-$backgroundGradient: linear-gradient(
-  253deg,
-  rgba(243, 246, 249, 1) 0%,
-  rgba(175, 249, 255, 0.6334908963585435) 20%,
-  rgba(157, 237, 252, 0.8127626050420168) 40%,
-  rgba(243, 246, 249, 0.7399334733893557) 60%,
-  rgba(175, 249, 255, 0.6867121848739496) 80%,
-  rgba(243, 246, 249, 0.42620798319327735) 100%
+$backgroundGradient: radial-gradient(
+  ellipse at center,
+  rgba(255, 255, 255, 0.5),
+  rgba(201, 44, 106, 0.25)
 );
 
 // primary
-$primaryLight: #eef2f6;
-$primaryMain: #2196f3;
-$primaryDark: #1e88e5;
-$primary200: #90caf9;
-$primary800: #1565c0;
+$primaryLight: #FF63A4;
+$primaryMain: #C92C6A;
+$primaryDark: #9C003A; // 50
+$primary200: #90caf9; // 20
+$primary800: #1565c0; // 80
 
 // secondary
 $secondaryLight: #ede7f6;

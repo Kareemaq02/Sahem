@@ -1,14 +1,10 @@
 ﻿using Application.Core;
-using Application.Queries.Complaints;
 using Application.Queries.Users;
-using Domain.ClientDTOs.Complaint;
 using Domain.ClientDTOs.User;
-using Domain.DataModels.Complaints;
+using Domain.Resources;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
-using System.IO;
 
 namespace Application.Handlers.Complaints
 {
@@ -28,7 +24,7 @@ namespace Application.Handlers.Complaints
         )
         {
             var result = await _context.Users
-                .Where(q => q.Id == request.id)
+                .Where(q => q.Id == request.id && q.intUserTypeId == (int)UsersConstant.userTypes.user)
                 .Join(
                     _context.UserInfos,
                     u => u.intUserInfoId,

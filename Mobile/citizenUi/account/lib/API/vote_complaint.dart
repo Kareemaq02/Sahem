@@ -74,8 +74,7 @@ Future<int?>RemoveVoteRequest(var complaintId) async {
       token2 = jsonDecode(response.body);
       print(token2);
       print('Voted successful');
-      // final prefs = await SharedPreferences.getInstance();
-      // await prefs.setString('token', token2);
+    
 
       return response.statusCode;
     } 

@@ -112,5 +112,23 @@ namespace API.Controllers
 
             return HandleResult(await Mediator.Send(new SubmitTaskCommand(submitTaskDTO, id)));
         }
+
+        [HttpGet("loggedInWorker")] //api/tasks/loggedInWorker
+        public async Task<IActionResult> GetLoggedInWorkerTasks(string username)
+        {
+            string authHeader = Request.Headers["Authorization"];
+            JwtSecurityTokenHandler tokenHandler = new();
+            JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
+
+            username = jwtToken.Claims.First(c => c.Type == "username").Value;
+
+            return HandleResult(await Mediator.Send(new GetLoggedInWorkerTasksQuery(username)));
+        }
+
+        [HttpGet("status/list")] // .../api/tasks/status/list
+        public async Task<IActionResult> GetTaskStatusTypes()
+        {
+            return HandleResult(await Mediator.Send(new GetTaskStatusTypesListQuery()));
+        }
     }
 }

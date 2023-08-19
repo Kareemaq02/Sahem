@@ -29,6 +29,15 @@
             public const string WaitingEvaluation = "waiting evaluation";
             public const string Completed = "completed";
             public const string ReFiled = "re-filed";
+
+            public const string PendingAr = "قيد الانتظار";
+            public const string RejectedAr = "مرفوض";
+            public const string ApprovedAr = "موافق عليه";
+            public const string ScheduledAr = "مجدول";
+            public const string InProgressAr = "قيد العمل";
+            public const string WaitingEvaluationAr = "انتظار التقييم";
+            public const string CompletedAr = "منجز";
+            public const string ReFiledAr = "بلاغ معاد";
         }
 
         public static class TaskStatusTypes
@@ -39,6 +48,13 @@
             public const string Failed = "failed";
             public const string Incomplete = "incomplete";
             public const string Completed = "completed";
+
+            public const string InactiveAr = "غير مفعل";
+            public const string InProgressAr = "قيد العمل";
+            public const string WaitingEvaluationAr = "انتظار التقييم";
+            public const string FailedAr = "فشل";
+            public const string IncompleteAr = "غير مكتمل";
+            public const string CompletedAr = "منجز";
         }
 
         public static class ComplaintTypes

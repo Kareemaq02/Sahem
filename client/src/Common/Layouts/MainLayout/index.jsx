@@ -1,4 +1,4 @@
-/*import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { Menu, ChevronLeft } from "@mui/icons-material";
 import RTLSideBar from "./Components/RTLSideBar";
@@ -13,6 +13,8 @@ import {
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/system";
+import "./Components/style.css"
+
 
 // Project imports
 import ScrollableContent from "../../Components/ScrollableContent";
@@ -32,7 +34,7 @@ const MainContent = styled("main")(({ theme, isSidebarOpen }) => ({
   flex: "1 1 auto",
   overflow: "hidden",
   marginRight: isSidebarOpen ? "270px" : "0", // Updated: Dynamic marginRight
-  marginLeft: isSidebarOpen ? "0" : "25px", // Updated: Dynamic marginLeft
+  marginLeft: isSidebarOpen ? "0" : "10", // Updated: Dynamic marginLeft
   transition: "margin 0.3s ease", // Updated: Transition for both marginRight and marginLeft
   width: '100vw',
   flexDirection: "row-reverse"
@@ -47,24 +49,21 @@ function Layout() {
   };
 
   useEffect(() => {
-    // Function to force Data Grid to resize when sidebar is collapsed
     const handleResize = () => {
       if (!isSidebarOpen) {
         window.dispatchEvent(new Event("resize"));
       }
     };
 
-    // Attach event listener
     window.addEventListener("resize", handleResize);
 
-    // Clean up event listener on component unmount
     return () => {
       window.removeEventListener("resize", handleResize);
     };
   }, [isSidebarOpen]);
 
   return (
-    <Main>
+    <Main dir="rtl">
       <RTLSideBar
         isOpen={isSidebarOpen}
         onClose={handleSidebarToggle}
@@ -88,11 +87,10 @@ function Layout() {
 }
 
 export default Layout;
-*/
 
 
 //LTR
-
+/*
 import React from "react";
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
@@ -151,3 +149,4 @@ function Layout() {
 }
 
 export default Layout;
+*/

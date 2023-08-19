@@ -6,6 +6,10 @@ import { CheckCircleOutline } from "@mui/icons-material/";
 
 // Project Imports
 import { GetTasksApi } from "../Service/GetTasksApi";
+import { deleteTasks } from "../Service/DeleteTask";
+
+// icons
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 function StatusColor(status) {
   switch (status) {
@@ -24,16 +28,31 @@ function StatusColor(status) {
   }
 }
 
-const TasksDataGrid = ({ EvaluateTask, deleteTasks }) => {
+const TasksDataGrid = ({ EvaluateTask, pageSize, pageNumber, selectedStatus, selectedTaskType }) => {
   const theme = useTheme();
   const [tasks, setTasks] = useState([]);
   useEffect(() => {
     const setTasksView = async () => {
-      const response = await GetTasksApi();
+      const response = await GetTasksApi(pageSize, pageNumber, selectedStatus, selectedTaskType);
       setTasks(response);
     };
     setTasksView();
-  }, []);
+  }, [pageSize, pageNumber, selectedStatus, selectedTaskType]);
+
+  const [taskToDelete, setTaskToDelete] = useState(null);
+
+  const handleDeleteTask = async (taskIdToDelete) => {
+    try {
+      await deleteTasks(taskIdToDelete); // Call your deleteTask API function
+      const updatedTasks = tasks.filter((task) => task.id !== taskIdToDelete);
+      setTasks(updatedTasks);
+    } catch (error) {
+      console.error("Error deleting task:", error);
+    }
+  };
+
+
+
 
   const columns = [
     {
@@ -86,7 +105,6 @@ const TasksDataGrid = ({ EvaluateTask, deleteTasks }) => {
         />
       ),
     },
-
     {
       field: "Action",
       headerName: "Action",
@@ -94,9 +112,9 @@ const TasksDataGrid = ({ EvaluateTask, deleteTasks }) => {
         <IconButton
           variant="contained"
           color="primary"
-          onClick={() => deleteTasks(params.row.taskId)}
+          onClick={() => handleDeleteTask(params.row.id)}
         >
-          Delete
+          <DeleteForeverIcon />
         </IconButton>
       ),
     },

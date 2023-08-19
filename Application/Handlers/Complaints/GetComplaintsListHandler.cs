@@ -32,6 +32,7 @@ namespace Application.Handlers.Complaints
             var query =
                 from c in _context.Complaints
                 join u in _context.Users on c.intUserID equals u.Id
+                join ui in _context.UserInfos on u.intUserInfoId equals ui.intId
                 join ct in _context.ComplaintTypes on c.intTypeId equals ct.intId
                 join cs in _context.ComplaintStatus on c.intStatusId equals cs.intId
                 join cp in _context.ComplaintPrivacy on c.intPrivacyId equals cp.intId
@@ -39,6 +40,8 @@ namespace Application.Handlers.Complaints
                 {
                     Complaint = c,
                     u.UserName,
+                    ui.strFirstName,
+                    ui.strLastName,
                     c.intTypeId,
                     ComplaintTypeEn = ct.strNameEn,
                     ComplaintTypeAr = ct.strNameAr,
@@ -65,6 +68,8 @@ namespace Application.Handlers.Complaints
                         {
                             intComplaintId = c.Complaint.intId,
                             strUserName = c.UserName,
+                            strFirstName = c.strFirstName,
+                            strLastName = c.strLastName,
                             dtmDateCreated = c.Complaint.dtmDateCreated,
                             intTypeId = c.intTypeId,
                             strComplaintTypeEn = c.ComplaintTypeEn,
@@ -86,7 +91,21 @@ namespace Application.Handlers.Complaints
                                     c.Complaint.intReminder
                                     + (c.UpVotes - c.DownVotes)
                                     + (DateTime.UtcNow.Ticks - c.Complaint.dtmDateCreated.Ticks)
+                                ),
+                            lstMedia = request.blnIncludePictures ? c.Complaint.Attachments
+                                .Select(
+                                    ca =>
+                                        new Media
+                                        {
+                                            Data = File.Exists(ca.strMediaRef)
+                                                ? Convert.ToBase64String(
+                                                    File.ReadAllBytes(ca.strMediaRef)
+                                                )
+                                                : string.Empty,
+                                            IsVideo = ca.blnIsVideo
+                                        }
                                 )
+                                .ToList():null,
                         }
                 )
                 .ToListAsync();
@@ -133,6 +152,19 @@ namespace Application.Handlers.Complaints
                 queryObject = queryObject
                     .Where(q => q.dtmDateCreated >= request.filter.dtmDateCreated)
                     .ToList();
+
+            if (request.filter.lstComplaintPrivacyIds.Count > 0)
+            {
+                var predicate = PredicateBuilder.New<ComplaintsListDTO>();
+                foreach (var filter in request.filter.lstComplaintPrivacyIds)
+                {
+                    var tempFilter = filter;
+                    predicate = predicate.Or(q => q.intPrivacyId == tempFilter);
+
+                }
+                queryObject = queryObject.Where(predicate).ToList();
+
+            }
 
             // NOT OPTIMIZED USE OTHER REFERENCES FOR HELP
             var result = await PagedList<ComplaintsListDTO>.CreateAsync(

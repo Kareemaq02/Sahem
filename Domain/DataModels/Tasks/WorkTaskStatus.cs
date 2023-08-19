@@ -13,5 +13,9 @@ namespace Domain.DataModels.Tasks
         [Column("NAME")]
         [Required]
         public string strName { get; set; }
+
+        [Column("NAME_AR")]
+        [Required]
+        public string strNameAr { get; set; }
     }
 }

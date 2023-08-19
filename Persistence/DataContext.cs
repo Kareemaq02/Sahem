@@ -114,6 +114,21 @@ namespace Persistence
                 .WithMany(q => q.Voters)
                 .HasForeignKey(q => q.intComplaintId);
 
+            // Complaint_Watchers intersection table
+            builder.Entity<ComplaintWatchers>(
+                q => q.HasKey(q => new { q.intUserId, q.intComplaintId })
+            );
+            builder
+                .Entity<ComplaintWatchers>()
+                .HasOne(q => q.User)
+                .WithMany(q => q.ComplaintsWatched)
+                .HasForeignKey(q => q.intUserId);
+            builder
+                .Entity<ComplaintWatchers>()
+                .HasOne(q => q.Complaint)
+                .WithMany(q => q.Watchers)
+                .HasForeignKey(q => q.intComplaintId);
+
             // Complaint_Statuses intersection table
             builder.Entity<ComplaintsStatuses>(
                 q => q.HasKey(q => new { q.intComplaintId, q.intStatusId })
@@ -132,11 +147,6 @@ namespace Persistence
             // Complaint_Attachment table
             builder.Entity<ComplaintAttachment>(
                 q => q.HasKey(q => new { q.intComplaintId, q.strMediaRef })
-            );
-
-            // Tasks_Attachments table
-            builder.Entity<WorkTaskAttachment>(
-                q => q.HasKey(q => new { q.intTaskId, q.strMediaRef })
             );
 
             // Task_Members intersection table
@@ -206,6 +216,7 @@ namespace Persistence
         public DbSet<ComplaintVoters> ComplaintVoters { get; set; }
         public DbSet<ComplaintAttachment> ComplaintAttachments { get; set; }
         public DbSet<ComplaintsStatuses> ComplaintsStatuses { get; set; }
+        public DbSet<ComplaintWatchers> ComplaintWatchers { get; set; }
 
         // Users DataSets
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
@@ -218,7 +229,6 @@ namespace Persistence
         public DbSet<WorkTaskType> TaskTypes { get; set; }
         public DbSet<WorkTaskMembers> TaskMembers { get; set; }
         public DbSet<WorkTaskComplaints> TasksComplaints { get; set; }
-        public DbSet<WorkTaskAttachment> TaskAttachments { get; set; }
 
         // Departments DataSets
         public DbSet<Department> Departments { get; set; }

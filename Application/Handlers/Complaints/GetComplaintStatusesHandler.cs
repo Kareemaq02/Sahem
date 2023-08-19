@@ -1,12 +1,9 @@
 ﻿using Application.Core;
 using Application.Queries.Complaints;
 using Domain.ClientDTOs.Complaint;
-using Domain.DataModels.Complaints;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
-using System.IO;
 
 namespace Application.Handlers.Complaints
 {
@@ -37,6 +34,19 @@ namespace Application.Handlers.Complaints
                         }
                 )
                 .ToListAsync();
+
+            foreach (var dto in result)
+            {
+                var status = await _context.ComplaintStatus
+                    .Where(cs => cs.intId == dto.intComplaintStatusId)
+                    .FirstOrDefaultAsync(cancellationToken: cancellationToken);
+
+                if (status != null)
+                {
+                    dto.strStatusName = status.strName;
+                    dto.strStatusNameAr = status.strNameAr;
+                }
+            }
 
             if (result.Count == 0)
             {

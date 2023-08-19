@@ -15,6 +15,9 @@ import { styled } from '@mui/material/styles';
 import { Inbox, Mail, ChevronLeft, ChevronRight } from '@mui/icons-material';
 import GetMenus from "../../../Routes/SideBarMenus";
 
+// css style
+import "../Components/style.css"
+
 const RTLSideBar = ({ isOpen, onClose, user }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [activeListItem, setActiveListItem] = useState(null);

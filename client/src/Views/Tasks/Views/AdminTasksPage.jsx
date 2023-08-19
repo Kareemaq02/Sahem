@@ -10,6 +10,7 @@ import {
   Typography,
   useTheme,
   SwipeableDrawer,
+  Grid,
 } from "@mui/material";
 
 // Project Imports
@@ -22,6 +23,7 @@ import FormRatingGroup from "../../../Common/Components/UI/FormFields/FormRating
 import FormRowRadioGroup from "../../../Common/Components/UI/FormFields/FormRadioGroup";
 import TasksDataGrid from "../Components/TasksDataGrid";
 import ScrollableContent from "../../../Common/Components/ScrollableContent";
+import CustomFilter from "../Components/CustomFilter";
 
 const testPhotos = [
   {
@@ -43,6 +45,10 @@ const AdminTasksPage = () => {
   const methods = useForm();
   const theme = useTheme();
   const [taskPhotos, setTaskPhotos] = useState(testPhotos);
+  const [taskId, setTaskId] = useState(testPhotos);
+  const [selectedStatus, setSelectedStatus] = useState([]);
+  const [selectedTypes, setSelectedTypes] = useState([]);
+  const [selectedComplaintTypes, setSelectedComplaintTypes] = useState([]);
   const [taskData, setTaskData] = useState({
     taskId: 0,
     taskStatus: null,
@@ -70,68 +76,80 @@ const AdminTasksPage = () => {
     setSnackbarOpen(false);
   };
 
+  const handleComplaintStatusChange = (selectedStatusId) => {
+    setSelectedStatus(selectedStatusId);
+  };
+
+  const handleComplaintTypesChange = (selectedComplaintTypeIds) => {
+    setSelectedComplaintTypes(selectedComplaintTypeIds);
+  };
+
   return (
     <div>
       <Typography variant="h1">Evaluate task</Typography>
-      <TasksDataGrid
-        EvaluateTask={async (id, admin) => {
-          const data = await GetTaskDetailsApi(id);
-          setTaskPhotos(data.photos);
-          setTaskData({ taskId: id, ...data, admin: admin, photos: null });
-          setDrawerOpen(true);
-        }}
-        deleteTasks={async (taskId) => {
-          const success = await deleteTasks(taskId);
-          if (success) {
-            setTaskId((prevTasks) =>
-              prevTasks.filter((task) => task.id !== taskId)
-            );
-          }
-        }}
-      />
-      <SwipeableDrawer
-        anchor="right"
-        open={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
-        onOpen={() => setDrawerOpen(true)}
-      >
-        <ScrollableContent>
-          <FormProvider {...methods}>
-            <form onSubmit={methods.handleSubmit(onSubmit)}>
-              <Stack spacing={2} width="32.5vw">
-                <MediaGallery
-                  items={taskPhotos}
-                  height="25rem"
-                  width="auto"
-                  borderRadius="1rem"
-                />
-                <TaskDetails theme={theme} taskData={taskData} />
-                <FormRatingGroup name="rating" />
-                <FormTextFieldMulti label="Comment" name="comment" />
-                <FormRowRadioGroup
-                  name="status"
-                  radioLabel="Status"
-                  labels={radioOptions}
-                />
-                <Button
-                  type="submit"
-                  color="primary"
-                  variant="contained"
-                  sx={{ borderRadius: "1rem" }}
-                >
-                  Next
-                </Button>
-              </Stack>
-            </form>
-          </FormProvider>
-        </ScrollableContent>
-      </SwipeableDrawer>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={2000}
-        onClose={handleCloseSnackbar}
-        message={snackbarMessage}
-      />
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={8}>
+          <TasksDataGrid
+            EvaluateTask={async (id, admin) => {
+              const data = await GetTaskDetailsApi(id);
+              setTaskPhotos(data.photos);
+              setTaskData({ taskId: id, ...data, admin: admin, photos: null });
+              setDrawerOpen(true);
+            }}
+            pageNumber={1}
+            pageSize={15}
+            selectedStatus={selectedStatus}
+            selectedTaskType={selectedComplaintTypes}
+          />
+          <SwipeableDrawer
+            anchor="right"
+            open={drawerOpen}
+            onClose={() => setDrawerOpen(false)}
+            onOpen={() => setDrawerOpen(true)}
+          >
+            <ScrollableContent>
+              <FormProvider {...methods}>
+                <form onSubmit={methods.handleSubmit(onSubmit)}>
+                  <Stack spacing={2} width="32.5vw">
+                    <MediaGallery
+                      items={taskPhotos}
+                      height="25rem"
+                      width="auto"
+                      borderRadius="1rem"
+                    />
+                    <TaskDetails theme={theme} taskData={taskData} />
+                    <FormRatingGroup name="rating" />
+                    <FormTextFieldMulti label="Comment" name="comment" />
+                    <FormRowRadioGroup
+                      name="status"
+                      radioLabel="Status"
+                      labels={radioOptions}
+                    />
+                    <Button
+                      type="submit"
+                      color="primary"
+                      variant="contained"
+                      sx={{ borderRadius: "1rem" }}
+                    >
+                      Next
+                    </Button>
+                  </Stack>
+                </form>
+              </FormProvider>
+            </ScrollableContent>
+          </SwipeableDrawer>
+          <Snackbar
+            open={snackbarOpen}
+            autoHideDuration={2000}
+            onClose={handleCloseSnackbar}
+            message={snackbarMessage}
+          />
+        </Grid>
+
+        <Grid item xs={12} md={4}>
+          <CustomFilter onComplaintStatusChange={handleComplaintStatusChange} onComplaintTypesChange={handleComplaintTypesChange} />
+        </Grid>
+      </Grid>
     </div>
   );
 };

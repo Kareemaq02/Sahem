@@ -74,7 +74,7 @@ namespace Application.Handlers.Complaints
                             return Result<SubmitTaskDTO>.Failure("No file was Uploaded.");
                         }
 
-                        var taskAttatchments = new List<WorkTaskAttachment>();
+                        var taskAttatchments = new List<ComplaintAttachment>();
                         foreach (var media in lstMedia)
                         {
                             string extension = Path.GetExtension(media.fileMedia.FileName);
@@ -96,18 +96,20 @@ namespace Application.Handlers.Complaints
                             await media.fileMedia.CopyToAsync(stream, cancellationToken);
 
                             taskAttatchments.Add(
-                                new WorkTaskAttachment
+                                new ComplaintAttachment
                                 {
-                                    intTaskId = request.id,
+                                    intComplaintId = request.id,
                                     strMediaRef = filePath,
                                     blnIsVideo = media.blnIsVideo,
                                     dtmDateCreated = DateTime.UtcNow,
-                                    intCreatedBy = userId
+                                    intCreatedBy = userId,
+                                    blnIsFromWorker = true
                                 }
                             );
                         }
 
-                        await _context.TaskAttachments.AddRangeAsync(taskAttatchments);
+                        // Alter it to link the attachment with the complaint, not the task
+                        //await _context.TaskAttachments.AddRangeAsync(taskAttatchments);
                         await _context.SaveChangesAsync(cancellationToken);
                         await transaction.CommitAsync();
                     }

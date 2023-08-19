@@ -5,6 +5,6 @@ using MediatR;
 
 namespace Application.Queries.Complaints
 {
-    public record GetComplaintsListQuery(ComplaintsFilter filter, string strUserName)
+    public record GetComplaintsListQuery(ComplaintsFilter filter, string strUserName, bool blnIncludePictures)
         : IRequest<Result<PagedList<ComplaintsListDTO>>>;
 }

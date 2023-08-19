@@ -93,17 +93,46 @@ namespace Persistence
             {
                 var complaintStatus = new List<ComplaintStatus>
                 {
-                    new ComplaintStatus { strName = ConstantsDB.ComplaintStatusTypes.Pending },
-                    new ComplaintStatus { strName = ConstantsDB.ComplaintStatusTypes.Rejected },
-                    new ComplaintStatus { strName = ConstantsDB.ComplaintStatusTypes.Approved },
-                    new ComplaintStatus { strName = ConstantsDB.ComplaintStatusTypes.Scheduled },
-                    new ComplaintStatus { strName = ConstantsDB.ComplaintStatusTypes.InProgress },
                     new ComplaintStatus
                     {
-                        strName = ConstantsDB.ComplaintStatusTypes.WaitingEvaluation
+                        strName = ConstantsDB.ComplaintStatusTypes.Pending,
+                        strNameAr = ConstantsDB.ComplaintStatusTypes.PendingAr
                     },
-                    new ComplaintStatus { strName = ConstantsDB.ComplaintStatusTypes.Completed },
-                    new ComplaintStatus { strName = ConstantsDB.ComplaintStatusTypes.ReFiled }
+                    new ComplaintStatus
+                    {
+                        strName = ConstantsDB.ComplaintStatusTypes.Rejected,
+                        strNameAr = ConstantsDB.ComplaintStatusTypes.RejectedAr
+                    },
+                    new ComplaintStatus
+                    {
+                        strName = ConstantsDB.ComplaintStatusTypes.Approved,
+                        strNameAr = ConstantsDB.ComplaintStatusTypes.ApprovedAr
+                    },
+                    new ComplaintStatus
+                    {
+                        strName = ConstantsDB.ComplaintStatusTypes.Scheduled,
+                        strNameAr = ConstantsDB.ComplaintStatusTypes.ScheduledAr
+                    },
+                    new ComplaintStatus
+                    {
+                        strName = ConstantsDB.ComplaintStatusTypes.InProgress,
+                        strNameAr = ConstantsDB.ComplaintStatusTypes.InProgressAr
+                    },
+                    new ComplaintStatus
+                    {
+                        strName = ConstantsDB.ComplaintStatusTypes.WaitingEvaluation,
+                        strNameAr = ConstantsDB.ComplaintStatusTypes.WaitingEvaluationAr
+                    },
+                    new ComplaintStatus
+                    {
+                        strName = ConstantsDB.ComplaintStatusTypes.Completed,
+                        strNameAr = ConstantsDB.ComplaintStatusTypes.CompletedAr
+                    },
+                    new ComplaintStatus
+                    {
+                        strName = ConstantsDB.ComplaintStatusTypes.ReFiled,
+                        strNameAr = ConstantsDB.ComplaintStatusTypes.ReFiledAr
+                    }
                 };
                 await context.ComplaintStatus.AddRangeAsync(complaintStatus);
             }
@@ -280,12 +309,36 @@ namespace Persistence
             {
                 var taskStatus = new List<WorkTaskStatus>
                 {
-                    new WorkTaskStatus { strName = ConstantsDB.TaskStatusTypes.Inactive },
-                    new WorkTaskStatus { strName = ConstantsDB.TaskStatusTypes.InProgress },
-                    new WorkTaskStatus { strName = ConstantsDB.TaskStatusTypes.WaitingEvaluation },
-                    new WorkTaskStatus { strName = ConstantsDB.TaskStatusTypes.Failed },
-                    new WorkTaskStatus { strName = ConstantsDB.TaskStatusTypes.Incomplete },
-                    new WorkTaskStatus { strName = ConstantsDB.TaskStatusTypes.Completed },
+                    new WorkTaskStatus
+                    {
+                        strName = ConstantsDB.TaskStatusTypes.Inactive,
+                        strNameAr = ConstantsDB.TaskStatusTypes.InactiveAr
+                    },
+                    new WorkTaskStatus
+                    {
+                        strName = ConstantsDB.TaskStatusTypes.InProgress,
+                        strNameAr = ConstantsDB.TaskStatusTypes.InProgressAr
+                    },
+                    new WorkTaskStatus
+                    {
+                        strName = ConstantsDB.TaskStatusTypes.WaitingEvaluation,
+                        strNameAr = ConstantsDB.TaskStatusTypes.WaitingEvaluationAr
+                    },
+                    new WorkTaskStatus
+                    {
+                        strName = ConstantsDB.TaskStatusTypes.Failed,
+                        strNameAr = ConstantsDB.TaskStatusTypes.FailedAr
+                    },
+                    new WorkTaskStatus
+                    {
+                        strName = ConstantsDB.TaskStatusTypes.Incomplete,
+                        strNameAr = ConstantsDB.TaskStatusTypes.IncompleteAr
+                    },
+                    new WorkTaskStatus
+                    {
+                        strName = ConstantsDB.TaskStatusTypes.Completed,
+                        strNameAr = ConstantsDB.TaskStatusTypes.CompletedAr
+                    },
                 };
                 await context.TaskStatus.AddRangeAsync(taskStatus);
             }
