@@ -2,6 +2,7 @@
 // ignore_for_file: must_be_immutable, unused_local_variable, file_names
 
 import 'package:account/Repository/color.dart';
+import 'package:account/Screens/File%20complaint/complaints1.dart';
 import 'package:account/Screens/Home/public_feed.dart';
 import 'package:account/Screens/Map/map_view.dart';
 import 'package:account/Screens/Profile/profile.dart';
@@ -149,7 +150,9 @@ class CustomActionButton extends StatelessWidget {
 
         InkWell(
         
-        onTap: () {print('click on edit');},
+        onTap: () {
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const FileCompalint()));
+        },
          child: const Image(
           image: AssetImage('assets/icons/FillComplaintIcon.png'),
           fit: BoxFit.cover,
