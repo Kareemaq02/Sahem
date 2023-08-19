@@ -3,82 +3,105 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ComplaintModel2 {
-  final int intId;
-  final String strUserName;
-  final String dtmDateCreated;
-  final String dtmDateFinished;
-  final String strComplaintTypeEn;
-  final String strComplaintTypeAr;
-  final String? strComment;
-  final String? strStatus;
-  final int intPrivacyId;
-  final int intVotersCount;
-  final double? decLat;
-  final double? decLng;
-  final  decPriority;
-  //final List<dynamic> lstMedia;
-  final bool? blnIsVideo;
+ 
+  int intComplaintId;
+  String strUserName;
+  DateTime dtmDateCreated;
+  DateTime dtmDateFinished;
+  int intTypeId;
+  String strComplaintTypeEn;
+  String strComplaintTypeAr;
+  String strComment;
+  int intStatusId;
+  String strStatus;
+  int intPrivacyId;
+  String strPrivacyAr;
+  String strPrivacyEn;
+  int intVoted;
+  int intVotersCount;
+  LatLng1 latLng;
+  double decPriority;
 
   ComplaintModel2({
-    required this.intId,
+    required this.intComplaintId,
     required this.strUserName,
     required this.dtmDateCreated,
     required this.dtmDateFinished,
+    required this.intTypeId,
     required this.strComplaintTypeEn,
     required this.strComplaintTypeAr,
     required this.strComment,
+    required this.intStatusId,
     required this.strStatus,
     required this.intPrivacyId,
+    required this.strPrivacyAr,
+    required this.strPrivacyEn,
+    required this.intVoted,
     required this.intVotersCount,
-    required this.decLat,
-    required this.decLng,
+    required this.latLng,
     required this.decPriority,
-    //required this.lstMedia,
-    required this.blnIsVideo,
   });
-
-  factory ComplaintModel2.fromJson(Map<String, dynamic> json) {
+ factory ComplaintModel2.fromJson(Map<String, dynamic> json) {
     return ComplaintModel2(
-      intId: json['intComplaintId'],
+      intComplaintId: json['intComplaintId'],
       strUserName: json['strUserName'],
-      dtmDateCreated: json['dtmDateCreated'],
-      dtmDateFinished: json['dtmDateFinished'],
+      dtmDateCreated: DateTime.parse(json['dtmDateCreated']),
+      dtmDateFinished: DateTime.parse(json['dtmDateFinished']),
+      intTypeId: json['intTypeId'],
       strComplaintTypeEn: json['strComplaintTypeEn'],
       strComplaintTypeAr: json['strComplaintTypeAr'],
       strComment: json['strComment'],
+      intStatusId: json['intStatusId'],
       strStatus: json['strStatus'],
       intPrivacyId: json['intPrivacyId'],
+      strPrivacyAr: json['strPrivacyAr'],
+      strPrivacyEn: json['strPrivacyEn'],
+      intVoted: json['intVoted'],
       intVotersCount: json['intVotersCount'],
-      decLat: json['decLat'],
-      decLng: json['decLng'],
+      latLng: LatLng1(
+        decLat: json['latLng']['decLat'],
+        decLng: json['latLng']['decLng'],
+      ),
       decPriority: json['decPriority'],
-      //lstMedia: json['lstMedia'],
-      blnIsVideo: json['blnIsVideo'],
     );
   }
+  
+}
+class LatLng1{
+    double decLat=0.0;
+    double decLng=0.0;
+
+    LatLng1({
+        required this.decLat,
+        required this.decLng,
+    });
+
 }
 
+
+
+
+
 class getUsersComplaint {
-  String token2="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFidXJ1bW1hbm4iLCJmaXJzdE5hbWUiOiJydWJhIiwibGFzdE5hbWUiOiJhYnVydW1tYW4iLCJwaG9uZU51bWJlciI6IjA3OTg5ODk5OTkiLCJ1c2VyVHlwZSI6InVzZXIiLCJuYmYiOjE2ODg2NDUyOTgsImV4cCI6MTY5MTIzNzI5OCwiaWF0IjoxNjg4NjQ1Mjk4fQ.b9clyTj4T7T46N81pRLKJKTfpxMPzncEUR5S72m1EPA";
+  final String apiUrl = "https://10.0.2.2:5000/api/complaints";
+  
+
   Future<List<ComplaintModel2>> getComplaints() async {
-    var baseUrl = "https://10.0.2.2:5000/api/complaints";
-
-    http.Response response = await http.get(
-      Uri.parse(baseUrl),
-      headers: {'Authorization': 'Bearer $token2'},
-    );
-    print(response.body);
-    print(response.statusCode);
-
+       String token2='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXJuYW1lIiwiZmlyc3ROYW1lIjoiZmlyc3QiLCJsYXN0TmFtZSI6Imxhc3QiLCJwaG9uZU51bWJlciI6IjAxMjM0NTY3ODkiLCJ1c2VyVHlwZSI6InVzZXIiLCJuYmYiOjE2ODg2NTEwMDYsImV4cCI6MTY5MTI0MzAwNiwiaWF0IjoxNjg4NjUxMDA2fQ.NJPnHG4WNtnelTqJm7KNGY4Jf6j3j7XZ5zOMHpALDBM';
+  var baseUrl = "https://10.0.2.2:5000/api/complaints";
+  http.Response response = await http.get(
+    Uri.parse(baseUrl),
+    headers: {
+      'Authorization': 'Bearer $token2',
+    },
+  );
+  
     if (response.statusCode == 200) {
-      var jsonData = json.decode(response.body) as List<dynamic>;
-      List<ComplaintModel2> complaints = [];
-
-      jsonData.forEach((complaintData) {
-        var complaint = ComplaintModel2.fromJson(complaintData);
-        complaints.add(complaint);
-      });
-
+      final jsonData = json.decode(response.body) as List<dynamic>;
+      List<ComplaintModel2> complaints = jsonData
+          .map((complaintData) => ComplaintModel2.fromJson(complaintData))
+          .toList();
+          print(complaints.length);
       return complaints;
     } else {
       throw Exception('Failed to get complaints. Status code: ${response.statusCode}');

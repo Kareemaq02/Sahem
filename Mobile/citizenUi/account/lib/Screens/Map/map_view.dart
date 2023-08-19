@@ -31,9 +31,22 @@ var currentLocation = MapConstants.myLocation;
 
 void _fetchComplaints() async {
   try {
-    List<ComplaintModel2> complaints = await _complaintApi.getComplaints();
+    _complaints = await _complaintApi.getComplaints();
     setState(() {
-      _complaints = complaints;
+      _complaints = _complaints;
+    });
+  } catch (error) {
+    print('Failed to fetch complaints: $error');
+   
+  }
+}
+
+void _fetchFilteredComplaints() async {
+  try {
+    _complaints = await _complaintApi.getComplaints();
+    setState(() {
+      _complaints = _complaints;
+
     });
   } catch (error) {
     print('Failed to fetch complaints: $error');
@@ -84,11 +97,14 @@ late final MapController mapController;
               ),
           MarkerLayerOptions(
            markers: [
-           for (int i = 0; i < mapMarkers3.length; i++)
+           for (int i = 0; i < _complaints.length; i++)
                    map.Marker(
                       height: 40 ,
                       width: 40,
-                      point: mapMarkers3[i].location ?? MapConstants.myLocation,
+                      point: LatLng(
+           _complaints[i].latLng.decLat ,
+          _complaints[i].latLng.decLng,
+        ) ?? MapConstants.myLocation,
                    
                       builder: (_) {
                         return GestureDetector(
@@ -99,7 +115,10 @@ late final MapController mapController;
                               curve: Curves.easeInOut,
                             );
                             selectedIndex = i;
-                            currentLocation = mapMarkers3[i].location ??
+                            currentLocation = LatLng(
+           _complaints[i].latLng!.decLat ,
+          _complaints[i].latLng!.decLng,
+        ) ?? MapConstants.myLocation ??
                                 MapConstants.myLocation;
                                 
                             _animatedMapMove(currentLocation, 11.5);
@@ -137,7 +156,10 @@ late final MapController mapController;
               controller: pageController,
               onPageChanged: (value) {
                selectedIndex = value;
-              mapMarkers3[value].location ?? MapConstants.myLocation;
+             LatLng(
+           _complaints[value].latLng!.decLat ,
+          _complaints[value].latLng!.decLng,
+        ) ?? MapConstants.myLocation ?? MapConstants.myLocation;
                 _animatedMapMove(currentLocation, 11.5);
 //                currentLocation = LatLng(
 //   MapMarker3[] ?? MapConstants.myLocation.latitude,
@@ -170,7 +192,7 @@ late final MapController mapController;
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      item.strComplaintTypeEn,
+                                      item.strComplaintTypeEn.toString(),
                                       style: const TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold,
@@ -178,7 +200,7 @@ late final MapController mapController;
                                     ),
                                     const SizedBox(height: 10),
                                     Text(
-                                      item.intId.toString(),
+                                      item.intComplaintId.toString(),
                                       style: const TextStyle(
                                         fontSize: 14,
                                         color: Colors.grey,
