@@ -25,6 +25,10 @@ import TasksDataGrid from "../Components/TasksDataGrid";
 import ScrollableContent from "../../../Common/Components/ScrollableContent";
 import CustomFilter from "../Components/CustomFilter";
 
+// icons 
+import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
+import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
+
 const testPhotos = [
   {
     media: "https://picsum.photos/id/10/800",
@@ -60,6 +64,9 @@ const AdminTasksPage = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [pageNumber, setPageNumber] = useState(1);
+  const pageSize = 15;
+
 
   const onSubmit = (data) => {
     console.log(data, taskData.taskId);
@@ -83,6 +90,15 @@ const AdminTasksPage = () => {
   const handleComplaintTypesChange = (selectedComplaintTypeIds) => {
     setSelectedComplaintTypes(selectedComplaintTypeIds);
   };
+  const handleArrowUp = () => {
+    setPageNumber((prevPageNumber) => prevPageNumber + 1);
+  };
+
+  const handleArrowDown = () => {
+    if (pageNumber > 1) {
+      setPageNumber((prevPageNumber) => prevPageNumber - 1);
+    }
+  };
 
   return (
     <div>
@@ -96,11 +112,24 @@ const AdminTasksPage = () => {
               setTaskData({ taskId: id, ...data, admin: admin, photos: null });
               setDrawerOpen(true);
             }}
-            pageNumber={1}
-            pageSize={15}
+            pageNumber={pageNumber}
+            pageSize={pageSize}
             selectedStatus={selectedStatus}
             selectedTaskType={selectedComplaintTypes}
           />
+
+          <div style={{ textAlign: "center", }}>
+            <ArrowCircleDownIcon
+              onClick={handleArrowUp}
+              style={{ cursor: "pointer", marginRight: "1rem" }}
+            />
+            <ArrowCircleUpIcon
+              onClick={handleArrowDown}
+              style={{ cursor: "pointer" }}
+            />
+          </div>
+
+
           <SwipeableDrawer
             anchor="right"
             open={drawerOpen}
