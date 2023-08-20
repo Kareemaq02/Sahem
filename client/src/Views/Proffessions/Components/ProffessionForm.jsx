@@ -1,7 +1,7 @@
 import { FormProvider, useForm } from "react-hook-form";
 
 import FormTextField from "../../../Common/Components/UI/FormFields/FormTextField";
-import { Button } from "@mui/material";
+import { Button, Paper, Typography } from "@mui/material";
 import ProffessionApi from "../Service/ProffessionApi";
 
 const ProffessionForm = () => {
@@ -18,19 +18,22 @@ const ProffessionForm = () => {
   };
 
   return (
-    <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit(onSubmit)}>
-        <FormTextField name="strNameAr" label="Arabic Name" />
-        <br />
-        <br />
-        <FormTextField name="strNameEn" label="English Name" />
-        <br />
-        <br />
-        <Button variant="contained" type="submit" sx={{ width: "100%" }}>
-          Add
-        </Button>
-      </form>
-    </FormProvider>
+    <Paper sx={{p:2, borderRadius:'25px'}}>
+      <Typography variant="h2" sx={{p:1, textAlign:'center'}}>Insert Proffesions </Typography>
+      <FormProvider {...methods}>
+        <form onSubmit={methods.handleSubmit(onSubmit)}>
+          <FormTextField name="strNameAr" label="Arabic Name" />
+          <br />
+          <br />
+          <FormTextField name="strNameEn" label="English Name" />
+          <br />
+          <br />
+          <Button variant="contained" type="submit" sx={{ width: "100%" }}>
+            Add
+          </Button>
+        </form>
+      </FormProvider>
+    </Paper>
   );
 };
 
