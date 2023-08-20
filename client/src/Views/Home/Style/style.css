@@ -1,4 +1,4 @@
-.filterStyle{
+.filterStyle {
     border-radius: 25px;
 }
 
@@ -6,8 +6,28 @@ h4 {
     padding: 4px;
 }
 
-.stay{
+.stay {
     width: 80%;
     float: left;
     overflow: hidden;
 }
+
+/* Add these styles to your existing CSS */
+.status-box {
+    display: none;
+    position: absolute;
+    background-color: rgba(255, 251, 251, 0.8);
+    color: rgb(206, 28, 28);
+    padding: 8px;
+    border-radius: 16px;
+    z-index: 1; /* To ensure the box appears above the card content */
+    left: 45%;
+    margin-top: 80px;
+  }
+  
+  .status-chip:hover + .status-box {
+    display: block;
+  }
+  
+
+  
