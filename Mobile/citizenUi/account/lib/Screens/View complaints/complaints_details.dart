@@ -2,7 +2,13 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:account/API/view_complaint_request.dart';
+import 'package:account/Repository/color.dart';
+import 'package:account/Widgets/appBar.dart';
+import 'package:account/Widgets/bottomNavBar.dart';
+import 'package:account/Widgets/myContainer.dart';
 import 'package:flutter/material.dart';
+import 'package:timelines/timelines.dart';
+import 'package:page_indicator/page_indicator.dart';
 
 class ComplaintDetailsScreen extends StatefulWidget {
   final List<ComplaintModel> complaints;
@@ -15,180 +21,195 @@ class ComplaintDetailsScreen extends StatefulWidget {
 
 class _ComplaintViewState extends State<ComplaintDetailsScreen> {
 
+ final List<String> imageList = [
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7zjk6aWDXjWiB_mMUpuxQdzMxtXbyd8M5ag&usqp=CAU',
+     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7zjk6aWDXjWiB_mMUpuxQdzMxtXbyd8M5ag&usqp=CAU',
+     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7zjk6aWDXjWiB_mMUpuxQdzMxtXbyd8M5ag&usqp=CAU',
+  ];
 
   int selectedIndex = 0;
   
   @override
   Widget build(BuildContext context) {
-    ComplaintModel complaint = widget.complaints.first;
-   
+  ComplaintModel complaint = widget.complaints.first;
+
   List<String> getImageUrls() {
   List<String> imageUrls = [];
   for (var media in complaint.lstMedia) {
-    imageUrls.add(media); // Add the media (URL) to the list
+    imageUrls.add(media.data); // Add the media data (URL) to the list
   }
   return imageUrls;
 }
+List<String> urls = getImageUrls();
+//print(urls); 
 
+ // List<String> imageUrls = getImageUrls();
 
-  List<String> imageUrls = getImageUrls();
+   
+    return  Scaffold(
 
-    return SafeArea(
-      top: true,
-      child: Align(
-        alignment: const AlignmentDirectional(0, 0),
-        child: 
-        
-        Container(
-          width: 280,
-          height: 500,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-            color: Colors.grey,
-            shape: BoxShape.rectangle,
-          ),
-          child: Column(
-            children: [
-               ElevatedButton(
-              onPressed: () {
-               
-                Navigator.pop(context); // Go back to the previous screen
-              },
-              child: const Text('Go Back'),
-            ),
-              SizedBox(
-                height: 180,
-                child: Stack(
-                  children: [
-                    PageView.builder(
-                      itemCount: imageUrls.length,
-                      onPageChanged: (index) {
-                        setState(() {
-                          selectedIndex = index;
-                        });
-                      },
-                      itemBuilder: (context, index) {
-                        return _buildImageCard(imageUrls[index]);
-                      },
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(imageUrls.length, (index) {
-                          return _buildImageIndicator(index);
-                        }),
+      backgroundColor:AppColor.background,
+      resizeToAvoidBottomInset: false,
+      floatingActionButton:const CustomActionButton(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar:  BottomNavBar1(0),
+      appBar:myAppBar(context,'بلاغاتي',true,130),
+      body:
+       SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+         child: Column(
+          children: [
+            //pageview
+             SizedBox(
+              height: 300,
+              child: PageIndicatorContainer(
+                align: IndicatorAlign.bottom,
+                length: imageList.length,
+                indicatorSpace: 10.0,
+                padding: const EdgeInsets.all(15),
+                indicatorColor: Colors.grey,
+                indicatorSelectorColor: Colors.blue,
+                shape: IndicatorShape.circle(size: 7),
+                child: PageView.builder(
+                  itemCount: imageList.length,
+                  itemBuilder: (context, position) {
+                    return Container(
+                      padding: const EdgeInsets.fromLTRB(5, 5, 5, 10),
+                      child: Container(
+                        //height: ,
+                        color: AppColor.background,
+                        child: Image.network(
+                          imageList[position], // Use the correct image path here
+                          scale: 0.1,
+                          fit:BoxFit.cover,
+                        ),
                       ),
-                    ),
-                  ],
+                    );
+                  },
                 ),
               ),
-              const SizedBox(height: 16),
-              const Divider(),
-              const SizedBox(height: 16),
-              _buildDetailsContainer(
-                complaintId: complaint.intId.toString(),
-                complaintType: complaint.strComplaintTypeEn.toString(),
-                timeCreated: complaint.dtmDateCreated.toString(),
-                timeFinished: complaint.dtmDateFinished.toString(),
-                status: "Resolved",
-                address: "123 Main Street, City",
+            ),
+             // //complaintinfo
+            Padding(
+              padding: const EdgeInsets.only(left:10.0,right: 10.0),
+              child: Mycontainer(130,
+                //foregroundDecoration: BoxDecoration(borderRadius: BorderRadius.circular(10),),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Column(
+                      children:[
+                      RowInfo("رقم البلاغ",complaint.intComplaintId.toString()),
+                      RowInfo("تاريخ الاضافة ",complaint.dtmDateCreated.toString()),
+                      RowInfo("نوع البلاغ",complaint.strComplaintTypeAr.toString()),
+                      RowInfo("موقع البلاغ","ش.وصفي التل ,عمان",),
+                      
+                          ]),
+                  ),
+                ),
+            
               ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildImageCard(String imagePath) {
-    return Container(
-      width: 200,
-      margin: const EdgeInsets.symmetric(horizontal: 5),
-      child: Card(
-        elevation: 2,
-        child: Image.asset(
-          imagePath,
-          fit: BoxFit.cover,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildImageIndicator(int index) {
-    Color dotColor =
-        index == selectedIndex ? Colors.black : Colors.grey.shade400;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 6),
-      child: CircleAvatar(
-        radius: 6,
-        backgroundColor: dotColor,
-      ),
-    );
-  }
-
-  Widget _buildDetailsContainer({
-    String complaintId="",
-    String complaintType="",
-    String timeCreated="",
-    String timeFinished="",
-    String status="",
-    String address="",
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      child: Card(
-        elevation: 2,
-        child: Padding(
-          padding: const EdgeInsets.all(1),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildDetailRow("Complaint ID", complaintId),
-              const SizedBox(height: 8),
-              _buildDetailRow("Complaint Type", complaintType),
-              const SizedBox(height: 8),
-              _buildDetailRow("Time Created", timeCreated),
-              const SizedBox(height: 8),
-              _buildDetailRow("Time Finished", timeFinished),
-              const SizedBox(height: 8),
-              _buildDetailRow("Status", status),
-              const SizedBox(height: 8),
-              _buildDetailRow("Address", address),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDetailRow(String title, String value) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          flex: 1,
-          child: Text(
-            title,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
+            ),
+     
+           // //satus details
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Mycontainer(500,
+            
+             Padding(
+               padding: const EdgeInsets.only(right:90.0),
+               child: Flexible(
+                      child: FixedTimeline.tileBuilder(
+                        direction: Axis.vertical,
+                        builder: TimelineTileBuilder.connectedFromStyle(
+                           
+                          contentsAlign: ContentsAlign.basic,
+                          connectionDirection: ConnectionDirection.before,
+                          connectorStyleBuilder: (context, index) {
+                          
+                            return (index == 1)
+                                ? ConnectorStyle.dashedLine
+                                : ConnectorStyle.dashedLine;
+                          },
+                          
+                          contentsBuilder: (context, index) => 
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                             crossAxisAlignment: CrossAxisAlignment.center,
+                             mainAxisAlignment: MainAxisAlignment.spaceAround,
+                               children: [
+                                Text('Status Name $index'), // Replace with your status name
+                                const Text('Time'), // Replace with your time
+                            ],
+                                               ),
+                          ),
+                        //  const Text('Contents',style: TextStyle(fontSize: 10),),
+                          indicatorStyleBuilder: (context, index) =>
+                             
+                              IndicatorStyle.dot,
+                  
+                          itemExtent: 80.0,
+                          itemCount: 6,
+                        ),
+                      ),
+                    ),
+             ),
+            
+          
             ),
           ),
-        ),
-        Expanded(
-          flex: 2,
-          child: Text(
-            value,
-            style: const TextStyle(
-              fontSize: 14,
-              color: Colors.black54,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+    
+          ],
+             ),
+       ),
+        ) ;
+         
 }
+
+  }
+
+
+
+
+Widget RowInfo(title,value){
+  return
+  Padding(
+    padding: const EdgeInsets.all(2.0),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+      //title
+
+       Text(
+        value,
+        textDirection: TextDirection.rtl,
+        style: const TextStyle(
+          color: AppColor.secondary,
+          fontFamily: 'DroidArabicKufi',
+          fontSize:10, 
+        ),
+        ),
+      Text(
+        title,
+        style: const TextStyle(
+          color: AppColor.main,
+          fontFamily: 'DroidArabicKufi',
+          fontSize:13, 
+        ),
+        textDirection: TextDirection.rtl,
+        ),
+    
+      //value
+    
+     
+    ],),
+  );
+}
+
+
+
+
+
+
+

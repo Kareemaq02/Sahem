@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -10,9 +11,11 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230818090136_added_notifications")]
+    partial class added_notifications
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -444,10 +447,6 @@ namespace Persistence.Migrations
                         .HasColumnType("int")
                         .HasColumnName("ID");
 
-                    b.Property<bool>("blnIsRead")
-                        .HasColumnType("tinyint(1)")
-                        .HasColumnName("IS_READ");
-
                     b.Property<DateTime>("dtmDateCreated")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("DATE_CREATED");
@@ -481,10 +480,6 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("ID");
-
-                    b.Property<bool>("blnIsRead")
-                        .HasColumnType("tinyint(1)")
-                        .HasColumnName("IS_READ");
 
                     b.Property<DateTime>("dtmDateCreated")
                         .HasColumnType("datetime(6)")

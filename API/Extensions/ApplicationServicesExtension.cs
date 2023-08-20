@@ -1,4 +1,5 @@
-﻿using Application;
+﻿using API.Services;
+using Application;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -20,6 +21,7 @@ namespace API.Extensions
             services.AddMediatR(
                 cfg => cfg.RegisterServicesFromAssembly(typeof(MediatREntrypoint).Assembly)
             );
+            services.AddScoped<NotificationService>();
 
             return services;
         }

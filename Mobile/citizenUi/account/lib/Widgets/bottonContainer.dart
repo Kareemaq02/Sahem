@@ -1,17 +1,8 @@
-// ignore_for_file: file_names, non_constant_identifier_names
 
 import 'package:account/Repository/color.dart';
 import 'package:flutter/material.dart';
 
-Widget BottonContainer(
-  String text,
-  textColor,
-  Color boxColor,
-  double width
-  ,BuildContext context,
-  bool apiFlag,
-  PageName,
-  [Future<dynamic>? onPressed])
+Widget BottonContainer(String text,textColor,Color boxColor,double width,BuildContext context,bool apiFlag,PageName,[Future<dynamic>? onPressed])
 {
   return   Container(
               height:49 ,
@@ -28,11 +19,11 @@ Widget BottonContainer(
               child: 
               ElevatedButton(
       style: ButtonStyle(
-        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.zero),
+        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.zero), // Remove default padding
         backgroundColor: MaterialStateProperty.all<Color>(boxColor),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(50), 
+            borderRadius: BorderRadius.circular(50), // Same as the container border radius
             side: BorderSide(
               color:AppColor.main,
               width: 1.3,
@@ -46,7 +37,7 @@ Widget BottonContainer(
                Navigator.push(
                context,
                MaterialPageRoute(builder: (context) => PageName),
-               ) : onPressed;
+               ) : onPressed!;
 
                 },
                 child: 
