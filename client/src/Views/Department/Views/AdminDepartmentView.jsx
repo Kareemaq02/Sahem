@@ -1,9 +1,10 @@
-import { Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import DepartmentTypeDataGrid from "../Components/DepartmentTypeDataGrid";
 
 import { useEffect, useState } from "react";
 import { Tty } from "@mui/icons-material";
 import GetDepartmentType from "../Service/GetDepartmentTypes";
+import DepartmentTypeForm from "../../Department/Components/DepartmentTypeForm";
 
 function AdminDepartmentView() {
   const [department, setDepartment] = useState([]);
@@ -20,7 +21,14 @@ function AdminDepartmentView() {
   return (
     <div>
       <Typography variant="h1">View Department Type</Typography>
-      <DepartmentTypeDataGrid data={department} />
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={8}>
+          <DepartmentTypeDataGrid data={department} />
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <DepartmentTypeForm />
+        </Grid>
+      </Grid>
     </div>
   );
 }
