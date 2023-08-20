@@ -18,7 +18,7 @@ import CustomFilter from "../Components/CustomFilter";
 
 
 const AdminShowUsersView = () => {
-    const pageSize = 10
+    const pageSize = 20
 
     const [users, setUsers] = useState([])
     const [userId, setUserId] = useState(null)
