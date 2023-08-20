@@ -8,7 +8,8 @@ import {
   IconButton,
   Box,
   Collapse,
-  Divider 
+  Divider, 
+  Typography
 } from '@mui/material';
 import { useNavigate, Link } from "react-router-dom";
 import { styled } from '@mui/material/styles';
@@ -69,6 +70,7 @@ const RTLSideBar = ({ isOpen, onClose, user }) => {
             sx={{
               pl: 4,
               color: '#18AAC9',
+              fontSize:'15px',
               ...(menu.path === window.location.pathname && activeListItemStyle),
             }}
             onClick={() => handleListItemClick(index, menu.path, true)}
@@ -108,6 +110,8 @@ const RTLSideBar = ({ isOpen, onClose, user }) => {
                   to={menu.path}
                   sx={{
                     color: '#18AAC9',
+                    fontWeight:'bold',
+                    fontSize:'18px',
                     ...(index === activeListItem && activeListItemStyle),
                   }}
                   onClick={() => handleListItemClick(index, menu.path, false)}
@@ -139,7 +143,7 @@ const RTLSideBar = ({ isOpen, onClose, user }) => {
     >
       <Box display="flex" flexDirection="column" height="100%" width="100%">
         <Box sx={{ p: 2 }}>
-          <h1>Road Damage</h1>
+          <Typography variant='h2' sx={{textAlign:'center',}}>Road Damage</Typography>
         </Box>
         {!isCollapsed && (
           <List>

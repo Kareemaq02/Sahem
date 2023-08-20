@@ -13,15 +13,13 @@ import {
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/system";
-import "./Components/style.css"
-
+import "./Components/style.css";
 
 // Project imports
 import ScrollableContent from "../../Components/ScrollableContent";
 import { IdentityHelper } from "../../Utils/IdentityHelper";
 
 // Configure JSS
-
 const Main = styled(Box)({
   display: "flex",
   flexFlow: "row",
@@ -33,11 +31,11 @@ const MainContent = styled("main")(({ theme, isSidebarOpen }) => ({
   backgroundImage: theme?.palette?.background.image,
   flex: "1 1 auto",
   overflow: "hidden",
-  marginRight: isSidebarOpen ? "270px" : "0", // Updated: Dynamic marginRight
-  marginLeft: isSidebarOpen ? "0" : "10", // Updated: Dynamic marginLeft
-  transition: "margin 0.3s ease", // Updated: Transition for both marginRight and marginLeft
-  width: '100vw',
-  flexDirection: "row-reverse"
+  marginRight: isSidebarOpen ? "290px" : "0",
+  marginLeft: isSidebarOpen ? "0" : "10",
+  transition: "margin 0.3s ease",
+  width: isSidebarOpen ? "calc(100vw - 270px)" : "100%", 
+  flexDirection: "row-reverse",
 }));
 
 function Layout() {
@@ -87,6 +85,7 @@ function Layout() {
 }
 
 export default Layout;
+
 
 
 //LTR
