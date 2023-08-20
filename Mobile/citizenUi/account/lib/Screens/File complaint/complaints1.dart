@@ -36,138 +36,6 @@ class _ComaplintState extends State<FileCompalint> {
 
 
 
-  
-
-//bool isCheckeda = false; // Initialize the checkbox state
-
-//check boxs
-Widget _buildFilterDialog(BuildContext context) { 
-  List<Map<String, dynamic>> checkboxData = [
-    {
-      "intTypeId": 22,
-      "strNameAr": "مخلفات اعمال صيانة",
-      "isChecked": false,
-    },
-    {
-      "intTypeId": 21,
-      "strNameAr": "مخلفات اعمال بناء",
-      "isChecked": false,
-    },
-    {
-      "intTypeId": 23,
-      "strNameAr": "مخلفات اعمال صيانة",
-      "isChecked": false,
-    },
-     {
-      "intTypeId": 24,
-      "strNameAr": "مخلفات اعمال صيانة",
-      "isChecked": false,
-    },
-    {
-      "intTypeId": 25,
-      "strNameAr": "مخلفات اعمال بناء",
-      "isChecked": false,
-    },
-    {
-      "intTypeId": 26,
-      "strNameAr": "مخلفات اعمال صيانة",
-      "isChecked": false,
-    },
-        {
-      "intTypeId": 27,
-      "strNameAr": "مخلفات اعمال صيانة",
-      "isChecked": false,
-    },
-    {
-      "intTypeId": 28,
-      "strNameAr": "مخلفات اعمال بناء",
-      "isChecked": false,
-    },
-    {
-      "intTypeId": 30,
-      "strNameAr": "مخلفات اعمال صيانة",
-      "isChecked": false,
-    },
-    // ... Add other items similarly
-  ];
-
-  return AlertDialog(
-    title: const Text(
-      'انواع البلاغات',
-      textAlign: TextAlign.center,
-    ),
-    content: SizedBox(
-      height: 250,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: ListView.builder(
-                itemCount: checkboxData.length,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (BuildContext context, int index) {
-                  final data = checkboxData[index];
-                  final intTypeId = data["intTypeId"] as int;
-                  final strNameAr = data["strNameAr"] as String;
-                  bool isChecked = data["isChecked"] as bool;
-
-                  return Column(
-                    children: [
-                      checkboxWidget2(strNameAr, context, isChecked, intTypeId, (value) {
-                        setState(() {
-                          data["isChecked"] = value;
-                        });
-                      }),
-                      const SizedBox(height: 20),
-                    ],
-                  );
-                },
-              ),
-            ),
-          ),
-          const SizedBox(height: 10),
-         // BottonContainer("استمرار", Colors.white, AppColor.main, 120),
-        ],
-      ),
-    ),
-  );
-}
-
-//checkboxes
-Widget checkboxWidget2(String option, BuildContext context, bool isChecked, int typeId, ValueChanged<bool> onChanged) {
-  return GestureDetector(
-    onTap: () {
-      onChanged(!isChecked);
-    },
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Text(
-          option,
-          style: TextStyle(color: AppColor.main, fontSize: 18),
-        ),
-        SizedBox(width: MediaQuery.of(context).padding.right + 5),
-        SizedBox(
-          width: 19,
-          height: 20,
-          child: Checkbox(
-            value: isChecked,
-            onChanged:(value)=> onChanged,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(4),
-              side: const BorderSide(color: AppColor.main),
-            ),
-            activeColor: AppColor.main,
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
-
  
 TextEditingController commentController = TextEditingController();
 
@@ -259,10 +127,10 @@ Widget stackButton(ICONS,whatToDo,context){
           color: AppColor.background,
           child: InkWell(
             onTap: () {
-             showDialog(
-              context: context,
-              builder: (BuildContext context) => _buildFilterDialog(context),
-            );
+            //  showDialog(
+            //   context: context,
+            //   builder: (BuildContext context) => _buildFilterDialog(context),
+            // );
             },
             child: SizedBox(
               width: 25,
@@ -317,7 +185,8 @@ Widget stackButton(ICONS,whatToDo,context){
              )),
            ),
            SizedBox(height: 10,),
-  	       BottonContainer("استمرار", Colors.white, AppColor.main, 250,context,true,buildConfirmDialog(context)),     
+  	       //BottonContainer("استمرار", Colors.white, AppColor.main, 250,context,true,,buildConfirmDialog(context)), 
+            BottonContainer("استمرار", Colors.white, AppColor.main, 250,context,true,null,(){}), 
             SizedBox(height: 50,),
         
           
@@ -329,36 +198,36 @@ Widget stackButton(ICONS,whatToDo,context){
 
 }
 
-void showAlertDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return Container(
-          width: MediaQuery.of(context).size.width / 1.3,
-          height: MediaQuery.of(context).size.height / 2.5,
-          decoration: new BoxDecoration(
-            shape: BoxShape.rectangle,
-            color: const Color(0xFFFFFF),
-            borderRadius: new BorderRadius.all(const Radius.circular(32.0)),
-          ),
-          child:
-          Column(children: [
-            // text("تأكيد البلاغ؟", AppColor.textTitle),
-            // RowInfo( "نوع البلاغ", "مخلفات اعمال بناء"),
-            // RowInfo( "نوع البلاغ", "مخلفات اعمال بناء"),
+// void showAlertDialog(BuildContext context) {
+//   showDialog(
+//     context: context,
+//     builder: (BuildContext context) {
+//       return Container(
+//           width: MediaQuery.of(context).size.width / 1.3,
+//           height: MediaQuery.of(context).size.height / 2.5,
+//           decoration: new BoxDecoration(
+//             shape: BoxShape.rectangle,
+//             color: const Color(0xFFFFFF),
+//             borderRadius: new BorderRadius.all(const Radius.circular(32.0)),
+//           ),
+//           child:
+//           Column(children: [
+//             // text("تأكيد البلاغ؟", AppColor.textTitle),
+//             // RowInfo( "نوع البلاغ", "مخلفات اعمال بناء"),
+//             // RowInfo( "نوع البلاغ", "مخلفات اعمال بناء"),
 
-            Row(
-              children: [
-               // BottonContainer("", AppColor.main, Colors.white, 100),
-               // BottonContainer("", Colors.white, AppColor.main, 100),
-              ],
-            ),
-          ],) //Contents here
+//             Row(
+//               children: [
+//                // BottonContainer("", AppColor.main, Colors.white, 100),
+//                // BottonContainer("", Colors.white, AppColor.main, 100),
+//               ],
+//             ),
+//           ],) //Contents here
         
-      );
-    },
-  );
-}
+//       );
+//     },
+//   );
+//}
 
 
 

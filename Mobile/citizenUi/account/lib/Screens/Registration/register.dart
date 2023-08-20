@@ -122,7 +122,7 @@ class _XDRegisterState extends State<XDRegister> {
                XDRegister1()
               
          
-        ):XDRegister1(),
+        ):XDRegister1(),null
         ),
          
          const SizedBox(height: 0,),

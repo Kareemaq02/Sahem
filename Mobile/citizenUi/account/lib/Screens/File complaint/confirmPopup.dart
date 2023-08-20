@@ -58,9 +58,9 @@ Widget buildConfirmDialog(BuildContext context) {
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: [
-                  BottonContainer("الغاء", AppColor.main, Colors.white,100,context,true,{}),
+                  BottonContainer("الغاء", AppColor.main, Colors.white,100,context,true,null,(){}),
                   const SizedBox(width: 10,),
-                 BottonContainer("استمرار", Colors.white, AppColor.main, 100,context,false,{}),
+                 BottonContainer("استمرار", Colors.white, AppColor.main, 100,context,false,null,(){}),
                 ],
               ),
             ),

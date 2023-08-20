@@ -59,28 +59,28 @@ class UserLogin{
      // return response.statusCode;
     } 
 
-     else if (response.statusCode == 401){
-      showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(
-          response.body=="\"User doesn't exist.\"" ? "User does\'t exist " :"Password is not correct",
-          style: const TextStyle(color: Colors.blue),
-        ),
-        content: const Text("please enter again"),
-        actions: <Widget>[
-          ElevatedButton(
-            child: const Text('Okay'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          )
-        ],
-      ),
+  //    else if (response.statusCode == 401){
+  //     showDialog(
+  //     context: context,
+  //     builder: (ctx) => AlertDialog(
+  //       title: Text(
+  //         response.body=="\"User doesn't exist.\"" ? "User does\'t exist " :"Password is not correct",
+  //         style: const TextStyle(color: Colors.blue),
+  //       ),
+  //       content: const Text("please enter again"),
+  //       actions: <Widget>[
+  //         ElevatedButton(
+  //           child: const Text('Okay'),
+  //           onPressed: () {
+  //             Navigator.of(context).pop();
+  //           },
+  //         )
+  //       ],
+  //     ),
 
-    );
-   // return response.statusCode;
-    } 
+  //   );
+  //  // return response.statusCode;
+  //   } 
    
     else {
       print('Login failed');
@@ -93,27 +93,7 @@ class UserLogin{
   }
 }
 
-// Fetching user data using the token
-// Future<Map<String, dynamic>> fetchUserData(String token) async {
-//   try {
-//     final response = await http.get(
-//       Uri.parse('https://10.0.2.2:5000/api/account/userdata/'),
-//       headers: {
-//         'Authorization': 'Bearer $token',
-//       },
-//     );
 
-//     if (response.statusCode == 200) {
-//       var data = jsonDecode(response.body);
-//       return data;
-//     } else {
-//       throw Exception('Failed to fetch user data');
-//     }
-//   } catch (e) {
-//     throw Exception(e.toString());
-//   }
-// }
-  
 
 
 }
