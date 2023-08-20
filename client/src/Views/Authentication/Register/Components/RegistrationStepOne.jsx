@@ -9,6 +9,8 @@ import {
   FormControlLabel,
   RadioGroup,
   Radio,
+  Grid,
+  Typography,
 } from "@mui/material";
 
 // Third Party
@@ -49,10 +51,33 @@ const RegistrationStepOne = ({
         })}
       >
         <Stack spacing={2}>
-          <Stack direction="row" spacing={1}>
+          {/*
+            <Stack direction="row" spacing={1}>
             <FormTextField name="firstname" label="First Name" />
             <FormTextField name="lastname" label="Last Name" />
           </Stack>
+          */}
+          <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+            <Grid item xs={12}>
+              <Typography variant="h6">Full Name in English</Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <FormTextField name="firstname" label="First Name" />
+            </Grid>
+            <Grid item xs={6}>
+              <FormTextField name="lastname" label="Last Name" />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="h6">Full Name in Arabic</Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <FormTextField name="firstnamear" label="First Name" />
+            </Grid>
+            <Grid item xs={6}>
+              <FormTextField name="lastnamear" label="Last Name" />
+            </Grid>
+          </Grid>
+
           <FormControl>
             <FormLabel>Nationality</FormLabel>
             <RadioGroup
