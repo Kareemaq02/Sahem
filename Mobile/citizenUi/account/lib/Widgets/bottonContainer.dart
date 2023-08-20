@@ -3,7 +3,10 @@
 import 'package:account/Repository/color.dart';
 import 'package:flutter/material.dart';
 
-Widget BottonContainer(String text,textColor,Color boxColor,double width,BuildContext context,bool apiFlag,PageName,[Future<dynamic>? onPressed])
+Widget BottonContainer(
+  String text,textColor,Color boxColor,double width,
+  BuildContext context,bool apiFlag,
+  [PageName,Future<dynamic>? onPressed])
 {
   return   Container(
               height:49 ,
@@ -38,7 +41,7 @@ Widget BottonContainer(String text,textColor,Color boxColor,double width,BuildCo
                Navigator.push(
                context,
                MaterialPageRoute(builder: (context) => PageName),
-               ) : onPressed!;
+               ) : onPressed;
 
                 },
                 child: 
