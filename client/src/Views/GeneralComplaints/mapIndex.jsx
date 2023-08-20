@@ -1,4 +1,4 @@
-
+import MapComp from "./Components/MapComp"
 
 
 function Home() {
