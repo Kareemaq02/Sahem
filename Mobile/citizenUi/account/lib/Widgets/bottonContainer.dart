@@ -1,12 +1,8 @@
-// ignore_for_file: file_names, non_constant_identifier_names
 
 import 'package:account/Repository/color.dart';
 import 'package:flutter/material.dart';
 
-Widget BottonContainer(
-  String text,textColor,Color boxColor,double width,
-  BuildContext context,bool apiFlag,
-  [PageName,Future<dynamic>? onPressed])
+Widget BottonContainer(String text,textColor,Color boxColor,double width,BuildContext context,bool apiFlag,PageName,[Future<dynamic>? onPressed])
 {
   return   Container(
               height:49 ,
@@ -41,7 +37,7 @@ Widget BottonContainer(
                Navigator.push(
                context,
                MaterialPageRoute(builder: (context) => PageName),
-               ) : onPressed;
+               ) : onPressed!;
 
                 },
                 child: 
