@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import WorkerDataGrid from "../Components/WorkerDataGrid";
 import { GetMyTasks } from "../Service/GetMyTaskAPI";
+import { Box } from "@mui/material";
 
 const WorkerMyTaskView = () => {
     const [myTasks, setMyTasks] = useState([]);
@@ -9,8 +10,11 @@ const WorkerMyTaskView = () => {
         const fetchWorkerTasks = async () => {
             try {
                 const response = await GetMyTasks();
-                console.log("API Response:", response.data); // Log the response for debugging
-                setMyTasks(response.data);
+                const tasksWithLeaderStatus = response.data.map(task => ({
+                    ...task,
+                    isLeader: task.blnIsTaskLeader === true
+                }));
+                setMyTasks(tasksWithLeaderStatus);
             } catch (error) {
                 console.error(error);
             }
@@ -20,9 +24,9 @@ const WorkerMyTaskView = () => {
 
 
     return (
-        <div>
+        <Box>
             <WorkerDataGrid tasks={myTasks} />
-        </div>
+        </Box>
     );
 };
 
