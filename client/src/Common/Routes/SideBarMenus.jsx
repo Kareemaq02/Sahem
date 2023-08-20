@@ -17,72 +17,63 @@ import {
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import InsertPageBreakIcon from "@mui/icons-material/Add";
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
+import EngineeringIcon from '@mui/icons-material/Engineering';
 
 const AdminMenus = [
   {
-    text: "Dashboard",
+    text: "اللوحة الرئيسية",
     path: "/auth/home",
     icon: <HomeOutlined />,
   },
   {
-    text: "Complaints",
+    text: "المشاكل",
     path: "/auth/complaints",
     icon: <ContentPaste />,
     children: [
       {
-        text: "Table View",
+        text: "عرض المشاكل",
         path: "/auth/complaints",
         icon: <TableChart />,
       },
       {
-        text: "Complaints Type",
+        text: "انواع المشاكل",
         path: "/auth/complainttype",
         icon: <FormatListBulletedIcon />,
       },
       {
-        text: "Insert Complaints Type",
-        path: "/auth/insert-complaint-type",
-        icon: <InsertPageBreakIcon />,
-      },
-      {
-        text: "Map View",
+        text: "خريطة المشاكل",
         path: "/auth/mapcomplaints",
         icon: <Map />,
       },
     ],
   },
   {
-    text: "Workers",
+    text: "العمال",
     path: "/auth/workers",
-    icon: <Groups2Outlined />,
+    icon: <EngineeringIcon />,
   },
   {
-    text: "Users",
+    text: "المواطنين",
     path: "/auth/users",
     icon: <Groups2Outlined />,
   },
   {
-    text: "Tasks",
+    text: "الاعمال",
     path: "/auth/tasks",
     icon: <AssignmentIndOutlined />,
     children: [
       {
-        text: "Table View",
+        text: "عرض الاعمال",
         path: "/auth/tasks",
         icon: <TableChart />,
       },
       {
-        text: "Task Type",
+        text: "انواع الاعمال",
         path: "/auth/tasktype",
         icon: <FormatListBulletedIcon />,
       },
       {
-        text: "Insert Task Type",
-        path: "/auth/insert-task-type",
-        icon: <InsertPageBreakIcon />,
-      },
-      {
-        text: "Map View",
+        text: "خريطة الاعمال",
         path: "/auth/maptasks",
         icon: <Map />,
       },
@@ -90,108 +81,61 @@ const AdminMenus = [
   },
   //Start Department
   {
-    text: "Department Type",
+    text: "انواع الاقسام",
     path: "/auth/department-type",
     icon: <AssignmentIndOutlined />,
     children: [
       {
-        text: "Insert Department Type",
-        path: "/auth/insert-department-type",
-        icon: <InsertPageBreakIcon />,
+        text: "عرض انواع الاقسام",
+        path: "/auth/department-type",
+        icon: <TableChart />,
       },
     ],
   },
   {
-    text: "Proffession",
+    text: "المهن",
     path: "/auth/proffession",
     icon: <AssignmentIndOutlined />,
     children: [
       {
-        text: "Proffession",
+        text: "عرض المهن",
         path: "/auth/proffession",
-        icon: <InsertPageBreakIcon />,
-      },
-      {
-        text: "Insert Proffession",
-        path: "/auth/insert-proffession",
-        icon: <InsertPageBreakIcon />,
+        icon: <TableChart />,
       },
     ],
-  },
-  //Start Proffession
-  {
-    text: "History",
-    path: "/auth/history",
-    icon: <ReceiptLongOutlined />,
-  },
-  {
-    text: "Statistics",
-  },
-  {
-    text: "Overview",
-    path: "/auth/overview",
-    icon: <AssessmentOutlined />,
-  },
-  {
-    text: "Daily",
-    path: "/auth/daily",
-    icon: <TodayOutlined />,
-  },
-  {
-    text: "Monthly",
-    path: "/auth/monthly",
-    icon: <CalendarMonthOutlined />,
-  },
-  {
-    text: "Breakdown",
-    path: "/auth/breakdown",
-    icon: <PieChartOutlined />,
-  },
-  {
-    text: "Management",
-  },
-  {
-    text: "Departments",
-    path: "/auth/departments",
-    icon: <Domain />,
-  },
-  {
-    text: "App Settings",
-    path: "/auth/appsettings",
-    icon: <DisplaySettingsOutlined />,
   },
 ];
 
 const WorkerMenus = [
   {
-    text: "Dashboard",
+    text: "الرئيسية",
     path: "/auth/home",
     icon: <HomeOutlined />,
   },
   {
-    text: "General Complaints",
+    text: "البلاغات العامة",
     path: "/auth/generalcomplaints",
     icon: <Public />,
     children: [
       {
-        text: "Table View",
+        text: "عرض البلاغات",
         path: "/auth/generalcomplaints",
         icon: <TableChart />,
       },
       {
-        text: "Map View",
+        text: "خريطة البلاغات",
         path: "/auth/mapgeneralcomplaints",
         icon: <Map />,
       },
     ],
   },
   {
-    text: "Tasks",
+    text: "الاعمال",
     path: "/auth/tasks",
     icon: <AssignmentIndOutlined />,
   },
   {
-    text: "My Tasks",
+    text: "اعمالي",
     path: "/auth/mytasks",
     icon: <AssignmentTurnedInIcon />,
   },
@@ -199,39 +143,39 @@ const WorkerMenus = [
 
 const UserMenus = [
   {
-    text: "Public Forum",
+    text: "اللوحة الرئيسية",
     path: "/auth/home",
     icon: <HomeOutlined />,
   },
   {
-    text: "General Complaints",
+    text: "البلاغات العامة",
     path: "/auth/generalcomplaints",
     icon: <Public />,
     children: [
       {
-        text: "Table View",
+        text: "عرض البلاغات العامة",
         path: "/auth/generalcomplaints",
         icon: <TableChart />,
       },
       {
-        text: "Map View",
+        text: "الخريطة",
         path: "/auth/mapcomplaints",
         icon: <Map />,
       },
     ],
   },
   {
-    text: "Complaints",
+    text: "بلاغاتي",
     path: "/auth/complaints",
     icon: <ContentPaste />,
     children: [
       {
-        text: "Table View",
+        text: "عرض بلاغاتي",
         path: "/auth/complaints",
         icon: <TableChart />,
       },
       {
-        text: "Map View",
+        text: "الخريطة",
         path: "/auth/mapcomplaints",
         icon: <Map />,
       },
