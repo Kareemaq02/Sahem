@@ -30,7 +30,7 @@ const ComplaintsTypeDataGrid = ({ DeleteComplaintsType, data }) => {
     },
     {
       field: "strPrivacy",
-      headerName: "Privavy",
+      headerName: "Privacy",
       flex: 0.5,
     },
   ];
