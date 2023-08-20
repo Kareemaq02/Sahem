@@ -10,6 +10,7 @@ import {
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { AddCircleOutline, ArrowCircleUp } from "@mui/icons-material/";
 
+
 function StatusColor(status) {
   switch (status) {
     case "pending":
@@ -115,6 +116,8 @@ const ComplaintsDataGrid = ({ AddComplaint, data }) => {
     },
   ];
 
+ 
+
   return (
     <Box margin="2rem 0 0 0" height="75vh">
       <DataGrid
@@ -124,6 +127,7 @@ const ComplaintsDataGrid = ({ AddComplaint, data }) => {
         components={{ Toolbar: GridToolbar }}
         density="compact"
       />
+      
     </Box>
   );
 };

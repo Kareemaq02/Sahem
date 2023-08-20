@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 
 // Mui
 import { Typography, SwipeableDrawer } from "@mui/material";
+import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
+import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 
 // Project Imports
 import { GetComplaintsApi } from "../Service/GetComplaintsApi";
@@ -18,14 +20,16 @@ const AdminViewComplaints = () => {
 
   const [approved, setApproved] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [pageNumber, setPageNumber] = useState(1);
+  const pageSize = 20;
 
   useEffect(() => {
     const setComplaintsView = async () => {
-      const response = await GetComplaintsApi();
+      const response = await GetComplaintsApi(pageSize, pageNumber);
       setComplaints(response.data);
     };
     setComplaintsView();
-  }, []);
+  }, [pageSize, pageNumber]);
 
   const FormatDate = () => {
     const rows = [...complaints];
@@ -37,6 +41,16 @@ const AdminViewComplaints = () => {
     media: `data:image/jpg;base64, ${media}`,
     title: complaint.intComplaintId + "-" + index,
   }));
+
+  const handleArrowUp = () => {
+    setPageNumber((prevPageNumber) => prevPageNumber + 1);
+  };
+
+  const handleArrowDown = () => {
+    if (pageNumber > 1) {
+      setPageNumber((prevPageNumber) => prevPageNumber - 1);
+    }
+  };
 
   return (
     <div>
@@ -50,6 +64,17 @@ const AdminViewComplaints = () => {
           setDrawerOpen(true);
         }}
       />
+      <div style={{ textAlign: "center", }}>
+        <ArrowCircleDownIcon
+          onClick={handleArrowUp}
+          style={{ cursor: "pointer", marginRight: "1rem" }}
+        />
+        <ArrowCircleUpIcon
+          onClick={handleArrowDown}
+          style={{ cursor: "pointer" }}
+        />
+      </div>
+
       <SwipeableDrawer
         anchor="right"
         open={drawerOpen}
