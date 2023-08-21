@@ -28,16 +28,19 @@ function StatusColor(status) {
   }
 }
 
-const TasksDataGrid = ({ EvaluateTask, pageSize, pageNumber, selectedStatus, selectedTaskType }) => {
+const TasksDataGrid = ({ EvaluateTask, pageSize, pageNumber, selectedStatus, selectedTaskType,refreshDataGrid }) => {
   const theme = useTheme();
   const [tasks, setTasks] = useState([]);
   useEffect(() => {
+
+
     const setTasksView = async () => {
       const response = await GetTasksApi(pageSize, pageNumber, selectedStatus, selectedTaskType);
       setTasks(response);
     };
     setTasksView();
-  }, [pageSize, pageNumber, selectedStatus, selectedTaskType]);
+    // fetchData();
+  }, [pageSize, pageNumber, selectedStatus, selectedTaskType,refreshDataGrid]);
 
   const [taskToDelete, setTaskToDelete] = useState(null);
 
