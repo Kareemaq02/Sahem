@@ -28,6 +28,8 @@ const GeneralComplaints = Loadable(lazy(() => import("../../Views/GeneralComplai
 const Users = Loadable(lazy(() => import("../../Views/ViewUsers/index")));
 const Workers = Loadable(lazy(() => import("../../Views/ViewWorkers/index")));
 const MyTask = Loadable(lazy(() => import("../../Views/MyTasks/index")));
+const RegWorker = Loadable(lazy(() => import("../../Views/WorkerReg/index")));
+const AccSettings = Loadable(lazy(() => import("../../Views/AccountSettings/index")));
 
 
 
@@ -172,6 +174,24 @@ const MainRoutes = {
         <PermissionsHelper
           allowedRoles={[Admin]}
           element={<InsertProffession />}
+        />
+      ),
+    },
+    {
+      path: "registerworker",
+      element: (
+        <PermissionsHelper
+          allowedRoles={[Admin]}
+          element={<RegWorker />}
+        />
+      ),
+    },
+    {
+      path: "account",
+      element: (
+        <PermissionsHelper
+          allowedRoles={[Admin,User]}
+          element={<AccSettings />}
         />
       ),
     },

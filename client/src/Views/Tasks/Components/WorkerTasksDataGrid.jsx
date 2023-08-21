@@ -14,19 +14,6 @@ const WorkerTaskDataGrid = ({data,EvaluateTask}) => {
         { field: "status", headerName: "Status", flex: 0.5 },
         { field: "dateScheduled", activatedDate: "scheduledDate", flex: 0.5 },
         { field: "deadline", headerName: "finishedDate", flex: 0.5 },
-        {
-            field: "button",
-            headerName: "Action",
-            renderCell: (params) => (
-              <IconButton
-                variant="contained"
-                color="primary"
-                onClick={() => EvaluateTask(params.row.id)}
-              >
-                <CheckCircleOutline />
-              </IconButton>
-            ),
-          },
     ];
 
     return (

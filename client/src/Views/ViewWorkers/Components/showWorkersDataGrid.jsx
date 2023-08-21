@@ -54,7 +54,7 @@ const ShowWorkersDataGrid = ({data}) => {
     ];
 
     return (
-        <Box margin="2rem 0 0 0" height="75vh">
+        <Box margin="2rem 0 0 0" height="75vh" sx={{flex:1, overflow:'hidden'}}>
             <DataGrid
                 rows={data}
                 columns={columns}

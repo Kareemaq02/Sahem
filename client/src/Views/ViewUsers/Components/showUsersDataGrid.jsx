@@ -80,7 +80,7 @@ const ShowUsersDataGrid = ({ data, id }) => {
     ];
 
     return (
-        <Box margin="2rem 0 0 0" height="75vh">
+        <Box margin="2rem 0 0 0" height="75vh" sx={{flex:1, width:'100%'}}>
             <DataGrid
                 rows={data}
                 columns={columns}

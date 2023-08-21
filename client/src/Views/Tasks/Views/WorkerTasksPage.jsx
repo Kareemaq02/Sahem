@@ -22,6 +22,7 @@ import { GetTaskDetailsApi } from "../Service/GetTaskDetailsApi";
 //icons
 import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
 import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
+// project
 import CustomFilter from "../Components/CustomFilter";
 
 
@@ -102,8 +103,8 @@ function WorkerTasksPage() {
 
   return (
     <div>
-      <Typography variant="h1" component="h1">
-        Worker Tasks Page
+      <Typography variant="h1" component="h1" fontFamily='sans-serif'>
+       الاعمال
       </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} md={8}>
@@ -112,11 +113,11 @@ function WorkerTasksPage() {
           <WorkerTaskDataGrid data={tasks} EvaluateTask={handleEvaluateTask} />
 
           <div style={{ textAlign: "center", }}>
-            <ArrowCircleUpIcon
+            <ArrowCircleDownIcon
               onClick={handleArrowUp}
               style={{ cursor: "pointer", marginRight: "1rem" }}
             />
-            <ArrowCircleDownIcon
+            <ArrowCircleUpIcon
               onClick={handleArrowDown}
               style={{ cursor: "pointer" }}
             />

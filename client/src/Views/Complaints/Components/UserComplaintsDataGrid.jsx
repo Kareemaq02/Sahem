@@ -17,6 +17,8 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Card,
+  CardContent
 } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { AddCircleOutline, ArrowCircleUp } from "@mui/icons-material/";
@@ -24,6 +26,13 @@ import ClearIcon from "@mui/icons-material/Clear";
 import EditIcon from "@mui/icons-material/Edit";
 import axios from "../../../Common/Utils/AxiosAgent";
 import ComplaintsTypesApi from "../Service/ComplaintsTypesApi";
+import { FlexBetween } from "../../../Common/Components/FlexBetween";
+import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { updateComplaint } from "../Service/UpdateComplaint"
+import { DateFormatterEn } from "../../../Common/Utils/DateFormatter";
+
 function StatusColor(status) {
   switch (status) {
     case "pending":
@@ -45,9 +54,30 @@ function StatusColor(status) {
   }
 }
 
+
+const DeleteConfirmationDialog = ({ open, onClose, onDelete }) => {
+  return (
+    <Dialog open={open} onClose={onClose}>
+      <DialogTitle sx={{ fontSize: "24px" }}>Confirm Deletion</DialogTitle>
+      <DialogContent>
+        Are you sure you want to delete this complaint?
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose} color="primary">
+          Cancel
+        </Button>
+        <Button onClick={onDelete} color="error">
+          Delete
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
+
 const ComplaintsDataGrid = ({ editComplaint, deleteComplaint, data }) => {
   const theme = useTheme();
   const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState(false); // Added state for delete confirmation
   const [selectedComplaint, setSelectedComplaint] = useState(null);
   const [editFormData, setEditFormData] = useState({
     comment: "",
@@ -55,18 +85,18 @@ const ComplaintsDataGrid = ({ editComplaint, deleteComplaint, data }) => {
   });
   const [complaintTypes, setComplaintTypes] = useState([]);
 
-  // useEffect(() => {
-  //   const fetchComplaintTypes = async () => {
-  //     try {
-  //       const response = await ComplaintsTypesApi();
-  //       setComplaintTypes(response.data);
-  //     } catch (error) {
-  //       console.error("Failed to fetch complaint types:", error);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchComplaintTypes = async () => {
+      try {
+        const response = await ComplaintsTypesApi();
+        setComplaintTypes(response.data);
+      } catch (error) {
+        console.error("Failed to fetch complaint types:", error);
+      }
+    };
 
-  //   fetchComplaintTypes();
-  // }, []);
+    fetchComplaintTypes();
+  }, []);
 
   const handleOpenEditDialog = (complaint) => {
     setSelectedComplaint(complaint);
@@ -92,31 +122,45 @@ const ComplaintsDataGrid = ({ editComplaint, deleteComplaint, data }) => {
     }));
   };
 
+  const handleDeleteConfirmation = (complaint) => {
+    setSelectedComplaint(complaint);
+    setOpenDeleteConfirmation(true);
+  };
+
+  const handleCloseDeleteConfirmation = () => {
+    setSelectedComplaint(null);
+    setOpenDeleteConfirmation(false);
+  };
+
   const handleEditFormSubmit = async () => {
     if (selectedComplaint) {
       const editedComplaint = {
         ...selectedComplaint,
-        strComment: editFormData.comment, // Updated line,
+        strComment: editFormData.comment,
         strComplaintTypeEn: editFormData.status,
       };
 
       try {
-        const response = await axios.put(
-          `/api/complaints/update/${editedComplaint.intComplaintId}`,
+        const success = await updateComplaint(
+          editedComplaint.intComplaintId,
           editedComplaint
         );
 
-        // Handle the response if necessary
-
-        editComplaint(editedComplaint);
-        handleCloseEditDialog();
+        if (success) {
+          editComplaint(editedComplaint);
+          handleCloseEditDialog();
+        } else {
+          console.error("Failed to update complaint"); // Handle error if needed
+        }
       } catch (error) {
         console.error("Failed to update complaint:", error);
       }
+
     }
   };
 
-  const columns = [
+
+  /*const columns = [
     { field: "intComplaintId", headerName: "ID", flex: 0.5 },
     { field: "strComplaintTypeEn", headerName: "Type", flex: 1 },
     { field: "dtmDateCreated", headerName: "Date Created", flex: 1 },
@@ -159,15 +203,56 @@ const ComplaintsDataGrid = ({ editComplaint, deleteComplaint, data }) => {
       ),
     },
   ];
-
+*/
   return (
-    <Box margin="2rem 0 0 0" height="75vh">
-      <DataGrid
-        rows={data}
-        columns={columns}
-        getRowId={(row) => row.intComplaintId}
-        components={{ Toolbar: GridToolbar }}
-        density="compact"
+    <Box sx={{ display: "grid", gap: 2, width: '100%' }}>
+
+      {data.map((complaint) => (
+        <Card key={complaint.intComplaintId} sx={{ borderRadius: '25px' }}>
+          <CardContent>
+            <Typography variant="h3" component="div">
+              <FlexBetween>
+                بلاغ رقم: {complaint.intComplaintId}
+                <Chip
+                  icon={<RadioButtonCheckedIcon />}
+                  color="primary"
+                  label={complaint.strStatus}
+                  variant="outlined"
+                  sx={{ p: 1 }}
+                />
+              </FlexBetween>
+            </Typography>
+            <Typography variant="h5" component="div">
+              {complaint.strComplaintTypeAr}
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              <IconButton onClick={() => handleOpenEditDialog(complaint)}>
+                <BorderColorIcon sx={{ color: 'darkblue' }} />
+              </IconButton>
+              {/* add dialog to check if user want to delete the complaint */}
+              <IconButton onClick={() => handleDeleteConfirmation(complaint)}>
+                <DeleteIcon sx={{ color: 'darkblue' }} />
+              </IconButton>
+            </Typography>
+            <Typography variant="h5">
+              <FlexBetween>
+                <Typography variant="h6"></Typography>
+                <Typography variant="h6">{DateFormatterEn(complaint.dtmDateCreated)}</Typography>
+              </FlexBetween>
+            </Typography>
+          </CardContent>
+        </Card>
+      ))}
+      <br />
+      <br />
+
+      <DeleteConfirmationDialog
+        open={openDeleteConfirmation}
+        onClose={handleCloseDeleteConfirmation}
+        onDelete={() => {
+          deleteComplaint(selectedComplaint.intComplaintId);
+          handleCloseDeleteConfirmation();
+        }}
       />
 
       {/* Edit Dialog */}
@@ -181,6 +266,7 @@ const ComplaintsDataGrid = ({ editComplaint, deleteComplaint, data }) => {
           },
         }}
       >
+
         <DialogTitle sx={{ fontSize: "24px" }}>Edit Complaint</DialogTitle>
 
         <DialogContent sx={{ overflow: "auto" }}>
@@ -205,7 +291,7 @@ const ComplaintsDataGrid = ({ editComplaint, deleteComplaint, data }) => {
                   key={complaintType.id}
                   value={complaintType.strNameEn}
                 >
-                  {complaintType.strNameEn}
+                  {complaintType.strNameAr}
                 </MenuItem>
               ))}
             </Select>

@@ -5,12 +5,13 @@ import {
   SettingsOutlined,
 } from "@mui/icons-material";
 import { AppBar, Chip, IconButton, Toolbar, useTheme } from "@mui/material";
+import { Link } from "react-router-dom";
 import { styled } from "@mui/system";
 import FaceIcon from '@mui/icons-material/Face';
 import "./style.css"
-
 // Project Imports
 import { FlexBetween } from "../../../Components/FlexBetween";
+import AccSetting from "../../../../Views/AccountSettings/index"
 
 // Context
 import AppContext from "../../../Context/AppContext";
@@ -61,9 +62,11 @@ const Navbar = ({ user }) => {
                 />
               )}
             </IconButton>
-            <IconButton>
+            <IconButton component={Link} to="/auth/account">
               <SettingsOutlined color="primary" sx={{ fontSize: "25px", color: 'gray' }} />
-              <AccountMenu user={user} sx={{ color: '#18AAC9',  }} id="accMenue" />
+            </IconButton>
+            <IconButton>
+              <AccountMenu user={user} sx={{ color: '#18AAC9', }} id="accMenue" />
             </IconButton>
 
           </div>

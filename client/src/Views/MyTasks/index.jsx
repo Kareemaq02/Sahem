@@ -1,3 +1,4 @@
+import { Typography } from "@mui/material";
 import WorkerMyTaskView from "./Views/WorkerMyTaskView"
 
 
@@ -5,7 +6,7 @@ function Home() {
 
     return(
         <div>
-            <h1>View My Tasks</h1>
+            <Typography variant="h1">الاعمال الخاصة بي</Typography>
             <WorkerMyTaskView />
         </div>
     )

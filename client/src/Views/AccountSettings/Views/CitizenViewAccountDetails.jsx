@@ -158,8 +158,9 @@ function CitizenViewAccountDetails() {
         fullWidth
         margin="normal"
       />
-
-      <Button variant="contained" color="primary" onClick={handleUpdate}>
+      <br />
+      <br />
+      <Button variant="contained" color="primary" onClick={handleUpdate} sx={{width:"100%"}}>
         Update
       </Button>
       <ToastContainer />

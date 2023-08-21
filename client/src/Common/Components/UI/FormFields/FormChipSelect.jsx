@@ -20,17 +20,21 @@ const FormChipSelect = ({ value, onChange, items }) => {
     <>
       {items.map((item) => (
         <>
-        <Chip
-          key={item.value}
-          label={item.label}
-          color={item.color}
-          onClick={() => handleChipClick(item)}
-          variant={value.includes(item.value) ? "default" : "outlined"}
+          <Chip
+            key={item.value}
+            label={item.label}
+            style={{
+              color: item.color,
+              border: `${item.color} solid 1px`,
+              margin: "0.5rem",
+            }}
+            onClick={() => handleChipClick(item)}
+            variant={value.includes(item.value) ? "default" : "outlined"}
           />
-          <br/>
-          <br/>
-          </>     
-          ))}
+          <br />
+          <br />
+        </>
+      ))}
     </>
   );
 };

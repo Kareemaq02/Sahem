@@ -56,7 +56,7 @@ function CitizenForum() {
   return (
     <div>
       <Typography variant="h1" component="h1">
-        Public Forum
+        اللوحة الرئيسية
       </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} md={8}>

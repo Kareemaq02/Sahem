@@ -74,7 +74,7 @@ const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange }) => {
                 />
             </Box>
             <br />
-            <h4 dir="ltr">complaint types</h4>
+            <h4 dir="rtl">انواع البلاغات</h4>
             <Divider />
             <br />
             <Box sx={{ width: '100%', }} textAlign="center">
@@ -96,13 +96,13 @@ const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange }) => {
                 >
                     {complaintTypes.map((complaintType) => (
                         <MenuItem key={complaintType.intTypeId} value={complaintType.intTypeId}>
-                            {complaintType.strNameEn}
+                            {complaintType.strNameAr}
                         </MenuItem>
                     ))}
                 </Select>
             </Box>
             <br />
-            <h4 dir="ltr">Status</h4>
+            <h4 dir="rtl">الحالة</h4>
             <Divider />
             <br />
             <Box sx={{ width: '100%', textAlign: 'center', display: 'flex', flexWrap: 'wrap', p: 1 }}>
@@ -111,26 +111,28 @@ const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange }) => {
                     value={selectedStatus}
                     onChange={handleComplaintStatusChange} // Pass the handleComplaintStatusChange function as onChange prop
                     items={[
-                        { label: 'Pending', value: 1, color: 'primary' },
-                        { label: 'rejected', value: 2, color: 'error' },
-                        { label: 'approved', value: 3, color: 'success' },
-                        { label: 'scheduled', value: 4, color: 'primary' },
-                        { label: 'in progress', value: 5, color: 'success' },
-                        { label: 'waiting evaluation', value: 6, color: 'success' },
-                        { label: 'completed', value: 7, color: 'success' },
-                        { label: 're-filed', value: 8, color: 'success' },
+                        { label: 'قيد الانتظار', value: 1, color: 'primary',},
+                        { label: 'مرفوض', value: 2, color: '#F44336' },
+                        { label: 'موافق عليه', value: 3, color: '#4CAF50' },
+                        { label: 'مجدول', value: 4, color: '#3F51B5' },
+                        { label: 'قيد العمل', value: 5, color: 'blue' },
+                        { label: 'بانتظار التقييم', value: 6, color: '#9C27B0' },
+                        { label: 'منجز', value: 7, color: '#8BC34A' },
+                        { label: 'معاد', value: 8, color: '#FFC107' },
                     ]}
                 />
             </Box>
             <br />
-            <h4 dir="ltr">Distance</h4>
+            <h4 dir="rtl">المسافة</h4>
             <Divider />
             <br />
             <Box sx={{ padding: 2, width: '100%', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <FormSlider />
             </Box>
-    </Paper>
-  );
+
+
+        </Paper>
+    );
 };
 
 export default CustomFilter;
