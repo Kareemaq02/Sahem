@@ -278,6 +278,19 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new AddComplaintToWatchListCommand(strUserName,intComplaintId)));
         }
 
+        [HttpDelete("removeFromWatchList/{intComplaintId}")] // .../api/complaints/removeFromWatchList
+        public async Task<IActionResult> RemoveComplaintFromWatchList
+            (int intComplaintId)
+        {
+            string authHeader = Request.Headers["Authorization"];
+            JwtSecurityTokenHandler tokenHandler = new();
+            JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
+
+            string strUserName = jwtToken.Claims.First(c => c.Type == "username").Value;
+
+            return HandleResult(await Mediator.Send(new RemoveComplaintFromWatchListCommand(strUserName, intComplaintId)));
+        }
+
 
 
     }
