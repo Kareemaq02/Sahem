@@ -28,6 +28,14 @@ namespace API.Controllers
             );
         }
 
+        [HttpGet("analytics")] // .../api/complaints
+        public async Task<IActionResult> GetComplaintsAnalytics([FromQuery] ComplaintsFilter filter)
+        {
+            return HandleResult(
+                await Mediator.Send(new GetComplaintsAnalyticsQuery(filter))
+            );
+        }
+
         [HttpGet("mywatchlist")] // .../api/complaints/mywatchlist
         public async Task<IActionResult> GetWatchedComplaintsList()
         {
