@@ -20,6 +20,8 @@ builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddCorsService(builder.Configuration, builder.Environment);
 builder.Services.AddIdentityService(builder.Configuration);
 builder.Services.AddTransient<InsertTaskHandler>();
+builder.Services.AddTransient<AddComplaintStatusChangeTransactionHandler>();
+
 
 var app = builder.Build();
 
