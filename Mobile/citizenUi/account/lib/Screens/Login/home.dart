@@ -42,10 +42,10 @@ class _XDHomeState extends State<XDHome> {
               ],
             ),
             const SizedBox(height: 50,),
-        BottonContainer( 'الدخول | مستخدم جديد',Colors.white ,AppColor.main,210,context,false,const XDRegister()),
+        BottonContainer( 'الدخول | مستخدم جديد',Colors.white ,AppColor.main,210,context,false,const XDRegister(),(){}),
        
            const SizedBox(height: 20,),
-         BottonContainer( 'الدخول كزائر' ,AppColor.main,Colors.white,210,context,false,const XDLogin()),
+         BottonContainer( 'الدخول كزائر' ,AppColor.main,Colors.white,210,context,false,const XDLogin(),(){}),
          
       ]
       ), 

@@ -83,7 +83,8 @@ class _XDLoginState extends State<XDLogin> {
        ],),
         const SizedBox(height: 10,),
        
-       BottonContainer("الدخول",Colors.white, AppColor.main,240,context,true,user.login(usernameController.text,passwordController.text,context)),
+      BottonContainer( "الدخول", Colors.white, AppColor.main, 240, context,  true, null,(){ user.login(usernameController.text, passwordController.text, context); },
+),
        //const SizedBox(height: 10,),
        Row(
         mainAxisAlignment: MainAxisAlignment.center,
