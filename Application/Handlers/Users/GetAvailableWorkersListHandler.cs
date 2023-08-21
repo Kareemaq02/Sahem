@@ -21,8 +21,8 @@ namespace Application.Handlers.Users
 
         public async Task<Result<List<WorkerDTO>>> Handle(GetAvailableWorkersListQuery request, CancellationToken cancellationToken)
         {
-            DateTime date = new DateTime(2023, 06, 10, 0, 0, 0);
-            DateTime date2 = new DateTime(2023, 06, 20, 0, 0, 0);
+            DateTime date = request.startDate;
+            DateTime date2 = request.endDate;
             var busyWorkerIdsQuery = from u in _context.Users
                                      join tm in _context.TaskMembers on u.Id equals tm.intWorkerId
                                      join t in _context.Tasks on tm.intTaskId equals t.intId

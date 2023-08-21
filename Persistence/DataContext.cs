@@ -6,6 +6,7 @@ using Domain.DataModels.Complaints;
 using Domain.DataModels.Intersections;
 using Domain.DataModels.Tasks;
 using Domain.DataModels.LookUps;
+using Domain.DataModels.Notifications;
 
 namespace Persistence
 {
@@ -216,6 +217,7 @@ namespace Persistence
         public DbSet<ComplaintVoters> ComplaintVoters { get; set; }
         public DbSet<ComplaintAttachment> ComplaintAttachments { get; set; }
         public DbSet<ComplaintsStatuses> ComplaintsStatuses { get; set; }
+        public DbSet<ComplaintWatchers> ComplaintWatchers { get; set; }
 
         // Users DataSets
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
@@ -236,5 +238,11 @@ namespace Persistence
         // Professions DataSets
         public DbSet<Profession> Professions { get; set; }
         public DbSet<ProfessionUsers> ProfessionUsers { get; set; }
+
+        // Notifications DataSets
+        public DbSet<NotificationType> NotificationTypes { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<NotificationToken> NotificationTokens { get; set; }
     }
 }

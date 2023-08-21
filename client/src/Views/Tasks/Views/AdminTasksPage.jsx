@@ -1,19 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { deleteTasks } from "../Service/DeleteTask";
-
-// Mui
-import {
-  Button,
-  Snackbar,
-  Stack,
-  Typography,
-  useTheme,
-  SwipeableDrawer,
-  Grid,
-} from "@mui/material";
-
-// Project Imports
+import {Button,Snackbar,Stack,Typography,useTheme,SwipeableDrawer,Grid,} from "@mui/material";
 import { EvaluateTaskApi } from "../Service/EvaluateTaskApi";
 import { GetTaskDetailsApi } from "../Service/GetTaskDetailsApi";
 import TaskDetails from "../Components/TaskDetails";
@@ -49,9 +37,12 @@ const AdminTasksPage = () => {
   const methods = useForm();
   const theme = useTheme();
   const [taskPhotos, setTaskPhotos] = useState(testPhotos);
-  const [taskId, setTaskId] = useState(testPhotos);
   const [selectedStatus, setSelectedStatus] = useState([]);
-  const [selectedTypes, setSelectedTypes] = useState([]);
+
+  const [refreshDataGrid, setRefreshDataGrid] = useState(false);
+  const handleRefreshDataGrid = () => {
+    setRefreshDataGrid(prevState => !prevState);
+  };
   const [selectedComplaintTypes, setSelectedComplaintTypes] = useState([]);
   const [taskData, setTaskData] = useState({
     taskId: 0,
@@ -68,11 +59,15 @@ const AdminTasksPage = () => {
   const pageSize = 15;
 
 
-  const onSubmit = (data) => {
+  const [showAlertDialog, setShowAlertDialog] = useState(false);
+
+  const onSubmit = async (data) => {
     console.log(data, taskData.taskId);
     if (EvaluateTaskApi(data, taskData.taskId)) {
       setSnackbarMessage("Task evaluated successfully!");
       setSnackbarOpen(true);
+      handleRefreshDataGrid();
+      setDrawerOpen(false);
     } else {
       setSnackbarMessage("Failed to evaluate task.");
       setSnackbarOpen(true);
@@ -106,6 +101,7 @@ const AdminTasksPage = () => {
       <Grid container spacing={2}>
         <Grid item xs={12} md={8}>
           <TasksDataGrid
+            refreshDataGrid={refreshDataGrid}
             EvaluateTask={async (id, admin) => {
               const data = await GetTaskDetailsApi(id);
               setTaskPhotos(data.photos);

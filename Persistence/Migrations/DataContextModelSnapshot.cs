@@ -437,6 +437,126 @@ namespace Persistence.Migrations
                     b.ToTable("Professions");
                 });
 
+            modelBuilder.Entity("Domain.DataModels.Notifications.Message", b =>
+                {
+                    b.Property<int>("intId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ID");
+
+                    b.Property<bool>("blnIsRead")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("IS_READ");
+
+                    b.Property<DateTime>("dtmDateCreated")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("DATE_CREATED");
+
+                    b.Property<int>("intAdminId")
+                        .HasColumnType("int")
+                        .HasColumnName("ADMIN_ID");
+
+                    b.Property<int>("intUserId")
+                        .HasColumnType("int")
+                        .HasColumnName("USER_ID");
+
+                    b.Property<string>("strBody")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("BODY");
+
+                    b.Property<string>("strHeader")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("HEADER");
+
+                    b.HasKey("intId");
+
+                    b.ToTable("messages");
+                });
+
+            modelBuilder.Entity("Domain.DataModels.Notifications.Notification", b =>
+                {
+                    b.Property<int>("intId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ID");
+
+                    b.Property<bool>("blnIsRead")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("IS_READ");
+
+                    b.Property<DateTime>("dtmDateCreated")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("DATE_CREATED");
+
+                    b.Property<int>("intTypeId")
+                        .HasColumnType("int")
+                        .HasColumnName("TYPE_ID");
+
+                    b.Property<int>("intUserId")
+                        .HasColumnType("int")
+                        .HasColumnName("USER_ID");
+
+                    b.HasKey("intId");
+
+                    b.HasIndex("intTypeId");
+
+                    b.ToTable("notifications");
+                });
+
+            modelBuilder.Entity("Domain.DataModels.Notifications.NotificationType", b =>
+                {
+                    b.Property<int>("intId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ID");
+
+                    b.Property<bool>("blnIsDeleted")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("IS_DELETED");
+
+                    b.Property<DateTime>("dtmDateCreated")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("DATE_CREATED");
+
+                    b.Property<DateTime>("dtmDateLastModified")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("DATE_LAST_MODIFIED");
+
+                    b.Property<int>("intCreatedBy")
+                        .HasColumnType("int")
+                        .HasColumnName("CREATED_BY");
+
+                    b.Property<int>("intLastModifiedBy")
+                        .HasColumnType("int")
+                        .HasColumnName("LAST_MODIFIED_BY");
+
+                    b.Property<string>("strBodyAr")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("BODY_AR");
+
+                    b.Property<string>("strBodyEn")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("BODY_EN");
+
+                    b.Property<string>("strHeaderAr")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("HEADER_AR");
+
+                    b.Property<string>("strHeaderEn")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("HEADER_EN");
+
+                    b.HasKey("intId");
+
+                    b.ToTable("notification_types");
+                });
+
             modelBuilder.Entity("Domain.DataModels.Tasks.WorkTask", b =>
                 {
                     b.Property<int>("intId")
@@ -1059,6 +1179,17 @@ namespace Persistence.Migrations
                     b.Navigation("Task");
 
                     b.Navigation("Worker");
+                });
+
+            modelBuilder.Entity("Domain.DataModels.Notifications.Notification", b =>
+                {
+                    b.HasOne("Domain.DataModels.Notifications.NotificationType", "NotificationType")
+                        .WithMany()
+                        .HasForeignKey("intTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("NotificationType");
                 });
 
             modelBuilder.Entity("Domain.DataModels.Tasks.WorkTask", b =>

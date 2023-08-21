@@ -3,6 +3,7 @@ using Domain.ClientDTOs.Complaint;
 using Domain.DataModels.Complaints;
 using Domain.DataModels.Intersections;
 using Domain.DataModels.User;
+using Domain.Helpers;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -67,7 +68,7 @@ namespace Application.Handlers.Complaints
                     await transaction.RollbackAsync();
                     return Result<InsertComplaintDTO>.Failure("No file was Uploaded.");
                 }
-
+                       
                 var complaintAttachments = new List<ComplaintAttachment>();
                 foreach (var media in lstMedia)
                 {
