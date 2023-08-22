@@ -1,7 +1,7 @@
 ﻿
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
-
+using System.Text.RegularExpressions;
 
 namespace Application.Handlers.Complaints
 {
@@ -17,7 +17,7 @@ namespace Application.Handlers.Complaints
             
             
             GeometryFactory geometryFactory = new GeometryFactory();
-            ShapefileDataReader shapefileDataReader = new ShapefileDataReader("C:/Users/LENOVO/Documents/Usa/USA_States.shp", geometryFactory);
+            ShapefileDataReader shapefileDataReader = new ShapefileDataReader("C:/Users/LENOVO/Documents/Jordan/geoBoundaries-JOR-ADM2.shp", geometryFactory);
 
             Coordinate coordinates = new Coordinate((double)lng, (double)lat);
             Point point = geometryFactory.CreatePoint(coordinates);
@@ -29,19 +29,20 @@ namespace Application.Handlers.Complaints
                 if (geometry.Contains(point))
                 {
 
-                    string attributeName = "STATE_NAME";
+                    string attributeName = "shapeName";
                     object attributeValue = shapefileDataReader[attributeName];
 
                     if (attributeValue != null)
                     {
                         stateName = attributeValue.ToString();
+                         stateName = Regex.Replace(stateName, "[^a-zA-Z]", "");
                     }
 
                 }
             }
 
             shapefileDataReader.Close();
-
+           
             return stateName;
         }
     }

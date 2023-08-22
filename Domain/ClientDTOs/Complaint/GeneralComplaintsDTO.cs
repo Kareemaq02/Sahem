@@ -7,6 +7,8 @@ namespace Domain.ClientDTOs.Complaint
         public int intComplaintId { get; set; }
         public string strFirstName { get; set; }
         public string strLastName { get; set; }
+        public string strFirstNameAr { get; set; }
+        public string strLastNameAr { get; set; }
         public DateTime dtmDateCreated { get; set; }
         public string strAddress {get; set; }
         public int intTypeId { get; set; }
@@ -21,5 +23,6 @@ namespace Domain.ClientDTOs.Complaint
         public LatLng latLng { get; set; }
         public List<Media> lstMedia { get; set; }
         public bool blnIsOnWatchList { get; set; }
+        public bool blnIsVerified { get; set; }
     }
 }

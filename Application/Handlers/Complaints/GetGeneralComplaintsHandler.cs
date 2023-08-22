@@ -40,9 +40,12 @@ namespace Application.Handlers.Complaints
                 select new
                 {
                     Complaint = c,
+                    ui.strFirstNameAr,
+                    ui.strLastNameAr,
                     u.UserName,
                     ui.strFirstName,
                     ui.strLastName,
+                    u.blnIsVerified,
                     c.intTypeId,
                     ComplaintTypeEn = ct.strNameEn,
                     ComplaintTypeAr = ct.strNameAr,
@@ -71,6 +74,8 @@ namespace Application.Handlers.Complaints
 
                         new GeneralComplaintsListDTO
                         {
+                            strFirstNameAr = c.strFirstNameAr,
+                            strLastNameAr = c.strLastNameAr,
                             intComplaintId = c.Complaint.intId,
                             strFirstName = c.strFirstName,
                             strLastName = c.strLastName,
@@ -105,7 +110,8 @@ namespace Application.Handlers.Complaints
                                  .Any(cw => cw.intUserId == userId && cw.intComplaintId == c.Complaint.intId),
 
                             strAddress = GetStateNameTemp.getStateNameByLatLng
-                                 (c.latLng.decLat, c.latLng.decLng)
+                                 (c.latLng.decLat, c.latLng.decLng), //TODO This makes the request very slow fetch from database when ready instead
+                            blnIsVerified = c.blnIsVerified
 
                       }
                 )
@@ -143,12 +149,12 @@ namespace Application.Handlers.Complaints
                     .Where(q => q.dtmDateCreated >= request.filter.dtmDateCreated)
                     .ToList();
 
-            if (request.filter.intDistance > 0)
+            if (request.filter.intDistanceInKm > 0)
             {
                 var predicate = PredicateBuilder.New<GeneralComplaintsListDTO>();
                     predicate = predicate.Or(item =>
                     HaversineHelper.HaversineDistance(request.userLocation,new LatLng{decLat = item.latLng.decLat,
-                    decLng = item.latLng.decLng})<= request.filter.intDistance);
+                    decLng = item.latLng.decLng})<= request.filter.intDistanceInKm * 1000);
 
                 queryObject = queryObject.Where(predicate).ToList();
             }
