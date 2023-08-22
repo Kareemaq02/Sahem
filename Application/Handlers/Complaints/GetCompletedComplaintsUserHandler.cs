@@ -1,16 +1,16 @@
 ﻿using Application.Core;
 using Application.Queries.Complaints;
 using Domain.ClientDTOs.Complaint;
+using Domain.Helpers;
 using Domain.Resources;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
-using System.Reflection.Metadata;
 
 namespace Application.Handlers.Complaints
 {
     public class GetCompletedComplaintsUserHandler
-        : IRequestHandler<GetCompletedComplaintsUserQuery, Result<List<ComplaintsListDTO>>>
+        : IRequestHandler<GetCompletedComplaintsUserQuery, Result<List<PublicCompletedComplaintsDTO>>>
     {
         private readonly DataContext _context;
 
@@ -19,7 +19,7 @@ namespace Application.Handlers.Complaints
             _context = context;
         }
 
-        public async Task<Result<List<ComplaintsListDTO>>> Handle(
+        public async Task<Result<List<PublicCompletedComplaintsDTO>>> Handle(
             GetCompletedComplaintsUserQuery request,
             CancellationToken cancellationToken
         )
@@ -27,6 +27,7 @@ namespace Application.Handlers.Complaints
             var query =
                 from c in _context.Complaints
                 join u in _context.Users on c.intUserID equals u.Id
+                join ui in _context.UserInfos on u.intUserInfoId equals ui.intId
                 join ct in _context.ComplaintTypes on c.intTypeId equals ct.intId
                 join cs in _context.ComplaintStatus on c.intStatusId equals cs.intId
                 where
@@ -35,57 +36,72 @@ namespace Application.Handlers.Complaints
                 select new
                 {
                     Complaint = c,
-                    UserName = u.UserName,
                     ComplaintTypeEn = ct.strNameEn,
                     ComplaintTypeAr = ct.strNameAr,
-                    ComplaintGrade = ct.decGrade,
-                    Status = cs.strName
+                    strStatusAr = cs.strNameAr,
+                    strStatusEn = cs.strName,
+                    ui.strFirstName,
+                    ui.strLastName,
+                    ui.strFirstNameAr,
+                    ui.strLastNameAr,
                 };
 
             var result = await query
                 .AsNoTracking()
                 .Select(
                     c =>
-                        new ComplaintsListDTO
+                        new PublicCompletedComplaintsDTO
                         {
-                            intComplaintId = c.Complaint.intId,
-                            strUserName = c.UserName,
+                            strFirstName = c.strFirstName,
+                            strLastName = c.strLastName,
+                            strFirstNameAr = c.strFirstNameAr,
+                            strLastNameAr = c.strLastNameAr,
                             dtmDateCreated = c.Complaint.dtmDateCreated,
+                            dtmDateFinished = c.Complaint.Tasks.
+                            Select(t => t.Task.dtmDateFinished).FirstOrDefault(),
                             strComplaintTypeEn = c.ComplaintTypeEn,
                             strComplaintTypeAr = c.ComplaintTypeAr,
-                            strStatus = c.Status,
-                            intPrivacyId = c.Complaint.intPrivacyId,
-                            decPriority =
-                                c.ComplaintGrade
-                                * (
-                                    (
-                                        c.Complaint.intReminder
-                                        + _context.ComplaintVoters
-                                            .AsNoTracking()
-                                            .Where(cv => cv.intComplaintId == c.Complaint.intId)
-                                            .Count()
-                                    ) + (DateTime.UtcNow.Ticks - c.Complaint.dtmDateCreated.Ticks)
+                            intTypeId = c.Complaint.intTypeId,
+                            latLng = c.Complaint.Attachments
+                        .Select(ca => new LatLng { decLat = ca.decLat, decLng = ca.decLng })
+                        .FirstOrDefault(),
+
+                            lstMediaAfter =  c.Complaint.Attachments
+                            .Where(q => q.blnIsFromWorker == true)
+                                .Select(
+                                    ca =>
+                                        new Media
+                                        {
+                                            Data = File.Exists(ca.strMediaRef)
+                                                ? Convert.ToBase64String(
+                                                    File.ReadAllBytes(ca.strMediaRef)
+                                                )
+                                                : string.Empty,
+                                            IsVideo = ca.blnIsVideo
+                                        }
                                 )
+                                .ToList(),
+                            lstMediaBefore = c.Complaint.Attachments
+                            .Where(q => q.blnIsFromWorker == false)
+                                .Select(
+                                    ca =>
+                                        new Media
+                                        {
+                                            Data = File.Exists(ca.strMediaRef)
+                                                ? Convert.ToBase64String(
+                                                    File.ReadAllBytes(ca.strMediaRef)
+                                                )
+                                                : string.Empty,
+                                            IsVideo = ca.blnIsVideo
+                                        }
+                                )
+                                .ToList()
                         }
                 )
                 .ToListAsync(cancellationToken);
 
-            if (result.Count > 0)
-            {
-                decimal minPriority = result.Min(c => c.decPriority);
-                decimal maxPriority = result.Max(c => c.decPriority);
-                decimal range = maxPriority - minPriority;
 
-                if (range > 0)
-                {
-                    foreach (var complaint in result)
-                    {
-                        complaint.decPriority = (complaint.decPriority - minPriority) / range;
-                    }
-                }
-            }
-
-            return Result<List<ComplaintsListDTO>>.Success(result);
+            return Result<List<PublicCompletedComplaintsDTO>>.Success(result);
         }
     }
 }
