@@ -9,6 +9,7 @@ using Persistence;
 using Microsoft.EntityFrameworkCore;
 using Domain.Resources;
 using Domain.DataModels.Complaints;
+using Application.Commands;
 
 namespace Application.Handlers.Tasks
 {
@@ -16,11 +17,15 @@ namespace Application.Handlers.Tasks
     {
         private readonly DataContext _context;
         public readonly UserManager<ApplicationUser> _userManager;
+        public readonly AddComplaintStatusChangeTransactionHandler _transactionHandler;
 
-        public InsertTaskHandler(DataContext context, UserManager<ApplicationUser> userManager)
+        public InsertTaskHandler(DataContext context, 
+            UserManager<ApplicationUser> userManager,
+            AddComplaintStatusChangeTransactionHandler transactionHandler)
         {
             _context = context;
             _userManager = userManager;
+            _transactionHandler = transactionHandler;
         }
 
         public async Task<Result<TaskDTO>> Handle(
@@ -132,7 +137,20 @@ namespace Application.Handlers.Tasks
 
                     var complaint = new Complaint { intId = request.Id };
                     _context.Complaints.Attach(complaint);
-                    complaint.intStatusId = (int)ComplaintsConstant.complaintStatus.approved;
+                    complaint.intStatusId = (int)ComplaintsConstant.complaintStatus.Scheduled;
+                    await _context.SaveChangesAsync(cancellationToken);
+
+
+                    await _transactionHandler.Handle(
+                  new AddComplaintStatusChangeTransactionCommand(
+                          request.Id,
+                          (int)ComplaintsConstant.complaintStatus.Scheduled
+                      ),
+                          cancellationToken
+                      );
+                    await _context.SaveChangesAsync(cancellationToken);
+
+
                 }
                 catch (Exception)
                 {

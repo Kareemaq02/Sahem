@@ -8,18 +8,22 @@ using Microsoft.EntityFrameworkCore;
 using Domain.Resources;
 using Domain.DataModels.Complaints;
 using Domain.ClientDTOs.Evaluation;
+using Application.Commands;
 
 namespace Application.Handlers.Evaluations
 {
     public class SetTaskAsFailedHandler : IRequestHandler<FailTaskCommand, Result<EvaluationDTO>>
     {
         private readonly DataContext _context;
+        private readonly AddComplaintStatusChangeTransactionHandler
+            _changeTransactionHandler;
         public readonly UserManager<ApplicationUser> _userManager;
 
-        public SetTaskAsFailedHandler(DataContext context, UserManager<ApplicationUser> userManager)
+        public SetTaskAsFailedHandler(DataContext context, UserManager<ApplicationUser> userManager, AddComplaintStatusChangeTransactionHandler changeTransactionHandler)
         {
             _context = context;
             _userManager = userManager;
+            _changeTransactionHandler = changeTransactionHandler;
         }
 
         public async Task<Result<EvaluationDTO>> Handle(
@@ -52,15 +56,29 @@ namespace Application.Handlers.Evaluations
 
             try
             {
-                int complaintId = await _context.TasksComplaints
+                var complaintIds = await _context.TasksComplaints
                     .Where(q => q.intTaskId == request.Id)
                     .Select(q => q.intComplaintId)
-                    .FirstOrDefaultAsync();
+                    .ToListAsync();
 
-                var complaint = new Complaint { intId = complaintId };
-                _context.Complaints.Attach(complaint);
-                complaint.intStatusId = (int)ComplaintsConstant.complaintStatus.approved;
-                await _context.SaveChangesAsync(cancellationToken);
+                foreach (var x in complaintIds)
+                {
+                    var complaint = new Complaint { intId = x };
+                    _context.Complaints.Attach(complaint);
+                    complaint.intStatusId = (int)ComplaintsConstant.complaintStatus.approved;
+                    await _context.SaveChangesAsync(cancellationToken);
+
+                    await _changeTransactionHandler.Handle(
+                      new AddComplaintStatusChangeTransactionCommand(
+                              x,
+                              (int)ComplaintsConstant.complaintStatus.pending
+                          ),
+                              cancellationToken
+                          );
+                    await _context.SaveChangesAsync(cancellationToken);
+                }
+
+
                 await transaction.CommitAsync();
             }
             catch (DbUpdateException)
