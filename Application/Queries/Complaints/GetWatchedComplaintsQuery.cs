@@ -5,5 +5,5 @@ using MediatR;
 namespace Application.Queries.Complaints
 {
     public record GetWatchedComplaintsQuery(string strUserName)
-        : IRequest<Result<List<ComplaintsListDTO>>>;
+        : IRequest<Result<List<WatchedComplaintDTO>>>;
 }

@@ -11,5 +11,9 @@
             incomplete = 5,
             completed = 6,
         }
+        public enum taskType
+        {
+            multiType = 7
+        }
     }
 }

@@ -43,7 +43,11 @@ const GeneralCompDataGrid = ({ data }) => {
                             </Typography>
                             <br />
                             <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                                <img src="https://via.placeholder.com/900x400" alt="Test Image" style={{ flex: 1, objectFit: 'cover' }} />
+                            <img
+                                src={GC.imageData ? `data:image/jpg;base64,${GC.imageData}` : "https://via.placeholder.com/900x400"}
+                                alt={`Image for complaint ${GC.intComplaintId}`}
+                                style={{ flex: 1, objectFit: 'cover', borderRadius: '25px',}}
+                            />
                             </div>
                         </CardContent>
                     </Card>

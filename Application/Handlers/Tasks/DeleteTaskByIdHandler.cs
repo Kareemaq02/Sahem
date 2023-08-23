@@ -1,4 +1,6 @@
-﻿using Application.Core;
+﻿using Application.Commands;
+using Application.Core;
+using Domain.DataModels.Complaints;
 using Domain.DataModels.Tasks;
 using Domain.Resources;
 using MediatR;
@@ -10,10 +12,13 @@ namespace Application.Handlers
     public class DeleteTaskByIdHandler : IRequestHandler<DeleteTaskCommand, Result<Unit>>
     {
         private readonly DataContext _context;
+        private readonly AddComplaintStatusChangeTransactionHandler _transactionHandler;
 
-        public DeleteTaskByIdHandler(DataContext context)
+        public DeleteTaskByIdHandler(DataContext context,
+            AddComplaintStatusChangeTransactionHandler transactionHandler)
         {
             _context = context;
+            _transactionHandler = transactionHandler;
         }
 
         public async Task<Result<Unit>> Handle(
@@ -60,6 +65,36 @@ namespace Application.Handlers
                 _context.Tasks.Remove(task);
 
                 await _context.SaveChangesAsync(cancellationToken);
+            }
+            catch (DbUpdateException)
+            {
+                await transaction.RollbackAsync();
+                return Result<Unit>.Failure("Failed to delete tasks.");
+            }
+            try
+            {
+                var complaintIds = await _context.TasksComplaints
+                      .Where(q => q.intTaskId == request.Id)
+                      .Select(q => q.intComplaintId)
+                      .ToListAsync();
+
+                foreach (int complaintId in complaintIds)
+                {
+                    var complaint = new Complaint { intId = complaintId };
+                    _context.Complaints.Attach(complaint);
+                    complaint.intStatusId = (int)ComplaintsConstant.complaintStatus.pending;
+                    await _context.SaveChangesAsync(cancellationToken);
+
+
+                    await _transactionHandler.Handle(
+                   new AddComplaintStatusChangeTransactionCommand(
+                           complaintId,
+                           (int)ComplaintsConstant.complaintStatus.pending
+                       ),
+                           cancellationToken
+                       );
+                    await _context.SaveChangesAsync(cancellationToken);
+                }
             }
             catch (DbUpdateException)
             {

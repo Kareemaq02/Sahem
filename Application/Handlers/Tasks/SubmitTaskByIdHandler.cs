@@ -1,4 +1,5 @@
-﻿using Application.Core;
+﻿using Application.Commands;
+using Application.Core;
 using Domain.ClientDTOs.Complaint;
 using Domain.ClientDTOs.Task;
 using Domain.DataModels.Complaints;
@@ -18,13 +19,16 @@ namespace Application.Handlers.Complaints
         private readonly DataContext _context;
         private readonly IConfiguration _configuration;
         public readonly UserManager<ApplicationUser> _userManager;
+        private readonly AddComplaintStatusChangeTransactionHandler _changeTransactionHandler;
 
         public SubmitTaskByIdHandler(
+            AddComplaintStatusChangeTransactionHandler changeTransactionHandler,
             DataContext context,
             IConfiguration configuration,
             UserManager<ApplicationUser> userManager
         )
         {
+            _changeTransactionHandler = changeTransactionHandler;
             _context = context;
             _configuration = configuration;
             _userManager = userManager;
@@ -108,9 +112,31 @@ namespace Application.Handlers.Complaints
                             );
                         }
 
+
+                        var complaintIds = await _context.TasksComplaints
+                            .Where(q => q.intTaskId == request.id)
+                            .Select(q => q.intComplaintId)
+                            .ToListAsync();
+
+                        foreach (int complaintId in complaintIds)
+                        {
+                            var complaint = new Complaint { intId = complaintId };
+                            _context.Complaints.Attach(complaint);
+                            complaint.intStatusId = (int)ComplaintsConstant.complaintStatus.waitingEvaluation;
+                            await _context.SaveChangesAsync(cancellationToken);
+
+
+                            await _changeTransactionHandler.Handle(
+                           new AddComplaintStatusChangeTransactionCommand(
+                                   complaintId,
+                                   (int)ComplaintsConstant.complaintStatus.waitingEvaluation
+                               ),
+                                   cancellationToken
+                               );
+                            await _context.SaveChangesAsync(cancellationToken);
+                        }
                         // Alter it to link the attachment with the complaint, not the task
                         //await _context.TaskAttachments.AddRangeAsync(taskAttatchments);
-                        await _context.SaveChangesAsync(cancellationToken);
                         await transaction.CommitAsync();
                     }
                     else

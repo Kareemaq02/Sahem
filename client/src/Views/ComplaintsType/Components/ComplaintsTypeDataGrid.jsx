@@ -42,7 +42,6 @@ const ComplaintsTypeDataGrid = ({ DeleteComplaintsType, data }) => {
         getRowId={(row) => row.id || Math.random().toString(36).substring(7)}
         components={{ Toolbar: GridToolbar }}
         density="compact"
-        sx={{width:"70%"}}
       />
     </Box>
   );

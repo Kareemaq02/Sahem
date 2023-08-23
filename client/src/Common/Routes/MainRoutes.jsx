@@ -35,6 +35,7 @@ const Workers = Loadable(lazy(() => import("../../Views/ViewWorkers/index")));
 const MyTask = Loadable(lazy(() => import("../../Views/MyTasks/index")));
 const RegWorker = Loadable(lazy(() => import("../../Views/WorkerReg/index")));
 const AccSettings = Loadable(lazy(() => import("../../Views/AccountSettings/index")));
+const MyWatches = Loadable(lazy(() => import("../../Views/MyWatchs/index")));
 
 
 
@@ -243,6 +244,15 @@ const MainRoutes = {
         <PermissionsHelper
           allowedRoles={[Admin,User]}
           element={<AccSettings />}
+        />
+      ),
+    },
+    {
+      path: "watchlist",
+      element: (
+        <PermissionsHelper
+          allowedRoles={[Admin,User]}
+          element={<MyWatches />}
         />
       ),
     },

@@ -103,7 +103,6 @@ const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange }) => {
     });
 
     
-
     const [complaintTypes, setComplaintTypes] = useState([]);
     const [selectedComplaintTypes, setSelectedComplaintTypes] = useState([]);
     const [selectedStatus, setselectedStatus] = useState([])
@@ -132,19 +131,21 @@ const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange }) => {
 
     };
 
-    const handleComplaintStatusChange = (selectedStsId) => { // Modify the function parameter to directly receive the selectedStsId
+    const handleComplaintStatusChange = (selectedStsId) => {
         setselectedStatus(selectedStsId);
         onComplaintStatusChange(selectedStsId);
     }
 
 
     return (
-        <Paper sx={{ width: "100%", backgroundColor: 'transparent 85%' }} className="filterStyle stay" >
+        <Paper sx={{ width: "100%", backgroundColor: 'transparent 85%', }} className="filterStyle stay" >
             <Box sx={{ width: '100%' }} textAlign="center" className="filterStyle">
                 <div
                     ref={mapContainer}
                     className="map-container"
                     style={{ height: "20rem", width: '100%' }}
+                    onMouseEnter={handleMapMouseEnter}
+                    onMouseLeave={handleMapMouseLeave}
                 />
             </Box>
             <br />
@@ -185,7 +186,7 @@ const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange }) => {
                     value={selectedStatus}
                     onChange={handleComplaintStatusChange} // Pass the handleComplaintStatusChange function as onChange prop
                     items={[
-                        { label: 'قيد الانتظار', value: 1, color: 'primary',},
+                        { label: 'قيد الانتظار', value: 1, color: 'primary', },
                         { label: 'مرفوض', value: 2, color: '#F44336' },
                         { label: 'موافق عليه', value: 3, color: '#4CAF50' },
                         { label: 'مجدول', value: 4, color: '#3F51B5' },
@@ -197,8 +198,6 @@ const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange }) => {
                 />
             </Box>
             <br />
-
-
         </Paper>
     );
 };

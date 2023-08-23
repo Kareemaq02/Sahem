@@ -1,4 +1,4 @@
-import { Box, Button, TextFieldt, Typography } from "@mui/material";
+import { Box, Button, TextFieldt, Typography, Paper } from "@mui/material";
 import FormTextField from "../../../Common/Components/UI/FormFields/FormTextField";
 import { FormProvider, useForm } from "react-hook-form";
 import DepartmentTypeApi from "../Service/DepartmentTypeApi";
@@ -28,18 +28,13 @@ const DepartmentTypeForm = () => {
   };
 
   return (
-    <Box
+    <Paper
       sx={{
-        width: '70%',
-        margin: '0 auto',
-        padding: '20px',
-        border: '1px solid #ccc',
-        borderRadius: '8px',
-        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-        // backgroundColor: '#f5f5f5',
+        p:2,
+        borderRadius:'25px'
       }}
     >
-      <Typography variant="h2" sx={{ marginBottom: '20px' }}>
+      <Typography variant="h2" sx={{ p:1, textAlign: 'center' }}>
         Insert Department Type
       </Typography>
       <FormProvider {...methods}>
@@ -55,7 +50,7 @@ const DepartmentTypeForm = () => {
           </Button>
         </form>
       </FormProvider>
-    </Box>
+    </Paper>
   );
 };
 

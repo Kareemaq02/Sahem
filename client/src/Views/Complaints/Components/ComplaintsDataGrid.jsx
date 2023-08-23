@@ -82,7 +82,7 @@ const ComplaintsDataGrid = ({ AddComplaint, data }) => {
     {
       field: "strUserName",
       headerName: "User",
-      flex: 1,
+      flex: 0.8,
       renderCell: (params) => (
         <Chip
           variant="outlined"
@@ -94,7 +94,7 @@ const ComplaintsDataGrid = ({ AddComplaint, data }) => {
         />
       ),
     },
-    { field: "strComplaintTypeEn", headerName: "Type", flex: 1 },
+    { field: "strComplaintTypeAr", headerName: "Type", flex: 1 },
     {
       field: "decPriority",
       headerName: "Priority",
@@ -145,6 +145,7 @@ const ComplaintsDataGrid = ({ AddComplaint, data }) => {
       ),
     },
   ];
+
 
   return (
     <Box margin="2rem 0 0 0" height="75vh">
