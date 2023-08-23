@@ -2,6 +2,7 @@
 using Application.Queries.Complaints;
 using Domain.ClientDTOs.Complaint;
 using Domain.Helpers;
+using Domain.Resources;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -9,7 +10,7 @@ using Persistence;
 namespace Application.Handlers.Complaints
 {
     public class GetComplaintsByUserHandler
-        : IRequestHandler<GetComplaintsByUserQuery, Result<List<ComplaintsListDTO>>>
+        : IRequestHandler<GetComplaintsByUserQuery, Result<List<MyComplaintDTO>>>
     {
         private readonly DataContext _context;
 
@@ -18,7 +19,7 @@ namespace Application.Handlers.Complaints
             _context = context;
         }
 
-        public async Task<Result<List<ComplaintsListDTO>>> Handle(
+        public async Task<Result<List<MyComplaintDTO>>> Handle(
             GetComplaintsByUserQuery request,
             CancellationToken cancellationToken
         )
@@ -38,7 +39,8 @@ namespace Application.Handlers.Complaints
                     Complaint = c,
                     ComplaintTypeEn = ct.strNameEn,
                     ComplaintTypeAr = ct.strNameAr,
-                    Status = cs.strName,
+                    strStatusAr = cs.strNameAr,
+                    strStatusEn = cs.strName,
                     privacyId = cp.intId,
                     privacyStrAr = cp.strNameAr,
                     privacyStrEn = cp.strNameEn,
@@ -50,17 +52,21 @@ namespace Application.Handlers.Complaints
                         .Count(cv => cv.intComplaintId == c.intId && cv.blnIsDownVote)
                 };
 
+    
             var result = await query
                 .AsNoTracking()
                 .Where(q => q.Complaint.intUserID == userId)
                 .Select(
                     c =>
-                        new ComplaintsListDTO
+                        new MyComplaintDTO
                         {
                             intComplaintId = c.Complaint.intId,
+                            intTypeId  = c.Complaint.intTypeId,
                             dtmDateCreated = c.Complaint.dtmDateCreated,
-                            dtmDateFinished = DateTime.MinValue, // MUST CHANGE WHEN TASK AND COMPLAINTS RELATIONSHIP IS DECIDED
-                            strStatus = c.Status,
+                            dtmDateFinished = c.Complaint.Tasks.Select(q => q.Task.dtmDateFinished).FirstOrDefault(),
+                            intStatusId = c.Complaint.intStatusId,
+                            strStatusAr = c.strStatusAr,
+                            strStatusEn = c.strStatusEn,
                             intPrivacyId = c.privacyId,
                             strPrivacyAr = c.privacyStrAr,
                             strPrivacyEn = c.privacyStrEn,
@@ -72,11 +78,43 @@ namespace Application.Handlers.Complaints
                                 .FirstOrDefault(),
                             strComment = c.Complaint.strComment,
                             intVotersCount = c.UpVotes - c.DownVotes,
+                            lstMediaAfter = c.Complaint.Attachments
+                            .Where(q => q.blnIsFromWorker == true)
+                                .Select(
+                                    ca =>
+                                        new Media
+                                        {
+                                            Data = File.Exists(ca.strMediaRef)
+                                                ? Convert.ToBase64String(
+                                                    File.ReadAllBytes(ca.strMediaRef)
+                                                )
+                                                : string.Empty,
+                                            IsVideo = ca.blnIsVideo
+                                        }
+                                )
+                                .ToList(),
+                            lstMediaBefore = c.Complaint.Attachments
+                            .Where(q => q.blnIsFromWorker == false)
+                                .Select(
+                                    ca =>
+                                        new Media
+                                        {
+                                            Data = File.Exists(ca.strMediaRef)
+                                                ? Convert.ToBase64String(
+                                                    File.ReadAllBytes(ca.strMediaRef)
+                                                )
+                                                : string.Empty,
+                                            IsVideo = ca.blnIsVideo
+                                        }
+                                )
+                                .ToList(),
+                            blnIsCompleted = c.Complaint.intStatusId
+                            == (int)ComplaintsConstant.complaintStatus.completed
                         }
                 )
                 .ToListAsync(cancellationToken);
 
-            return Result<List<ComplaintsListDTO>>.Success(result);
+            return Result<List<MyComplaintDTO>>.Success(result);
         }
     }
 }
