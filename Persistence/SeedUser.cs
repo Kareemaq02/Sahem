@@ -40,12 +40,46 @@ namespace Persistence
                 "AlSharifi",
                 "AlQazwini"
             };
+            Dictionary<string, string> firstNameMapping = new Dictionary<string, string>
+            {
+                { "Ali", "علي" },
+                { "Amira", "أميرة" },
+                { "Nour", "نور" },
+                { "Mohammed", "محمد" },
+                { "Rima", "ريما" },
+                { "Zeinab", "زينب" },
+                { "Hussein", "حسين" },
+                { "Fatima", "فاطمة" },
+                { "Omar", "عمر" },
+                { "Maryam", "مريم" },
 
+            };
+            Dictionary<string, string> lastNameMapping = new Dictionary<string, string>
+            {
+                { "AlSaadi", "السعدي" },
+                { "AlMahdi", "المهدي" },
+                { "AlAlawi", "العلوي" },
+                { "AlHusseini", "الحسيني" },
+                { "AlObaidi", "العبيدي" },
+                { "AlMuradi", "المرادي" },
+                { "AlMousawi", "الموسوي" },
+                { "AlSadr", "الصدر" },
+                { "AlSharifi", "الشريفي" },
+                { "AlQazwini", "القزويني" },
+            };
+
+            var randomEnglishFirstName = arabicFirstNames[random.Next(0, arabicFirstNames.Length)];
+            var randomArabicFirstName = firstNameMapping[randomEnglishFirstName];
+
+            var randomEnglishLastName = arabicLastNames[random.Next(0, arabicLastNames.Length)];
+            var randomArabicLastName = lastNameMapping[randomEnglishLastName];
             var info = await context.UserInfos.AddAsync(
                 new UserInfo
                 {
-                    strFirstName = arabicFirstNames[random.Next(0, arabicFirstNames.Length)],
-                    strLastName = arabicLastNames[random.Next(0, arabicLastNames.Length)],
+                    strFirstName = randomEnglishFirstName,
+                    strLastName = randomEnglishLastName,
+                    strFirstNameAr = randomArabicFirstName,
+                    strLastNameAr = randomArabicLastName,
                     strPhoneNumber = GenaratePhoneNumber(context),
                     strNationalId = GenaratNationalId(context),
                     strNationalIdNumber = GenarateNationalIdNumber(context)
