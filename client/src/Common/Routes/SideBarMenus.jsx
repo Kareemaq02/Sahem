@@ -42,7 +42,7 @@ const AdminMenus = [
       },
       {
         text: "خريطة المشاكل",
-        path: "/auth/mapcomplaints",
+        path: "/auth/compMap",
         icon: <Map />,
       },
     ],
@@ -74,7 +74,7 @@ const AdminMenus = [
       },
       {
         text: "خريطة الاعمال",
-        path: "/auth/maptasks",
+        path: "/auth/taskMap",
         icon: <Map />,
       },
     ],
@@ -124,7 +124,7 @@ const WorkerMenus = [
       },
       {
         text: "خريطة البلاغات",
-        path: "/auth/mapgeneralcomplaints",
+        path: "/auth/taskMapWorker",
         icon: <Map />,
       },
     ],
@@ -159,7 +159,7 @@ const UserMenus = [
       },
       {
         text: "الخريطة",
-        path: "/auth/mapcomplaints",
+        path: "/auth/compMapUserGen",
         icon: <Map />,
       },
     ],
@@ -176,7 +176,7 @@ const UserMenus = [
       },
       {
         text: "الخريطة",
-        path: "/auth/mapcomplaints",
+        path: "/auth/compMapUser",
         icon: <Map />,
       },
     ],

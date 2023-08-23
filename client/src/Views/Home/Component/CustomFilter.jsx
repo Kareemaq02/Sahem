@@ -7,7 +7,9 @@ import FormChipSelect from "../../../Common/Components/UI/FormFields/FormChipSel
 import GetComplaintTypes from "../Service/GetComplaintTypes";
 import ComplaintMap from "./ComplaintMap"
 import "../Style/style.css"
-import mapboxgl from "mapbox-gl";
+import "./ComplaintMap.css"
+
+import mapboxgl, { Marker, Popup } from "mapbox-gl";
 
 const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange }) => {
 
@@ -18,7 +20,35 @@ const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange }) => {
     const map = useRef(null);
     const [lng, setLng] = useState(35.919952);
     const [lat, setLat] = useState(31.941391);
-    const [zoom, setZoom] = useState(10);
+    const [zoom, setZoom] = useState(8);
+
+    const geojson = {
+        'type': 'FeatureCollection',
+        'features': [
+        {
+        'type': 'Feature',
+        'properties': {
+        'message': 'Foo',
+        'iconSize': [60, 60]
+        },
+        'geometry': {
+        'type': 'Point',
+        'coordinates': [lng, lat]
+        }
+        },
+        {
+        'type': 'Feature',
+        'properties': {
+        'message': 'Bar',
+        'iconSize': [50, 50]
+        },
+        'geometry': {
+        'type': 'Point',
+        'coordinates': [35.875612, 31.957211]
+        }
+        },
+        ]
+        };
 
     useEffect(() => {
         if (map.current) return; // initialize map only once
@@ -28,7 +58,51 @@ const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange }) => {
             center: [lng, lat],
             zoom: zoom,
         });
+        for (const marker of geojson.features) {
+            const el = document.createElement('div');
+            const width = marker.properties.iconSize[0];
+            const height = marker.properties.iconSize[1];
+            el.className = 'marker';
+            el.style.backgroundImage = `url(https://placekitten.com/g/${width}/${height}/)`;
+            el.style.width = `${width}px`;
+            el.style.height = `${height}px`;
+            el.style.backgroundSize = '100%';
+    
+        const popupContent = document.createElement("div");
+        popupContent.className = "popup-container";
+    
+        popupContent.innerHTML = `
+        <div class="popup-image" style="border-color: ${(marker.properties.message)};">
+        <img src="URL_OF_YOUR_IMAGE" alt="Marker Image" />
+      </div>
+      <div class="popup-divider"></div>
+      <div class="popup-content">
+        <!-- ... rest of the content -->
+      </div>
+          <div class="popup-divider"></div>
+          <div class="popup-content">
+            <div class="popup-label">رقم البلاغ</div>
+            <div class="popup-value">Value 1</div>
+            <div class="popup-label">حالة البلاغ</div>
+            <div class="popup-value">Value 2</div>
+            <div class="popup-label">المستخدم</div>
+            <div class="popup-value">Value 3</div>
+            <div class="popup-label">تاريخ الأضافة</div>
+            <div class="popup-value">Value 4</div>
+          </div>
+        `;
+    
+        const popup = new Popup({ offset: 25 }).setDOMContent(popupContent);
+    
+        new mapboxgl.Marker(el)
+          .setLngLat(marker.geometry.coordinates)
+          .setPopup(popup)
+          .addTo(map.current);
+      }
+        
     });
+
+    
 
     const [complaintTypes, setComplaintTypes] = useState([]);
     const [selectedComplaintTypes, setSelectedComplaintTypes] = useState([]);
@@ -46,7 +120,7 @@ const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange }) => {
         };
 
         fetchComplaintTypes();
-    }, []);
+    }, [lng, lat, zoom, geojson]);
 
 
 
@@ -123,12 +197,6 @@ const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange }) => {
                 />
             </Box>
             <br />
-            <h4 dir="rtl">المسافة</h4>
-            <Divider />
-            <br />
-            <Box sx={{ padding: 2, width: '100%', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <FormSlider />
-            </Box>
 
 
         </Paper>

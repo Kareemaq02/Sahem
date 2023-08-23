@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import mapboxgl, { Marker, Popup } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { Box } from "@mui/material";
-import "./ComplaintMap.css";
+import "./Map_Complaints.css";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiYWdyaWRiIiwiYSI6ImNsbDN5dXgxNTAxOTAza2xhdnVmcnRzbGEifQ.3cM2WO5ubiAjuWbpXi9woQ";
@@ -12,7 +12,7 @@ function App() {
   const map = useRef(null);
   const [lat, setLat] = useState(31.952912);
   const [lng, setLng] = useState(35.910861);
-  const [zoom, setZoom] = useState(10);
+  const [zoom, setZoom] = useState(11);
   const geojson = {
     'type': 'FeatureCollection',
     'features': [
@@ -61,6 +61,7 @@ function App() {
         el.style.height = `${height}px`;
         el.style.backgroundSize = '100%';
 
+    // Create a custom popup content
     const popupContent = document.createElement("div");
     popupContent.className = "popup-container";
 
@@ -85,11 +86,13 @@ function App() {
       </div>
     `;
 
+    // Create a popup
     const popup = new Popup({ offset: 25 }).setDOMContent(popupContent);
 
+    // Add the marker element to the map with popup
     new mapboxgl.Marker(el)
       .setLngLat(marker.geometry.coordinates)
-      .setPopup(popup)
+      .setPopup(popup) // Set the popup
       .addTo(map.current);
   }
     }, [lng, lat, zoom, geojson]);
