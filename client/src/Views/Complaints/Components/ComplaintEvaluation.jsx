@@ -18,12 +18,14 @@ const ComplaintEvaluation = ({ photos, complaint, setApproved }) => {
       >
         Evaluate Complaint
       </Typography>
-      <MediaGallery
-        items={photos}
-        height="25rem"
-        width="auto"
-        borderRadius="1rem"
-      />
+      {photos.map((media, index) => (
+        <img
+          key={index}
+          src={`data:image/jpg;base64,${media.data}`}
+          alt={`Image ${index}`}
+          style={{borderRadius:'25px'}}
+        />
+      ))}
       <ComplaintDetails theme={theme} complaint={complaint} />
       <Stack direction="row" spacing={2}>
         <Button

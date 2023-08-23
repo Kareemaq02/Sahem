@@ -36,7 +36,7 @@ const ComplaintDetails = ({ theme, complaint }) => {
           <Typography variant="h5" color={theme.palette.grey[500]}>
             Status
           </Typography>
-          <Chip label="Status Here" color="primary" variant="outlined" />
+          <Chip label={complaint.strStatus} color="primary" variant="outlined" />
         </FlexBetween>
         <FlexBetween>
           <Typography variant="h5" color={theme.palette.grey[500]}>
