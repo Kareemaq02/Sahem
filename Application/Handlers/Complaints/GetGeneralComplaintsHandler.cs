@@ -109,8 +109,8 @@ namespace Application.Handlers.Complaints
                             blnIsOnWatchList = c.Complaint.Watchers
                                  .Any(cw => cw.intUserId == userId && cw.intComplaintId == c.Complaint.intId),
 
-                            strAddress = GetStateNameTemp.getStateNameByLatLng
-                                 (c.latLng.decLat, c.latLng.decLng), //TODO This makes the request very slow fetch from database when ready instead
+                           /* strAddress = GetStateNameTemp.getStateNameByLatLng
+                                 (c.latLng.decLat, c.latLng.decLng), *///TODO This makes the request very slow fetch from database when ready instead
                             blnIsVerified = c.blnIsVerified
 
                       }
