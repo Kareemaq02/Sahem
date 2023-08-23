@@ -4,10 +4,10 @@ import React, { useState, useEffect } from "react";
 import { Typography, SwipeableDrawer } from "@mui/material";
 
 
-import {GetComplaintApi} from "../Service/GetComplaintsApi"
+import { GetComplaintApi } from "../Service/GetComplaintsApi"
 import { DateFormatterEn } from "../../../Common/Utils/DateFormatter";
 import GeneralCompDataGrid from "../Components/generalCompDateGrid";
-
+import GetComplaintImage from "../../Home/Service/GetComplaintImage";
 
 
 const CitizenViewGeneralComplaints = () => {
@@ -16,7 +16,14 @@ const CitizenViewGeneralComplaints = () => {
     useEffect(() => {
         const setComplaintsView = async () => {
             const response = await GetComplaintApi();
-            setComplaints(response.data);
+
+            const complaintsWithData = await Promise.all(response.data.map(async (complaint) => {
+                const imageDataResponse = await GetComplaintImage(complaint.intComplaintId);
+                const imageData = imageDataResponse.data.lstMedia[0]?.data || "";
+
+                return { ...complaint, imageData };
+            }));
+            setComplaints(complaintsWithData);
         };
         setComplaintsView();
     }, []);
@@ -29,8 +36,7 @@ const CitizenViewGeneralComplaints = () => {
 
     return (
         <div>
-            <Typography variant="h1">General Complaints</Typography>
-            <GeneralCompDataGrid  data={FormatDate(complaints)}/>
+            <GeneralCompDataGrid data={FormatDate(complaints)} />
         </div>
     );
 };
