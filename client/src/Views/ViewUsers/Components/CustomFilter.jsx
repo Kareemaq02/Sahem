@@ -14,12 +14,8 @@ const CustomFilter = ({ onFilterChange }) => {
     };
 
     return (
-        <Paper sx={{ bgcolor: 'transparent' }}>
-            <Box sx={{ backgroundColor: "#f0f0f0", width: '100%', padding: 10 }} textAlign="center">
-                <h2 style={{ fontSize: "36px" }}>Filters</h2>
-            </Box>
-            <br />
-            <Typography variant="h4"> Show Only Verified </Typography>
+        <Paper sx={{ bgcolor: 'white', p:3, borderRadius:'25px'}}>
+            <Typography variant="h3">اظهار المستخدمين الموثقين فقط</Typography>
             <Box sx={{ width: '100%', textAlign: 'center', display: 'flex', flexWrap: 'wrap' }}>
                 <Switch onChange={handleVerifiedSwitchChange} />
 
@@ -27,7 +23,9 @@ const CustomFilter = ({ onFilterChange }) => {
             <br />
             <br />
             <Divider />
-            <Typography variant="h4"> Show Only Blacklisted </Typography>
+            <br />
+            <br />
+            <Typography variant="h3"> اظهار المستخدمين المحظورين فقط </Typography>
             <Box sx={{ width: '100%', textAlign: 'center', display: 'flex', flexWrap: 'wrap' }}>
                 <Switch onChange={handleBlacklistedSwitchChange} />
 
