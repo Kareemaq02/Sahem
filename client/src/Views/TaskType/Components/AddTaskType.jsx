@@ -1,4 +1,4 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField, Typography,Paper } from "@mui/material";
 import FormTextField from "../../../Common/Components/UI/FormFields/FormTextField";
 import { FormProvider, useForm } from "react-hook-form";
 import InsertTaskType from "../Service/InsertTaskType";
@@ -26,18 +26,13 @@ const AddTaskType = () => {
     }
   };
   return (
-    <Box
+    <Paper
       sx={{
-        width: '70%',
-        margin: '0 auto',
-        padding: '20px',
-        border: '1px solid #ccc',
-        borderRadius: '8px',
-        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-        // backgroundColor: '#f5f5f5',
+        p:2,
+        borderRadius:'25px'
       }}
     >
-      <Typography variant="h2" sx={{ marginBottom: '20px' }}>
+      <Typography variant="h2" sx={{ textAlign:'center', p:1}}>
         Add Task Types
       </Typography>
       <FormProvider {...methods}>
@@ -61,7 +56,7 @@ const AddTaskType = () => {
           </Button>
         </form>
       </FormProvider>
-    </Box>
+    </Paper>
   );
 };
 

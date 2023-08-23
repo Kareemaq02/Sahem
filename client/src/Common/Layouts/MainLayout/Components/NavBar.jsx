@@ -13,6 +13,9 @@ import "./style.css"
 import { FlexBetween } from "../../../Components/FlexBetween";
 import AccSetting from "../../../../Views/AccountSettings/index"
 
+// png
+import amman from './amman.png'
+
 // Context
 import AppContext from "../../../Context/AppContext";
 import AccountMenu from "./AccountMenu";
@@ -44,6 +47,19 @@ const Navbar = ({ user }) => {
       dir="rtl"
     >
       <Toolbar sx={{ justifyContent: "space-between" }}>
+        <img
+          src={amman}
+          alt="امانة عمان الكبري"
+          style={{
+            maxWidth: '100%',
+            maxHeight: '80px',
+            height: 'auto',
+            width: 'auto',
+            display: 'block',
+            padding: '5px',
+            margin: '0'
+          }}
+        />
         {/* LEFT SIDE */}
         <FlexBetween />
         {/* RIGHT SIDE */}
@@ -70,7 +86,6 @@ const Navbar = ({ user }) => {
             </IconButton>
 
           </div>
-
         </FlexBetween>
       </Toolbar>
     </AppBar>

@@ -18,10 +18,11 @@ import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import InsertPageBreakIcon from "@mui/icons-material/Add";
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import EngineeringIcon from '@mui/icons-material/Engineering';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 const AdminMenus = [
   {
-    text: "اللوحة الرئيسية",
+    text: "الرئيسية",
     path: "/auth/home",
     icon: <HomeOutlined />,
   },
@@ -36,13 +37,14 @@ const AdminMenus = [
         icon: <TableChart />,
       },
       {
-        text: "انواع المشاكل",
+        text: "الجدول",
         path: "/auth/complainttype",
         icon: <FormatListBulletedIcon />,
       },
       {
         text: "خريطة المشاكل",
-        path: "/auth/mapcomplaints",
+        path: "/auth/compMap",
+     
         icon: <Map />,
       },
     ],
@@ -63,18 +65,18 @@ const AdminMenus = [
     icon: <AssignmentIndOutlined />,
     children: [
       {
-        text: "عرض الاعمال",
+        text: "الجدول",
         path: "/auth/tasks",
         icon: <TableChart />,
       },
       {
-        text: "انواع الاعمال",
+        text: "الجدول",
         path: "/auth/tasktype",
         icon: <FormatListBulletedIcon />,
       },
       {
         text: "خريطة الاعمال",
-        path: "/auth/maptasks",
+        path: "/auth/taskMap",
         icon: <Map />,
       },
     ],
@@ -86,7 +88,7 @@ const AdminMenus = [
     icon: <AssignmentIndOutlined />,
     children: [
       {
-        text: "عرض انواع الاقسام",
+        text: "الجدول",
         path: "/auth/department-type",
         icon: <TableChart />,
       },
@@ -98,7 +100,7 @@ const AdminMenus = [
     icon: <AssignmentIndOutlined />,
     children: [
       {
-        text: "عرض المهن",
+        text: "الجدول",
         path: "/auth/proffession",
         icon: <TableChart />,
       },
@@ -118,13 +120,13 @@ const WorkerMenus = [
     icon: <Public />,
     children: [
       {
-        text: "عرض البلاغات",
+        text: "الجدول",
         path: "/auth/generalcomplaints",
         icon: <TableChart />,
       },
       {
         text: "خريطة البلاغات",
-        path: "/auth/mapgeneralcomplaints",
+        path: "/auth/taskMapWorker",
         icon: <Map />,
       },
     ],
@@ -143,7 +145,7 @@ const WorkerMenus = [
 
 const UserMenus = [
   {
-    text: "اللوحة الرئيسية",
+    text: "المنتدى",
     path: "/auth/home",
     icon: <HomeOutlined />,
   },
@@ -153,13 +155,13 @@ const UserMenus = [
     icon: <Public />,
     children: [
       {
-        text: "عرض البلاغات العامة",
+        text: "عرض",
         path: "/auth/generalcomplaints",
         icon: <TableChart />,
       },
       {
         text: "الخريطة",
-        path: "/auth/mapcomplaints",
+        path: "/auth/compMapUserGen",
         icon: <Map />,
       },
     ],
@@ -170,16 +172,21 @@ const UserMenus = [
     icon: <ContentPaste />,
     children: [
       {
-        text: "عرض بلاغاتي",
+        text: "عرض",
         path: "/auth/complaints",
         icon: <TableChart />,
       },
       {
         text: "الخريطة",
-        path: "/auth/mapcomplaints",
+        path: "/auth/compMapUser",
         icon: <Map />,
       },
     ],
+  },
+  {
+    text: "المفضلة",
+    path: "/auth/watchlist",
+    icon: <FavoriteIcon />,
   },
 ];
 

@@ -31,16 +31,27 @@ const AdminViewComplaints = () => {
     setComplaintsView();
   }, [pageSize, pageNumber]);
 
+  const setComplaintById = async (params) => {
+    try {
+      const response = await GetComplaintByidApi(params);
+      setComplaint(response.data);
+      setApproved(false);
+      setDrawerOpen(true);
+    } catch (error) {
+      console.error("Error fetching complaint:", error);
+    }
+  }
+
+  const decodeBase64Image = (base64Data) => {
+    return `data:image/jpg;base64,${base64Data}`;
+  };
+
+
   const FormatDate = () => {
     const rows = [...complaints];
     rows.forEach((c) => (c.dtmDateCreated = DateFormatterEn(c.dtmDateCreated)));
     return rows;
   };
-
-  const photos = complaint.lstMedia.map((media, index) => ({
-    media: `data:image/jpg;base64, ${media}`,
-    title: complaint.intComplaintId + "-" + index,
-  }));
 
   const handleArrowUp = () => {
     setPageNumber((prevPageNumber) => prevPageNumber + 1);
@@ -57,12 +68,7 @@ const AdminViewComplaints = () => {
       <Typography variant="h1">View Complaints</Typography>
       <ComplaintsDataGrid
         data={FormatDate()}
-        AddComplaint={async (params) => {
-          const response = await GetComplaintByidApi(params);
-          setComplaint(response.data);
-          setApproved(false);
-          setDrawerOpen(true);
-        }}
+        AddComplaint={setComplaintById}
       />
       <div style={{ textAlign: "center", }}>
         <ArrowCircleDownIcon
@@ -80,18 +86,18 @@ const AdminViewComplaints = () => {
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
         onOpen={() => setDrawerOpen(true)}
-        PaperProps={{ style: { width: "65%" } }}
+        PaperProps={{ style: { width: "45%" } }}
       >
         <ScrollableContent>
           {approved ? (
             <TaskCreation
-              photos={photos}
+              photos={complaint.lstMedia}
               complaint={complaint}
               CloseDrawer={() => setDrawerOpen(false)}
             />
           ) : (
             <ComplaintEvaluation
-              photos={photos}
+              photos={complaint.lstMedia}
               complaint={complaint}
               setApproved={setApproved}
             />
