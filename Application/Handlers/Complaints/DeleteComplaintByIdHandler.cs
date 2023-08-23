@@ -39,7 +39,7 @@ namespace Application.Handlers
                     await _context.SaveChangesAsync(cancellationToken);
                 }
                 else
-                    return Result<Unit>.Failure("Failed to delete the complaint.");
+                    return Result<Unit>.Failure("Only pending complaints can be deleted.");
             }
             catch (DbUpdateException)
             {
@@ -52,6 +52,21 @@ namespace Application.Handlers
                 var complaint = new Complaint { intId = request.Id };
                 _context.Complaints.Attach(complaint);
                 _context.Complaints.Remove(complaint);
+
+                await _context.SaveChangesAsync(cancellationToken);
+            }
+            catch (DbUpdateException)
+            {
+                await transaction.RollbackAsync();
+                return Result<Unit>.Failure("Failed to delete complaint.");
+            }
+            try
+            {
+                var complaintTransactions = await _context.ComplaintsStatuses
+                         .Where(ca => ca.intComplaintId == request.Id)
+                         .ToListAsync(cancellationToken);
+
+                _context.ComplaintsStatuses.RemoveRange(complaintTransactions);
 
                 await _context.SaveChangesAsync(cancellationToken);
             }

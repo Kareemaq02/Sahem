@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Domain.Resources;
 using Domain.DataModels.Complaints;
 using Domain.ClientDTOs.Evaluation;
+using Application.Commands;
 
 namespace Application.Handlers.Evaluations
 {
@@ -15,13 +16,16 @@ namespace Application.Handlers.Evaluations
         : IRequestHandler<CompleteTaskCommand, Result<EvaluationDTO>>
     {
         private readonly DataContext _context;
+        private readonly AddComplaintStatusChangeTransactionHandler _changeTransactionHandler;
         public readonly UserManager<ApplicationUser> _userManager;
 
         public SetTaskAsCompletedHandler(
             DataContext context,
-            UserManager<ApplicationUser> userManager
+            UserManager<ApplicationUser> userManager,
+            AddComplaintStatusChangeTransactionHandler changeTransactionHandler
         )
         {
+            _changeTransactionHandler = changeTransactionHandler;
             _context = context;
             _userManager = userManager;
         }
@@ -66,6 +70,16 @@ namespace Application.Handlers.Evaluations
                     var complaint = new Complaint { intId = x };
                     _context.Complaints.Attach(complaint);
                     complaint.intStatusId = (int)ComplaintsConstant.complaintStatus.completed;
+                    await _context.SaveChangesAsync(cancellationToken);
+
+
+                    await _changeTransactionHandler.Handle(
+                      new AddComplaintStatusChangeTransactionCommand(
+                              x,
+                              (int)ComplaintsConstant.complaintStatus.completed
+                          ),
+                              cancellationToken
+                          );
                     await _context.SaveChangesAsync(cancellationToken);
                 }
 

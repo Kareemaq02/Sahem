@@ -88,7 +88,7 @@ namespace Application.Handlers.Complaints
                             intStatusId = c.Complaint.intStatusId,
                             intComplaintId = c.Complaint.intId,
                             dtmDateCreated = c.Complaint.dtmDateCreated,
-                            dtmDateFinished = DateTime.MinValue, // TODO MUST CHANGE WHEN TASK AND COMPLAINTS RELATIONSHIP IS DECIDED
+                            dtmDateFinished = c.Complaint.Tasks.Select(q => q.Task.dtmDateFinished).FirstOrDefault() , 
                             strStatus = c.Status,
                             intPrivacyId = c.privacyId,
                             strPrivacyAr = c.privacyStrAr,

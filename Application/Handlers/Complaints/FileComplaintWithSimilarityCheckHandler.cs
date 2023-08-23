@@ -1,4 +1,5 @@
-﻿using Application.Core;
+﻿using Application.Commands;
+using Application.Core;
 using Domain.ClientDTOs.Complaint;
 using Domain.DataModels.Complaints;
 using Domain.DataModels.Intersections;
@@ -19,16 +20,19 @@ namespace Application.Handlers.Complaints
         private readonly DataContext _context;
         private readonly IConfiguration _configuration;
         public readonly UserManager<ApplicationUser> _userManager;
+        private readonly AddComplaintStatusChangeTransactionHandler _transactionHandler;
 
         public FileComplaintWithSimilarityCheckHandler(
             DataContext context,
             IConfiguration configuration,
-            UserManager<ApplicationUser> userManager
+            UserManager<ApplicationUser> userManager,
+            AddComplaintStatusChangeTransactionHandler transactionHandler
         )
         {
             _context = context;
             _configuration = configuration;
             _userManager = userManager;
+            _transactionHandler = transactionHandler;
         }
 
         public async Task<Result<InsertComplaintDTO>> Handle(
@@ -176,6 +180,21 @@ namespace Application.Handlers.Complaints
 
                     await _context.ComplaintAttachments.AddRangeAsync(complaintAttachments);
                     await _context.SaveChangesAsync(cancellationToken);
+
+
+                    await _transactionHandler.Handle
+                        (
+                        new AddComplaintStatusChangeTransactionCommand
+                        (
+                            complaint.intId
+                        ,
+                            (int)ComplaintsConstant.complaintStatus.pending
+                        )
+                        ,
+                         cancellationToken
+                        );
+  
+                    await _context.SaveChangesAsync (cancellationToken);
                     await transaction.CommitAsync();
                 }
                 catch (Exception)
