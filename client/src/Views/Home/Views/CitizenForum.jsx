@@ -3,16 +3,19 @@ import { Typography, Box, Grid, IconButton } from "@mui/material";
 import ComplaintPost from "../Component/ComplaintPost";
 import { FlexBetween } from "../../../Common/Components/FlexBetween";
 import CustomFilter from "../Component/CustomFilter";
+// icons
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+// project
 import GetComplaintDetails from "../Service/GetComplaintDetails";
+import GetComplaintImage from "../Service/GetComplaintImage";
 
 function CitizenForum() {
   const [comDet, setCompDet] = useState([]);
   const [pageSize, setPageSize] = useState(10);
   const [pageNumber, setPageNumber] = useState(1);
   const [selectedComplaintTypes, setSelectedComplaintTypes] = useState([]);
-  const [selectedStatus, setSelectedStatus] = useState([]); 
+  const [selectedStatus, setSelectedStatus] = useState([]);
 
 
   useEffect(() => {
@@ -23,9 +26,17 @@ function CitizenForum() {
           pageSize,
           selectedComplaintTypes,
           selectedStatus,
-          null // Replace 'null' with the actual date value, if needed
+          null 
         );
-        setCompDet(response.data);
+
+        const complaintsWithData = await Promise.all(response.data.map(async (complaint) => {
+          const imageDataResponse = await GetComplaintImage(complaint.intComplaintId); 
+          const imageData = imageDataResponse.data.lstMedia[0]?.data || ""; 
+
+          return { ...complaint, imageData };
+        }));
+
+        setCompDet(complaintsWithData);
       } catch (error) {
         console.error(error);
       }
@@ -55,31 +66,29 @@ function CitizenForum() {
 
   return (
     <div>
-      <Typography variant="h1" component="h1">
-        اللوحة الرئيسية
-      </Typography>
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={8}>
+
+      <Grid container spacing={2} className="app-container">
+        <Grid item xs={12} md={8} className="main-content">
           <FlexBetween>
             <ComplaintPost data={comDet} />
           </FlexBetween>
 
           <Box display="flex" justifyContent="center" mt={2} >
             <IconButton onClick={() => handlePageChange("prev")} disabled={pageNumber === 1}>
-            <ArrowForwardIcon />
+              <ArrowForwardIcon />
             </IconButton>
             <IconButton
               onClick={() => handlePageChange("next")}
               disabled={comDet.length < pageSize}
             >
-              
+
               <ArrowBackIcon />
             </IconButton>
 
           </Box>
         </Grid>
 
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={4} className="custom-filter-container">
           {/* Pass the handleComplaintTypesChange function as a prop */}
           <CustomFilter onComplaintTypesChange={handleComplaintTypesChange} onComplaintStatusChange={handleComplaintStatusChange} />
         </Grid>

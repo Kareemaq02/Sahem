@@ -1,6 +1,6 @@
 import { FormProvider, useForm } from "react-hook-form";
 import FormTextField from "../../../Common/Components/UI/FormFields/FormTextField";
-import { Button, Box, Typography } from "@mui/material";
+import { Button, Box, Typography, Paper } from "@mui/material";
 import ProffessionApi from "../Service/ProffessionApi";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -25,18 +25,13 @@ const ProffessionForm = () => {
     }
   };
   return (
-    <Box
+    <Paper
       sx={{
-        width: '70%',
-        margin: '0 auto',
-        padding: '20px',
-        border: '1px solid #ccc',
-        borderRadius: '8px',
-        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-        // backgroundColor: '#f5f5f5',
+        p:2,
+        borderRadius:'25px'
       }}
     >
-      <Typography variant="h2" sx={{ marginBottom: '20px' }}>
+      <Typography variant="h2" sx={{ p:1, textAlign:'center' }}>
         Insert Proffession
       </Typography>
       <FormProvider {...methods}>
@@ -52,7 +47,7 @@ const ProffessionForm = () => {
           </Button>
         </form>
       </FormProvider>
-    </Box>
+    </Paper>
   );
 };
 

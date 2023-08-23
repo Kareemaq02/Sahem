@@ -31,3 +31,38 @@ h4 {
   
 
   
+  /* In your CSS file */
+.app-container {
+    display: flex;
+  }
+  
+  .custom-filter-container {
+    position: sticky;
+    top: 0;
+    height: 100vh; /* Adjust the height as needed */
+    overflow-y: auto;
+  }
+  
+  .main-content {
+    flex: 1;
+    padding: 20px;
+    /* Add any additional styles for your main content */
+  }
+  
+  .disable-scroll {
+    overflow: hidden;
+  }
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+    background-color: #3498db;
+    color: white;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin-left: 4px;
+  }
+  
