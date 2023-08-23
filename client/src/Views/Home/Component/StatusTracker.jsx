@@ -1,5 +1,5 @@
 import React from 'react';
-import '../Style/StatusTracker.css'; // Import your CSS file for styling
+import '../Style/StatusTracker.css';
 import { Box } from '@mui/system';
 
 const StatusTracker = ({ currentStage }) => {

@@ -14,6 +14,11 @@ const NotFound = Loadable(lazy(() => import("../../Views/NotFound")));
 const Auth = Loadable(lazy(() => import("../../Views/Authentication/")));
 const Login = Loadable(lazy(() => import("../../Views/Authentication/Login")));
 const ComplaintType = Loadable(lazy(() => import("../../Views/ComplaintsType/index")));
+const CompMap = Loadable(lazy(() => import("../../Views/Maps/Map_Complaint/Map_Complaints")));
+const TaskMap = Loadable(lazy(() => import("../../Views/Maps/Map_Task/Map_Tasks")));
+const WorkerTaskMap = Loadable(lazy(() => import("../../Views/Maps/Map_Tasks_Worker/Map_Tasks_Worker")));
+const CompMapUserGen = Loadable(lazy(() => import("../../Views/Maps/Map_Complaint_User_General/Map_Complaint_User_General")));
+const CompMapUser = Loadable(lazy(() => import("../../Views/Maps/Map_Complaint_User/Map_Complaint_User")));
 const DepartmentType = Loadable(lazy(() => import("../../Views/Department/index")));
 const TaskType = Loadable(lazy(() => import("../../Views/TaskType/index")));
 const Register = Loadable(
@@ -31,6 +36,7 @@ const MyTask = Loadable(lazy(() => import("../../Views/MyTasks/index")));
 const RegWorker = Loadable(lazy(() => import("../../Views/WorkerReg/index")));
 const AccSettings = Loadable(lazy(() => import("../../Views/AccountSettings/index")));
 const MyWatches = Loadable(lazy(() => import("../../Views/MyWatchs/index")));
+
 
 
 
@@ -94,6 +100,51 @@ const MainRoutes = {
         <PermissionsHelper
           allowedRoles={[Admin, User,Worker]}
           element={<GeneralComplaints />}
+        />
+      ),
+    },
+    {
+      path: "compMap",
+      element: (
+        <PermissionsHelper
+          allowedRoles={[Admin]}
+          element={<CompMap />}
+        />
+      ),
+    },
+    {
+      path: "compMapUserGen",
+      element: (
+        <PermissionsHelper
+          allowedRoles={[Admin,User]}
+          element={<CompMapUserGen />}
+        />
+      ),
+    },
+    {
+      path: "compMapUser",
+      element: (
+        <PermissionsHelper
+          allowedRoles={[Admin,User]}
+          element={<CompMapUser />}
+        />
+      ),
+    },
+    {
+      path: "taskMap",
+      element: (
+        <PermissionsHelper
+          allowedRoles={[Admin]}
+          element={<TaskMap/>}
+        />
+      ),
+    },
+    {
+      path: "taskMapWorker",
+      element: (
+        <PermissionsHelper
+          allowedRoles={[Worker]}
+          element={<WorkerTaskMap/>}
         />
       ),
     },

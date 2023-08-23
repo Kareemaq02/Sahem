@@ -42,8 +42,9 @@ const AdminMenus = [
         icon: <FormatListBulletedIcon />,
       },
       {
-        text: "خريطة",
-        path: "/auth/mapcomplaints",
+        text: "خريطة المشاكل",
+        path: "/auth/compMap",
+     
         icon: <Map />,
       },
     ],
@@ -74,8 +75,8 @@ const AdminMenus = [
         icon: <FormatListBulletedIcon />,
       },
       {
-        text: "خريطة",
-        path: "/auth/maptasks",
+        text: "خريطة الاعمال",
+        path: "/auth/taskMap",
         icon: <Map />,
       },
     ],
@@ -124,8 +125,8 @@ const WorkerMenus = [
         icon: <TableChart />,
       },
       {
-        text: "خريطة",
-        path: "/auth/mapgeneralcomplaints",
+        text: "خريطة البلاغات",
+        path: "/auth/taskMapWorker",
         icon: <Map />,
       },
     ],
@@ -160,7 +161,7 @@ const UserMenus = [
       },
       {
         text: "الخريطة",
-        path: "/auth/mapcomplaints",
+        path: "/auth/compMapUserGen",
         icon: <Map />,
       },
     ],
@@ -177,7 +178,7 @@ const UserMenus = [
       },
       {
         text: "الخريطة",
-        path: "/auth/mapcomplaints",
+        path: "/auth/compMapUser",
         icon: <Map />,
       },
     ],

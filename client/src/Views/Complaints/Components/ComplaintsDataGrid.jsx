@@ -1,15 +1,45 @@
+import React from "react";
 import {
   Box,
-  IconButton,
-  Avatar,
   Chip,
   Typography,
   Slider,
   useTheme,
+  IconButton,
+  Avatar,
 } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { AddCircleOutline, ArrowCircleUp } from "@mui/icons-material/";
+import {
+  AddCircleOutline,
+  ArrowCircleUp,
+  Info,
+  Error,
+  CheckCircle,
+  Schedule,
+  DoneAll,
+  Help,
+} from "@mui/icons-material/";
 
+function StatusIcon(status) {
+  switch (status) {
+    case "pending":
+      return <Schedule />;
+    case "rejected":
+      return <Error />;
+    case "approved":
+      return <Info />;
+    case "in progress":
+      return <Help />;
+    case "waiting evaluation":
+      return <Info />;
+    case "completed":
+      return <CheckCircle />;
+    case "re-filed":
+      return <DoneAll />;
+    default:
+      return <Info />;
+  }
+}
 
 function StatusColor(status) {
   switch (status) {
@@ -70,12 +100,7 @@ const ComplaintsDataGrid = ({ AddComplaint, data }) => {
       headerName: "Priority",
       flex: 1,
       renderCell: (params) => (
-        <Typography
-          variant="h5"
-          display="flex"
-          alignItems="center"
-          gap="0.5rem"
-        >
+        <Box display="flex" alignItems="center" gap="0.5rem">
           <ArrowCircleUp />
           <Slider
             sx={{
@@ -91,8 +116,10 @@ const ComplaintsDataGrid = ({ AddComplaint, data }) => {
             defaultValue={params.row.decPriority * 100}
             disabled
           />
-          %{(params.row.decPriority * 100).toFixed(2)}
-        </Typography>
+          <Typography variant="body2">
+            {(params.row.decPriority * 100).toFixed(2)}%
+          </Typography>
+        </Box>
       ),
     },
     { field: "dtmDateCreated", headerName: "Date Created", flex: 1 },
@@ -104,17 +131,20 @@ const ComplaintsDataGrid = ({ AddComplaint, data }) => {
         <Chip
           label={params.row.strStatus}
           color={StatusColor(params.row.strStatus)}
+          icon={StatusIcon(params.row.strStatus)}
           variant="outlined"
           sx={{
-            width: "7rem",
-            height: "1.5rem",
-            backgroundColor: "rgba(0,0,0,0.05)",
+            width: "60%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.05)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         />
       ),
     },
   ];
-
 
 
   return (
@@ -126,7 +156,6 @@ const ComplaintsDataGrid = ({ AddComplaint, data }) => {
         components={{ Toolbar: GridToolbar }}
         density="compact"
       />
-
     </Box>
   );
 };

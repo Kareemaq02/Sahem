@@ -86,7 +86,7 @@ const AdminViewComplaints = () => {
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
         onOpen={() => setDrawerOpen(true)}
-        PaperProps={{ style: { width: "65%" } }}
+        PaperProps={{ style: { width: "45%" } }}
       >
         <ScrollableContent>
           {approved ? (
