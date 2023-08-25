@@ -23,11 +23,6 @@ namespace Application.Handlers.Complaints
             CancellationToken cancellationToken
         )
         {
-            var userId = await _context.Users
-                .Where(u => u.UserName == request.strUserName)
-                .Select(u => u.Id)
-                .SingleOrDefaultAsync();
-
             var query =
                 from c in _context.Complaints
                 join u in _context.Users on c.intUserID equals u.Id
