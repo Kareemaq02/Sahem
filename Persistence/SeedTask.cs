@@ -83,11 +83,11 @@ namespace Persistence
 
             for (int i = 0; i < workerArr.Length; i++)
             {
-                await context.TaskMembers.AddAsync(
-                    new WorkTaskMembers
+                await context.TeamMembers.AddAsync(
+                    new TeamMembers
                     {
                         intWorkerId = workerArr[i].Id,
-                        intTaskId = taskEntity.Entity.intId,
+                        intTeamId = taskEntity.Entity.intId,
                         blnIsLeader = i == 0
                     }
                 );

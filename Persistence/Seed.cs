@@ -25,6 +25,7 @@ namespace Persistence
                 {
                     int typeAdmin = 0,
                         typeWorker = 0,
+                        typeLeader = 0,
                         typeUser = 0;
 
                     if (!context.UserTypes.Any())
@@ -37,6 +38,10 @@ namespace Persistence
                             new UserType { strName = ConstantsDB.UserTypes.Worker }
                         );
 
+                        var typeLeaderEntity = await context.UserTypes.AddAsync(
+                            new UserType { strName = ConstantsDB.UserTypes.Leader }
+                        );
+
                         var typeUserEntity = await context.UserTypes.AddAsync(
                             new UserType { strName = ConstantsDB.UserTypes.User }
                         );
@@ -46,6 +51,7 @@ namespace Persistence
                         // await saving to get valid IDs otherwise you'll get a zero which violates the Foreign key constraint
                         typeAdmin = typeAdminEntity.Entity.intId;
                         typeWorker = typeWorkerEntity.Entity.intId;
+                        typeLeader = typeLeaderEntity.Entity.intId;
                         typeUser = typeUserEntity.Entity.intId;
                     }
 
@@ -54,6 +60,7 @@ namespace Persistence
                         userManager,
                         typeAdmin,
                         typeWorker,
+                        typeLeader,
                         typeUser
                     );
 
