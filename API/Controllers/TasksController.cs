@@ -130,5 +130,16 @@ namespace API.Controllers
         {
             return HandleResult(await Mediator.Send(new GetTaskStatusTypesListQuery()));
         }
+
+
+        [HttpPost("AddComplaintToExistingTask")] // .../api/tasks/AddComplaintToExistingTask
+        public async Task<IActionResult> AddComplaintToExistingTask(AddComplaintToExistingTaskDTO
+            addComplaintToTaskDTO)
+        {
+
+            return HandleResult(await Mediator.
+                Send(new AddComplaintToExistingTaskCommand(addComplaintToTaskDTO)));
+
+        }
     }
 }

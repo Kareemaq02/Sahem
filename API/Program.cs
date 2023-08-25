@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Domain.DataModels.User;
 using Application.Handlers.Tasks;
+using Application.Handlers.Complaints;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +22,7 @@ builder.Services.AddCorsService(builder.Configuration, builder.Environment);
 builder.Services.AddIdentityService(builder.Configuration);
 builder.Services.AddTransient<InsertTaskHandler>();
 builder.Services.AddTransient<AddComplaintStatusChangeTransactionHandler>();
-
+builder.Services.AddTransient<GetComplaintByIdHandler>();
 
 var app = builder.Build();
 

@@ -53,13 +53,7 @@ namespace API.Controllers
         [HttpGet("{id}")] // .../api/complaints/...
         public async Task<IActionResult> GetComplaintById(int id)
         {
-            string authHeader = Request.Headers["Authorization"];
-            JwtSecurityTokenHandler tokenHandler = new();
-            JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
-
-            var strUserName = jwtToken.Claims.First(c => c.Type == "username").Value;
-
-            return HandleResult(await Mediator.Send(new GetComplaintByIdQuery(strUserName, id)));
+            return HandleResult(await Mediator.Send(new GetComplaintByIdQuery(id)));
         }
 
         [HttpPost("location")] // .../api/complaints/location
@@ -309,6 +303,45 @@ namespace API.Controllers
         }
 
 
+        [HttpPut("reject/{id}")] // .../api/complaints/reject/id
+        public async Task<IActionResult> RejectComplaintById(
+            int id,
+            string username
+        )
+        {
+            string authHeader = Request.Headers["Authorization"];
+            JwtSecurityTokenHandler tokenHandler = new();
+            JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
 
+            username = jwtToken.Claims.First(c => c.Type == "username").Value;
+
+            return HandleResult(
+                await Mediator.Send(new RejectComplaintByIdCommand(id, username))
+            );
+        }
+
+
+        [HttpGet("privacyLevels")] // .../api/complaints/privacyLevels
+        public async Task<IActionResult> GetComplaintPrivacyLevels()
+        {
+            return HandleResult(await Mediator.Send(new GetComplaintPrivacyLevelsListQuery()));
+        }
+
+        [HttpPut("types/delete/{id}")] // .../api/complaints/type/delete
+        public async Task<IActionResult> DeleteComplaintTypeById(int id, string username)
+        {
+            string authHeader = Request.Headers["Authorization"];
+            JwtSecurityTokenHandler tokenHandler = new();
+            JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
+
+            username = jwtToken.Claims.First(c => c.Type == "username").Value;
+            return HandleResult(await Mediator.Send(new DeleteComplaintTypeByIdCommand(id, username)));
+        }
+        [HttpGet("by/taskid/{id}")] // .../api/complaints/by/taskid/id
+        public async Task<IActionResult> GetComplaintsByTaskId(int id)
+        {
+
+            return HandleResult(await Mediator.Send(new GetComplaintsByTaskIdQuery(id)));
+        }
     }
 }
