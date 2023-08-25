@@ -30,6 +30,7 @@ namespace Application.Handlers.Departments
                         from user in users.DefaultIfEmpty()
                         join ui in _context.UserInfos on user.intUserInfoId equals ui.intId into usersInfo
                         from userInfo in usersInfo.DefaultIfEmpty()
+                        where d.blnIsDeleted == false
                         select new
                         {
                             Department = d,
