@@ -320,6 +320,7 @@ namespace API.Controllers
                 await Mediator.Send(new GetPublicCompletedComplaintsMapViewQuery())
             );
 
+        }
         [HttpPut("reject/{id}")] // .../api/complaints/reject/id
         public async Task<IActionResult> RejectComplaintById(
             int id,
@@ -330,10 +331,7 @@ namespace API.Controllers
             JwtSecurityTokenHandler tokenHandler = new();
             JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
 
-        }
-
-
-            username = jwtToken.Claims.First(c => c.Type == "username").Value;
+        username = jwtToken.Claims.First(c => c.Type == "username").Value;
 
             return HandleResult(
                 await Mediator.Send(new RejectComplaintByIdCommand(id, username))
@@ -341,7 +339,7 @@ namespace API.Controllers
         }
 
 
-        [HttpGet("privacyLevels")] // .../api/complaints/privacyLevels
+    [HttpGet("privacyLevels")] // .../api/complaints/privacyLevels
         public async Task<IActionResult> GetComplaintPrivacyLevels()
         {
             return HandleResult(await Mediator.Send(new GetComplaintPrivacyLevelsListQuery()));
