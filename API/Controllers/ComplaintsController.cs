@@ -300,8 +300,25 @@ namespace API.Controllers
             return HandleResult(
                 await Mediator.Send(new GetGeneralComplaintsListQuery(filter, strUserName, userLocation))
             );
+
         }
 
+        [HttpGet("general/mapView")] // .../api/complaints/general/mapView
+        public async Task<IActionResult> GetGeneralComplaintsMapView()
+        {
+
+            return HandleResult(
+                await Mediator.Send(new GetGeneralComplaintsMapViewQuery())
+            );
+
+        }
+        [HttpGet("completed/public/mapView")] // .../api/complaints/general/mapView
+        public async Task<IActionResult> GetPublicCompletedComplaintsMapView()
+        {
+
+            return HandleResult(
+                await Mediator.Send(new GetPublicCompletedComplaintsMapViewQuery())
+            );
 
         [HttpPut("reject/{id}")] // .../api/complaints/reject/id
         public async Task<IActionResult> RejectComplaintById(
@@ -312,6 +329,9 @@ namespace API.Controllers
             string authHeader = Request.Headers["Authorization"];
             JwtSecurityTokenHandler tokenHandler = new();
             JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
+
+        }
+
 
             username = jwtToken.Claims.First(c => c.Type == "username").Value;
 
