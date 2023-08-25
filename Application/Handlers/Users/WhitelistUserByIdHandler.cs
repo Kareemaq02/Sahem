@@ -25,8 +25,8 @@ public class WhitelistUserByIdHandler : IRequestHandler<WhitelistUserByIdCommand
             {
                 return Result<Unit>.Failure("User not found.");
             }
-            else if (user.intUserTypeId != (int)UsersConstant.userTypes.user)
-                return Result<Unit>.Failure("The Provided id is not a Citizen Id");
+            else if (user.intUserTypeId != (int)UsersConstant.userTypes.user || user.intUserTypeId != (int)UsersConstant.userTypes.worker)
+                return Result<Unit>.Failure("The Provided id is not a Citizen or Worker Id");
 
             if (user.blnIsBlacklisted == true)
             {
