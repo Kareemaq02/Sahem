@@ -39,6 +39,8 @@ namespace Application.Handlers.Users
                                         {
                                             u.Id,
                                             ui.strFirstName,
+                                            ui.strFirstNameAr,
+                                            ui.strLastNameAr,
                                             ui.strLastName,
                                             ui.strPhoneNumber
                                         } into g
@@ -47,6 +49,8 @@ namespace Application.Handlers.Users
                                             intId = g.Key.Id,
                                             strFirstName = g.Key.strFirstName,
                                             strLastName = g.Key.strLastName,
+                                            strFirstNameAr = g.Key.strFirstNameAr,
+                                            strLastNameAr = g.Key.strLastNameAr,
                                             strPhoneNumber = g.Key.strPhoneNumber
                                         };
 

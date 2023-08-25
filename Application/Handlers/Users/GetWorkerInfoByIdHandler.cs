@@ -37,6 +37,8 @@ namespace Application.Handlers.Complaints
                          intId = u.User.Id,
                          strUsername = u.User.UserName,
                          strFirstName = u.UserInfo.strFirstName,
+                         strFirstNameAr = u.UserInfo.strFirstNameAr,
+                         strLastNameAr = u.UserInfo.strLastNameAr,
                          strLastName = u.UserInfo.strLastName,
                          strNationalId = u.UserInfo.strNationalId,
                          strPhoneNumber = u.UserInfo.strPhoneNumber,

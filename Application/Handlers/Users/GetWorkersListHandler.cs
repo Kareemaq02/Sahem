@@ -37,6 +37,8 @@ namespace Application.Handlers.Users
                             intId = u.Id,
                             strFirstName = ui.strFirstName,
                             strLastName = ui.strLastName,
+                            strFirstNameAr = ui.strFirstNameAr,
+                            strLastNameAr = ui.strLastNameAr,
                             strPhoneNumber = ui.strPhoneNumber
                         }
                 )
