@@ -40,58 +40,69 @@ namespace Application.Handlers.Evaluations
                 strComment = request.CompletedDTO?.strComment,
                 decRating = request.CompletedDTO.decRating
             };
-            using var transaction = await _context.Database.BeginTransactionAsync();
 
-            try
+            var complaintStatus = await _context.Complaints
+                    .Where(c => c.intId == request.Id)
+                    .Select(c => c.intStatusId)
+                    .FirstOrDefaultAsync(cancellationToken);
+
+            if (complaintStatus != (int)ComplaintsConstant.complaintStatus.waitingEvaluation)
             {
-                var task = new WorkTask { intId = request.Id };
-                _context.Tasks.Attach(task);
-                task.intStatusId = (int)TasksConstant.taskStatus.completed;
-                task.strComment = completedDTO?.strComment;
-                task.decRating = Convert.ToDecimal(completedDTO.decRating);
+                using var transaction = await _context.Database.BeginTransactionAsync();
 
-                await _context.SaveChangesAsync(cancellationToken);
-            }
-            catch (DbUpdateException)
-            {
-                await transaction.RollbackAsync();
-                return Result<EvaluationDTO>.Failure("Failed to update task status.");
-            }
-
-            try
-            {
-                var complaintIds = await _context.TasksComplaints
-                    .Where(q => q.intTaskId == request.Id)
-                    .Select(q => q.intComplaintId)
-                    .ToListAsync();
-
-                foreach (var x in complaintIds)
+                try
                 {
-                    var complaint = new Complaint { intId = x };
-                    _context.Complaints.Attach(complaint);
-                    complaint.intStatusId = (int)ComplaintsConstant.complaintStatus.completed;
-                    await _context.SaveChangesAsync(cancellationToken);
+                    var task = new WorkTask { intId = request.Id };
+                    _context.Tasks.Attach(task);
+                    task.intStatusId = (int)TasksConstant.taskStatus.completed;
+                    task.strComment = completedDTO?.strComment;
+                    task.decRating = Convert.ToDecimal(completedDTO.decRating);
 
-
-                    await _changeTransactionHandler.Handle(
-                      new AddComplaintStatusChangeTransactionCommand(
-                              x,
-                              (int)ComplaintsConstant.complaintStatus.completed
-                          ),
-                              cancellationToken
-                          );
                     await _context.SaveChangesAsync(cancellationToken);
                 }
+                catch (DbUpdateException)
+                {
+                    await transaction.RollbackAsync();
+                    return Result<EvaluationDTO>.Failure("Failed to update task status.");
+                }
 
-                await transaction.CommitAsync();
-            }
-            catch (DbUpdateException)
-            {
-                await transaction.RollbackAsync();
-                return Result<EvaluationDTO>.Failure("Failed to update complaint status.");
-            }
+                try
+                {
+                    var complaintIds = await _context.TasksComplaints
+                        .Where(q => q.intTaskId == request.Id)
+                        .Select(q => q.intComplaintId)
+                        .ToListAsync();
 
-            return Result<EvaluationDTO>.Success(completedDTO);
+                    foreach (var x in complaintIds)
+                    {
+                        var complaint = new Complaint { intId = x };
+                        _context.Complaints.Attach(complaint);
+                        complaint.intStatusId = (int)ComplaintsConstant.complaintStatus.completed;
+                        await _context.SaveChangesAsync(cancellationToken);
+
+
+                        await _changeTransactionHandler.Handle(
+                          new AddComplaintStatusChangeTransactionCommand(
+                                  x,
+                                  (int)ComplaintsConstant.complaintStatus.completed
+                              ),
+                                  cancellationToken
+                              );
+                        await _context.SaveChangesAsync(cancellationToken);
+                    }
+
+                    await transaction.CommitAsync();
+                }
+                catch (DbUpdateException)
+                {
+                    await transaction.RollbackAsync();
+                    return Result<EvaluationDTO>.Failure("Failed to update complaint status.");
+                }
+                return Result<EvaluationDTO>.Success(completedDTO);
+            }
+            else
+                return Result<EvaluationDTO>.Failure("Only complaints with waiting evaluation status could be evaluated.");
+
         }
     }
 }
