@@ -13,6 +13,7 @@ namespace Persistence
             UserManager<ApplicationUser> userManager,
             int typeAdmin,
             int typeWorker,
+            int typeLeader,
             int typeUser
         )
         {
@@ -34,6 +35,17 @@ namespace Persistence
                     strPhoneNumber = "0788888888",
                     strNationalId = "2000111222",
                     strNationalIdNumber = "RUX11222"
+                }
+            );
+
+            var infoLeader = await context.UserInfos.AddAsync(
+                new UserInfo
+                {
+                    strFirstName = "leader",
+                    strLastName = "leader",
+                    strPhoneNumber = "0788881288",
+                    strNationalId = "2099111222",
+                    strNationalIdNumber = "RHU11122"
                 }
             );
             var infoUser = await context.UserInfos.AddAsync(
@@ -71,6 +83,17 @@ namespace Persistence
                 intUserTypeId = typeWorker,
             };
 
+            var userLeader = new ApplicationUser
+            {
+                UserName = "leader",
+                PhoneNumberConfirmed = true,
+                blnIsVerified = false,
+                blnIsActive = false,
+                blnIsBlacklisted = false,
+                intUserInfoId = infoLeader.Entity.intId,
+                intUserTypeId = typeLeader,
+            };
+
             var userUser = new ApplicationUser
             {
                 UserName = "user",
@@ -84,6 +107,7 @@ namespace Persistence
 
             await userManager.CreateAsync(userAdmin, "Pass@123");
             await userManager.CreateAsync(userWorker, "Pass@123");
+            await userManager.CreateAsync(userLeader, "Pass@123");
             await userManager.CreateAsync(userUser, "Pass@123");
         }
 

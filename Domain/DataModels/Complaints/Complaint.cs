@@ -63,6 +63,12 @@ namespace Domain.DataModels.Complaints
         [Column("IS_REFILED")]
         public Boolean blnIsRefiled { get; set; }
 
+        [Column("REGION")]
+        [ForeignKey("Region")]
+        public int intRegionId { get; set; }
+
+        public Region Region { get; set; }
+
         // Relations
         public ICollection<ComplaintVoters> Voters { get; set; }
         public ICollection<ComplaintWatchers> Watchers { get; set; }
