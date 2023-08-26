@@ -11,7 +11,7 @@ import "./ComplaintMap.css"
 
 import mapboxgl, { Marker, Popup } from "mapbox-gl";
 
-const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange }) => {
+const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange, onSliderValueChange }) => {
 
     mapboxgl.accessToken =
         "pk.eyJ1IjoiYWdyaWRiIiwiYSI6ImNsbDN5dXgxNTAxOTAza2xhdnVmcnRzbGEifQ.3cM2WO5ubiAjuWbpXi9woQ";
@@ -25,30 +25,30 @@ const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange }) => {
     const geojson = {
         'type': 'FeatureCollection',
         'features': [
-        {
-        'type': 'Feature',
-        'properties': {
-        'message': 'Foo',
-        'iconSize': [60, 60]
-        },
-        'geometry': {
-        'type': 'Point',
-        'coordinates': [lng, lat]
-        }
-        },
-        {
-        'type': 'Feature',
-        'properties': {
-        'message': 'Bar',
-        'iconSize': [50, 50]
-        },
-        'geometry': {
-        'type': 'Point',
-        'coordinates': [35.875612, 31.957211]
-        }
-        },
+            {
+                'type': 'Feature',
+                'properties': {
+                    'message': 'Foo',
+                    'iconSize': [60, 60]
+                },
+                'geometry': {
+                    'type': 'Point',
+                    'coordinates': [lng, lat]
+                }
+            },
+            {
+                'type': 'Feature',
+                'properties': {
+                    'message': 'Bar',
+                    'iconSize': [50, 50]
+                },
+                'geometry': {
+                    'type': 'Point',
+                    'coordinates': [35.875612, 31.957211]
+                }
+            },
         ]
-        };
+    };
 
     useEffect(() => {
         if (map.current) return; // initialize map only once
@@ -67,11 +67,11 @@ const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange }) => {
             el.style.width = `${width}px`;
             el.style.height = `${height}px`;
             el.style.backgroundSize = '100%';
-    
-        const popupContent = document.createElement("div");
-        popupContent.className = "popup-container";
-    
-        popupContent.innerHTML = `
+
+            const popupContent = document.createElement("div");
+            popupContent.className = "popup-container";
+
+            popupContent.innerHTML = `
         <div class="popup-image" style="border-color: ${(marker.properties.message)};">
         <img src="URL_OF_YOUR_IMAGE" alt="Marker Image" />
       </div>
@@ -91,21 +91,22 @@ const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange }) => {
             <div class="popup-value">Value 4</div>
           </div>
         `;
-    
-        const popup = new Popup({ offset: 25 }).setDOMContent(popupContent);
-    
-        new mapboxgl.Marker(el)
-          .setLngLat(marker.geometry.coordinates)
-          .setPopup(popup)
-          .addTo(map.current);
-      }
-        
+
+            const popup = new Popup({ offset: 25 }).setDOMContent(popupContent);
+
+            new mapboxgl.Marker(el)
+                .setLngLat(marker.geometry.coordinates)
+                .setPopup(popup)
+                .addTo(map.current);
+        }
+
     });
 
-    
+
     const [complaintTypes, setComplaintTypes] = useState([]);
     const [selectedComplaintTypes, setSelectedComplaintTypes] = useState([]);
     const [selectedStatus, setselectedStatus] = useState([])
+    const [sliderValue, setSliderValue] = useState(30);
 
     useEffect(() => {
         // Fetch complaint types from the API and set them to state
@@ -121,6 +122,11 @@ const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange }) => {
         fetchComplaintTypes();
     }, [lng, lat, zoom, geojson]);
 
+
+    const handleSliderChange = (event, newValue) => {
+        setSliderValue(newValue);
+        onSliderValueChange(newValue); 
+    };
 
 
     const handleComplaintTypesChange = (event) => {
@@ -144,8 +150,6 @@ const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange }) => {
                     ref={mapContainer}
                     className="map-container"
                     style={{ height: "20rem", width: '100%' }}
-                    onMouseEnter={handleMapMouseEnter}
-                    onMouseLeave={handleMapMouseLeave}
                 />
             </Box>
             <br />
@@ -184,20 +188,23 @@ const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange }) => {
                 {/* Replace the Stack with MultipleSelectCheckmarks */}
                 <FormChipSelect
                     value={selectedStatus}
-                    onChange={handleComplaintStatusChange} // Pass the handleComplaintStatusChange function as onChange prop
+                    onChange={handleComplaintStatusChange}
                     items={[
                         { label: 'قيد الانتظار', value: 1, color: 'primary', },
-                        { label: 'مرفوض', value: 2, color: '#F44336' },
                         { label: 'موافق عليه', value: 3, color: '#4CAF50' },
                         { label: 'مجدول', value: 4, color: '#3F51B5' },
                         { label: 'قيد العمل', value: 5, color: 'blue' },
                         { label: 'بانتظار التقييم', value: 6, color: '#9C27B0' },
-                        { label: 'منجز', value: 7, color: '#8BC34A' },
                         { label: 'معاد', value: 8, color: '#FFC107' },
                     ]}
                 />
             </Box>
+            <h4 dir="rtl">  المسافة/كم</h4>
+            <Divider />
             <br />
+            <Box sx={{ padding: 2, width: '100%', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <FormSlider value={sliderValue} onChange={handleSliderChange} />
+            </Box>
         </Paper>
     );
 };

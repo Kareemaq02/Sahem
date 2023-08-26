@@ -65,4 +65,13 @@ h4 {
     border-radius: 50%;
     margin-left: 4px;
   }
-  
+
+  /* In your style.css or a separate CSS file */
+.fixed-size-image {
+  width: 90%;
+  height: 600px; /* Set a specific height value */
+  object-fit: cover;
+  border-radius: 25px;
+  display: block;
+  margin: 0 auto;
+}
