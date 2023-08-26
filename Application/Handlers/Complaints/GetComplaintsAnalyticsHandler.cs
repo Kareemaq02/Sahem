@@ -100,6 +100,7 @@ namespace Application.Handlers.Complaints
                         rejectedComplaintsPercentage = (float)Math.Round((float)groupedComplaints.Count(q => q.intStatusId == (int)ComplaintsConstant.complaintStatus.rejected) / groupedComplaints.Count() * 100, 2),
                         scheduledComplaintsPercentage = (float)Math.Round((float)groupedComplaints.Count(q => q.intStatusId == (int)ComplaintsConstant.complaintStatus.Scheduled) / groupedComplaints.Count() * 100, 2),
                         waitingEvaluationComplaintsPercentage = (float)Math.Round((float)groupedComplaints.Count(q => q.intStatusId == (int)ComplaintsConstant.complaintStatus.waitingEvaluation) / groupedComplaints.Count() * 100, 2),
+                        inProgressComplaintsPercentage = (float)Math.Round((float)groupedComplaints.Count(q => q.intStatusId == (int)ComplaintsConstant.complaintStatus.inProgress) / groupedComplaints.Count() * 100, 2)
                     })
                 .ToListAsync();
 
