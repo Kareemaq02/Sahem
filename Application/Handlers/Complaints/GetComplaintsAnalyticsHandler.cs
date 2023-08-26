@@ -2,12 +2,10 @@
 using Application.Queries.Complaints;
 using Domain.ClientDTOs.Complaint;
 using Domain.DataModels.Complaints;
-using Domain.Helpers;
 using Domain.Resources;
 using LinqKit;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using MySqlX.XDevAPI.Common;
 using Persistence;
 
 namespace Application.Handlers.Complaints
@@ -56,22 +54,11 @@ namespace Application.Handlers.Complaints
                 complaintsCountQueryObject = complaintsCountQueryObject.Where(predicate).ToList();
             }
 
-            var countForCompleted = complaintsCountQueryObject
-                                 .Count(q => q.intStatusId == (int)ComplaintsConstant.complaintStatus.completed);
-            var countForRejected = complaintsCountQueryObject
-                                 .Count(q => q.intStatusId == (int)ComplaintsConstant.complaintStatus.rejected);
-            var countForRefiled = complaintsCountQueryObject
-                                 .Count(q => q.intStatusId == (int)ComplaintsConstant.complaintStatus.refiled);
-            var countForPending = complaintsCountQueryObject
-                                 .Count(q => q.intStatusId == (int)ComplaintsConstant.complaintStatus.pending);
+        
 
-            Console.WriteLine("completed" + countForCompleted);
-            Console.WriteLine("rej" + countForRejected);
-            Console.WriteLine("ref" + countForRefiled);
-            Console.WriteLine("countForPending" + countForPending);
-            
+
             var totalComplaintsCount = complaintsCountQueryObject.Count();
-            Console.WriteLine("totalComplaintsCount" + totalComplaintsCount);
+
 
             var query =
                 from c in _context.Complaints
@@ -95,30 +82,32 @@ namespace Application.Handlers.Complaints
                 query = query.Where(c => c.dtmDateCreated <= request.filter.dtmDateTo);
             }
             // NOT OPTIMIZED USE OTHER REFERENCES FOR HELP
+
+
             var queryObject = await query
                 .AsNoTracking()
-                .GroupBy(c => new {  c.intTypeId, c.strNameAr,c.strNameEn }) // Group by intStatusId and intTypeId
+                .GroupBy(c => new { c.intTypeId, c.strNameAr, c.strNameEn })
                 .Select(groupedComplaints =>
-                   new ComplaintsAnalyticsDTO
-                               {
-                            
-                          intCount = groupedComplaints.Count(),
-                          intTypeId = groupedComplaints.Key.intTypeId,
-                           strNameAr = groupedComplaints.Key.strNameAr,
-                           strNameEn = groupedComplaints.Key.strNameEn,
-                           completedComplaintsPercentage = (float)Math.Round((float)countForCompleted/totalComplaintsCount * 100,2),
-                           pendingComplaintsPercentage = (float)Math.Round((float)countForPending / totalComplaintsCount * 100, 2),
-                           refiledComplaintsPercentage = (float)Math.Round((float)countForRefiled / totalComplaintsCount * 100, 2),
-                           rejectedComplaintsPercentage = (float)Math.Round((float)countForRejected / totalComplaintsCount * 100, 2)
-
-                   })
-                    .ToListAsync();
+                    new ComplaintsAnalyticsDTO
+                    {
+                        intCount = groupedComplaints.Count(),
+                        intTypeId = groupedComplaints.Key.intTypeId,
+                        strNameAr = groupedComplaints.Key.strNameAr,
+                        strNameEn = groupedComplaints.Key.strNameEn,
+                        pendingComplaintsPercentage = (float)Math.Round((float)groupedComplaints.Count(q => q.intStatusId == (int)ComplaintsConstant.complaintStatus.pending) / groupedComplaints.Count() * 100, 2),
+                        completedComplaintsPercentage = (float)Math.Round((float)groupedComplaints.Count(q => q.intStatusId == (int)ComplaintsConstant.complaintStatus.completed) / groupedComplaints.Count() * 100, 2),
+                        refiledComplaintsPercentage = (float)Math.Round((float)groupedComplaints.Count(q => q.intStatusId == (int)ComplaintsConstant.complaintStatus.refiled) / groupedComplaints.Count() * 100, 2),
+                        rejectedComplaintsPercentage = (float)Math.Round((float)groupedComplaints.Count(q => q.intStatusId == (int)ComplaintsConstant.complaintStatus.rejected) / groupedComplaints.Count() * 100, 2),
+                        scheduledComplaintsPercentage = (float)Math.Round((float)groupedComplaints.Count(q => q.intStatusId == (int)ComplaintsConstant.complaintStatus.Scheduled) / groupedComplaints.Count() * 100, 2),
+                        waitingEvaluationComplaintsPercentage = (float)Math.Round((float)groupedComplaints.Count(q => q.intStatusId == (int)ComplaintsConstant.complaintStatus.waitingEvaluation) / groupedComplaints.Count() * 100, 2),
+                    })
+                .ToListAsync();
 
 
 
 
             // Filter in-memory ONLY FOR GENERAL PRIORITY
-         
+
 
             if (request.filter.lstComplaintTypeIds.Count > 0)
             {
