@@ -67,7 +67,7 @@ const RTLSideBar = ({ isOpen, onClose, user }) => {
             component={Link}
             to={menu.path}
             sx={{
-              pl: 16,
+              pl: 10,
               color: '#18AAC9',
               ...(menu.path === window.location.pathname && activeListItemStyle),
             }}

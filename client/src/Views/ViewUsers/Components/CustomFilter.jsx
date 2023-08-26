@@ -15,7 +15,7 @@ const CustomFilter = ({ onFilterChange }) => {
 
     return (
         <Paper sx={{ bgcolor: 'white', p:3, borderRadius:'25px'}}>
-            <Typography variant="h3">اظهار المستخدمين الموثقين فقط</Typography>
+            <Typography variant="h3" sx={{ fontFamily: 'Droid Arabic Naskh, sans-serif' }} >اظهار المستخدمين الموثقين فقط</Typography>
             <Box sx={{ width: '100%', textAlign: 'center', display: 'flex', flexWrap: 'wrap' }}>
                 <Switch onChange={handleVerifiedSwitchChange} />
 
@@ -25,7 +25,7 @@ const CustomFilter = ({ onFilterChange }) => {
             <Divider />
             <br />
             <br />
-            <Typography variant="h3"> اظهار المستخدمين المحظورين فقط </Typography>
+            <Typography variant="h3" sx={{ fontFamily: 'Droid Arabic Naskh, sans-serif' }}> اظهار المستخدمين المحظورين فقط </Typography>
             <Box sx={{ width: '100%', textAlign: 'center', display: 'flex', flexWrap: 'wrap' }}>
                 <Switch onChange={handleBlacklistedSwitchChange} />
 

@@ -1,9 +1,10 @@
 import { Typography } from "@mui/material";
+import AdminDashboard from "./AdminDashboard";
 
 function WorkerDashboard() {
   return (
-    <Typography variant="h1" component="h1">
-      Worker Dashboard IS NOT IMPLEMENTED YET
+    <Typography>
+      <AdminDashboard />
     </Typography>
   );
 }

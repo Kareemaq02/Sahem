@@ -10,7 +10,7 @@ import {
   import { DataGrid, GridToolbar } from "@mui/x-data-grid";
   import { AddCircleOutline, ArrowCircleUp } from "@mui/icons-material/";
   import DeleteIcon from "@mui/icons-material/Delete";
-  
+  import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
   const Proffession = ({Delete, data}) => {
     const theme = useTheme();
@@ -18,14 +18,24 @@ import {
     const columns = [
           {
             field: "strNameAr",
-            headerName: "Arabic Name",
+            headerName: "الاسم بالعربي",
             flex: 1,
           },
           {
             field: "strNameEn",
-            headerName: "English Name",
+            headerName: "الاسم بلانجليزي",
             flex: 1,
           },
+          {
+            field: 'Action',
+            headerName: 'حذف',
+            flex: 0.5,
+            renderCell: (params) => (
+              <IconButton>
+                <DeleteForeverIcon sx={{color: 'red'}}/>
+              </IconButton>
+            )
+          }
     ]
 
     
@@ -37,6 +47,7 @@ import {
         getRowId={(row) => row.id || Math.random().toString(36).substring(7)}
         components={{ Toolbar: GridToolbar }}
         density="compact"
+        sx={{fontSize: 'medium',fontFamily: 'Droid Arabic Naskh, sans-serif'}}
       />
     </Box>
   );

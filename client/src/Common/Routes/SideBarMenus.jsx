@@ -37,7 +37,7 @@ const AdminMenus = [
         icon: <TableChart />,
       },
       {
-        text: "الجدول",
+        text: "انواع المشاكل",
         path: "/auth/complainttype",
         icon: <FormatListBulletedIcon />,
       },
@@ -65,12 +65,12 @@ const AdminMenus = [
     icon: <AssignmentIndOutlined />,
     children: [
       {
-        text: "الجدول",
+        text: "عرض الاعمال",
         path: "/auth/tasks",
         icon: <TableChart />,
       },
       {
-        text: "الجدول",
+        text: "انواع الاعمال",
         path: "/auth/tasktype",
         icon: <FormatListBulletedIcon />,
       },
@@ -88,7 +88,7 @@ const AdminMenus = [
     icon: <AssignmentIndOutlined />,
     children: [
       {
-        text: "الجدول",
+        text: " عرض الاقسام",
         path: "/auth/department-type",
         icon: <TableChart />,
       },
@@ -100,7 +100,7 @@ const AdminMenus = [
     icon: <AssignmentIndOutlined />,
     children: [
       {
-        text: "الجدول",
+        text: "عرض المهن",
         path: "/auth/proffession",
         icon: <TableChart />,
       },

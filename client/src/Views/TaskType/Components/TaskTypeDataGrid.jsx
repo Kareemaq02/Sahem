@@ -15,18 +15,13 @@ const TaskTypeDataGrid = ({ DeleteTaskType, data }) => {
   const theme = useTheme();
   const columns = [
     {
-      field: "intId",
-      headerName: "ID",
-      flex: 0.5,
-    },
-    {
       field: "strNameAr",
-      headerName: "Arabic Name",
+      headerName: "الاسم بالعربي",
       flex: 1,
     },
     {
       field: "strNameEn",
-      headerName: "English Name",
+      headerName: "الاسم بلانجليزي",
       flex: 1,
     },
   ];
@@ -36,9 +31,10 @@ const TaskTypeDataGrid = ({ DeleteTaskType, data }) => {
       <DataGrid
         rows={data}
         columns={columns}
-        getRowId={(row) => row.intId}
+        getRowId={(row) => row.intId }
         components={{ Toolbar: GridToolbar }}
         density="compact"
+        sx={{fontSize: 'medium'}}
       />
     </Box>
   );

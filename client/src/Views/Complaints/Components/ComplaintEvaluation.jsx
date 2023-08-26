@@ -8,6 +8,12 @@ import { ChevronLeftOutlined } from "@mui/icons-material/";
 import ComplaintDetails from "./ComplaintDetails";
 import MediaGallery from "../../../Common/Components/MediaGallery";
 
+// slider
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
+
 const ComplaintEvaluation = ({ photos, complaint, setApproved }) => {
   const theme = useTheme();
   return (
@@ -18,14 +24,25 @@ const ComplaintEvaluation = ({ photos, complaint, setApproved }) => {
       >
         Evaluate Complaint
       </Typography>
-      {photos.map((media, index) => (
-        <img
-          key={index}
-          src={`data:image/jpg;base64,${media.data}`}
-          alt={`Image ${index}`}
-          style={{borderRadius:'25px'}}
-        />
-      ))}
+      <Slider
+        dots={true} 
+        infinite={true}
+        slidesToShow={1}
+        slidesToScroll={1}
+        autoplay={true}
+        autoplaySpeed={3000}
+      >
+        {photos.map((media, index) => (
+          <div key={index}>
+            <img
+              src={`data:image/jpg;base64,${media.data}`}
+              alt={`Image ${index}`}
+              style={{ borderRadius: '25px', width: '100%', height: '450px' }}
+            />
+          </div>
+        ))}
+      </Slider>
+
       <ComplaintDetails theme={theme} complaint={complaint} />
       <Stack direction="row" spacing={2}>
         <Button

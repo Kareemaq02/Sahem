@@ -6,6 +6,7 @@ import "../Style/style.css"
 import { PostComplaintWatch } from "../Service/PostComplaintWatch";
 // Import the SetVote function
 import { SetVote, getVoteStatus, setDownvote, removeVote } from "../Service/SetVoteApi";
+import VerifiedOutlinedIcon from '@mui/icons-material/VerifiedOutlined';
 
 // css style
 import "../Style/style.css"
@@ -24,14 +25,11 @@ const ComplaintPost = ({ data }) => {
     const handleVote = async (complaintId, isDownvote) => {
         try {
             if (isDownvote) {
-                // If it's a downvote, call the setDownvote function
                 await setDownvote(complaintId);
             } else {
-                // If it's an upvote, call the SetVote function
                 await SetVote(complaintId);
             }
 
-            // After voting, update the complaintData state to reflect the new vote status
             const updatedData = complaintData.map((complaint) => {
                 if (complaint.intComplaintId === complaintId) {
                     complaint.isDownVote = !isDownvote;
@@ -39,13 +37,11 @@ const ComplaintPost = ({ data }) => {
                 }
                 return complaint;
             });
-
             setComplaintData(updatedData);
         } catch (error) {
             console.error(error);
         }
     };
-
 
     const setWatch = async (complaintId) => {
         await PostComplaintWatch(complaintId)
@@ -62,6 +58,16 @@ const ComplaintPost = ({ data }) => {
                                 <div style={{ display: 'flex', alignItems: 'center', }}>
                                     <div className="avatar">A</div>
                                     <span style={{ marginLeft: '10px' }}>{complaint.strFirstName} {complaint.strLastName}</span>
+                                    <FlexBetween>
+                                        {
+                                            complaint.blnIsVerified === true ? (
+                                                <VerifiedOutlinedIcon />
+                                            ) : (
+                                                <span> </span>
+
+                                            )
+                                        }
+                                    </FlexBetween>
                                 </div>
 
 
@@ -69,22 +75,22 @@ const ComplaintPost = ({ data }) => {
                                     className="status-chip"
                                     icon={<RadioButtonCheckedIcon />}
                                     color="primary"
-                                    label={complaint.strStatus}
+                                    label={complaint.strStatusAr}
                                     variant="outlined"
                                     sx={{ p: 1 }}
                                 />
                                 <div className="status-box">
-                                    <Typography variant="body2" >الحالة العامة: <StatusTracker currentStage={complaint.strStatus} /> </Typography>
+                                    <Typography variant="body2" >الحالة العامة: <StatusTracker currentStage={complaint.strStatusEn} /> </Typography>
                                 </div>
                             </FlexBetween>
                         </Typography>
                         <FlexBetween>
-                        <Typography variant="h5" component="div" sx={{ paddingRight: 6, }}>
-                           <FlexBetween>
-                            <WatchLaterIcon sx={{color: 'gray'}}/>
-                            <span >قبل 5 ساعات</span>
-                            </FlexBetween>
-                           </Typography>
+                            <Typography variant="h5" component="div" sx={{ paddingRight: 6, }}>
+                                <FlexBetween>
+                                    <WatchLaterIcon sx={{ color: 'gray' }} />
+                                    <span >قبل 5 ساعات</span>
+                                </FlexBetween>
+                            </Typography>
                         </FlexBetween>
                         <br />
                         <Typography variant="body1" color="text.secondary" sx={{ width: '85%', display: 'grid', margin: 'auto' }}>
@@ -95,8 +101,9 @@ const ComplaintPost = ({ data }) => {
                             <img
                                 src={complaint.imageData ? `data:image/jpg;base64,${complaint.imageData}` : "https://via.placeholder.com/900x400"}
                                 alt={`Image for complaint ${complaint.intComplaintId}`}
-                                style={{ flex: 1, objectFit: 'cover', borderRadius: '25px', width: "90%", display: 'grid', marginLeft: 'auto', marginRight: 'auto' }}
+                                className="fixed-size-image"
                             />
+
 
                             <FlexBetween>
                                 <div style={{ paddingRight: '36px', marginTop: '13px' }}>
@@ -114,7 +121,11 @@ const ComplaintPost = ({ data }) => {
                                         {complaint.isDownVote === true ? <ThumbDown /> : <ThumbDownOutlined />}
                                     </IconButton>
                                     <IconButton onClick={() => setWatch(complaint.intComplaintId)}>
-                                        <RemoveRedEyeIcon />
+                                        {complaint.blnIsOnWatchList === true ? (
+                                            <RemoveRedEyeIcon sx={{ color: '#e74c3c' }} />
+                                        ) : (
+                                            <RemoveRedEyeIcon />
+                                        )}
                                     </IconButton>
                                 </div>
 
