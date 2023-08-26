@@ -12,7 +12,7 @@ import { IdentityHelper } from "../../../Common/Utils/IdentityHelper";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 
-const WorkerDataGrid = ({ tasks }) => {
+const WorkerDataGrid = ({ tasks, refreshData }) => {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [selectedTask, setSelectedTask] = useState(null);
     const theme = useTheme();
@@ -57,13 +57,17 @@ const WorkerDataGrid = ({ tasks }) => {
         },
     ];
 
-    const handleSubmit = async (taskId, status) => {
+    const handleSubmit = async (taskId, status, tasks) => {
         await ActivateTask(taskId);
         if (status === 'in progress') {
             setShowTaskBarError(true);
+        } else if (status === 'completed') {
+            setShowTaskBarError(true);
         } else {
             setShowTaskBarSuccess(true);
+
         }
+
     }
 
     return (
