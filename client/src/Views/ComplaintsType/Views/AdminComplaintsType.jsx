@@ -27,7 +27,7 @@ function AdminComplaintsType() {
           <ComplaintsTypeDataGrid data={complaintType} />
         </Grid>
         <Grid item xs={12} md={4}>
-          <ComplaintsTypeForm />
+          <ComplaintsTypeForm refreshData={setComplaintType}/>
         </Grid>
       </Grid>
     </div>
