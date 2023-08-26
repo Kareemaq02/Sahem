@@ -25,8 +25,8 @@ public class VerifyUserByIdHandler : IRequestHandler<VerifyUserByIdCommand, Resu
             {
                 return Result<Unit>.Failure("User not found.");
             }
-            else if (user.intUserTypeId != (int)UsersConstant.userTypes.user)
-                return Result<Unit>.Failure("The Provided id is not a Citizen Id");
+            else if (user.intUserTypeId == (int)UsersConstant.userTypes.admin)
+                return Result<Unit>.Failure("The Provided id is not a Citizen or Worker Id");
 
             if (user.blnIsVerified == false)
             {

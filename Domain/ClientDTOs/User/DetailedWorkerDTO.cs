@@ -6,6 +6,8 @@
         public string strUsername { get; set; }
         public string strFirstName { get; set; }
         public string strLastName { get; set; }
+        public string strFirstNameAr { get; set; }
+        public string strLastNameAr { get; set; }
         public bool boolIsVerified { get; set; }
         public bool boolIsActive { get; set; }
         public bool boolIsBlacklisted { get; set; }
