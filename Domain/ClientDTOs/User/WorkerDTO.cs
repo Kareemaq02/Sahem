@@ -8,5 +8,7 @@
         public string strFirstNameAr { get; set; }
         public string strLastNameAr { get; set; }
         public string strPhoneNumber { get; set; }
+        public string strProfessionEn { get; set; }
+        public string strProfessionAr { get; set; }
     }
 }
