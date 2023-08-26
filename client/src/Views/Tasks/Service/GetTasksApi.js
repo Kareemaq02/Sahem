@@ -35,6 +35,7 @@ export const GetTasksApi = async (
       admin: item.adminUsername,
       cost: 0,
       type: item.strTypeNameEn,
+      typeAr: item.strTypeNameAr,
       dateScheduled: DateFormatterEn(item.scheduledDate),
       deadline: DateFormatterEn(item.deadlineDate),
       status: item.strTaskStatus,
