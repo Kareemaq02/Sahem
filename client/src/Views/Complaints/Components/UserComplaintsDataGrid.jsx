@@ -32,6 +32,7 @@ import BorderColorIcon from '@mui/icons-material/BorderColor';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { updateComplaint } from "../Service/UpdateComplaint"
 import { DateFormatterEn } from "../../../Common/Utils/DateFormatter";
+import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
 
 function StatusColor(status) {
   switch (status) {
@@ -208,41 +209,91 @@ const ComplaintsDataGrid = ({ editComplaint, deleteComplaint, data }) => {
     <Box sx={{ display: "grid", gap: 2, width: '100%' }}>
 
       {data.map((complaint) => (
-        <Card key={complaint.intComplaintId} sx={{ borderRadius: '25px' }}>
-          <CardContent>
-            <Typography variant="h3" component="div">
-              <FlexBetween>
-                بلاغ رقم: {complaint.intComplaintId}
-                <Chip
-                  icon={<RadioButtonCheckedIcon />}
-                  color="primary"
-                  label={complaint.strStatus}
-                  variant="outlined"
-                  sx={{ p: 1 }}
-                />
-              </FlexBetween>
-            </Typography>
-            <Typography variant="h5" component="div">
-              {complaint.strComplaintTypeAr}
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              <IconButton onClick={() => handleOpenEditDialog(complaint)}>
-                <BorderColorIcon sx={{ color: 'darkblue' }} />
-              </IconButton>
-              {/* add dialog to check if user want to delete the complaint */}
-              <IconButton onClick={() => handleDeleteConfirmation(complaint)}>
-                <DeleteIcon sx={{ color: 'darkblue' }} />
-              </IconButton>
-            </Typography>
-            <Typography variant="h5">
-              <FlexBetween>
-                <Typography variant="h6"></Typography>
-                <Typography variant="h6">{DateFormatterEn(complaint.dtmDateCreated)}</Typography>
-              </FlexBetween>
-            </Typography>
-          </CardContent>
-        </Card>
+        <div>
+          <Card key={complaint.intComplaintId} sx={{ borderRadius: '25px', }}>
+            <CardContent>
+              <Typography variant="h3" component="div">
+                <FlexBetween>
+                  بلاغ رقم: {complaint.intComplaintId}
+                  <Chip
+                    icon={<RadioButtonCheckedIcon />}
+                    color="primary"
+                    label={complaint.strStatusAr}
+                    variant="outlined"
+                    sx={{ p: 1 }}
+                  />
+                </FlexBetween>
+              </Typography>
+              <Typography variant="h5" component="div">
+                {complaint.strComplaintTypeAr}
+              </Typography>
+              <Typography variant="body1" color="text.secondary">
+                <IconButton onClick={() => handleOpenEditDialog(complaint)}>
+                  <BorderColorIcon sx={{ color: 'darkblue' }} />
+                </IconButton>
+                {/* add dialog to check if user want to delete the complaint */}
+                <IconButton onClick={() => handleDeleteConfirmation(complaint)}>
+                  <DeleteIcon sx={{ color: 'darkblue' }} />
+                </IconButton>
+              </Typography>
+
+              {/* Photos */}
+
+              {complaint.strStatusEn === 'completed' ? (
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'row', gap: 5 }}>
+                  {/* before */}
+                  <Box sx={{ width: '50%', }}>
+                    <img
+                      src={complaint.beforeImageData ? `data:image/jpg;base64,${complaint.beforeImageData}` : "https://via.placeholder.com/900x400"}
+                      alt={`Image for complaint ${complaint.intComplaintId}`}
+                      style={{ flex: 1, objectFit: 'cover', borderRadius: '25px', width: '100%', height: '420px' }}
+                    />
+                  </Box>
+                  {/* after */}
+                  <Box sx={{ width: '50%' }}>
+                    <img
+                      src={complaint.afterImageData ? `data:image/jpg;base64,${complaint.afterImageData}` : "https://via.placeholder.com/900x400"}
+                      alt={`Image for complaint ${complaint.intComplaintId}`}
+                      style={{ flex: 1, objectFit: 'cover', borderRadius: '25px', width: '100%', height: '420px' }}
+                    />
+                  </Box>
+                </div>
+              ) : (
+                <Box sx={{ width: '50%', display: 'grid', margin: '0 auto' }}>
+                  <img
+                    src={complaint.beforeImageData ? `data:image/jpg;base64,${complaint.beforeImageData}` : "https://via.placeholder.com/900x400"}
+                    alt={`Image for complaint ${complaint.intComplaintId}`}
+                    style={{ flex: 1, objectFit: 'cover', borderRadius: '25px', width: '100%', height: '420px' }}
+                  />
+                </Box>
+              )}
+              <br />
+              <Typography variant="h5">
+                <FlexBetween>
+                  <Typography variant="h6" sx={{ pr: 3 }}>{complaint.strPrivacyEn === 'public' ? (
+                    <Typography variant="h4">
+                      <FlexBetween>
+                        {complaint.intVotersCount}
+                        <FavoriteOutlinedIcon sx={{ color: 'gray' }} />
+                      </FlexBetween>
+                    </Typography>
+                  ) : (
+                    <span></span>
+                  )} </Typography>
+                  <Typography variant="h6">{complaint.strStatusEn === 'completed' ? (
+                    complaint.dtmDateFinished
+                  ) : (
+                    complaint.dtmDateCreated
+                  )}</Typography>
+                </FlexBetween>
+              </Typography>
+            </CardContent>
+          </Card>
+          <br />
+          <br />
+        </div>
       ))}
+
       <br />
       <br />
 
