@@ -94,12 +94,13 @@ namespace Application.Handlers.Complaints
                         intTypeId = groupedComplaints.Key.intTypeId,
                         strNameAr = groupedComplaints.Key.strNameAr,
                         strNameEn = groupedComplaints.Key.strNameEn,
-                        pendingComplaintsPercentage = (float)Math.Round((float)groupedComplaints.Count(q => q.intStatusId == (int)ComplaintsConstant.complaintStatus.pending) / groupedComplaints.Count() * 100, 2),
-                        completedComplaintsPercentage = (float)Math.Round((float)groupedComplaints.Count(q => q.intStatusId == (int)ComplaintsConstant.complaintStatus.completed) / groupedComplaints.Count() * 100, 2),
-                        refiledComplaintsPercentage = (float)Math.Round((float)groupedComplaints.Count(q => q.intStatusId == (int)ComplaintsConstant.complaintStatus.refiled) / groupedComplaints.Count() * 100, 2),
-                        rejectedComplaintsPercentage = (float)Math.Round((float)groupedComplaints.Count(q => q.intStatusId == (int)ComplaintsConstant.complaintStatus.rejected) / groupedComplaints.Count() * 100, 2),
-                        scheduledComplaintsPercentage = (float)Math.Round((float)groupedComplaints.Count(q => q.intStatusId == (int)ComplaintsConstant.complaintStatus.Scheduled) / groupedComplaints.Count() * 100, 2),
-                        waitingEvaluationComplaintsPercentage = (float)Math.Round((float)groupedComplaints.Count(q => q.intStatusId == (int)ComplaintsConstant.complaintStatus.waitingEvaluation) / groupedComplaints.Count() * 100, 2),
+                        pendingComplaints = groupedComplaints.Count(q => q.intStatusId == (int)ComplaintsConstant.complaintStatus.pending),
+                        completedComplaints  =groupedComplaints.Count(q => q.intStatusId == (int)ComplaintsConstant.complaintStatus.completed),
+                        refiledComplaints  = groupedComplaints.Count(q => q.intStatusId == (int)ComplaintsConstant.complaintStatus.refiled),
+                        rejectedComplaints  = groupedComplaints.Count(q => q.intStatusId == (int)ComplaintsConstant.complaintStatus.rejected),
+                        scheduledComplaints  = groupedComplaints.Count(q => q.intStatusId == (int)ComplaintsConstant.complaintStatus.Scheduled),
+                        waitingEvaluationComplaints = groupedComplaints.Count(q => q.intStatusId == (int)ComplaintsConstant.complaintStatus.waitingEvaluation),
+                        inProgressComplaints  = groupedComplaints.Count(q => q.intStatusId == (int)ComplaintsConstant.complaintStatus.inProgress)
                     })
                 .ToListAsync();
 

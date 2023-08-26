@@ -6,12 +6,11 @@
         {
             pending = 1,
             rejected = 2,
-            approved = 3,
-            Scheduled = 4,
-            inProgress = 5,
-            waitingEvaluation = 6,
-            completed = 7,
-            refiled = 8
+            Scheduled = 3,
+            inProgress = 4,
+            waitingEvaluation = 5,
+            completed = 6,
+            refiled = 7
         }
 
         public enum complaintPrivacy
