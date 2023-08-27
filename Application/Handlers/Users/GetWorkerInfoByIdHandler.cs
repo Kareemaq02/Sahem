@@ -23,10 +23,12 @@ namespace Application.Handlers.Complaints
             CancellationToken cancellationToken
         )
         {
-
-             var result = await _context.Users
-             .Where(q => q.Id == request.id && q.intUserTypeId == (int)UsersConstant.userTypes.worker)
-              .Join(
+            var result = await _context.Users
+                .Where(
+                    q =>
+                        q.Id == request.id && q.intUserTypeId == (int)UsersConstant.userTypes.worker
+                )
+                .Join(
                     _context.UserInfos,
                     u => u.intUserInfoId,
                     ui => ui.intId,
@@ -52,7 +54,6 @@ namespace Application.Handlers.Complaints
                          .Count(tm => tm.intWorkerId == request.id &&
                          tm.Task.intStatusId == (int)TasksConstant.taskStatus.completed)
                      }).FirstOrDefaultAsync();
-
 
             if (result == null)
             {

@@ -8,6 +8,7 @@ namespace Persistence
     {
         // Seed file Settings
         private static readonly int _admins = 14;
+        private static readonly int _leaders = 32;
         private static readonly int _workers = 87;
         private static readonly int _citizens = 416;
         private static readonly int _complaints = 1322;
@@ -25,6 +26,7 @@ namespace Persistence
                 {
                     int typeAdmin = 0,
                         typeWorker = 0,
+                        typeLeader = 0,
                         typeUser = 0;
 
                     if (!context.UserTypes.Any())
@@ -37,6 +39,10 @@ namespace Persistence
                             new UserType { strName = ConstantsDB.UserTypes.Worker }
                         );
 
+                        var typeLeaderEntity = await context.UserTypes.AddAsync(
+                            new UserType { strName = ConstantsDB.UserTypes.Leader }
+                        );
+
                         var typeUserEntity = await context.UserTypes.AddAsync(
                             new UserType { strName = ConstantsDB.UserTypes.User }
                         );
@@ -46,6 +52,7 @@ namespace Persistence
                         // await saving to get valid IDs otherwise you'll get a zero which violates the Foreign key constraint
                         typeAdmin = typeAdminEntity.Entity.intId;
                         typeWorker = typeWorkerEntity.Entity.intId;
+                        typeLeader = typeLeaderEntity.Entity.intId;
                         typeUser = typeUserEntity.Entity.intId;
                     }
 
@@ -54,6 +61,7 @@ namespace Persistence
                         userManager,
                         typeAdmin,
                         typeWorker,
+                        typeLeader,
                         typeUser
                     );
 
@@ -64,6 +72,10 @@ namespace Persistence
                     for (int i = 0; i < _workers; i++)
                     {
                         await SeedUser.SeedUsers(context, userManager, typeWorker, i);
+                    }
+                    for (int i = 0; i < _leaders; i++)
+                    {
+                        await SeedUser.SeedUsers(context, userManager, typeLeader, i);
                     }
                     for (int i = 0; i < _admins; i++)
                     {

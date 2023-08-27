@@ -110,11 +110,11 @@ public class UpdateTaskByIdHandler : IRequestHandler<UpdateTaskCommand, Result<U
                 && request.updateTaskDTO.workersList.Count != 0
             )
             {
-                var oldWorkersList = await _context.TaskMembers
-                    .Where(tm => tm.intTaskId == request.Id)
+                var oldWorkersList = await _context.TeamMembers
+                    .Where(tm => tm.intTeamId == request.Id)
                     .ToListAsync();
 
-                _context.TaskMembers.RemoveRange(oldWorkersList);
+                _context.TeamMembers.RemoveRange(oldWorkersList);
                 UpdateTaskDTO.workersList = request.updateTaskDTO.workersList;
                 foreach (var worker in request.updateTaskDTO.workersList)
                 {
@@ -125,14 +125,14 @@ public class UpdateTaskByIdHandler : IRequestHandler<UpdateTaskCommand, Result<U
                         return Result<UpdateTaskDTO>.Failure($"Invalid user id: {worker.intId}");
                     }
 
-                    var taskWorker = new WorkTaskMembers
+                    var taskWorker = new TeamMembers
                     {
                         intWorkerId = worker.intId,
-                        intTaskId = request.Id,
+                        intTeamId = request.Id,
                         blnIsLeader = worker.isLeader
                     };
 
-                    await _context.TaskMembers.AddAsync(taskWorker);
+                    await _context.TeamMembers.AddAsync(taskWorker);
 
                     if (worker.isLeader)
                     {

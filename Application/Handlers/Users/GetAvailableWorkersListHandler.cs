@@ -10,7 +10,8 @@ using System.Threading.Tasks; // Add this using statement
 
 namespace Application.Handlers.Users
 {
-    public class GetAvailableWorkersListHandler : IRequestHandler<GetAvailableWorkersListQuery, Result<List<WorkerDTO>>>
+    public class GetAvailableWorkersListHandler
+        : IRequestHandler<GetAvailableWorkersListQuery, Result<List<WorkerDTO>>>
     {
         private readonly DataContext _context;
 
@@ -19,7 +20,10 @@ namespace Application.Handlers.Users
             _context = context;
         }
 
-        public async Task<Result<List<WorkerDTO>>> Handle(GetAvailableWorkersListQuery request, CancellationToken cancellationToken)
+        public async Task<Result<List<WorkerDTO>>> Handle(
+            GetAvailableWorkersListQuery request,
+            CancellationToken cancellationToken
+        )
         {
             DateTime startDate = request.startDate;
             DateTime endDate = request.endDate;

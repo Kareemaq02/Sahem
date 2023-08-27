@@ -19,9 +19,11 @@ namespace Application.Handlers.Tasks
         public readonly UserManager<ApplicationUser> _userManager;
         public readonly AddComplaintStatusChangeTransactionHandler _transactionHandler;
 
-        public InsertTaskHandler(DataContext context, 
+        public InsertTaskHandler(
+            DataContext context,
             UserManager<ApplicationUser> userManager,
-            AddComplaintStatusChangeTransactionHandler transactionHandler)
+            AddComplaintStatusChangeTransactionHandler transactionHandler
+        )
         {
             _context = context;
             _userManager = userManager;
@@ -81,34 +83,30 @@ namespace Application.Handlers.Tasks
                             await transaction.RollbackAsync();
                             return Result<TaskDTO>.Failure($"Invalid user id: {worker.intId}");
                         }
-                        
+
                         if (user2.intUserTypeId != (int)UsersConstant.userTypes.worker)
                         {
                             await transaction.RollbackAsync();
                             return Result<TaskDTO>.Failure($"Invalid worker id: {worker.intId}");
                         }
 
-                        var workerNameQuery = from user in _context.UserInfos
-                                              where user.intId == worker.intId
-                                              select new
-                                              {
-                                                  user.strFirstName,
-                                                  user.strLastName
-                                              };
+                        var workerNameQuery =
+                            from user in _context.UserInfos
+                            where user.intId == worker.intId
+                            select new { user.strFirstName, user.strLastName };
                         var workerUser = await workerNameQuery.FirstOrDefaultAsync();
 
                         taskDTO.workersList.ElementAt(i).strFirstName = workerUser.strFirstName;
                         taskDTO.workersList.ElementAt(i).strLastName = workerUser.strLastName;
                         i++;
-                        var taskWorker = new WorkTaskMembers
+                        var taskWorker = new TeamMembers
                         {
-
                             intWorkerId = worker.intId,
-                            intTaskId = taskEntity.Entity.intId,
+                            intTeamId = taskEntity.Entity.intId,
                             blnIsLeader = worker.isLeader
                         };
 
-                        await _context.TaskMembers.AddAsync(taskWorker);
+                        await _context.TeamMembers.AddAsync(taskWorker);
 
                         if (worker.isLeader)
                             leaderCount++;
@@ -131,8 +129,6 @@ namespace Application.Handlers.Tasks
                         intComplaintId = request.Id
                     };
 
-
-
                     await _context.TasksComplaints.AddAsync(taskComplaint);
 
                     var complaint = new Complaint { intId = request.Id };
@@ -140,17 +136,14 @@ namespace Application.Handlers.Tasks
                     complaint.intStatusId = (int)ComplaintsConstant.complaintStatus.Scheduled;
                     await _context.SaveChangesAsync(cancellationToken);
 
-
                     await _transactionHandler.Handle(
-                  new AddComplaintStatusChangeTransactionCommand(
-                          request.Id,
-                          (int)ComplaintsConstant.complaintStatus.Scheduled
-                      ),
-                          cancellationToken
-                      );
+                        new AddComplaintStatusChangeTransactionCommand(
+                            request.Id,
+                            (int)ComplaintsConstant.complaintStatus.Scheduled
+                        ),
+                        cancellationToken
+                    );
                     await _context.SaveChangesAsync(cancellationToken);
-
-
                 }
                 catch (Exception)
                 {

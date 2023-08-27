@@ -1,8 +1,10 @@
 ﻿using Domain.DataModels.Complaints;
+using Domain.DataModels.Intersections;
 using Domain.DataModels.Tasks;
 using Domain.DataModels.User;
 using Domain.Resources;
 using Microsoft.AspNetCore.Identity;
+using static Domain.Resources.ComplaintsConstant;
 
 namespace Persistence
 {
@@ -13,6 +15,7 @@ namespace Persistence
             UserManager<ApplicationUser> userManager,
             int typeAdmin,
             int typeWorker,
+            int typeLeader,
             int typeUser
         )
         {
@@ -34,6 +37,17 @@ namespace Persistence
                     strPhoneNumber = "0788888888",
                     strNationalId = "2000111222",
                     strNationalIdNumber = "RUX11222"
+                }
+            );
+
+            var infoLeader = await context.UserInfos.AddAsync(
+                new UserInfo
+                {
+                    strFirstName = "leader",
+                    strLastName = "leader",
+                    strPhoneNumber = "0788881288",
+                    strNationalId = "2099111222",
+                    strNationalIdNumber = "RHU11122"
                 }
             );
             var infoUser = await context.UserInfos.AddAsync(
@@ -71,6 +85,17 @@ namespace Persistence
                 intUserTypeId = typeWorker,
             };
 
+            var userLeader = new ApplicationUser
+            {
+                UserName = "leader",
+                PhoneNumberConfirmed = true,
+                blnIsVerified = false,
+                blnIsActive = false,
+                blnIsBlacklisted = false,
+                intUserInfoId = infoLeader.Entity.intId,
+                intUserTypeId = typeLeader,
+            };
+
             var userUser = new ApplicationUser
             {
                 UserName = "user",
@@ -84,11 +109,25 @@ namespace Persistence
 
             await userManager.CreateAsync(userAdmin, "Pass@123");
             await userManager.CreateAsync(userWorker, "Pass@123");
+            await userManager.CreateAsync(userLeader, "Pass@123");
             await userManager.CreateAsync(userUser, "Pass@123");
         }
 
         public static async Task CreateComplaintLookUpTables(DataContext context)
         {
+            if (!context.Regions.Any())
+            {
+                await context.Regions.AddAsync(
+                    new Region
+                    {
+                        strNameAr = "جبل عمان",
+                        strNameEn = "Jabal Amman",
+                        strShapePath = @"C:\Fake\Path\Files\test.shp"
+                    }
+                );
+                await context.SaveChangesAsync();
+            }
+
             if (!context.ComplaintStatus.Any())
             {
                 var complaintStatus = new List<ComplaintStatus>
@@ -305,6 +344,41 @@ namespace Persistence
 
         public static async Task CreateTaskLookUpTables(DataContext context)
         {
+            if (!context.Teams.Any())
+            {
+                await context.Teams.AddAsync(new Team { intAdminId = 1, intDepartmentId = 1 });
+                await context.SaveChangesAsync();
+
+                await context.TeamMembers.AddAsync(
+                    new TeamMembers
+                    {
+                        intWorkerId = 3,
+                        intTeamId = 1,
+                        blnIsLeader = true
+                    }
+                );
+
+                var workerArr = context.Users
+                    .Where(u => u.intUserTypeId == 2)
+                    .OrderBy(q => q.Id)
+                    .Skip(1)
+                    .Take(5)
+                    .ToArray();
+
+                for (int i = 0; i < workerArr.Length; i++)
+                {
+                    await context.TeamMembers.AddAsync(
+                        new TeamMembers
+                        {
+                            intWorkerId = workerArr[i].Id,
+                            intTeamId = 1,
+                            blnIsLeader = false
+                        }
+                    );
+                }
+                await context.SaveChangesAsync();
+            }
+
             if (!context.TaskStatus.Any())
             {
                 var taskStatus = new List<WorkTaskStatus>
