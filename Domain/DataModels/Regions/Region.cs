@@ -17,5 +17,9 @@ namespace Domain.DataModels.Complaints
         [Column("NAME_EN")]
         [Required]
         public string strNameEn { get; set; }
+
+        [Column("SHAPE_PATH")]
+        [Required]
+        public string strShapePath { get; set; }
     }
 }
