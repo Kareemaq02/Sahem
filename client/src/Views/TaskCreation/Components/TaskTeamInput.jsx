@@ -14,18 +14,25 @@ import { DataGrid } from "@mui/x-data-grid";
 
 // Project Imports
 import { GetWorkersApi } from "../../../Common/Services/GetWorkersApi";
+import { availableWorker } from "../../../Common/Services/availableWorker";
 
 // Context
 import TaskCreationContext from "../Context/TaskCreationContext";
 
-const TaskTeamInput = ({ NextStep }) => {
-  const { workers, setWorkers, leader, setLeader, members, setMembers } =
+const TaskTeamInput = ({ NextStep   }) => {
+  const { workers, setWorkers, leader, setLeader, members, setMembers, formattedStartDate, formattedDueDate } =
     useContext(TaskCreationContext);
   const [snackBar, setSnackBar] = useState(false);
 
+  /*
+  const startDate = '2023-09-12 00:00:00.000000'
+  const dueDate = '2023-09-17 00:00:00.000000'
+  */
+
+
   useEffect(() => {
     const GetWorkers = async () => {
-      const list = await GetWorkersApi();
+      const list = await availableWorker(formattedStartDate, formattedDueDate);
       if (members.length > 0) {
         const membersIds = members.map((member) => member.intId);
         setWorkers(list.filter((item) => !membersIds.includes(item.intId)));
@@ -34,7 +41,7 @@ const TaskTeamInput = ({ NextStep }) => {
       }
     };
     GetWorkers();
-  }, []);
+  }, [formattedStartDate, formattedDueDate]);
 
   useEffect(() => {
     if (!leader && members.length > 0) {
@@ -70,6 +77,7 @@ const TaskTeamInput = ({ NextStep }) => {
     },
   };
 
+  
   const WorkersTable = [
     {
       field: "button",

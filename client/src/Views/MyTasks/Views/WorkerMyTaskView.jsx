@@ -25,7 +25,7 @@ const WorkerMyTaskView = () => {
 
     return (
         <Box>
-            <WorkerDataGrid tasks={myTasks} />
+            <WorkerDataGrid tasks={myTasks} refreshData={setMyTasks}/>
         </Box>
     );
 };

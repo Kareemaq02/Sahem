@@ -23,7 +23,7 @@ const ShowWatchlist = ({ data }) => {
                                     className="status-chip"
                                     icon={<RadioButtonCheckedIcon />}
                                     color="primary"
-                                    label={watch.strStatus}
+                                    label={watch.strStatusAr}
                                     variant="outlined"
                                     sx={{ p: 1 }}
                                 />

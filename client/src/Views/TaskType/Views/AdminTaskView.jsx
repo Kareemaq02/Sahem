@@ -25,7 +25,7 @@ function AdminTaskType() {
           <TaskTypeDataGrid data={complaints} />
         </Grid>
         <Grid item xs={12} md={4}>
-          <AddTaskType />
+          <AddTaskType refreshdata={setComplaints}/>
         </Grid>
       </Grid>
     </div>

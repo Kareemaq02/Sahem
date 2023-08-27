@@ -17,12 +17,12 @@ import {
     const columns = [
           {
             field: "strNameAr",
-            headerName: "Arabic Name",
+            headerName: "الاسم بالعربي",
             flex: 1,
           },
           {
             field: "strNameEn",
-            headerName: "English Name",
+            headerName: "الاسم بلانجليزي",
             flex: 1,
           },
           
@@ -35,6 +35,7 @@ import {
             getRowId={(row) => row.strUserName || Math.random().toString(36).substring(7)}
             components={{ Toolbar: GridToolbar }}
             density="compact"
+            sx={{fontSize: 'medium'}}
           />
         </Box>
       ); 
