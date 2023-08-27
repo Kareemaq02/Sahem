@@ -49,6 +49,7 @@ class _XDPublicFeed1State extends State<XDPublicFeed1> {
 
          //complaint Post
         Expanded(
+            flex: 1,
           child: RefreshIndicator(
             displacement: 100,
            backgroundColor: AppColor.background,
