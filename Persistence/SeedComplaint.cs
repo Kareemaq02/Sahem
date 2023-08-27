@@ -46,6 +46,7 @@ namespace Persistence
                 dtmDateLastReminded = dateReminded,
                 intLastModifiedBy = 1,
                 dtmDateCreated = dateCreated,
+                intRegionId = 1,
             };
 
             var complaintEntity = await context.Complaints.AddAsync(complaint);

@@ -1,8 +1,10 @@
 ﻿using Domain.DataModels.Complaints;
+using Domain.DataModels.Intersections;
 using Domain.DataModels.Tasks;
 using Domain.DataModels.User;
 using Domain.Resources;
 using Microsoft.AspNetCore.Identity;
+using static Domain.Resources.ComplaintsConstant;
 
 namespace Persistence
 {
@@ -113,6 +115,19 @@ namespace Persistence
 
         public static async Task CreateComplaintLookUpTables(DataContext context)
         {
+            if (!context.Regions.Any())
+            {
+                await context.Regions.AddAsync(
+                    new Region
+                    {
+                        strNameAr = "جبل عمان",
+                        strNameEn = "Jabal Amman",
+                        strShapePath = @"C:\Fake\Path\Files\test.shp"
+                    }
+                );
+                await context.SaveChangesAsync();
+            }
+
             if (!context.ComplaintStatus.Any())
             {
                 var complaintStatus = new List<ComplaintStatus>
@@ -329,6 +344,41 @@ namespace Persistence
 
         public static async Task CreateTaskLookUpTables(DataContext context)
         {
+            if (!context.Teams.Any())
+            {
+                await context.Teams.AddAsync(new Team { intAdminId = 1, intDepartmentId = 1 });
+                await context.SaveChangesAsync();
+
+                await context.TeamMembers.AddAsync(
+                    new TeamMembers
+                    {
+                        intWorkerId = 3,
+                        intTeamId = 1,
+                        blnIsLeader = true
+                    }
+                );
+
+                var workerArr = context.Users
+                    .Where(u => u.intUserTypeId == 2)
+                    .OrderBy(q => q.Id)
+                    .Skip(1)
+                    .Take(5)
+                    .ToArray();
+
+                for (int i = 0; i < workerArr.Length; i++)
+                {
+                    await context.TeamMembers.AddAsync(
+                        new TeamMembers
+                        {
+                            intWorkerId = workerArr[i].Id,
+                            intTeamId = 1,
+                            blnIsLeader = false
+                        }
+                    );
+                }
+                await context.SaveChangesAsync();
+            }
+
             if (!context.TaskStatus.Any())
             {
                 var taskStatus = new List<WorkTaskStatus>

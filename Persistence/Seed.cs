@@ -8,6 +8,7 @@ namespace Persistence
     {
         // Seed file Settings
         private static readonly int _admins = 14;
+        private static readonly int _leaders = 32;
         private static readonly int _workers = 87;
         private static readonly int _citizens = 416;
         private static readonly int _complaints = 1322;
@@ -71,6 +72,10 @@ namespace Persistence
                     for (int i = 0; i < _workers; i++)
                     {
                         await SeedUser.SeedUsers(context, userManager, typeWorker, i);
+                    }
+                    for (int i = 0; i < _leaders; i++)
+                    {
+                        await SeedUser.SeedUsers(context, userManager, typeLeader, i);
                     }
                     for (int i = 0; i < _admins; i++)
                     {
