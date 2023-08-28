@@ -10,8 +10,17 @@ import "../Style/style.css"
 import "./ComplaintMap.css"
 
 import mapboxgl, { Marker, Popup } from "mapbox-gl";
+// import GetGeneralComplaintMarker from "../Service/GetGeneralComplaintsMap";
+import GetPublicComplaintMarker from "../Service/GetPublicComplaintsMap";
 
-const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange, onSliderValueChange }) => {
+// import { GetPublicComplaintMarker } from "../Service/GetPublicComplaintsMap";
+
+
+
+
+
+
+const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange, markerInfoList }) => {
 
     mapboxgl.accessToken =
         "pk.eyJ1IjoiYWdyaWRiIiwiYSI6ImNsbDN5dXgxNTAxOTAza2xhdnVmcnRzbGEifQ.3cM2WO5ubiAjuWbpXi9woQ";
@@ -22,8 +31,12 @@ const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange, onSlide
     const [lat, setLat] = useState(31.941391);
     const [zoom, setZoom] = useState(8);
 
+    const [markerDetails, setMarkerDetails] = useState([]);
+  
+
+
     const geojson = {
-        'type': 'FeatureCollection',
+        
         'features': [
             {
                 'type': 'Feature',
@@ -51,6 +64,8 @@ const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange, onSlide
     };
 
     useEffect(() => {
+
+
         if (map.current) return; // initialize map only once
         map.current = new mapboxgl.Map({
             container: mapContainer.current,
@@ -70,7 +85,6 @@ const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange, onSlide
 
             const popupContent = document.createElement("div");
             popupContent.className = "popup-container";
-
             popupContent.innerHTML = `
         <div class="popup-image" style="border-color: ${(marker.properties.message)};">
         <img src="URL_OF_YOUR_IMAGE" alt="Marker Image" />
@@ -82,7 +96,7 @@ const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange, onSlide
           <div class="popup-divider"></div>
           <div class="popup-content">
             <div class="popup-label">رقم البلاغ</div>
-            <div class="popup-value">Value 1</div>
+            <div class="popup-value">${markerDetails.intComplaintId}</div>
             <div class="popup-label">حالة البلاغ</div>
             <div class="popup-value">Value 2</div>
             <div class="popup-label">المستخدم</div>
@@ -106,10 +120,13 @@ const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange, onSlide
     const [complaintTypes, setComplaintTypes] = useState([]);
     const [selectedComplaintTypes, setSelectedComplaintTypes] = useState([]);
     const [selectedStatus, setselectedStatus] = useState([])
-    const [sliderValue, setSliderValue] = useState(30);
 
     useEffect(() => {
         // Fetch complaint types from the API and set them to state
+        const showMarkerDetails = async () => {
+            const response = await GetPublicComplaintMarker()
+            setMarkerDetails(response.data)
+        }
         const fetchComplaintTypes = async () => {
             try {
                 const response = await GetComplaintTypes();
@@ -120,13 +137,9 @@ const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange, onSlide
         };
 
         fetchComplaintTypes();
-    }, [lng, lat, zoom, geojson]);
+        showMarkerDetails();
+    }, []);
 
-
-    const handleSliderChange = (event, newValue) => {
-        setSliderValue(newValue);
-        onSliderValueChange(newValue); 
-    };
 
 
     const handleComplaintTypesChange = (event) => {
@@ -188,23 +201,20 @@ const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange, onSlide
                 {/* Replace the Stack with MultipleSelectCheckmarks */}
                 <FormChipSelect
                     value={selectedStatus}
-                    onChange={handleComplaintStatusChange}
+                    onChange={handleComplaintStatusChange} // Pass the handleComplaintStatusChange function as onChange prop
                     items={[
                         { label: 'قيد الانتظار', value: 1, color: 'primary', },
+                        { label: 'مرفوض', value: 2, color: '#F44336' },
                         { label: 'موافق عليه', value: 3, color: '#4CAF50' },
                         { label: 'مجدول', value: 4, color: '#3F51B5' },
                         { label: 'قيد العمل', value: 5, color: 'blue' },
                         { label: 'بانتظار التقييم', value: 6, color: '#9C27B0' },
+                        { label: 'منجز', value: 7, color: '#8BC34A' },
                         { label: 'معاد', value: 8, color: '#FFC107' },
                     ]}
                 />
             </Box>
-            <h4 dir="rtl">  المسافة/كم</h4>
-            <Divider />
             <br />
-            <Box sx={{ padding: 2, width: '100%', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <FormSlider value={sliderValue} onChange={handleSliderChange} />
-            </Box>
         </Paper>
     );
 };

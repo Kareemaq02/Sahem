@@ -10,7 +10,6 @@ import { BlackListUser } from "../Service/BlackListUser";
 import { WhiteListUser } from "../Service/WhiteListUser";
 import { VerifyUser } from "../Service/VerifyUser";
 import { UnVerifyUser } from "../Service/UnVerifyUser";
-import { Link } from "react-router-dom"; // Import the Link component
 
 
 const ShowUsersDataGrid = ({ data, id }) => {
@@ -51,21 +50,21 @@ const ShowUsersDataGrid = ({ data, id }) => {
     };
 
     const columns = [
-        { field: "intId", headerName: "رقم", flex: 0.5 },
-        { field: "strUsername", headerName: "اسم المستخدم", flex: 0.5 },
+        { field: "intId", headerName: "ID", flex: 0.5 },
+        { field: "strUsername", headerName: "User Name", flex: 0.5 },
         {
             field: "name",
-            headerName: "الاسم",
+            headerName: "Name",
             flex: 0.5,
             valueGetter: (params) => {
-                const firstName = params.row.strFirstNameAr || params.row.strFirstName;
-                const LastName = params.row.strLastNameAr || params.row.strLastName;
+                const firstName = params.row.strFirstName || "";
+                const LastName = params.row.strLastName || "";
                 return `${firstName} ${LastName}`
             }
         },
         {
             field: "Action",
-            headerName: "عرض",
+            headerName: "Action",
             renderCell: (params) => (
                 <div>
                     <IconButton
@@ -81,7 +80,7 @@ const ShowUsersDataGrid = ({ data, id }) => {
     ];
 
     return (
-        <Box margin="2rem 0 0 0" height="75vh" sx={{ flex: 1, width: '100%' }}>
+        <Box margin="2rem 0 0 0" height="75vh" sx={{flex:1, width:'100%'}}>
             <DataGrid
                 rows={data}
                 columns={columns}
@@ -91,7 +90,6 @@ const ShowUsersDataGrid = ({ data, id }) => {
                 }}
                 density="compact"
                 className="responsive-grid"
-                sx={{ fontWeight: 'bold' }}
             />
 
             <Dialog
@@ -100,7 +98,7 @@ const ShowUsersDataGrid = ({ data, id }) => {
                 maxWidth="md"
                 fullWidth
             >
-                <DialogTitle sx={{ fontFamily: 'Droid Arabic Naskh, sans-serif' }}>معلومات المستخدم</DialogTitle>
+                <DialogTitle>User Information</DialogTitle>
                 <DialogContent>
                     {selectedUser && (
 
@@ -110,37 +108,37 @@ const ShowUsersDataGrid = ({ data, id }) => {
                                     <Typography variant="h2" id="Name">
                                         {selectedUser.strFirstName}
                                         <br />
-                                        <Typography variant="h6" id="ntid" sx={{ fontFamily: 'Droid Arabic Naskh, sans-serif' }}>
-                                            {selectedUser.strFirstName} {selectedUser.strLastName} :الاسم الكامل
+                                        <Typography variant="h6" id="ntid">
+                                            national_id: 20020123
                                         </Typography>
                                     </Typography>
-                                    <Link to={`/auth/message?name=${selectedUser.strFirstName}`}>
-                                        <Button id="msgbtn" variant="contained" endIcon={<SendIcon />}>
-                                            مراسلة
-                                        </Button>
-                                    </Link>
+                                    <Button id="msgbtn" variant="contained" endIcon={<SendIcon />}>
+                                        Message
+                                    </Button>
                                 </FlexBetween>
                             </div>
                             <hr />
                             <div className="basicInfo">
-                                <Typography variant="h4" id="basicInfoTitle" sx={{ fontFamily: 'Droid Arabic Naskh, sans-serif' }}>المعلومات الشخصية</Typography>
+                                <Typography variant="h4" id="basicInfoTitle">Basic Details</Typography>
                                 <br />
                                 <br />
                                 <Stack direction="row" spacing={2} sx={{ width: "90%" }}>
 
                                     <Stack spacing={2} sx={{ flexGrow: 1, }}>
 
-                                        <Typography sx={{ fontFamily: 'Droid Arabic Naskh, sans-serif' }}>رقم <br />  {selectedUser.intId}</Typography>
-                                        <Typography sx={{ fontFamily: 'Droid Arabic Naskh, sans-serif' }}>الاسم الاول<br /> {selectedUser.strFirstName}</Typography>
-                                        <Typography sx={{ fontFamily: 'Droid Arabic Naskh, sans-serif' }}>الاسم الاخير<br /> {selectedUser.strLastName}</Typography>
+                                        <Typography>ID: <br />  {selectedUser.intId}</Typography>
+                                        <Typography>First Name:<br /> {selectedUser.strFirstName}</Typography>
+                                        <Typography>Last Name:<br /> {selectedUser.strLastName}</Typography>
                                     </Stack >
 
                                     <Stack >
 
-                                        <Typography variant="h3" sx={{ fontFamily: 'Droid Arabic Naskh, sans-serif' }}>حظر المستخدم</Typography>
+                                        <Typography variant="h3">Suspend User Activities</Typography>
 
                                         <Typography sx={{ fontSize: "10px" }} variant="h6" id="justify">
                                             <FlexBetween>
+                                                User will no longer be able to vote or report a complaint
+
                                                 <Switch
                                                     checked={selectedUser?.boolIsBlacklisted === true}
                                                     onChange={async (event) => {
@@ -160,21 +158,20 @@ const ShowUsersDataGrid = ({ data, id }) => {
                                                     }}
                                                 />
 
-                                                <Typography sx={{ fontFamily: 'Droid Arabic Naskh, sans-serif' }}>المستخدم لن يستطيع التصويت او الابلاغ عن مشاكل</Typography>
-
-
                                             </FlexBetween>
 
                                         </Typography>
 
                                         <br />
                                         <br />
-                                        <Typography variant="h3" sx={{ fontFamily: 'Droid Arabic Naskh, sans-serif' }}>توثيق المستخدم</Typography>
+                                        <Typography variant="h3">Verify User</Typography>
 
                                         <Typography sx={{ fontSize: "10px" }} variant="h6" id="justify">
                                             <FlexBetween>
-                                                <Switch
-                                                    checked={selectedUser?.boolIsVerified === true}
+                                                Toggling this will make the user's reports have a higher over others
+
+                                                <Switch 
+                                                    checked = {selectedUser?.boolIsVerified === true}
                                                     onChange={async (event) => {
                                                         const newVerifyChecked = event.target.checked;
                                                         setIsVerifyChecked(newVerifyChecked)
@@ -190,13 +187,18 @@ const ShowUsersDataGrid = ({ data, id }) => {
                                                             boolIsVerified: newVerifyChecked
                                                         }));
                                                     }}
+                                                
                                                 />
-
-                                                <Typography sx={{ fontFamily: 'Droid Arabic Naskh, sans-serif' }}>تفعيل هذا الخيار يعطي صاحب الحساب افضلية</Typography>
                                             </FlexBetween>
 
                                         </Typography>
                                         <br />
+                                        <br />
+                                        <Typography variant="h3">Data Management</Typography>
+                                        <Typography sx={{ fontSize: "10px" }} variant="h6">Warning</Typography>
+                                        <Button variant="outlined" color="error">
+                                            Delete Account
+                                        </Button>
                                     </Stack>
                                 </Stack>
 

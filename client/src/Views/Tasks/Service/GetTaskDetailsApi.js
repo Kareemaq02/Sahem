@@ -9,7 +9,6 @@ export const GetTaskDetailsApi = async (id) => {
       taskStatus: data.strTaskStatus,
       members: data.workersList.map((worker) => worker.intId.toString()), // Need to be changed into string names
       type: data.strTypeNameEn,
-      typeAr: data.strTypeNameAr,
       date: DateFormatterEn(data.finishedDate),
       photos: data.lstMedia.map((media) => ({
         image: media.strMediaRef,

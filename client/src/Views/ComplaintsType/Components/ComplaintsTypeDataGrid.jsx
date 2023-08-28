@@ -15,27 +15,25 @@ const ComplaintsTypeDataGrid = ({ DeleteComplaintsType, data }) => {
   const columns = [
     {
       field: "intDepartmentId",
-      headerName: "رقم القسم",
+      headerName: "Department ID",
       flex: 0.5,
     },
     {
       field: "strNameAr",
-      headerName: "الاسم بالعربي",
+      headerName: "Arabic Name",
       flex: 1,
     },
     {
       field: "strNameEn",
-      headerName: "الاسم بلانجليزي",
+      headerName: "English Name",
       flex: 1,
     },
     {
       field: "strPrivacy",
-      headerName: "الخصوصية",
+      headerName: "Privacy",
       flex: 0.5,
     },
   ];
-
-
   return (
     <Box margin="2rem 0 0 0" height="75vh">
       <DataGrid
@@ -44,7 +42,6 @@ const ComplaintsTypeDataGrid = ({ DeleteComplaintsType, data }) => {
         getRowId={(row) => row.id || Math.random().toString(36).substring(7)}
         components={{ Toolbar: GridToolbar }}
         density="compact"
-        sx={{fontWeight: 'bold'}}
       />
     </Box>
   );
