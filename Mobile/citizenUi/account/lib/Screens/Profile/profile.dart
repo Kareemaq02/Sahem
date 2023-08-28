@@ -61,27 +61,25 @@ class _ProfileState extends State<Profile> {
        appBar:myAppBar(context,"الإعدادات",false,170),
       body: Padding(
         padding: const EdgeInsets.only(top:8.0,bottom: 8.0),
-        child: Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                
-              Padding(
-                padding: const EdgeInsets.only(right:8.0,left: 8.0),
-                child: InfoBox( '${userInfo.strFirstName!} ${userInfo.strLastName!}',),
-              ),
-              SizedBox(height: 10,),
-              DataBox('أسم المستخدم',textButtn,userInfo.strUsername!,),
-              DataBox("البريد الالكتروني",textButtn,userInfo.strUsername!,),
-              DataBox("رقم الهاتف",textButtn,userInfo.strPhoneNumber!,),
-              DataBox("كلمة المرور",textButtn,"********"),
-              DataBox("استلام الاشعارات",switchV,"غير مفعل"),
-              DataBox("اللغة",toggleLang,"العربية"),
-             SizedBox(height: 10,),
-             logoutBox(context),
-              ],),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
               
-          ),
+            Padding(
+              padding: const EdgeInsets.only(right:8.0,left: 8.0),
+              child: InfoBox( '${userInfo.strFirstName!} ${userInfo.strLastName!}',),
+            ),
+            SizedBox(height: 10,),
+            DataBox('أسم المستخدم',textButtn,userInfo.strUsername!,),
+            DataBox("البريد الالكتروني",textButtn,userInfo.strUsername!,),
+            DataBox("رقم الهاتف",textButtn,userInfo.strPhoneNumber!,),
+            DataBox("كلمة المرور",textButtn,"********"),
+            DataBox("استلام الاشعارات",switchV,"غير مفعل"),
+            DataBox("اللغة",toggleLang,"العربية"),
+           SizedBox(height: 10,),
+           logoutBox(context),
+            ],),
+            
         ),
       ),
 
