@@ -17,6 +17,11 @@ namespace Domain.DataModels.Intersections
         public int intAdminId { get; set; }
         public ApplicationUser Admin { get; set; }
 
+        [Column("LEADER_ID")]
+        [ForeignKey("Leader")]
+        public int intLeaderId { get; set; }
+        public ApplicationUser Leader { get; set; }
+
         [Column("DEPARTMENT_ID")]
         [ForeignKey("department")]
         public int intDepartmentId { get; set; }

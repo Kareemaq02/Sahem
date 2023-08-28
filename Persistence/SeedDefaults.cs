@@ -346,17 +346,15 @@ namespace Persistence
         {
             if (!context.Teams.Any())
             {
-                await context.Teams.AddAsync(new Team { intAdminId = 1, intDepartmentId = 1 });
-                await context.SaveChangesAsync();
-
-                await context.TeamMembers.AddAsync(
-                    new TeamMembers
+                await context.Teams.AddAsync(
+                    new Team
                     {
-                        intWorkerId = 3,
-                        intTeamId = 1,
-                        blnIsLeader = true
+                        intAdminId = 1,
+                        intDepartmentId = 1,
+                        intLeaderId = 3
                     }
                 );
+                await context.SaveChangesAsync();
 
                 var workerArr = context.Users
                     .Where(u => u.intUserTypeId == 2)
@@ -368,12 +366,7 @@ namespace Persistence
                 for (int i = 0; i < workerArr.Length; i++)
                 {
                     await context.TeamMembers.AddAsync(
-                        new TeamMembers
-                        {
-                            intWorkerId = workerArr[i].Id,
-                            intTeamId = 1,
-                            blnIsLeader = false
-                        }
+                        new TeamMembers { intWorkerId = workerArr[i].Id, intTeamId = 1, }
                     );
                 }
                 await context.SaveChangesAsync();

@@ -45,10 +45,7 @@ namespace Application.Handlers.Complaints
                 .Select(u => u.Id)
                 .SingleOrDefaultAsync();
 
-            var isLeader = _context.TeamMembers.Any(
-                tm =>
-                    tm.intTeamId == request.id && tm.intWorkerId == userId && tm.blnIsLeader == true
-            );
+            var isLeader = _context.Teams.Any(tm => tm.intLeaderId == userId);
 
             if (isLeader)
             {

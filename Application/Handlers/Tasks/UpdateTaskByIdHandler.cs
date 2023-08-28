@@ -129,7 +129,7 @@ public class UpdateTaskByIdHandler : IRequestHandler<UpdateTaskCommand, Result<U
                     {
                         intWorkerId = worker.intId,
                         intTeamId = request.Id,
-                        blnIsLeader = worker.isLeader
+                        //blnIsLeader = worker.isLeader
                     };
 
                     await _context.TeamMembers.AddAsync(taskWorker);

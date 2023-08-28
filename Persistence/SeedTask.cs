@@ -40,7 +40,7 @@ namespace Persistence
                 intStatusId = 1,
                 intTypeId = taskType.intId,
                 decCost = (decimal)(random.NextDouble() * 12654 - 89) + 89,
-                intLeaderId = 2,
+                intTeamId = 1,
                 dtmDateScheduled = dateCreated,
                 dtmDateActivated = dateCreated,
                 dtmDateDeadline = datelastModified,

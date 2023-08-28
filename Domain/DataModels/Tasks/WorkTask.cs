@@ -18,10 +18,10 @@ namespace Domain.DataModels.Tasks
         public int intAdminId { get; set; }
         public ApplicationUser Admin { get; set; }
 
-        [Column("LEADER_ID")]
-        [ForeignKey("Leader")]
-        public int intLeaderId { get; set; }
-        public ApplicationUser Leader { get; set; }
+        [Column("TEAM_ID")]
+        [ForeignKey("Team")]
+        public int intTeamId { get; set; }
+        public Team Team { get; set; }
 
         [Column("STATUS_ID")]
         [ForeignKey("Status")]

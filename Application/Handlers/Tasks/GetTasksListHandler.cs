@@ -71,7 +71,7 @@ namespace Application.Handlers.Tasks
                                     intId = x.Worker.Id,
                                     strFirstName = x.Worker.UserInfo.strFirstName,
                                     strLastName = x.Worker.UserInfo.strLastName,
-                                    isLeader = x.blnIsLeader,
+                                    //isLeader = x.blnIsLeader,
                                 }
                         )
                         .Distinct()

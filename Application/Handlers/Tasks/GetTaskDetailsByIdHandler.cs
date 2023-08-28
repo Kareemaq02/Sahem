@@ -87,7 +87,7 @@ namespace Application.Handlers.Tasks
                                 new TaskWorkerDTO
                                 {
                                     intId = x.Worker.Id,
-                                    isLeader = x.blnIsLeader,
+                                    //isLeader = x.blnIsLeader,
                                     strFirstName = x.Worker.UserInfo.strFirstName,
                                     strLastName = x.Worker.UserInfo.strLastName
                                 }

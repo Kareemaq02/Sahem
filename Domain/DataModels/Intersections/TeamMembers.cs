@@ -15,8 +15,5 @@ namespace Domain.DataModels.Intersections
         [ForeignKey("Task")]
         public int intTeamId { get; set; }
         public Team Team { get; set; }
-
-        [Column("IS_LEADER")]
-        public Boolean blnIsLeader { get; set; }
     }
 }

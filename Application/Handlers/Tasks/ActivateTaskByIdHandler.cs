@@ -36,9 +36,7 @@ public class ActivateTaskByIdHandler : IRequestHandler<ActivateTaskCommand, Resu
             .Select(u => u.Id)
             .SingleOrDefaultAsync(cancellationToken: cancellationToken);
 
-        var isLeader = _context.TeamMembers.Any(
-            tm => tm.intTeamId == request.Id && tm.intWorkerId == userId && tm.blnIsLeader == true
-        );
+        var isLeader = _context.Teams.Any(tm => tm.intLeaderId == userId);
 
         //Start transaction
         using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);

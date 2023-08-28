@@ -61,19 +61,19 @@ namespace Application.Handlers.Tasks
                     scheduledDate = g.Key.ScheduledDate,
                     deadlineDate = g.Key.DeadlineDate,
                     strTaskStatus = g.Key.TaskStatus,
-                    blnIsTaskLeader = g.Any(x => x.intWorkerId == request.id && x.blnIsLeader),
-                    workersList = g.Select(
-                            x =>
-                                new TaskWorkerDTO
-                                {
-                                    intId = x.Worker.Id,
-                                    strFirstName = x.Worker.UserInfo.strFirstName,
-                                    strLastName = x.Worker.UserInfo.strLastName,
-                                    isLeader = x.blnIsLeader,
-                                }
-                        )
-                        .Distinct()
-                        .ToList()
+                    //blnIsTaskLeader = g.Any(x => x.intWorkerId == request.id && x.blnIsLeader),
+                    //workersList = g.Select(
+                    //        x =>
+                    //            new TaskWorkerDTO
+                    //            {
+                    //                intId = x.Worker.Id,
+                    //                strFirstName = x.Worker.UserInfo.strFirstName,
+                    //                strLastName = x.Worker.UserInfo.strLastName,
+                    //                isLeader = x.blnIsLeader,
+                    //            }
+                    //    )
+                    //    .Distinct()
+                    //    .ToList()
                 };
 
             var result = await query.ToListAsync();

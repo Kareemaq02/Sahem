@@ -103,7 +103,7 @@ namespace Application.Handlers.Tasks
                         {
                             intWorkerId = worker.intId,
                             intTeamId = taskEntity.Entity.intId,
-                            blnIsLeader = worker.isLeader
+                            //blnIsLeader = worker.isLeader
                         };
 
                         await _context.TeamMembers.AddAsync(taskWorker);
