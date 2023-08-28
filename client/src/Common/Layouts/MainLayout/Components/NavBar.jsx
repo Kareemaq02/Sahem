@@ -57,7 +57,7 @@ const Navbar = ({ user }) => {
             width: 'auto',
             display: 'block',
             padding: '5px',
-            margin: '0'
+            margin: '0 2rem 0 2rem'
           }}
         />
         {/* LEFT SIDE */}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Box, Grid, Paper, Typography, Select, Chip, MenuItem } from "@mui/material";
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DateField } from '@mui/x-date-pickers/DateField';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -88,11 +88,13 @@ function AdminDashboard() {
               <Typography variant='h3' sx={{ pr: 1, display: 'grid', margin: 'auto 0' }}>اختيار التاريخ</Typography>
               <Box sx={{ pr: 2, }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker', 'DatePicker']}>
-                    <DatePicker
+                  <DemoContainer components={['DateField']}>
+                    <DateField
                       label="اختيار تاريخ"
                       value={selectedDate}
                       onChange={handleDateChange}
+                      format="MM-DD-YYYY"
+                      sx={{ height: '100%' }}
                     />
                   </DemoContainer>
                 </LocalizationProvider>
@@ -127,7 +129,7 @@ function AdminDashboard() {
 
           </Paper>
         </Grid>
-        <Grid item xs={12} sm={12}>
+        <Grid item xs={12} sm={6}>
           <Paper sx={{ borderRadius: '1rem' }}>
             <BarChartComponent
               selectedComplaintTypes={selectedComplaintTypes}
@@ -138,7 +140,7 @@ function AdminDashboard() {
         </Grid>
         <Grid item xs={12} sm={6}>
           <Paper sx={{ borderRadius: '1rem' }}>
-            <LineChartComponent />
+           <LineChartComponent />
           </Paper>
         </Grid>
       </Grid>

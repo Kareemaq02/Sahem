@@ -1,5 +1,4 @@
 import { createContext, useState } from "react";
-import dayjs from "dayjs";
 
 const TaskCreationContext = createContext();
 export const TaskCreationProvider = ({ children }) => {
@@ -9,8 +8,6 @@ export const TaskCreationProvider = ({ children }) => {
   // Team states
   const [leader, setLeader] = useState(null);
   const [members, setMembers] = useState([]);
-  const [startDate, setStartDate] = useState(null);
-  const [dueDate, setDueDate] = useState(null);
 
   const fullTeam =
     members.length > 0
@@ -24,14 +21,11 @@ export const TaskCreationProvider = ({ children }) => {
   const [task, setTask] = useState({
     id: "--",
     status: "Scheduled",
+    startDate: null,
+    dueDate: null,
     taskType: null,
     comment: "",
   });
-
-   // Formatted dates
-   const formattedStartDate = startDate ? dayjs(startDate).format("YYYY-MM-DD HH:mm:ss") : null;
-   const formattedDueDate = dueDate ? dayjs(dueDate).format("YYYY-MM-DD HH:mm:ss") : null;
- 
 
   // Shipped states
   const values = {
@@ -44,10 +38,6 @@ export const TaskCreationProvider = ({ children }) => {
     setMembers,
     task,
     setTask,
-    formattedStartDate,
-    setStartDate,
-    formattedDueDate,
-    setDueDate,
   };
 
   /////////////

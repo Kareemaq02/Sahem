@@ -1,4 +1,4 @@
-import { Typography, Button, Paper, Box } from "@mui/material"
+import { Typography, Button, Paper } from "@mui/material"
 import { FormProvider, useForm } from "react-hook-form"
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -43,51 +43,41 @@ const AdminWorkerReg = () => {
 
 
     return (
-        <Box>
-            <Paper sx={{ p: 2, borderRadius: '25px' }}>
-                <FormProvider {...methods}>
-                    <h1 style={{ textAlign: 'center' }}>تسجيل عامل جديد</h1>
-                    <form onSubmit={methods.handleSubmit(createWorker)}>
-                        <FormTextField name="strUsername" label="اسم المستخدم" defaultValue="" />
-                        <br />
-                        <br />
-                        <FormTextField name="strPhonenumber" label="رقم الهاتف" defaultValue="" />
-                        <br />
-                        <br />
-                        <FormTextField type="password" name="strPassword" label="كلمة المرور" defaultValue="" />
-                        <br />
-                        <br />
-                        <FormTextField name="strFirstName" label="الاسم الاول" defaultValue="" />
-                        <br />
-                        <br />
-                        <FormTextField name="strLastName" label="الاسم الاخير" defaultValue="" />
-                        <br />
-                        <br />
-                        <FormTextField name="strFirstNameAr" label="الاسم الاول بالعربي" defaultValue="" />
-                        <br />
-                        <br />
-                        <FormTextField name="strLastNameAr" label="الاسم الاحير بالعربي" defaultValue="" />
-                        <br />
-                        <br />
-                        <FormTextField name="strNationalId" label="رقم وطني" defaultValue="" />
-                        <br />
-                        <br />
-                        <FormTextField name="strPassportNumber" label="رقم الجواز" defaultValue="" />
-                        <br />
-                        <br />
-                        <FormTextField name="strNationalIdNumber" label="الرقم الوطني" defaultValue="" />
-                        <br />
-                        <br />
-                        <Button type="submit" variant="contained" color="primary" sx={{ width: "100%" }}>
+        <Paper sx={{ p: 2, borderRadius: '25px' }}>
+            <FormProvider {...methods}>
+                <h1 style={{ textAlign: 'center' }}>Register a Worker</h1>
+                <form onSubmit={methods.handleSubmit(createWorker)}>
+                    <FormTextField name="strUsername" label="User Name" defaultValue="" />
+                    <br />
+                    <br />
+                    <FormTextField name="strPhonenumber" label="Phone Number" defaultValue="" />
+                    <br />
+                    <br />
+                    <FormTextField type="password" name="strPassword" label="Password" defaultValue="" />
+                    <br />
+                    <br />
+                    <FormTextField name="strFirstName" label="First Name" defaultValue="" />
+                    <br />
+                    <br />
+                    <FormTextField name="strLastName" label="Last Name" defaultValue="" />
+                    <br />
+                    <br />
+                    <FormTextField name="strNationalId" label="National Id" defaultValue="" />
+                    <br />
+                    <br />
+                    <FormTextField name="strPassportNumber" label="Passport Number" defaultValue="" />
+                    <br />
+                    <br />
+                    <FormTextField name="strNationalIdNumber" label="National Id Number" defaultValue="" />
+                    <br />
+                    <br />
+                    <Button type="submit" variant="contained" color="primary" sx={{ width: "100%" }}>
 
-                            Add
-                        </Button>
-                    </form>
-                </FormProvider>
-            </Paper>
-            <br />
-            <br />
-        </Box>
+                        Add
+                    </Button>
+                </form>
+            </FormProvider>
+        </Paper>
     )
 }
 export default AdminWorkerReg;

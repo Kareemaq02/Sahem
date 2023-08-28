@@ -20,13 +20,13 @@ function AdminDepartmentView() {
 
   return (
     <div>
-      <Typography variant="h1" sx={{ fontFamily: 'Droid Arabic Naskh, sans-serif' }}>عرض الاقسام</Typography>
+      <Typography variant="h1">View Department Type</Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} md={8}>
           <DepartmentTypeDataGrid data={department} />
         </Grid>
         <Grid item xs={12} md={4}>
-          <DepartmentTypeForm refreshDataGrid={setDepartment} />
+          <DepartmentTypeForm />
         </Grid>
       </Grid>
     </div>
