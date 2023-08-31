@@ -1,4 +1,5 @@
 import 'package:account/Repository/color.dart';
+import 'package:account/Screens/Analytics/Analytics.dart';
 import 'package:account/Widgets/Charts/RatingChart.dart';
 import 'package:account/Widgets/Displays/InfoDisplayBox.dart';
 import 'package:account/Widgets/appBar.dart';
@@ -76,7 +77,12 @@ class _MainMenuState extends State<MainMenu> {
                             width: buttonWidth,
                             icon: Icons.bar_chart_rounded,
                             text: "الإحصائيات",
-                            onPressed: () => {})
+                            onPressed: () => {
+                                  Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const Analytics()))
+                                })
                       ],
                     ),
                     Row(
