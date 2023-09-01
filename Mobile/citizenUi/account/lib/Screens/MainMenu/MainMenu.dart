@@ -1,5 +1,8 @@
 import 'package:account/Repository/color.dart';
 import 'package:account/Screens/Analytics/Analytics.dart';
+import 'package:account/Screens/Home/public_feed.dart';
+import 'package:account/Screens/Profile/profile.dart';
+import 'package:account/Screens/View%20complaints/complaints_list.dart';
 import 'package:account/Widgets/Charts/RatingChart.dart';
 import 'package:account/Widgets/Displays/InfoDisplayBox.dart';
 import 'package:account/Widgets/appBar.dart';
@@ -65,7 +68,12 @@ class _MainMenuState extends State<MainMenu> {
                             width: buttonWidth,
                             icon: Icons.settings_rounded,
                             text: "الإعدادات",
-                            onPressed: () => {}),
+                            onPressed: () => {
+                                  Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const Profile()))
+                                }),
                         SquareButtonWithStroke(
                             height: buttonHeight,
                             width: buttonWidth,
@@ -73,16 +81,16 @@ class _MainMenuState extends State<MainMenu> {
                             text: "أداء الربع السنوي",
                             onPressed: () => {}),
                         SquareButtonWithStroke(
-                            height: buttonHeight,
-                            width: buttonWidth,
-                            icon: Icons.bar_chart_rounded,
-                            text: "الإحصائيات",
-                            onPressed: () => {
-                                  Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const Analytics()))
-                                })
+                          height: buttonHeight,
+                          width: buttonWidth,
+                          icon: Icons.bar_chart_rounded,
+                          text: "الإحصائيات",
+                          onPressed: () => {
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) => const Analytics()))
+                          },
+                        )
                       ],
                     ),
                     Row(
@@ -98,13 +106,23 @@ class _MainMenuState extends State<MainMenu> {
                             width: buttonWidth,
                             icon: Icons.forum_rounded,
                             text: "المنتدى العام",
-                            onPressed: () => {}),
+                            onPressed: () => {
+                                  Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const XDPublicFeed1()))
+                                }),
                         SquareButtonWithStroke(
                             height: buttonHeight,
                             width: buttonWidth,
                             icon: Icons.card_membership_rounded,
                             text: "بلاغاتي",
-                            onPressed: () => {}),
+                            onPressed: () => {
+                                  Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const XDComplaintsList()))
+                                }),
                       ],
                     )
                   ],
@@ -131,26 +149,34 @@ class _MainMenuState extends State<MainMenu> {
               ),
             ),
             // Display boxes
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                InfoDisplayBox(
-                    height: 0.12 * screenHeight,
-                    width: 0.45 * screenWidth,
-                    title: "عدد البلاغات الناجحه",
-                    content: "2,452"),
-                InfoDisplayBox(
-                    height: 0.12 * screenHeight,
-                    width: 0.45 * screenWidth,
-                    title: "متوسط مدة حل البلاغ",
-                    content: "3 أيام"),
-              ],
+            SizedBox(
+              width: 0.95 * screenWidth,
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InfoDisplayBox(
+                      height: 0.12 * screenHeight,
+                      width: 0.45 * screenWidth,
+                      title: "عدد البلاغات الناجحه",
+                      content: "2,452"),
+                  InfoDisplayBox(
+                      height: 0.12 * screenHeight,
+                      width: 0.45 * screenWidth,
+                      title: "متوسط مدة حل البلاغ",
+                      content: "3 أيام"),
+                ],
+              ),
             ),
             // Chart
             Expanded(
               child: Container(
-                  margin: EdgeInsets.only(bottom: halfMarginY),
+                  margin:
+                      EdgeInsets.only(top: halfMarginY, bottom: halfMarginY),
+                  width: 0.95 * screenWidth,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white),
                   child: const RatingChart()),
             )
           ],

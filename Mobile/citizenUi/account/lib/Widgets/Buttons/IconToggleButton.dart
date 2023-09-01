@@ -1,25 +1,39 @@
 import 'package:account/Repository/color.dart';
 import 'package:flutter/material.dart';
 
-class SquareButtonWithStroke extends StatelessWidget {
+class IconToggleButton extends StatelessWidget {
   final double height;
   final double width;
   final IconData icon;
   final String text;
+  final bool isChecked;
   final VoidCallback onPressed;
 
-  const SquareButtonWithStroke(
+  const IconToggleButton(
       {super.key,
       required this.height,
       required this.width,
-      required this.icon,
       required this.text,
+      required this.icon,
+      required this.isChecked,
       required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     double iconSize = (0.5 * width + 0.5 * height) / 2;
     double fontSize = (0.1 * width + 0.1 * height) / 2;
+
+    Widget rightBar = isChecked
+        ? Align(
+            alignment: Alignment.centerRight,
+            child: Container(
+              width: 0.04 * width,
+              color: isChecked ? AppColor.main : Colors.white,
+            ),
+          )
+        : const SizedBox(
+            height: 0,
+          );
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(10.0),
@@ -36,13 +50,7 @@ class SquareButtonWithStroke extends StatelessWidget {
             ),
             child: Stack(
               children: [
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Container(
-                    width: 0.04 * width,
-                    color: AppColor.main,
-                  ),
-                ),
+                rightBar,
                 Align(
                   alignment: Alignment.center,
                   child: Column(
@@ -52,13 +60,13 @@ class SquareButtonWithStroke extends StatelessWidget {
                       Icon(
                         icon,
                         size: iconSize,
-                        color: AppColor.textTitle,
+                        color: isChecked ? AppColor.main : AppColor.textTitle,
                       ),
                       Text(
                         text,
                         textDirection: TextDirection.rtl,
                         style: TextStyle(
-                          color: AppColor.textTitle,
+                          color: isChecked ? AppColor.main : AppColor.textTitle,
                           fontSize: fontSize,
                           fontFamily: 'DroidArabicKufi',
                         ),

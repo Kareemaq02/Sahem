@@ -1,10 +1,10 @@
 import 'package:account/Repository/color.dart';
+import 'package:account/Widgets/Buttons/IconToggleButton.dart';
 import 'package:account/Widgets/Charts/RatingChart.dart';
 import 'package:account/Widgets/Charts/TimeframeChip.dart';
-import 'package:account/Widgets/Displays/InfoDisplayBox.dart';
+import 'package:account/Widgets/CheckBoxes/CheckBox.dart';
 import 'package:account/Widgets/appBar.dart';
 import 'package:account/Widgets/bottomNavBar.dart';
-import 'package:account/Widgets/Buttons/squareButtonWithStroke.dart';
 import 'package:flutter/material.dart';
 
 class Analytics extends StatefulWidget {
@@ -21,6 +21,31 @@ class _AnalyticsState extends State<Analytics> {
   }
 
   int timeframe = 1;
+  int chart = 0;
+  Widget renderedChart = renderChart(0);
+  DateTime selectedDate = DateTime.now().subtract(const Duration(days: 7));
+  List<int> selectedTypes = [];
+
+  void selectChart(int index) {
+    setState(() {
+      chart == index ? chart = 0 : chart = index;
+      renderedChart = renderChart(chart);
+    });
+  }
+
+  Future<void> selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +59,83 @@ class _AnalyticsState extends State<Analytics> {
     double fullMarginX = 0.04 * screenWidth;
     double halfMarginX = 0.02 * screenWidth;
 
-    double buttonHeight = 0.145 * screenHeight;
-    double buttonWidth = 0.3 * screenWidth;
+    final timechips = [
+      TimeframeChip(
+          selected: timeframe == 1,
+          text: "اسبوع",
+          onPressed: () => setState(() {
+                timeframe = 1;
+                selectedDate = DateTime.now().subtract(const Duration(days: 7));
+              })),
+      TimeframeChip(
+          selected: timeframe == 2,
+          text: "شهر",
+          onPressed: () => setState(() {
+                timeframe = 2;
+                selectedDate =
+                    DateTime.now().subtract(const Duration(days: 30));
+              })),
+      TimeframeChip(
+          selected: timeframe == 3,
+          text: "3 اشهر",
+          onPressed: () => setState(() {
+                timeframe = 3;
+                selectedDate =
+                    DateTime.now().subtract(const Duration(days: 91));
+              })),
+      TimeframeChip(
+          selected: timeframe == 4,
+          text: "سنه",
+          onPressed: () => setState(() {
+                timeframe = 4;
+                selectedDate =
+                    DateTime.now().subtract(const Duration(days: 365));
+              })),
+      TimeframeChip(
+          selected: timeframe == 5,
+          text: "أخر",
+          onPressed: () => setState(() {
+                timeframe = 5;
+                selectDate(context);
+              })),
+    ];
+
+    List<Map<String, dynamic>> typesObjs = returnTypesMockApi(selectedTypes);
+    List<Widget> rowChildren = [];
+    int halfLength = (typesObjs.length / 2).ceil();
+    for (var index = 0; index < typesObjs.length; index++) {
+      var entry = typesObjs[index];
+
+      var isLastElement = index == typesObjs.length - 1;
+      var isMiddleElement = index == halfLength - 1;
+
+      var padding = isLastElement || isMiddleElement
+          ? EdgeInsets.only(right: fullMarginX)
+          : EdgeInsets.only(left: halfMarginX, right: halfMarginX);
+
+      void checkboxFunction() {
+        setState(() {
+          if (!selectedTypes.contains(entry["intId"])) {
+            selectedTypes.add(entry["intId"]);
+            entry["isChecked"] = true;
+          } else {
+            selectedTypes.remove(entry["intId"]);
+            entry["isChecked"] = false;
+          }
+        });
+      }
+
+      rowChildren.add(
+        Padding(
+          padding: padding,
+          child: CheckBoxNew(
+            text: entry["strName"],
+            isChecked: entry["isChecked"],
+            onChanged: checkboxFunction,
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
       backgroundColor: AppColor.background,
@@ -51,7 +151,7 @@ class _AnalyticsState extends State<Analytics> {
             // Buttons
             Center(
               child: Container(
-                height: 0.43 * screenHeight,
+                height: 0.45 * screenHeight,
                 width: 0.95 * screenWidth,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
@@ -63,50 +163,182 @@ class _AnalyticsState extends State<Analytics> {
                     Row(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        TimeframeChip(
-                            timeframe: 1,
-                            selected: timeframe == 1,
-                            text: "اسبوع",
-                            onPressed: () => setState(() => timeframe = 1)),
-                        TimeframeChip(
-                            timeframe: 2,
-                            selected: timeframe == 2,
-                            text: "شهر",
-                            onPressed: () => setState(() => timeframe = 2)),
-                      ],
+                      children: timechips,
                     ),
-                    const RatingChart(),
+                    Expanded(child: renderedChart),
                   ],
                 ),
               ),
             ),
             // Sub-title
             Container(
-              color: Colors.white,
-              child: Padding(
-                padding: EdgeInsets.only(
-                    top: fullMarginY,
-                    bottom: fullMarginY,
-                    right: fullMarginX,
-                    left: fullMarginX),
-                child: const Align(
-                  alignment: Alignment.centerRight,
-                  child: Text("أنواع البلاغات",
-                      textAlign: TextAlign.right,
-                      textDirection: TextDirection.rtl,
-                      style: TextStyle(
-                        color: AppColor.textTitle,
-                        fontSize: 16,
-                        fontFamily: 'DroidArabicKufi',
-                      )),
-                ),
+              height: 0.17 * screenHeight,
+              width: 0.95 * screenWidth,
+              margin: EdgeInsets.only(top: halfMarginY),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10), color: Colors.white),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                        top: fullMarginY / 4,
+                        bottom: halfMarginY,
+                        right: fullMarginX,
+                        left: fullMarginX),
+                    child: const Align(
+                      alignment: Alignment.topRight,
+                      child: Text("أنواع البلاغات",
+                          textAlign: TextAlign.right,
+                          textDirection: TextDirection.rtl,
+                          style: TextStyle(
+                            color: AppColor.textTitle,
+                            fontSize: 14,
+                            fontFamily: 'DroidArabicKufi',
+                          )),
+                    ),
+                  ),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    reverse: true,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisSize: MainAxisSize.max,
+                          children: rowChildren.sublist(0, halfLength),
+                        ),
+                        SizedBox(
+                          height: fullMarginY,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisSize: MainAxisSize.max,
+                          children: rowChildren.sublist(halfLength),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
             // Display boxes
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(
+                    top: halfMarginY,
+                    left: halfMarginX,
+                    right: halfMarginX,
+                    bottom: fullMarginY),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    IconToggleButton(
+                        height: 0.15 * screenHeight,
+                        width: 0.31 * screenWidth,
+                        text: "تقييم المهام",
+                        icon: Icons.emoji_emotions_outlined,
+                        isChecked: chart == 1,
+                        onPressed: () => {selectChart(1)}),
+                    IconToggleButton(
+                        height: 0.15 * screenHeight,
+                        width: 0.31 * screenWidth,
+                        text: "حالة البلاغات",
+                        icon: Icons.percent_rounded,
+                        isChecked: chart == 2,
+                        onPressed: () => {selectChart(2)}),
+                    IconToggleButton(
+                        height: 0.15 * screenHeight,
+                        width: 0.31 * screenWidth,
+                        text: "مدة حل البلاغ",
+                        icon: Icons.av_timer_rounded,
+                        isChecked: chart == 3,
+                        onPressed: () => {selectChart(3)}),
+                  ],
+                ),
+              ),
+            )
           ],
         ),
       ),
     );
   }
+}
+
+Widget renderChart(int chart) {
+  Widget sentChart = const Center(child: Text('Loading...'));
+  switch (chart) {
+    case 1:
+      sentChart = const RatingChart();
+      break;
+    case 2:
+      sentChart = const RatingChart();
+      break;
+    case 3:
+      sentChart = const RatingChart();
+      break;
+    default:
+      sentChart = const RatingChart();
+      break;
+  }
+  return FutureBuilder(
+    future: Future.delayed(const Duration(milliseconds: 300)),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const Center(child: Text('Loading...'));
+      } else {
+        return sentChart;
+      }
+    },
+  );
+}
+
+List<Map<String, dynamic>> returnTypesMockApi(List<int> selectedTypes) {
+  return [
+    {
+      "intId": 1,
+      "strName": "حفر الشوارع",
+      "isChecked": selectedTypes.contains(1),
+    },
+    {
+      "intId": 2,
+      "strName": "تراكم نفايات",
+      "isChecked": selectedTypes.contains(2),
+    },
+    {
+      "intId": 3,
+      "strName": "مطبات مخالفة",
+      "isChecked": selectedTypes.contains(3),
+    },
+    {
+      "intId": 4,
+      "strName": "تكسر ارصفة",
+      "isChecked": selectedTypes.contains(4),
+    },
+    {
+      "intId": 5,
+      "strName": "2 حفر الشوارع",
+      "isChecked": selectedTypes.contains(5),
+    },
+    {
+      "intId": 6,
+      "strName": "2 تراكم نفايات",
+      "isChecked": selectedTypes.contains(6),
+    },
+    {
+      "intId": 7,
+      "strName": "2 مطبات مخالفة",
+      "isChecked": selectedTypes.contains(7),
+    },
+    {
+      "intId": 8,
+      "strName": "2 تكسر ارصفة",
+      "isChecked": selectedTypes.contains(8),
+    },
+  ];
 }
