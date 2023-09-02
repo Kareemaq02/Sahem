@@ -1,12 +1,12 @@
 import 'package:account/Repository/color.dart';
 import 'package:flutter/material.dart';
 
-class TimeframeChip extends StatelessWidget {
+class StyledFilterChip extends StatelessWidget {
   final bool selected;
   final String text;
   final VoidCallback onPressed;
 
-  const TimeframeChip(
+  const StyledFilterChip(
       {super.key,
       required this.selected,
       required this.text,

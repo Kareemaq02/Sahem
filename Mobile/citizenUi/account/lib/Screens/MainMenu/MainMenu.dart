@@ -1,5 +1,6 @@
 import 'package:account/Repository/color.dart';
 import 'package:account/Screens/Analytics/Analytics.dart';
+import 'package:account/Screens/Analytics/Quarter.dart';
 import 'package:account/Screens/Home/public_feed.dart';
 import 'package:account/Screens/Profile/profile.dart';
 import 'package:account/Screens/View%20complaints/complaints_list.dart';
@@ -75,11 +76,16 @@ class _MainMenuState extends State<MainMenu> {
                                               const Profile()))
                                 }),
                         SquareButtonWithStroke(
-                            height: buttonHeight,
-                            width: buttonWidth,
-                            icon: Icons.timelapse_rounded,
-                            text: "أداء الربع السنوي",
-                            onPressed: () => {}),
+                          height: buttonHeight,
+                          width: buttonWidth,
+                          icon: Icons.timelapse_rounded,
+                          text: "أداء الربع السنوي",
+                          onPressed: () => {
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) => const Quarter()))
+                          },
+                        ),
                         SquareButtonWithStroke(
                           height: buttonHeight,
                           width: buttonWidth,

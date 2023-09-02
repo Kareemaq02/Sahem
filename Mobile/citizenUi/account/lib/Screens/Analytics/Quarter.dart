@@ -1,50 +1,44 @@
 import 'package:account/Repository/color.dart';
-import 'package:account/Widgets/Buttons/IconToggleButton.dart';
 import 'package:account/Widgets/Charts/RatingChart.dart';
 import 'package:account/Widgets/Charts/StyledFilterChip.dart';
 import 'package:account/Widgets/CheckBoxes/CheckBox.dart';
+import 'package:account/Widgets/Displays/InfoDisplayBox.dart';
 import 'package:account/Widgets/appBar.dart';
 import 'package:account/Widgets/bottomNavBar.dart';
 import 'package:flutter/material.dart';
 
-class Analytics extends StatefulWidget {
-  const Analytics({super.key});
+class Quarter extends StatefulWidget {
+  const Quarter({super.key});
 
   @override
-  _AnalyticsState createState() => _AnalyticsState();
+  _QuarterState createState() => _QuarterState();
 }
 
-class _AnalyticsState extends State<Analytics> {
+class _QuarterState extends State<Quarter> {
   @override
   void initState() {
     super.initState();
   }
 
-  int timeframe = 1;
+  int region = 1;
   int chart = 0;
-  Widget renderedChart = renderChart(0);
-  DateTime selectedDate = DateTime.now().subtract(const Duration(days: 7));
+  final ScrollController _scrollController = ScrollController();
   List<int> selectedTypes = [];
 
   void selectChart(int index) {
     setState(() {
       chart == index ? chart = 0 : chart = index;
-      renderedChart = renderChart(chart);
     });
   }
 
-  Future<void> selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
+// Change int to Widget when fully working
+  void scrollRegions(int index, List<int> timechips, double screenWidth) {
+    double offset = (index - (timechips.length / 2)) * (0.2 * screenWidth);
+    _scrollController.animateTo(
+      offset,
+      duration: const Duration(milliseconds: 600),
+      curve: Curves.ease,
     );
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-      });
-    }
   }
 
   @override
@@ -59,45 +53,73 @@ class _AnalyticsState extends State<Analytics> {
     double fullMarginX = 0.04 * screenWidth;
     double halfMarginX = 0.02 * screenWidth;
 
-    final timechips = [
+    double boxHeight = 0.15 * screenHeight;
+    double boxWidth = 0.31 * screenWidth;
+
+    final regionChipsIds = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+    final regionChips = [
+      SizedBox(
+        width: fullMarginX * 3,
+      ),
       StyledFilterChip(
-          selected: timeframe == 1,
-          text: "اسبوع",
+          selected: region == 1,
+          text: "راس العين",
           onPressed: () => setState(() {
-                timeframe = 1;
-                selectedDate = DateTime.now().subtract(const Duration(days: 7));
+                region = 1;
+                scrollRegions(0, regionChipsIds, screenWidth);
               })),
       StyledFilterChip(
-          selected: timeframe == 2,
-          text: "شهر",
+          selected: region == 2,
+          text: "جبل النزهة",
           onPressed: () => setState(() {
-                timeframe = 2;
-                selectedDate =
-                    DateTime.now().subtract(const Duration(days: 30));
+                region = 2;
+                scrollRegions(1, regionChipsIds, screenWidth);
               })),
       StyledFilterChip(
-          selected: timeframe == 3,
-          text: "3 اشهر",
+          selected: region == 3,
+          text: "شفا بدران",
           onPressed: () => setState(() {
-                timeframe = 3;
-                selectedDate =
-                    DateTime.now().subtract(const Duration(days: 91));
+                region = 3;
+                scrollRegions(2, regionChipsIds, screenWidth);
               })),
       StyledFilterChip(
-          selected: timeframe == 4,
-          text: "سنه",
+          selected: region == 4,
+          text: "المقابلين",
           onPressed: () => setState(() {
-                timeframe = 4;
-                selectedDate =
-                    DateTime.now().subtract(const Duration(days: 365));
+                region = 4;
+                scrollRegions(3, regionChipsIds, screenWidth);
               })),
       StyledFilterChip(
-          selected: timeframe == 5,
-          text: "أخر",
+          selected: region == 5,
+          text: "الياسمين",
           onPressed: () => setState(() {
-                timeframe = 5;
-                selectDate(context);
+                region = 5;
+                scrollRegions(4, regionChipsIds, screenWidth);
               })),
+      StyledFilterChip(
+          selected: region == 6,
+          text: "ماركا",
+          onPressed: () => setState(() {
+                region = 6;
+                scrollRegions(5, regionChipsIds, screenWidth);
+              })),
+      StyledFilterChip(
+          selected: region == 7,
+          text: "جبل الحسين",
+          onPressed: () => setState(() {
+                region = 7;
+                scrollRegions(6, regionChipsIds, screenWidth);
+              })),
+      StyledFilterChip(
+          selected: region == 8,
+          text: "ابو نصير",
+          onPressed: () => setState(() {
+                region = 8;
+                scrollRegions(7, regionChipsIds, screenWidth);
+              })),
+      SizedBox(
+        width: fullMarginX * 3,
+      ),
     ];
 
     List<Map<String, dynamic>> typesObjs = returnTypesMockApi(selectedTypes);
@@ -136,7 +158,6 @@ class _AnalyticsState extends State<Analytics> {
         ),
       );
     }
-
     return Scaffold(
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
@@ -160,12 +181,66 @@ class _AnalyticsState extends State<Analytics> {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: timechips,
+                    Stack(
+                      children: [
+                        Align(
+                          alignment: Alignment.center,
+                          child: SingleChildScrollView(
+                            controller: _scrollController,
+                            scrollDirection: Axis.horizontal,
+                            child: SizedBox(
+                              height: 0.07 * screenHeight,
+                              width: regionChips.length * 0.2 * screenWidth,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: regionChips,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: IgnorePointer(
+                            child: Container(
+                              height: 0.07 * screenHeight,
+                              width: 0.25 * screenWidth,
+                              decoration: const BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.centerLeft,
+                                  end: Alignment.centerRight,
+                                  colors: [
+                                    Colors.white,
+                                    Color.fromARGB(0, 255, 255, 255)
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: IgnorePointer(
+                            child: Container(
+                              height: 0.07 * screenHeight,
+                              width: 0.25 * screenWidth,
+                              decoration: const BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.centerRight,
+                                  end: Alignment.centerLeft,
+                                  colors: [
+                                    Colors.white,
+                                    Color.fromARGB(0, 255, 255, 255)
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    Expanded(child: renderedChart),
+                    const Expanded(child: RatingChart()),
                   ],
                 ),
               ),
@@ -238,27 +313,21 @@ class _AnalyticsState extends State<Analytics> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    IconToggleButton(
-                        height: 0.15 * screenHeight,
-                        width: 0.31 * screenWidth,
-                        text: "تقييم المهام",
-                        icon: Icons.emoji_emotions_outlined,
-                        isChecked: chart == 1,
-                        onPressed: () => {selectChart(1)}),
-                    IconToggleButton(
-                        height: 0.15 * screenHeight,
-                        width: 0.31 * screenWidth,
-                        text: "حالة البلاغات",
-                        icon: Icons.percent_rounded,
-                        isChecked: chart == 2,
-                        onPressed: () => {selectChart(2)}),
-                    IconToggleButton(
-                        height: 0.15 * screenHeight,
-                        width: 0.31 * screenWidth,
-                        text: "مدة حل البلاغ",
-                        icon: Icons.av_timer_rounded,
-                        isChecked: chart == 3,
-                        onPressed: () => {selectChart(3)}),
+                    InfoDisplayBox(
+                        height: boxHeight,
+                        width: boxWidth,
+                        title: "عدد البلاغات",
+                        content: "247"),
+                    InfoDisplayBox(
+                        height: boxHeight,
+                        width: boxWidth,
+                        title: "مدة المهام",
+                        content: "يومين"),
+                    InfoDisplayBox(
+                        height: boxHeight,
+                        width: boxWidth,
+                        title: "نسبة النجاح",
+                        content: "66.7%"),
                   ],
                 ),
               ),
@@ -268,34 +337,6 @@ class _AnalyticsState extends State<Analytics> {
       ),
     );
   }
-}
-
-Widget renderChart(int chart) {
-  Widget sentChart = const Center(child: Text('Loading...'));
-  switch (chart) {
-    case 1:
-      sentChart = const RatingChart();
-      break;
-    case 2:
-      sentChart = const RatingChart();
-      break;
-    case 3:
-      sentChart = const RatingChart();
-      break;
-    default:
-      sentChart = const RatingChart();
-      break;
-  }
-  return FutureBuilder(
-    future: Future.delayed(const Duration(milliseconds: 300)),
-    builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return const Center(child: Text('Loading...'));
-      } else {
-        return sentChart;
-      }
-    },
-  );
 }
 
 List<Map<String, dynamic>> returnTypesMockApi(List<int> selectedTypes) {
