@@ -19,7 +19,7 @@ class _QuarterState extends State<Quarter> {
   @override
   void initState() {
     super.initState();
-    renderTypes();
+    _futureTypesObjs = fetchTypesData();
   }
 
   final ScrollController _scrollController = ScrollController();
@@ -31,48 +31,12 @@ class _QuarterState extends State<Quarter> {
   String avgResolve = "يومين";
   String successRate = "66.7%";
   List<int> selectedTypes = [];
-  List<Map<String, dynamic>> typesObjs = [];
-  List<Widget> typesCheckboxes = [];
+  late Future<List<Map<String, dynamic>>> _futureTypesObjs;
 
-  //Mock API
-  List<Widget> returnRegionsMockApi(double screenWidth, double fullMarginX) {
-    List<String> regionNames = [
-      "راس العين",
-      "جبل النزهة",
-      "شفا بدران",
-      "المقابلين",
-      "الياسمين",
-      "ماركا",
-      "جبل الحسين",
-      "ابو نصير"
-    ];
-    List<Widget> regionChips = [];
-    for (int i = 0; i < regionNames.length; i++) {
-      regionChips.add(
-        StyledFilterChip(
-          selected: region == i,
-          text: regionNames[i],
-          onPressed: () {
-            setState(() {
-              region = i;
-              scrollRegions(i, screenWidth);
-            });
-          },
-        ),
-      );
-    }
-    regionChips.insert(0, SizedBox(width: fullMarginX * 3));
-    regionChips.add(SizedBox(width: fullMarginX * 3));
-
-    return regionChips;
-  }
-
-  ///
-
-  // Render Methods
-  void renderTypes() async {
+  Future<List<Map<String, dynamic>>> fetchTypesData() async {
     var typesRequest = ComplaintTypeRequest();
     var typesData = await typesRequest.getAllCategory();
+    List<Map<String, dynamic>> typesObjs = [];
     for (var type in typesData) {
       var typeObj = {
         "intId": type.intTypeId,
@@ -80,61 +44,11 @@ class _QuarterState extends State<Quarter> {
       };
       typesObjs.add(typeObj);
     }
-    List<Widget> rowChildren = [];
-    int halfLength = (typesObjs.length / 2).ceil();
-    for (var index = 0; index < typesObjs.length; index++) {
-      var entry = typesObjs[index];
-
-      var isLastElement = index == typesObjs.length - 1;
-      var isMiddleElement = index == halfLength - 1;
-      var padding = isLastElement || isMiddleElement
-          ? EdgeInsets.only(right: 16)
-          : EdgeInsets.only(left: 8, right: 8);
-
-      void checkboxFunction() {
-        setState(() {
-          if (!selectedTypes.contains(entry["intId"])) {
-            selectedTypes.add(entry["intId"]);
-          } else {
-            selectedTypes.remove(entry["intId"]);
-          }
-        });
-      }
-
-      rowChildren.add(
-        Padding(
-          padding: padding,
-          child: CheckBoxNew(
-            text: entry["strName"],
-            isChecked: selectedTypes.contains(entry["intId"]),
-            onChanged: checkboxFunction,
-          ),
-        ),
-      );
-    }
-    setState(() {
-      typesCheckboxes = rowChildren;
-    });
-  }
-
-  void selectChart(int index) {
-    setState(() {
-      chart == index ? chart = 0 : chart = index;
-    });
-  }
-
-  void scrollRegions(int index, double screenWidth) {
-    double offset = 0.2 * screenWidth * index;
-    _scrollController.animateTo(
-      offset,
-      duration: const Duration(milliseconds: 600),
-      curve: Curves.ease,
-    );
+    return typesObjs;
   }
 
   @override
   Widget build(BuildContext context) {
-    //MediaQuery
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
@@ -147,9 +61,6 @@ class _QuarterState extends State<Quarter> {
     double boxHeight = 0.15 * screenHeight;
     double boxWidth = 0.31 * screenWidth;
 
-    // Dynamic Data setup
-    int halfLength = (typesCheckboxes.length / 2).ceil();
-    final regionChips = returnRegionsMockApi(screenWidth, fullMarginX);
     return Scaffold(
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
@@ -161,7 +72,6 @@ class _QuarterState extends State<Quarter> {
         padding: EdgeInsets.only(top: halfMarginY, bottom: halfMarginY),
         child: Column(
           children: [
-            // Buttons
             Center(
               child: Container(
                 height: 0.45 * screenHeight,
@@ -184,12 +94,17 @@ class _QuarterState extends State<Quarter> {
                               scrollDirection: Axis.horizontal,
                               child: SizedBox(
                                 height: 0.07 * screenHeight,
-                                width: regionChips.length * 0.2 * screenWidth,
+                                width: returnRegionsMockApi(
+                                            screenWidth, fullMarginX)
+                                        .length *
+                                    0.2 *
+                                    screenWidth,
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
-                                  children: regionChips,
+                                  children: returnRegionsMockApi(
+                                      screenWidth, fullMarginX),
                                 ),
                               ),
                             ),
@@ -246,7 +161,6 @@ class _QuarterState extends State<Quarter> {
                 ),
               ),
             ),
-            // Sub-title
             Container(
               height: 0.17 * screenHeight,
               width: 0.95 * screenWidth,
@@ -275,34 +189,66 @@ class _QuarterState extends State<Quarter> {
                           )),
                     ),
                   ),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    reverse: true,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          mainAxisSize: MainAxisSize.max,
-                          children: typesCheckboxes.sublist(0, halfLength),
-                        ),
-                        SizedBox(
-                          height: fullMarginY,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          mainAxisSize: MainAxisSize.max,
-                          children: typesCheckboxes.sublist(halfLength),
-                        ),
-                      ],
-                    ),
+                  FutureBuilder<List<Map<String, dynamic>>>(
+                    future: _futureTypesObjs,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        var typesObjs = snapshot.data!;
+                        int halfLength = (typesObjs.length / 2).ceil();
+                        return SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          reverse: true,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                mainAxisSize: MainAxisSize.max,
+                                children: typesObjs
+                                    .sublist(0, halfLength)
+                                    .asMap()
+                                    .entries
+                                    .map((entry) {
+                                  return renderCheckBox(
+                                    entry,
+                                    typesObjs,
+                                    fullMarginX,
+                                  );
+                                }).toList(),
+                              ),
+                              SizedBox(
+                                height: fullMarginY,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                mainAxisSize: MainAxisSize.max,
+                                children: typesObjs
+                                    .sublist(halfLength)
+                                    .asMap()
+                                    .entries
+                                    .map((entry) {
+                                  return renderCheckBox(
+                                    entry,
+                                    typesObjs,
+                                    fullMarginX,
+                                  );
+                                }).toList(),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                    },
                   ),
                 ],
               ),
             ),
-            // Display boxes
             Expanded(
               child: Padding(
                 padding: EdgeInsets.only(
@@ -336,6 +282,78 @@ class _QuarterState extends State<Quarter> {
           ],
         ),
       ),
+    );
+  }
+
+  Padding renderCheckBox(
+    MapEntry<int, Map<String, dynamic>> entry,
+    List<dynamic> typesObjs,
+    double fullMarginX,
+  ) {
+    final int index = entry.key;
+    final Map<String, dynamic> map = entry.value;
+    int halfLength = (typesObjs.length / 2).ceil();
+    var isLastElement = index == typesObjs.length - 1;
+    var isMiddleElement = index == halfLength - 1;
+    var padding = isLastElement || isMiddleElement
+        ? EdgeInsets.only(right: fullMarginX)
+        : EdgeInsets.only(left: fullMarginX / 2, right: fullMarginX / 2);
+    return Padding(
+      padding: padding,
+      child: CheckBoxNew(
+        text: map["strName"],
+        isChecked: selectedTypes.contains(map["intId"]),
+        onChanged: () {
+          setState(() {
+            if (!selectedTypes.contains(map["intId"])) {
+              selectedTypes.add(map["intId"]);
+            } else {
+              selectedTypes.remove(map["intId"]);
+            }
+          });
+        },
+      ),
+    );
+  }
+
+  List<Widget> returnRegionsMockApi(double screenWidth, double fullMarginX) {
+    List<String> regionNames = [
+      "راس العين",
+      "جبل النزهة",
+      "شفا بدران",
+      "المقابلين",
+      "الياسمين",
+      "ماركا",
+      "جبل الحسين",
+      "ابو نصير"
+    ];
+    List<Widget> regionChips = [];
+    for (int i = 0; i < regionNames.length; i++) {
+      regionChips.add(
+        StyledFilterChip(
+          selected: region == i,
+          text: regionNames[i],
+          onPressed: () {
+            setState(() {
+              region = i;
+              scrollRegions(i, screenWidth);
+            });
+          },
+        ),
+      );
+    }
+    regionChips.insert(0, SizedBox(width: fullMarginX * 3));
+    regionChips.add(SizedBox(width: fullMarginX * 3));
+
+    return regionChips;
+  }
+
+  void scrollRegions(int index, double screenWidth) {
+    double offset = 0.2 * screenWidth * index;
+    _scrollController.animateTo(
+      offset,
+      duration: const Duration(milliseconds: 600),
+      curve: Curves.ease,
     );
   }
 }
