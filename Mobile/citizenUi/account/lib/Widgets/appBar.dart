@@ -1,13 +1,10 @@
-
-
-
-
-
+import 'package:account/Widgets/fiter.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/filter/filterType.dart';
 import 'package:flutter/material.dart';
 
- myAppBar(BuildContext context,title,visible,int space){
+
+ myAppBar(BuildContext context,title,visible, space){
   return
   PreferredSize(
       preferredSize: const Size.fromHeight(45.0),
