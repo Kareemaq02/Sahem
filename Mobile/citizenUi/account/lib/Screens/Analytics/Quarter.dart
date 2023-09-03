@@ -1,11 +1,12 @@
 import 'package:account/Repository/color.dart';
-import 'package:account/Widgets/Charts/RatingChart.dart';
+import 'package:account/Widgets/Charts/PerformanceChart.dart';
 import 'package:account/Widgets/Charts/StyledFilterChip.dart';
 import 'package:account/Widgets/CheckBoxes/CheckBox.dart';
 import 'package:account/Widgets/Displays/InfoDisplayBox.dart';
 import 'package:account/Widgets/appBar.dart';
 import 'package:account/Widgets/bottomNavBar.dart';
 import 'package:flutter/material.dart';
+import 'package:account/API/get_complaints_types.dart';
 
 class Quarter extends StatefulWidget {
   const Quarter({super.key});
@@ -18,12 +19,103 @@ class _QuarterState extends State<Quarter> {
   @override
   void initState() {
     super.initState();
+    renderTypes();
   }
 
-  int region = 1;
-  int chart = 0;
   final ScrollController _scrollController = ScrollController();
+
+  // API Vars
+  int region = 0;
+  int chart = 0;
+  int complaintCount = 247;
+  String avgResolve = "يومين";
+  String successRate = "66.7%";
   List<int> selectedTypes = [];
+  List<Map<String, dynamic>> typesObjs = [];
+  List<Widget> typesCheckboxes = [];
+
+  //Mock API
+  List<Widget> returnRegionsMockApi(double screenWidth, double fullMarginX) {
+    List<String> regionNames = [
+      "راس العين",
+      "جبل النزهة",
+      "شفا بدران",
+      "المقابلين",
+      "الياسمين",
+      "ماركا",
+      "جبل الحسين",
+      "ابو نصير"
+    ];
+    List<Widget> regionChips = [];
+    for (int i = 0; i < regionNames.length; i++) {
+      regionChips.add(
+        StyledFilterChip(
+          selected: region == i,
+          text: regionNames[i],
+          onPressed: () {
+            setState(() {
+              region = i;
+              scrollRegions(i, screenWidth);
+            });
+          },
+        ),
+      );
+    }
+    regionChips.insert(0, SizedBox(width: fullMarginX * 3));
+    regionChips.add(SizedBox(width: fullMarginX * 3));
+
+    return regionChips;
+  }
+
+  ///
+
+  // Render Methods
+  void renderTypes() async {
+    var typesRequest = ComplaintTypeRequest();
+    var typesData = await typesRequest.getAllCategory();
+    for (var type in typesData) {
+      var typeObj = {
+        "intId": type.intTypeId,
+        "strName": type.strNameAr,
+      };
+      typesObjs.add(typeObj);
+    }
+    List<Widget> rowChildren = [];
+    int halfLength = (typesObjs.length / 2).ceil();
+    for (var index = 0; index < typesObjs.length; index++) {
+      var entry = typesObjs[index];
+
+      var isLastElement = index == typesObjs.length - 1;
+      var isMiddleElement = index == halfLength - 1;
+      var padding = isLastElement || isMiddleElement
+          ? EdgeInsets.only(right: 16)
+          : EdgeInsets.only(left: 8, right: 8);
+
+      void checkboxFunction() {
+        setState(() {
+          if (!selectedTypes.contains(entry["intId"])) {
+            selectedTypes.add(entry["intId"]);
+          } else {
+            selectedTypes.remove(entry["intId"]);
+          }
+        });
+      }
+
+      rowChildren.add(
+        Padding(
+          padding: padding,
+          child: CheckBoxNew(
+            text: entry["strName"],
+            isChecked: selectedTypes.contains(entry["intId"]),
+            onChanged: checkboxFunction,
+          ),
+        ),
+      );
+    }
+    setState(() {
+      typesCheckboxes = rowChildren;
+    });
+  }
 
   void selectChart(int index) {
     setState(() {
@@ -31,9 +123,8 @@ class _QuarterState extends State<Quarter> {
     });
   }
 
-// Change int to Widget when fully working
-  void scrollRegions(int index, List<int> timechips, double screenWidth) {
-    double offset = (index - (timechips.length / 2)) * (0.2 * screenWidth);
+  void scrollRegions(int index, double screenWidth) {
+    double offset = 0.2 * screenWidth * index;
     _scrollController.animateTo(
       offset,
       duration: const Duration(milliseconds: 600),
@@ -56,108 +147,9 @@ class _QuarterState extends State<Quarter> {
     double boxHeight = 0.15 * screenHeight;
     double boxWidth = 0.31 * screenWidth;
 
-    final regionChipsIds = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-    final regionChips = [
-      SizedBox(
-        width: fullMarginX * 3,
-      ),
-      StyledFilterChip(
-          selected: region == 1,
-          text: "راس العين",
-          onPressed: () => setState(() {
-                region = 1;
-                scrollRegions(0, regionChipsIds, screenWidth);
-              })),
-      StyledFilterChip(
-          selected: region == 2,
-          text: "جبل النزهة",
-          onPressed: () => setState(() {
-                region = 2;
-                scrollRegions(1, regionChipsIds, screenWidth);
-              })),
-      StyledFilterChip(
-          selected: region == 3,
-          text: "شفا بدران",
-          onPressed: () => setState(() {
-                region = 3;
-                scrollRegions(2, regionChipsIds, screenWidth);
-              })),
-      StyledFilterChip(
-          selected: region == 4,
-          text: "المقابلين",
-          onPressed: () => setState(() {
-                region = 4;
-                scrollRegions(3, regionChipsIds, screenWidth);
-              })),
-      StyledFilterChip(
-          selected: region == 5,
-          text: "الياسمين",
-          onPressed: () => setState(() {
-                region = 5;
-                scrollRegions(4, regionChipsIds, screenWidth);
-              })),
-      StyledFilterChip(
-          selected: region == 6,
-          text: "ماركا",
-          onPressed: () => setState(() {
-                region = 6;
-                scrollRegions(5, regionChipsIds, screenWidth);
-              })),
-      StyledFilterChip(
-          selected: region == 7,
-          text: "جبل الحسين",
-          onPressed: () => setState(() {
-                region = 7;
-                scrollRegions(6, regionChipsIds, screenWidth);
-              })),
-      StyledFilterChip(
-          selected: region == 8,
-          text: "ابو نصير",
-          onPressed: () => setState(() {
-                region = 8;
-                scrollRegions(7, regionChipsIds, screenWidth);
-              })),
-      SizedBox(
-        width: fullMarginX * 3,
-      ),
-    ];
-
-    List<Map<String, dynamic>> typesObjs = returnTypesMockApi(selectedTypes);
-    List<Widget> rowChildren = [];
-    int halfLength = (typesObjs.length / 2).ceil();
-    for (var index = 0; index < typesObjs.length; index++) {
-      var entry = typesObjs[index];
-
-      var isLastElement = index == typesObjs.length - 1;
-      var isMiddleElement = index == halfLength - 1;
-
-      var padding = isLastElement || isMiddleElement
-          ? EdgeInsets.only(right: fullMarginX)
-          : EdgeInsets.only(left: halfMarginX, right: halfMarginX);
-
-      void checkboxFunction() {
-        setState(() {
-          if (!selectedTypes.contains(entry["intId"])) {
-            selectedTypes.add(entry["intId"]);
-            entry["isChecked"] = true;
-          } else {
-            selectedTypes.remove(entry["intId"]);
-            entry["isChecked"] = false;
-          }
-        });
-      }
-
-      rowChildren.add(
-        Padding(
-          padding: padding,
-          child: CheckBoxNew(
-            text: entry["strName"],
-            isChecked: entry["isChecked"],
-            onChanged: checkboxFunction,
-          ),
-        ),
-      );
-    }
+    // Dynamic Data setup
+    int halfLength = (typesCheckboxes.length / 2).ceil();
+    final regionChips = returnRegionsMockApi(screenWidth, fullMarginX);
     return Scaffold(
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
@@ -185,17 +177,20 @@ class _QuarterState extends State<Quarter> {
                       children: [
                         Align(
                           alignment: Alignment.center,
-                          child: SingleChildScrollView(
-                            controller: _scrollController,
-                            scrollDirection: Axis.horizontal,
-                            child: SizedBox(
-                              height: 0.07 * screenHeight,
-                              width: regionChips.length * 0.2 * screenWidth,
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: regionChips,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: SingleChildScrollView(
+                              controller: _scrollController,
+                              scrollDirection: Axis.horizontal,
+                              child: SizedBox(
+                                height: 0.07 * screenHeight,
+                                width: regionChips.length * 0.2 * screenWidth,
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: regionChips,
+                                ),
                               ),
                             ),
                           ),
@@ -207,6 +202,9 @@ class _QuarterState extends State<Quarter> {
                               height: 0.07 * screenHeight,
                               width: 0.25 * screenWidth,
                               decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(10),
+                                ),
                                 gradient: LinearGradient(
                                   begin: Alignment.centerLeft,
                                   end: Alignment.centerRight,
@@ -226,6 +224,9 @@ class _QuarterState extends State<Quarter> {
                               height: 0.07 * screenHeight,
                               width: 0.25 * screenWidth,
                               decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(10),
+                                ),
                                 gradient: LinearGradient(
                                   begin: Alignment.centerRight,
                                   end: Alignment.centerLeft,
@@ -240,7 +241,7 @@ class _QuarterState extends State<Quarter> {
                         ),
                       ],
                     ),
-                    const Expanded(child: RatingChart()),
+                    const Expanded(child: PerformanceChart()),
                   ],
                 ),
               ),
@@ -285,7 +286,7 @@ class _QuarterState extends State<Quarter> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           mainAxisSize: MainAxisSize.max,
-                          children: rowChildren.sublist(0, halfLength),
+                          children: typesCheckboxes.sublist(0, halfLength),
                         ),
                         SizedBox(
                           height: fullMarginY,
@@ -293,7 +294,7 @@ class _QuarterState extends State<Quarter> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           mainAxisSize: MainAxisSize.max,
-                          children: rowChildren.sublist(halfLength),
+                          children: typesCheckboxes.sublist(halfLength),
                         ),
                       ],
                     ),
@@ -317,17 +318,17 @@ class _QuarterState extends State<Quarter> {
                         height: boxHeight,
                         width: boxWidth,
                         title: "عدد البلاغات",
-                        content: "247"),
+                        content: complaintCount.toString()),
                     InfoDisplayBox(
                         height: boxHeight,
                         width: boxWidth,
                         title: "مدة المهام",
-                        content: "يومين"),
+                        content: avgResolve),
                     InfoDisplayBox(
                         height: boxHeight,
                         width: boxWidth,
                         title: "نسبة النجاح",
-                        content: "66.7%"),
+                        content: successRate),
                   ],
                 ),
               ),
@@ -337,49 +338,4 @@ class _QuarterState extends State<Quarter> {
       ),
     );
   }
-}
-
-List<Map<String, dynamic>> returnTypesMockApi(List<int> selectedTypes) {
-  return [
-    {
-      "intId": 1,
-      "strName": "حفر الشوارع",
-      "isChecked": selectedTypes.contains(1),
-    },
-    {
-      "intId": 2,
-      "strName": "تراكم نفايات",
-      "isChecked": selectedTypes.contains(2),
-    },
-    {
-      "intId": 3,
-      "strName": "مطبات مخالفة",
-      "isChecked": selectedTypes.contains(3),
-    },
-    {
-      "intId": 4,
-      "strName": "تكسر ارصفة",
-      "isChecked": selectedTypes.contains(4),
-    },
-    {
-      "intId": 5,
-      "strName": "2 حفر الشوارع",
-      "isChecked": selectedTypes.contains(5),
-    },
-    {
-      "intId": 6,
-      "strName": "2 تراكم نفايات",
-      "isChecked": selectedTypes.contains(6),
-    },
-    {
-      "intId": 7,
-      "strName": "2 مطبات مخالفة",
-      "isChecked": selectedTypes.contains(7),
-    },
-    {
-      "intId": 8,
-      "strName": "2 تكسر ارصفة",
-      "isChecked": selectedTypes.contains(8),
-    },
-  ];
 }
