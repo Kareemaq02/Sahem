@@ -42,8 +42,7 @@ Future<List<dynamic>> fetchComplaints() async {
           'Authorization': 'Bearer $token2',
         }
   );
-      print(response.body);
-     print(response.statusCode);
+
   if (response.statusCode == 200) {
 
     print("ok");
