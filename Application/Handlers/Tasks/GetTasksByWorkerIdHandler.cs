@@ -31,10 +31,10 @@ namespace Application.Handlers.Tasks
                 join ui in _context.UserInfos on u.intUserInfoId equals ui.intId
                 join tT in _context.TaskTypes on t.intTypeId equals tT.intId
                 join ts in _context.TaskStatus on t.intStatusId equals ts.intId
-                join tm in _context.TaskMembers on t.intId equals tm.intTaskId
+                join tm in _context.TeamMembers on t.intId equals tm.intTeamId
                 where
-                    _context.TaskMembers.Any(
-                        tm => tm.intTaskId == t.intId && tm.intWorkerId == request.id
+                    _context.TeamMembers.Any(
+                        tm => tm.intTeamId == t.intId && tm.intWorkerId == request.id
                     )
                 group tm by new
                 {
@@ -63,20 +63,19 @@ namespace Application.Handlers.Tasks
                     scheduledDate = g.Key.ScheduledDate,
                     deadlineDate = g.Key.DeadlineDate,
                     strTaskStatus = g.Key.TaskStatus,
-                    
-                    blnIsTaskLeader = g.Any(x => x.intWorkerId == request.id && x.blnIsLeader),
-                    workersList = g.Select(
-                            x =>
-                                new TaskWorkerDTO
-                                {
-                                    intId = x.Worker.Id,
-                                    strFirstName = x.Worker.UserInfo.strFirstName,
-                                    strLastName = x.Worker.UserInfo.strLastName,
-                                    isLeader = x.blnIsLeader,
-                                }
-                        )
-                        .Distinct()
-                        .ToList()
+                    //blnIsTaskLeader = g.Any(x => x.intWorkerId == request.id && x.blnIsLeader),
+                    //workersList = g.Select(
+                    //        x =>
+                    //            new TaskWorkerDTO
+                    //            {
+                    //                intId = x.Worker.Id,
+                    //                strFirstName = x.Worker.UserInfo.strFirstName,
+                    //                strLastName = x.Worker.UserInfo.strLastName,
+                    //                isLeader = x.blnIsLeader,
+                    //            }
+                    //    )
+                    //    .Distinct()
+                    //    .ToList()
                 };
 
             var result = await query.ToListAsync();

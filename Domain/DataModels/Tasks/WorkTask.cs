@@ -15,9 +15,13 @@ namespace Domain.DataModels.Tasks
 
         [Column("ADMIN_ID")]
         [ForeignKey("Admin")]
-        [Required]
         public int intAdminId { get; set; }
         public ApplicationUser Admin { get; set; }
+
+        [Column("TEAM_ID")]
+        [ForeignKey("Team")]
+        public int intTeamId { get; set; }
+        public Team Team { get; set; }
 
         [Column("STATUS_ID")]
         [ForeignKey("Status")]
@@ -84,8 +88,6 @@ namespace Domain.DataModels.Tasks
         public Boolean blnIsActivated { get; set; }
 
         // Relations
-        public ICollection<WorkTaskMembers> Workers { get; set; }
-
         public ICollection<WorkTaskComplaints> Complaints { get; set; }
     }
 }

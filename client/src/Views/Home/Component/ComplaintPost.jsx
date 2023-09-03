@@ -9,6 +9,7 @@ import { SetVote, getVoteStatus, setDownvote, removeVote } from "../Service/SetV
 
 // css style
 import "../Style/style.css"
+import "../Style/button-style.css"
 
 //icons
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
@@ -18,14 +19,42 @@ import WatchLaterIcon from '@mui/icons-material/WatchLater';
 
 
 const ComplaintPost = ({ data }) => {
-    const [complaintData, setComplaintData] = useState(data);
+    const [complaintData, setComplaintData] = useState([]);
     const [loggedInUser, setLoggedInUser] = useState(null);
+    useEffect(() => {
+        setComplaintData(data);
+
+    }, [data]);
+
+
 
     const handleVote = async (complaintId, isDownvote) => {
         try {
+            // debugger;
+
+            const singleComplaint = complaintData.find(c => c.intComplaintId === complaintId);
+
+            if (singleComplaint.intVoted != 0) {
+                
+                await removeVote(complaintId);
+
+
+                const updatedData = complaintData.map((complaint) => {
+                    if (complaint.intComplaintId === complaintId) {
+                        complaint.intVoted = 0;
+                        complaint.intVotersCount += isDownvote ? 1 : -1;
+                    }
+                    return complaint;
+                });
+
+                setComplaintData(updatedData);
+                return;
+            }
+
             if (isDownvote) {
                 // If it's a downvote, call the setDownvote function
                 await setDownvote(complaintId);
+
             } else {
                 // If it's an upvote, call the SetVote function
                 await SetVote(complaintId);
@@ -34,8 +63,8 @@ const ComplaintPost = ({ data }) => {
             // After voting, update the complaintData state to reflect the new vote status
             const updatedData = complaintData.map((complaint) => {
                 if (complaint.intComplaintId === complaintId) {
-                    complaint.isDownVote = !isDownvote;
-                    complaint.intVotersCount += isDownvote ? 1 : -1;
+                    complaint.intVoted = !isDownvote ? 1 : -1;
+                    complaint.intVotersCount += !isDownvote ? 1 : -1;
                 }
                 return complaint;
             });
@@ -54,7 +83,7 @@ const ComplaintPost = ({ data }) => {
     return (
 
         <Box sx={{ display: "grid", gap: 2, width: '100%' }}>
-            {data.map((complaint) => (
+            {complaintData.map((complaint) => (
                 <Card key={complaint.intComplaintId} className="filterStyle">
                     <CardContent>
                         <Typography variant="h3" component="div" className="app">
@@ -63,7 +92,6 @@ const ComplaintPost = ({ data }) => {
                                     <div className="avatar">A</div>
                                     <span style={{ marginLeft: '10px' }}>{complaint.strFirstName} {complaint.strLastName}</span>
                                 </div>
-
 
                                 <Chip
                                     className="status-chip"
@@ -79,12 +107,12 @@ const ComplaintPost = ({ data }) => {
                             </FlexBetween>
                         </Typography>
                         <FlexBetween>
-                        <Typography variant="h5" component="div" sx={{ paddingRight: 6, }}>
-                           <FlexBetween>
-                            <WatchLaterIcon sx={{color: 'gray'}}/>
-                            <span >قبل 5 ساعات</span>
-                            </FlexBetween>
-                           </Typography>
+                            <Typography variant="h5" component="div" sx={{ paddingRight: 6, }}>
+                                <FlexBetween>
+                                    <WatchLaterIcon sx={{ color: 'gray' }} />
+                                    <span >قبل 5 ساعات</span>
+                                </FlexBetween>
+                            </Typography>
                         </FlexBetween>
                         <br />
                         <Typography variant="body1" color="text.secondary" sx={{ width: '85%', display: 'grid', margin: 'auto' }}>
@@ -101,17 +129,28 @@ const ComplaintPost = ({ data }) => {
                             <FlexBetween>
                                 <div style={{ paddingRight: '36px', marginTop: '13px' }}>
                                     <IconButton
-                                        aria-label="Upvote"
+                                        aria-label="Upvote" 
+                                        // className={complaint.intVoted == 1 ? 'upvote_green' : '' }
+
+                                        className={`${complaint.intVoted === 1 ? 'upvote_green' : ''} ${complaint.intVoted === -1 ? 'disabled' : ''}`}
+
+
+
+
                                         onClick={() => handleVote(complaint.intComplaintId, false)}
                                     >
                                         {complaint.isDownVote === false ? <ThumbUp /> : <ThumbUpOutlined />}
+                                        {/* {complaint.isDownVote === false ? <ThumbUp /> : <ThumbUp />} */}
                                     </IconButton>
                                     <span>{complaint.intVotersCount}</span>
                                     <IconButton
-                                        aria-label="Downvote"
+                                        aria-label="Downvote" className={`${complaint.intVoted == -1 ? 'downvote_red' : ''} ${complaint.intVoted === 1 ? 'disabled' : ''}`}
+                                        
                                         onClick={() => handleVote(complaint.intComplaintId, true)}
+                                        // disabled={clickedVote === 1}
                                     >
                                         {complaint.isDownVote === true ? <ThumbDown /> : <ThumbDownOutlined />}
+                                        {/* {complaint.isDownVote === true ? <ThumbDown /> : <ThumbDown />} */}
                                     </IconButton>
                                     <IconButton onClick={() => setWatch(complaint.intComplaintId)}>
                                         <RemoveRedEyeIcon />
@@ -122,10 +161,10 @@ const ComplaintPost = ({ data }) => {
                             </FlexBetween>
                         </div>
                     </CardContent>
-                </Card>
+                </Card >
             ))}
 
-        </Box>
+        </Box >
 
     );
 };

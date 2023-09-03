@@ -40,6 +40,7 @@ namespace Persistence
                 intStatusId = 1,
                 intTypeId = taskType.intId,
                 decCost = (decimal)(random.NextDouble() * 12654 - 89) + 89,
+                intTeamId = 1,
                 dtmDateScheduled = dateCreated,
                 dtmDateActivated = dateCreated,
                 dtmDateDeadline = datelastModified,
@@ -72,26 +73,6 @@ namespace Persistence
                 }
             );
             await context.SaveChangesAsync();
-
-            var workerType = context.UserTypes.Where(q => q.strName == "worker").FirstOrDefault();
-            var workersCount = context.Users
-                .Where(q => q.intUserTypeId == workerType.intId)
-                .Count();
-            var workerRand = random.Next(1, workersCount + 1);
-
-            var workerArr = context.Users.OrderBy(q => q.Id).Skip(workerRand - 1).Take(6).ToArray();
-
-            for (int i = 0; i < workerArr.Length; i++)
-            {
-                await context.TaskMembers.AddAsync(
-                    new WorkTaskMembers
-                    {
-                        intWorkerId = workerArr[i].Id,
-                        intTaskId = taskEntity.Entity.intId,
-                        blnIsLeader = i == 0
-                    }
-                );
-            }
         }
     }
 }

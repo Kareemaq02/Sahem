@@ -45,7 +45,7 @@ function App() {
     if (map.current) return; // initialize map only once
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
-      style: "mapbox://styles/mapbox/light-v11",
+      style: "mapbox://styles/mapbox/streets-v12",
       center: [lng, lat],
       zoom: zoom,
     });
@@ -105,7 +105,7 @@ function App() {
       height="95%"
       width="100%"
     >
-      <div ref={mapContainer} style={{ height: "100%", width: "100%" }} />
+      <div ref={mapContainer} style={{ height: "100%", width: "100%",borderRadius: "5px" }} />
     </Box>
   );
 }

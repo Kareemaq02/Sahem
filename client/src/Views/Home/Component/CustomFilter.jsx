@@ -10,8 +10,17 @@ import "../Style/style.css"
 import "./ComplaintMap.css"
 
 import mapboxgl, { Marker, Popup } from "mapbox-gl";
+// import GetGeneralComplaintMarker from "../Service/GetGeneralComplaintsMap";
+import GetPublicComplaintMarker from "../Service/GetPublicComplaintsMap";
 
-const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange }) => {
+// import { GetPublicComplaintMarker } from "../Service/GetPublicComplaintsMap";
+
+
+
+
+
+
+const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange, markerInfoList }) => {
 
     mapboxgl.accessToken =
         "pk.eyJ1IjoiYWdyaWRiIiwiYSI6ImNsbDN5dXgxNTAxOTAza2xhdnVmcnRzbGEifQ.3cM2WO5ubiAjuWbpXi9woQ";
@@ -22,35 +31,41 @@ const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange }) => {
     const [lat, setLat] = useState(31.941391);
     const [zoom, setZoom] = useState(8);
 
+    const [markerDetails, setMarkerDetails] = useState([]);
+  
+
+
     const geojson = {
-        'type': 'FeatureCollection',
+        
         'features': [
-        {
-        'type': 'Feature',
-        'properties': {
-        'message': 'Foo',
-        'iconSize': [60, 60]
-        },
-        'geometry': {
-        'type': 'Point',
-        'coordinates': [lng, lat]
-        }
-        },
-        {
-        'type': 'Feature',
-        'properties': {
-        'message': 'Bar',
-        'iconSize': [50, 50]
-        },
-        'geometry': {
-        'type': 'Point',
-        'coordinates': [35.875612, 31.957211]
-        }
-        },
+            {
+                'type': 'Feature',
+                'properties': {
+                    'message': 'Foo',
+                    'iconSize': [60, 60]
+                },
+                'geometry': {
+                    'type': 'Point',
+                    'coordinates': [lng, lat]
+                }
+            },
+            {
+                'type': 'Feature',
+                'properties': {
+                    'message': 'Bar',
+                    'iconSize': [50, 50]
+                },
+                'geometry': {
+                    'type': 'Point',
+                    'coordinates': [35.875612, 31.957211]
+                }
+            },
         ]
-        };
+    };
 
     useEffect(() => {
+
+
         if (map.current) return; // initialize map only once
         map.current = new mapboxgl.Map({
             container: mapContainer.current,
@@ -67,11 +82,10 @@ const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange }) => {
             el.style.width = `${width}px`;
             el.style.height = `${height}px`;
             el.style.backgroundSize = '100%';
-    
-        const popupContent = document.createElement("div");
-        popupContent.className = "popup-container";
-    
-        popupContent.innerHTML = `
+
+            const popupContent = document.createElement("div");
+            popupContent.className = "popup-container";
+            popupContent.innerHTML = `
         <div class="popup-image" style="border-color: ${(marker.properties.message)};">
         <img src="URL_OF_YOUR_IMAGE" alt="Marker Image" />
       </div>
@@ -82,7 +96,7 @@ const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange }) => {
           <div class="popup-divider"></div>
           <div class="popup-content">
             <div class="popup-label">رقم البلاغ</div>
-            <div class="popup-value">Value 1</div>
+            <div class="popup-value">${markerDetails.intComplaintId}</div>
             <div class="popup-label">حالة البلاغ</div>
             <div class="popup-value">Value 2</div>
             <div class="popup-label">المستخدم</div>
@@ -91,24 +105,28 @@ const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange }) => {
             <div class="popup-value">Value 4</div>
           </div>
         `;
-    
-        const popup = new Popup({ offset: 25 }).setDOMContent(popupContent);
-    
-        new mapboxgl.Marker(el)
-          .setLngLat(marker.geometry.coordinates)
-          .setPopup(popup)
-          .addTo(map.current);
-      }
-        
+
+            const popup = new Popup({ offset: 25 }).setDOMContent(popupContent);
+
+            new mapboxgl.Marker(el)
+                .setLngLat(marker.geometry.coordinates)
+                .setPopup(popup)
+                .addTo(map.current);
+        }
+
     });
 
-    
+
     const [complaintTypes, setComplaintTypes] = useState([]);
     const [selectedComplaintTypes, setSelectedComplaintTypes] = useState([]);
     const [selectedStatus, setselectedStatus] = useState([])
 
     useEffect(() => {
         // Fetch complaint types from the API and set them to state
+        const showMarkerDetails = async () => {
+            const response = await GetPublicComplaintMarker()
+            setMarkerDetails(response.data)
+        }
         const fetchComplaintTypes = async () => {
             try {
                 const response = await GetComplaintTypes();
@@ -119,7 +137,8 @@ const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange }) => {
         };
 
         fetchComplaintTypes();
-    }, [lng, lat, zoom, geojson]);
+        showMarkerDetails();
+    }, []);
 
 
 
@@ -144,8 +163,6 @@ const CustomFilter = ({ onComplaintTypesChange, onComplaintStatusChange }) => {
                     ref={mapContainer}
                     className="map-container"
                     style={{ height: "20rem", width: '100%' }}
-                    onMouseEnter={handleMapMouseEnter}
-                    onMouseLeave={handleMapMouseLeave}
                 />
             </Box>
             <br />

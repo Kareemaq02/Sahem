@@ -35,7 +35,7 @@ namespace Domain.DataModels.User
         // Relations
         public ICollection<ComplaintVoters> Complaints { get; set; }
         public ICollection<ComplaintWatchers> ComplaintsWatched { get; set; }
-        public ICollection<WorkTaskMembers> Tasks { get; set; }
+        public ICollection<TeamMembers> Teams { get; set; }
         public ICollection<DepartmentUsers> Departments { get; set; }
         public ICollection<ProfessionUsers> Professions { get; set; }
     }

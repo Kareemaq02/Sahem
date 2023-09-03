@@ -9,6 +9,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 // project
 import GetComplaintDetails from "../Service/GetComplaintDetails";
 import GetComplaintImage from "../Service/GetComplaintImage";
+import ScrollLock from 'react-scroll-lock-component';
 
 function CitizenForum() {
   const [comDet, setCompDet] = useState([]);
@@ -31,7 +32,7 @@ function CitizenForum() {
 
         const complaintsWithData = await Promise.all(response.data.map(async (complaint) => {
           const imageDataResponse = await GetComplaintImage(complaint.intComplaintId); 
-          const imageData = imageDataResponse.data.lstMedia[0]?.data || ""; 
+          const imageData = imageDataResponse.data.lstMedia[0]?.data || "-1"; 
 
           return { ...complaint, imageData };
         }));
@@ -68,6 +69,7 @@ function CitizenForum() {
     <div>
 
       <Grid container spacing={2} className="app-container">
+ 
         <Grid item xs={12} md={8} className="main-content">
           <FlexBetween>
             <ComplaintPost data={comDet} />
@@ -87,12 +89,14 @@ function CitizenForum() {
 
           </Box>
         </Grid>
-
+        {/* <ScrollLock> */}
         <Grid item xs={12} md={4} className="custom-filter-container">
           {/* Pass the handleComplaintTypesChange function as a prop */}
-          <CustomFilter onComplaintTypesChange={handleComplaintTypesChange} onComplaintStatusChange={handleComplaintStatusChange} />
+          <CustomFilter onComplaintTypesChange={handleComplaintTypesChange} onComplaintStatusChange={handleComplaintStatusChange}  />
         </Grid>
+        {/* </ScrollLock> */}
       </Grid>
+
       <br />
       <br />
     </div>

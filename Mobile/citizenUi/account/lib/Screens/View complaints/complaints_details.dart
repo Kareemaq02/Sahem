@@ -94,18 +94,16 @@ List<String> urls = getImageUrls();
               padding: const EdgeInsets.only(left:10.0,right: 10.0),
               child: Mycontainer(130,
                 //foregroundDecoration: BoxDecoration(borderRadius: BorderRadius.circular(10),),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Column(
-                      children:[
-                      RowInfo("رقم البلاغ",complaint.intComplaintId.toString()),
-                      RowInfo("تاريخ الاضافة ",complaint.dtmDateCreated.toString()),
-                      RowInfo("نوع البلاغ",complaint.strComplaintTypeAr.toString()),
-                      RowInfo("موقع البلاغ","ش.وصفي التل ,عمان",),
-                      
-                          ]),
-                  ),
+                Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Column(
+                    children:[
+                    RowInfo("رقم البلاغ",complaint.intComplaintId.toString()),
+                    RowInfo("تاريخ الاضافة ",complaint.dtmDateCreated.toString()),
+                    RowInfo("نوع البلاغ",complaint.strComplaintTypeAr.toString()),
+                    RowInfo("موقع البلاغ","ش.وصفي التل ,عمان",),
+                    
+                        ]),
                 ),
             
               ),
@@ -118,42 +116,40 @@ List<String> urls = getImageUrls();
             
              Padding(
                padding: const EdgeInsets.only(right:90.0),
-               child: Flexible(
-                      child: FixedTimeline.tileBuilder(
-                        direction: Axis.vertical,
-                        builder: TimelineTileBuilder.connectedFromStyle(
-                           
-                          contentsAlign: ContentsAlign.basic,
-                          connectionDirection: ConnectionDirection.before,
-                          connectorStyleBuilder: (context, index) {
-                          
-                            return (index == 1)
-                                ? ConnectorStyle.dashedLine
-                                : ConnectorStyle.dashedLine;
-                          },
-                          
-                          contentsBuilder: (context, index) => 
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                             crossAxisAlignment: CrossAxisAlignment.center,
-                             mainAxisAlignment: MainAxisAlignment.spaceAround,
-                               children: [
-                                Text('Status Name $index'), // Replace with your status name
-                                const Text('Time'), // Replace with your time
-                            ],
-                                               ),
-                          ),
-                        //  const Text('Contents',style: TextStyle(fontSize: 10),),
-                          indicatorStyleBuilder: (context, index) =>
-                             
-                              IndicatorStyle.dot,
+               child: FixedTimeline.tileBuilder(
+                 direction: Axis.vertical,
+                 builder: TimelineTileBuilder.connectedFromStyle(
+                    
+                   contentsAlign: ContentsAlign.basic,
+                   connectionDirection: ConnectionDirection.before,
+                   connectorStyleBuilder: (context, index) {
+                   
+                     return (index == 1)
+                         ? ConnectorStyle.dashedLine
+                         : ConnectorStyle.dashedLine;
+                   },
+                   
+                   contentsBuilder: (context, index) => 
+                   Padding(
+                     padding: const EdgeInsets.all(8.0),
+                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                         Text('Status Name $index'), // Replace with your status name
+                         const Text('Time'), // Replace with your time
+                     ],
+                                        ),
+                   ),
+                 //  const Text('Contents',style: TextStyle(fontSize: 10),),
+                   indicatorStyleBuilder: (context, index) =>
+                      
+                       IndicatorStyle.dot,
                   
-                          itemExtent: 80.0,
-                          itemCount: 6,
-                        ),
-                      ),
-                    ),
+                   itemExtent: 80.0,
+                   itemCount: 6,
+                 ),
+               ),
              ),
             
           

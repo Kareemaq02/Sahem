@@ -23,36 +23,41 @@ namespace Application.Handlers.Complaints
             CancellationToken cancellationToken
         )
         {
-
-             var result = await _context.Users
-             .Where(q => q.Id == request.id && q.intUserTypeId == (int)UsersConstant.userTypes.worker)
-              .Join(
+            var result = await _context.Users
+                .Where(
+                    q =>
+                        q.Id == request.id && q.intUserTypeId == (int)UsersConstant.userTypes.worker
+                )
+                .Join(
                     _context.UserInfos,
                     u => u.intUserInfoId,
                     ui => ui.intId,
                     (u, ui) => new { User = u, UserInfo = ui }
-                   )
-                 .Select(u => new DetailedWorkerDTO
-                     {
-                         intId = u.User.Id,
-                         strUsername = u.User.UserName,
-                         strFirstName = u.UserInfo.strFirstName,
-                         strFirstNameAr = u.UserInfo.strFirstNameAr,
-                         strLastNameAr = u.UserInfo.strLastNameAr,
-                         strLastName = u.UserInfo.strLastName,
-                         strNationalId = u.UserInfo.strNationalId,
-                         strPhoneNumber = u.UserInfo.strPhoneNumber,
-                         strNationalIdNumber = u.UserInfo.strNationalIdNumber,
-                         strPassportNumber = u.UserInfo.strPassportNumber,
-                         strRegistrationNumber = u.UserInfo.strRegistrationNumber,
-                         boolIsActive = u.User.blnIsActive,
-                         boolIsBlacklisted = u.User.blnIsBlacklisted,
-                         boolIsVerified = u.User.blnIsVerified,
-                         intCompletedTasksCount = _context.TaskMembers
-                         .Count(tm => tm.intWorkerId == request.id &&
-                         tm.Task.intStatusId == (int)TasksConstant.taskStatus.completed)
-                     }).FirstOrDefaultAsync();
-
+                )
+                .Select(
+                    u =>
+                        new DetailedWorkerDTO
+                        {
+                            intId = u.User.Id,
+                            strUsername = u.User.UserName,
+                            strFirstName = u.UserInfo.strFirstName,
+                            strFirstNameAr = u.UserInfo.strFirstNameAr,
+                            strLastNameAr = u.UserInfo.strLastNameAr,
+                            strLastName = u.UserInfo.strLastName,
+                            strNationalId = u.UserInfo.strNationalId,
+                            strPhoneNumber = u.UserInfo.strPhoneNumber,
+                            strNationalIdNumber = u.UserInfo.strNationalIdNumber,
+                            strPassportNumber = u.UserInfo.strPassportNumber,
+                            strRegistrationNumber = u.UserInfo.strRegistrationNumber,
+                            boolIsActive = u.User.blnIsActive,
+                            boolIsBlacklisted = u.User.blnIsBlacklisted,
+                            boolIsVerified = u.User.blnIsVerified,
+                            //intCompletedTasksCount = _context.TaskMembers
+                            //.Count(tm => tm.intWorkerId == request.id &&
+                            //tm.Task.intStatusId == (int)TasksConstant.taskStatus.completed)
+                        }
+                )
+                .FirstOrDefaultAsync();
 
             if (result == null)
             {
