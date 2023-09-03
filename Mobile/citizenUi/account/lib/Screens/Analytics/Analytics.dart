@@ -6,6 +6,7 @@ import 'package:account/Widgets/CheckBoxes/CheckBox.dart';
 import 'package:account/Widgets/appBar.dart';
 import 'package:account/Widgets/bottomNavBar.dart';
 import 'package:flutter/material.dart';
+import 'package:account/API/get_complaints_types.dart';
 
 class Analytics extends StatefulWidget {
   const Analytics({super.key});
@@ -18,6 +19,7 @@ class _AnalyticsState extends State<Analytics> {
   @override
   void initState() {
     super.initState();
+    _futureTypesObjs = fetchTypesData();
   }
 
   int timeframe = 1;
@@ -25,6 +27,21 @@ class _AnalyticsState extends State<Analytics> {
   Widget renderedChart = renderChart(0);
   DateTime selectedDate = DateTime.now().subtract(const Duration(days: 7));
   List<int> selectedTypes = [];
+  late Future<List<Map<String, dynamic>>> _futureTypesObjs;
+
+  Future<List<Map<String, dynamic>>> fetchTypesData() async {
+    var typesRequest = ComplaintTypeRequest();
+    var typesData = await typesRequest.getAllCategory();
+    List<Map<String, dynamic>> typesObjs = [];
+    for (var type in typesData) {
+      var typeObj = {
+        "intId": type.intTypeId,
+        "strName": type.strNameAr,
+      };
+      typesObjs.add(typeObj);
+    }
+    return typesObjs;
+  }
 
   void selectChart(int index) {
     setState(() {
@@ -100,43 +117,6 @@ class _AnalyticsState extends State<Analytics> {
               })),
     ];
 
-    List<Map<String, dynamic>> typesObjs = returnTypesMockApi(selectedTypes);
-    List<Widget> rowChildren = [];
-    int halfLength = (typesObjs.length / 2).ceil();
-    for (var index = 0; index < typesObjs.length; index++) {
-      var entry = typesObjs[index];
-
-      var isLastElement = index == typesObjs.length - 1;
-      var isMiddleElement = index == halfLength - 1;
-
-      var padding = isLastElement || isMiddleElement
-          ? EdgeInsets.only(right: fullMarginX)
-          : EdgeInsets.only(left: halfMarginX, right: halfMarginX);
-
-      void checkboxFunction() {
-        setState(() {
-          if (!selectedTypes.contains(entry["intId"])) {
-            selectedTypes.add(entry["intId"]);
-            entry["isChecked"] = true;
-          } else {
-            selectedTypes.remove(entry["intId"]);
-            entry["isChecked"] = false;
-          }
-        });
-      }
-
-      rowChildren.add(
-        Padding(
-          padding: padding,
-          child: CheckBoxNew(
-            text: entry["strName"],
-            isChecked: entry["isChecked"],
-            onChanged: checkboxFunction,
-          ),
-        ),
-      );
-    }
-
     return Scaffold(
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
@@ -199,29 +179,62 @@ class _AnalyticsState extends State<Analytics> {
                           )),
                     ),
                   ),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    reverse: true,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          mainAxisSize: MainAxisSize.max,
-                          children: rowChildren.sublist(0, halfLength),
-                        ),
-                        SizedBox(
-                          height: fullMarginY,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          mainAxisSize: MainAxisSize.max,
-                          children: rowChildren.sublist(halfLength),
-                        ),
-                      ],
-                    ),
+                  FutureBuilder<List<Map<String, dynamic>>>(
+                    future: _futureTypesObjs,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        var typesObjs = snapshot.data!;
+                        int halfLength = (typesObjs.length / 2).ceil();
+                        return SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          reverse: true,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                mainAxisSize: MainAxisSize.max,
+                                children: typesObjs
+                                    .sublist(0, halfLength)
+                                    .asMap()
+                                    .entries
+                                    .map((entry) {
+                                  return renderCheckBox(
+                                    entry,
+                                    typesObjs,
+                                    fullMarginX,
+                                  );
+                                }).toList(),
+                              ),
+                              SizedBox(
+                                height: fullMarginY,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                mainAxisSize: MainAxisSize.max,
+                                children: typesObjs
+                                    .sublist(halfLength)
+                                    .asMap()
+                                    .entries
+                                    .map((entry) {
+                                  return renderCheckBox(
+                                    entry,
+                                    typesObjs,
+                                    fullMarginX,
+                                  );
+                                }).toList(),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                    },
                   ),
                 ],
               ),
@@ -268,6 +281,37 @@ class _AnalyticsState extends State<Analytics> {
       ),
     );
   }
+
+  Padding renderCheckBox(
+    MapEntry<int, Map<String, dynamic>> entry,
+    List<dynamic> typesObjs,
+    double fullMarginX,
+  ) {
+    final int index = entry.key;
+    final Map<String, dynamic> map = entry.value;
+    int halfLength = (typesObjs.length / 2).ceil();
+    var isLastElement = index == typesObjs.length - 1;
+    var isMiddleElement = index == halfLength - 1;
+    var padding = isLastElement || isMiddleElement
+        ? EdgeInsets.only(right: fullMarginX)
+        : EdgeInsets.only(left: fullMarginX / 2, right: fullMarginX / 2);
+    return Padding(
+      padding: padding,
+      child: CheckBoxNew(
+        text: map["strName"],
+        isChecked: selectedTypes.contains(map["intId"]),
+        onChanged: () {
+          setState(() {
+            if (!selectedTypes.contains(map["intId"])) {
+              selectedTypes.add(map["intId"]);
+            } else {
+              selectedTypes.remove(map["intId"]);
+            }
+          });
+        },
+      ),
+    );
+  }
 }
 
 Widget renderChart(int chart) {
@@ -296,49 +340,4 @@ Widget renderChart(int chart) {
       }
     },
   );
-}
-
-List<Map<String, dynamic>> returnTypesMockApi(List<int> selectedTypes) {
-  return [
-    {
-      "intId": 1,
-      "strName": "حفر الشوارع",
-      "isChecked": selectedTypes.contains(1),
-    },
-    {
-      "intId": 2,
-      "strName": "تراكم نفايات",
-      "isChecked": selectedTypes.contains(2),
-    },
-    {
-      "intId": 3,
-      "strName": "مطبات مخالفة",
-      "isChecked": selectedTypes.contains(3),
-    },
-    {
-      "intId": 4,
-      "strName": "تكسر ارصفة",
-      "isChecked": selectedTypes.contains(4),
-    },
-    {
-      "intId": 5,
-      "strName": "2 حفر الشوارع",
-      "isChecked": selectedTypes.contains(5),
-    },
-    {
-      "intId": 6,
-      "strName": "2 تراكم نفايات",
-      "isChecked": selectedTypes.contains(6),
-    },
-    {
-      "intId": 7,
-      "strName": "2 مطبات مخالفة",
-      "isChecked": selectedTypes.contains(7),
-    },
-    {
-      "intId": 8,
-      "strName": "2 تكسر ارصفة",
-      "isChecked": selectedTypes.contains(8),
-    },
-  ];
 }
