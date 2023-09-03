@@ -38,6 +38,7 @@ namespace Application.Handlers.Tasks
                     )
                 group tm by new
                 {
+                    statusId = t.intStatusId,
                     TaskId = t.intId,
                     AdminFirstName = ui.strFirstName,
                     AdminLastName = ui.strLastName,
@@ -52,6 +53,7 @@ namespace Application.Handlers.Tasks
                 select new WorkerTaskDTO
                 {
                     taskId = g.Key.TaskId,
+                    intTaskStatusId = g.Key.statusId,
                     strAdminFirstName = g.Key.AdminFirstName,
                     strAdminLastName = g.Key.AdminLastName,
                     strTypeNameEn = g.Key.TaskTypeEn,
