@@ -1,0 +1,33 @@
+{
+
+"login":"Login",
+"email":"Email or Username",
+"password":"Password",
+"confirmPassword":"Confirm Password",
+"username":"Username",
+"forgot_password":"Forgot Password?",
+"dont_have_acc":"Don't have an account? Sign up",
+"register":"register",
+"idType":"Type of ID",
+"idNumber":"ID Number",
+"nationalID":"National ID Number",
+"nationalNumber":"National Number",
+"next":"Next",
+"nationality":"Nationality",
+"passportNumber":"Passport Number",
+"finish":"Finish",
+"firstName":"First Name",
+"lastName":"Last Name",
+"phoneNumber":"Phone Number",
+"areYourJordanian":"are Your Jordanian",
+"yes":"Yes",
+"no":"No",
+"haveAccount":"Already have an account",
+"rememberMe":"Remeber me",
+"email_or_username":"Email/Username",
+"registrationNumber":"Registeration Number",
+"selectHere":"Select Here",
+"rememberMe": "Remeber me"
+
+
+}
