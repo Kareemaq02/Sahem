@@ -10,7 +10,8 @@ using System.Threading.Tasks; // Add this using statement
 
 namespace Application.Handlers.Users
 {
-    public class GetAvailableWorkersListHandler : IRequestHandler<GetAvailableWorkersListQuery, Result<List<WorkerDTO>>>
+    public class GetAvailableWorkersListHandler
+        : IRequestHandler<GetAvailableWorkersListQuery, Result<List<WorkerDTO>>>
     {
         private readonly DataContext _context;
 
@@ -19,18 +20,25 @@ namespace Application.Handlers.Users
             _context = context;
         }
 
-        public async Task<Result<List<WorkerDTO>>> Handle(GetAvailableWorkersListQuery request, CancellationToken cancellationToken)
+        public async Task<Result<List<WorkerDTO>>> Handle(
+            GetAvailableWorkersListQuery request,
+            CancellationToken cancellationToken
+        )
         {
             DateTime startDate = request.startDate;
             DateTime endDate = request.endDate;
-            var busyWorkerIdsQuery = from u in _context.Users
-                                     join tm in _context.TaskMembers on u.Id equals tm.intWorkerId
-                                     join t in _context.Tasks on tm.intTaskId equals t.intId into tasks
-                                     from taskQ in tasks.DefaultIfEmpty()
-                                     where u.intUserTypeId == 2 &&
-                   !((taskQ.dtmDateDeadline > endDate && taskQ.dtmDateScheduled > endDate) ||
-                     (taskQ.dtmDateDeadline < startDate && taskQ.dtmDateScheduled < startDate))
-                                     select u.Id;
+            var busyWorkerIdsQuery =
+                from u in _context.Users
+                join tm in _context.TeamMembers on u.Id equals tm.intWorkerId
+                join t in _context.Tasks on tm.intTeamId equals t.intId into tasks
+                from taskQ in tasks.DefaultIfEmpty()
+                where
+                    u.intUserTypeId == 2
+                    && !(
+                        (taskQ.dtmDateDeadline > endDate && taskQ.dtmDateScheduled > endDate)
+                        || (taskQ.dtmDateDeadline < startDate && taskQ.dtmDateScheduled < startDate)
+                    )
+                select u.Id;
 
             Console.WriteLine(startDate);
             Console.WriteLine(endDate);
@@ -61,21 +69,28 @@ namespace Application.Handlers.Users
                                          };*/
 
 
-            var availableWorkersQuery = from u in _context.Users
-                                        join ui in _context.UserInfos on u.intUserInfoId equals ui.intId
-                                        where u.intUserTypeId == (int)UsersConstant.userTypes.worker
-                                         && !busyWorkerIdsQuery.Contains(u.Id)
-                                         orderby u.Id
-                                        select new WorkerDTO {
-                                            intId = u.Id,
-                                            strFirstName = ui.strFirstName,
-                                            strLastName = ui.strLastName,
-                                            strFirstNameAr = ui.strFirstNameAr,
-                                            strLastNameAr = ui.strLastNameAr,
-                                            strPhoneNumber = ui.strPhoneNumber,
-                                            strProfessionEn = u.Professions.Select(q => q.Profession.strNameEn).FirstOrDefault(),
-                                            strProfessionAr = u.Professions.Select(q => q.Profession.strNameAr).FirstOrDefault()
-                                        };
+            var availableWorkersQuery =
+                from u in _context.Users
+                join ui in _context.UserInfos on u.intUserInfoId equals ui.intId
+                where
+                    u.intUserTypeId == (int)UsersConstant.userTypes.worker
+                    && !busyWorkerIdsQuery.Contains(u.Id)
+                orderby u.Id
+                select new WorkerDTO
+                {
+                    intId = u.Id,
+                    strFirstName = ui.strFirstName,
+                    strLastName = ui.strLastName,
+                    strFirstNameAr = ui.strFirstNameAr,
+                    strLastNameAr = ui.strLastNameAr,
+                    strPhoneNumber = ui.strPhoneNumber,
+                    strProfessionEn = u.Professions
+                        .Select(q => q.Profession.strNameEn)
+                        .FirstOrDefault(),
+                    strProfessionAr = u.Professions
+                        .Select(q => q.Profession.strNameAr)
+                        .FirstOrDefault()
+                };
 
             var result = await availableWorkersQuery.Distinct().ToListAsync();
 

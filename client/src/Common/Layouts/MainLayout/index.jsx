@@ -71,7 +71,7 @@ function Layout() {
       <MainContent isSidebarOpen={isSidebarOpen}>
         <IconButton
           onClick={handleSidebarToggle}
-          style={{ zIndex: 1, position: "absolute", right: isSidebarOpen ? "290px" : "25px" }}
+          style={{ zIndex: 1, position: "absolute", right: isSidebarOpen ? "305px" : "25px", background:'#fff', top:'15px' }}
         >
           {isSidebarOpen ? <Menu /> : <ChevronLeft />}
         </IconButton>

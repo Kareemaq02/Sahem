@@ -6,22 +6,13 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 const proffessionFormValidation = yup.object().shape({
-  strNameAr: yup
-    .string()
-    .typeError("Invalid data type, must enter a name")
-    .matches(/^[\p{L}\s]*$/u, "Invalid entry, must not contain numbers")
-    .required("This field is required"),
-  strNameEn: yup
-    .string()
-    .typeError("Invalid data type, must enter a name")
-    .matches(/^[A-Za-z\s]*$/, "Invalid entry, must not contain numbers")
-    .required("This field is required"),
-
+  strNameAr: yup.string().typeError("Invalid data type, must enter a name").matches(/^[A-Za-z\s]*$/, "Invalid entry, must not contain numbers").required("Invalid entry this field is required"),
+  strNameEn: yup.string().typeError("Invalid data type, must enter a name").matches(/^[A-Za-z\s]*$/, "Invalid entry, must not contain numbers").required("Invalid entry this field is required"),
 });
 
-const ProffessionForm = ({ refreshData }) => {
+const ProffessionForm = () => {
   const methods = useForm({
-    resolver: yupResolver(proffessionFormValidation),
+    resolver: yupResolver(proffessionFormValidation), 
   });
 
   const onSubmit = async (data) => {
@@ -29,7 +20,6 @@ const ProffessionForm = ({ refreshData }) => {
       await ProffessionApi(data);
       console.log("Conn...");
       console.log("Done.. OK");
-      refreshData(prevData => [...prevData, data]);
     } catch (error) {
       console.log("Error While Connect.");
     }
@@ -37,19 +27,19 @@ const ProffessionForm = ({ refreshData }) => {
   return (
     <Paper
       sx={{
-        p: 2,
-        borderRadius: '25px'
+        p:2,
+        borderRadius:'25px'
       }}
     >
-      <Typography variant="h2" sx={{ p: 1, textAlign: 'center', fontFamily: 'Droid Arabic Naskh, sans-serif' }}> 
-        اضافة مهن جديدة
+      <Typography variant="h2" sx={{ p:1, textAlign:'center' }}>
+        Insert Proffession
       </Typography>
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <FormTextField name="strNameAr" label="الاسم بالعربي" />
+          <FormTextField name="strNameAr" label="Arabic Name" />
           <br />
           <br />
-          <FormTextField name="strNameEn" label="الاسم بلانجليزي" />
+          <FormTextField name="strNameEn" label="English Name" />
           <br />
           <br />
           <Button variant="contained" type="submit" sx={{ width: '100%' }}>

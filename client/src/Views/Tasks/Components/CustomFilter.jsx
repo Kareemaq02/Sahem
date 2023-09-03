@@ -1,4 +1,4 @@
-import { Box, Divider, Select, Stack, Paper, MenuItem, Chip, Typography } from "@mui/material";
+import { Box, Divider, Select, Stack, Paper, MenuItem, Chip } from "@mui/material";
 import { GetTaskType } from "../Service/GetTaskTypes";
 import { useState, useEffect } from "react";
 import FormChipSelect from "../../../Common/Components/UI/FormFields/FormChipSelect"
@@ -38,9 +38,12 @@ const CustomFilter = ({ onComplaintStatusChange, onComplaintTypesChange }) => {
     };
 
     return (
-        <Paper sx={{ width: "100%", backgroundColor: 'transparent 85%', borderRadius: '25px', p : 2 }} className="filterStyle stay" >
-            <Typography dir="rtl" variant="h4" sx={{ fontFamily: 'Droid Arabic Naskh, sans-serif' }}>انواع المشاكل</Typography>
+        <Paper sx={{ width: "100%", backgroundColor: 'transparent 85%' }} className="filterStyle stay" >
+            <Box sx={{ backgroundColor: "#f0f0f0", width: '100%', padding: 10 }} textAlign="center" className="filterStyle">
+                <h2>Filter</h2>
+            </Box>
             <br />
+            <h4 dir="ltr">complaint types</h4>
             <Divider />
             <br />
             <Box sx={{ width: '100%', }} textAlign="center">
@@ -63,14 +66,13 @@ const CustomFilter = ({ onComplaintStatusChange, onComplaintTypesChange }) => {
                 >
                     {taskType.map((taskType) => (
                         <MenuItem key={taskType.intId} value={taskType.intId}>
-                            {taskType.strNameAr}
+                            {taskType.strNameEn}
                         </MenuItem>
                     ))}
                 </Select>
             </Box>
             <br />
-            <Typography variant="h4" dir="rtl" sx={{ fontFamily: 'Droid Arabic Naskh, sans-serif' }}>الحالة</Typography >
-            <br />
+            <h4 dir="ltr">Status</h4>
             <Divider />
             <br />
             <Box sx={{ width: '100%', textAlign: 'center', display: 'flex', flexWrap: 'wrap', p: 1 }}>
@@ -78,12 +80,12 @@ const CustomFilter = ({ onComplaintStatusChange, onComplaintTypesChange }) => {
                     value={selectedStatus}
                     onChange={handleComplaintStatusChange} // Pass the handleComplaintStatusChange function as onChange prop
                     items={[
-                        { label: 'غير مفعل', value: 1, color: 'primary' },
-                        { label: 'قيد العمل', value: 2, color: 'error' },
-                        { label: 'انتظار التقييم', value: 3, color: 'success' },
-                        { label: 'فشل', value: 4, color: 'primary' },
-                        { label: 'غير مكتمل', value: 5, color: 'success' },
-                        { label: 'منجز', value: 6, color: 'success' },
+                        { label: 'inactive', value: 1, color: 'primary' },
+                        { label: 'in progress', value: 2, color: 'error' },
+                        { label: 'wait evaluation', value: 3, color: 'success' },
+                        { label: 'failed', value: 4, color: 'primary' },
+                        { label: 'incomplete', value: 5, color: 'success' },
+                        { label: 'completed', value: 6, color: 'success' },
                     ]}
                 />
             </Box>

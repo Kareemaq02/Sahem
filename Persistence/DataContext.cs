@@ -151,16 +151,16 @@ namespace Persistence
             );
 
             // Task_Members intersection table
-            builder.Entity<WorkTaskMembers>(q => q.HasKey(q => new { q.intWorkerId, q.intTaskId }));
+            builder.Entity<TeamMembers>(q => q.HasKey(q => new { q.intWorkerId, q.intTeamId }));
             builder
-                .Entity<WorkTaskMembers>()
-                .HasOne(q => q.Task)
+                .Entity<TeamMembers>()
+                .HasOne(q => q.Team)
                 .WithMany(q => q.Workers)
-                .HasForeignKey(q => q.intTaskId);
+                .HasForeignKey(q => q.intTeamId);
             builder
-                .Entity<WorkTaskMembers>()
+                .Entity<TeamMembers>()
                 .HasOne(q => q.Worker)
-                .WithMany(q => q.Tasks)
+                .WithMany(q => q.Teams)
                 .HasForeignKey(q => q.intWorkerId);
 
             // Task_Complaint intersection table
@@ -223,12 +223,12 @@ namespace Persistence
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<UserInfo> UserInfos { get; set; }
         public DbSet<UserType> UserTypes { get; set; }
+        public DbSet<WorkerVacation> WorkerVacations { get; set; }
 
         // Tasks DataSets
         public DbSet<WorkTask> Tasks { get; set; }
         public DbSet<WorkTaskStatus> TaskStatus { get; set; }
         public DbSet<WorkTaskType> TaskTypes { get; set; }
-        public DbSet<WorkTaskMembers> TaskMembers { get; set; }
         public DbSet<WorkTaskComplaints> TasksComplaints { get; set; }
 
         // Departments DataSets
@@ -244,5 +244,12 @@ namespace Persistence
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<NotificationToken> NotificationTokens { get; set; }
+
+        // Regions Datasets
+        public DbSet<Region> Regions { get; set; }
+
+        // Teams Datasets
+        public DbSet<TeamMembers> TeamMembers { get; set; }
+        public DbSet<Team> Teams { get; set; }
     }
 }

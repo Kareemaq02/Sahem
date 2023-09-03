@@ -11,10 +11,10 @@ export const EvaluateTaskApi = async (data, id) => {
     return response.data.status < 400;
   }
 
-  if (data.status === "incomplete") {
-     const response = await axios.post(`api/evaluations/Incomplete/${id}`, data);
-     return response.data.status < 400;
-   }
+  // if (data.status === "incomplete") {
+  //   const response = await axios.post(`api/evaluations/Incomplete/${id}`, data);
+  //   return response.data.status < 400;
+  // }
 
   return false;
 };

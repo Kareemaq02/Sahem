@@ -45,10 +45,7 @@ namespace Application.Handlers.Complaints
                 .Select(u => u.Id)
                 .SingleOrDefaultAsync();
 
-            var isLeader = _context.TaskMembers.Any(
-                tm =>
-                    tm.intTaskId == request.id && tm.intWorkerId == userId && tm.blnIsLeader == true
-            );
+            var isLeader = _context.Teams.Any(tm => tm.intLeaderId == userId);
 
             if (isLeader)
             {
@@ -112,7 +109,6 @@ namespace Application.Handlers.Complaints
                             );
                         }
 
-
                         var complaintIds = await _context.TasksComplaints
                             .Where(q => q.intTaskId == request.id)
                             .Select(q => q.intComplaintId)
@@ -122,17 +118,17 @@ namespace Application.Handlers.Complaints
                         {
                             var complaint = new Complaint { intId = complaintId };
                             _context.Complaints.Attach(complaint);
-                            complaint.intStatusId = (int)ComplaintsConstant.complaintStatus.waitingEvaluation;
+                            complaint.intStatusId = (int)
+                                ComplaintsConstant.complaintStatus.waitingEvaluation;
                             await _context.SaveChangesAsync(cancellationToken);
 
-
                             await _changeTransactionHandler.Handle(
-                           new AddComplaintStatusChangeTransactionCommand(
-                                   complaintId,
-                                   (int)ComplaintsConstant.complaintStatus.waitingEvaluation
-                               ),
-                                   cancellationToken
-                               );
+                                new AddComplaintStatusChangeTransactionCommand(
+                                    complaintId,
+                                    (int)ComplaintsConstant.complaintStatus.waitingEvaluation
+                                ),
+                                cancellationToken
+                            );
                             await _context.SaveChangesAsync(cancellationToken);
                         }
                         // Alter it to link the attachment with the complaint, not the task

@@ -45,7 +45,7 @@ namespace Application.Handlers.Tasks
                 join ui in _context.UserInfos on u.intUserInfoId equals ui.intId
                 join tT in _context.TaskTypes on t.intTypeId equals tT.intId
                 join ts in _context.TaskStatus on t.intStatusId equals ts.intId
-                join tm in _context.TaskMembers on t.intId equals tm.intTaskId
+                join tm in _context.TeamMembers on t.intId equals tm.intTeamId
                 where t.intId == request.Id
                 group tm by new
                 {
@@ -87,7 +87,7 @@ namespace Application.Handlers.Tasks
                                 new TaskWorkerDTO
                                 {
                                     intId = x.Worker.Id,
-                                    isLeader = x.blnIsLeader,
+                                    //isLeader = x.blnIsLeader,
                                     strFirstName = x.Worker.UserInfo.strFirstName,
                                     strLastName = x.Worker.UserInfo.strLastName
                                 }

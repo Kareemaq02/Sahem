@@ -50,6 +50,10 @@ namespace Persistence.Migrations
                         .HasColumnType("int")
                         .HasColumnName("PRIVACY_ID");
 
+                    b.Property<int>("intRegionId")
+                        .HasColumnType("int")
+                        .HasColumnName("REGION_ID");
+
                     b.Property<int>("intReminder")
                         .HasColumnType("int")
                         .HasColumnName("REMINDER");
@@ -73,6 +77,8 @@ namespace Persistence.Migrations
                     b.HasKey("intId");
 
                     b.HasIndex("intPrivacyId");
+
+                    b.HasIndex("intRegionId");
 
                     b.HasIndex("intStatusId");
 
@@ -179,6 +185,59 @@ namespace Persistence.Migrations
                     b.HasIndex("intPrivacyId");
 
                     b.ToTable("complaints_types");
+                });
+
+            modelBuilder.Entity("Domain.DataModels.Complaints.Region", b =>
+                {
+                    b.Property<int>("intId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ID");
+
+                    b.Property<string>("strNameAr")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("NAME_AR");
+
+                    b.Property<string>("strNameEn")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("NAME_EN");
+
+                    b.Property<string>("strShapePath")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("SHAPE_PATH");
+
+                    b.HasKey("intId");
+
+                    b.ToTable("regions");
+                });
+
+            modelBuilder.Entity("Domain.DataModels.Complaints.WorkerVacation", b =>
+                {
+                    b.Property<int>("intId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ID");
+
+                    b.Property<DateTime>("dtmEndDate")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("END_DATE");
+
+                    b.Property<DateTime>("dtmStartDate")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("START_DATE");
+
+                    b.Property<int>("intWorkerId")
+                        .HasColumnType("int")
+                        .HasColumnName("WORKER_ID");
+
+                    b.HasKey("intId");
+
+                    b.HasIndex("intWorkerId");
+
+                    b.ToTable("worker_vacations");
                 });
 
             modelBuilder.Entity("Domain.DataModels.Intersections.ComplaintAttachment", b =>
@@ -315,6 +374,51 @@ namespace Persistence.Migrations
                     b.ToTable("profession_users");
                 });
 
+            modelBuilder.Entity("Domain.DataModels.Intersections.Team", b =>
+                {
+                    b.Property<int>("intId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ID");
+
+                    b.Property<int>("intAdminId")
+                        .HasColumnType("int")
+                        .HasColumnName("ADMIN_ID");
+
+                    b.Property<int>("intDepartmentId")
+                        .HasColumnType("int")
+                        .HasColumnName("DEPARTMENT_ID");
+
+                    b.Property<int>("intLeaderId")
+                        .HasColumnType("int")
+                        .HasColumnName("LEADER_ID");
+
+                    b.HasKey("intId");
+
+                    b.HasIndex("intAdminId");
+
+                    b.HasIndex("intLeaderId");
+
+                    b.ToTable("teams");
+                });
+
+            modelBuilder.Entity("Domain.DataModels.Intersections.TeamMembers", b =>
+                {
+                    b.Property<int>("intWorkerId")
+                        .HasColumnType("int")
+                        .HasColumnName("WORKER_ID");
+
+                    b.Property<int>("intTeamId")
+                        .HasColumnType("int")
+                        .HasColumnName("TEAM_ID");
+
+                    b.HasKey("intWorkerId", "intTeamId");
+
+                    b.HasIndex("intTeamId");
+
+                    b.ToTable("team_members");
+                });
+
             modelBuilder.Entity("Domain.DataModels.Intersections.WorkTaskComplaints", b =>
                 {
                     b.Property<int>("intTaskId")
@@ -330,27 +434,6 @@ namespace Persistence.Migrations
                     b.HasIndex("intComplaintId");
 
                     b.ToTable("tasks_complaints");
-                });
-
-            modelBuilder.Entity("Domain.DataModels.Intersections.WorkTaskMembers", b =>
-                {
-                    b.Property<int>("intWorkerId")
-                        .HasColumnType("int")
-                        .HasColumnName("USER_ID");
-
-                    b.Property<int>("intTaskId")
-                        .HasColumnType("int")
-                        .HasColumnName("TASK_ID");
-
-                    b.Property<bool>("blnIsLeader")
-                        .HasColumnType("tinyint(1)")
-                        .HasColumnName("IS_LEADER");
-
-                    b.HasKey("intWorkerId", "intTaskId");
-
-                    b.HasIndex("intTaskId");
-
-                    b.ToTable("tasks_members");
                 });
 
             modelBuilder.Entity("Domain.DataModels.LookUps.Department", b =>
@@ -505,6 +588,26 @@ namespace Persistence.Migrations
                     b.ToTable("notifications");
                 });
 
+            modelBuilder.Entity("Domain.DataModels.Notifications.NotificationToken", b =>
+                {
+                    b.Property<int>("intId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ID");
+
+                    b.Property<int>("intUserId")
+                        .HasColumnType("int")
+                        .HasColumnName("USER_ID");
+
+                    b.Property<string>("strToken")
+                        .HasColumnType("longtext")
+                        .HasColumnName("TOKEN");
+
+                    b.HasKey("intId");
+
+                    b.ToTable("notification_tokens");
+                });
+
             modelBuilder.Entity("Domain.DataModels.Notifications.NotificationType", b =>
                 {
                     b.Property<int>("intId")
@@ -620,6 +723,10 @@ namespace Persistence.Migrations
                         .HasColumnType("int")
                         .HasColumnName("STATUS_ID");
 
+                    b.Property<int>("intTeamId")
+                        .HasColumnType("int")
+                        .HasColumnName("TEAM_ID");
+
                     b.Property<int>("intTypeId")
                         .HasColumnType("int")
                         .HasColumnName("TYPE_ID");
@@ -633,6 +740,8 @@ namespace Persistence.Migrations
                     b.HasIndex("intAdminId");
 
                     b.HasIndex("intStatusId");
+
+                    b.HasIndex("intTeamId");
 
                     b.HasIndex("intTypeId");
 
@@ -1007,6 +1116,12 @@ namespace Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Domain.DataModels.Complaints.Region", "Region")
+                        .WithMany()
+                        .HasForeignKey("intRegionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Domain.DataModels.Complaints.ComplaintStatus", "Status")
                         .WithMany()
                         .HasForeignKey("intStatusId")
@@ -1023,6 +1138,8 @@ namespace Persistence.Migrations
 
                     b.Navigation("Privacy");
 
+                    b.Navigation("Region");
+
                     b.Navigation("Status");
                 });
 
@@ -1035,6 +1152,17 @@ namespace Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Privacy");
+                });
+
+            modelBuilder.Entity("Domain.DataModels.Complaints.WorkerVacation", b =>
+                {
+                    b.HasOne("Domain.DataModels.User.ApplicationUser", "Worker")
+                        .WithMany()
+                        .HasForeignKey("intWorkerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Worker");
                 });
 
             modelBuilder.Entity("Domain.DataModels.Intersections.ComplaintAttachment", b =>
@@ -1143,6 +1271,44 @@ namespace Persistence.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Domain.DataModels.Intersections.Team", b =>
+                {
+                    b.HasOne("Domain.DataModels.User.ApplicationUser", "Admin")
+                        .WithMany()
+                        .HasForeignKey("intAdminId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.DataModels.User.ApplicationUser", "Leader")
+                        .WithMany()
+                        .HasForeignKey("intLeaderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Admin");
+
+                    b.Navigation("Leader");
+                });
+
+            modelBuilder.Entity("Domain.DataModels.Intersections.TeamMembers", b =>
+                {
+                    b.HasOne("Domain.DataModels.Intersections.Team", "Team")
+                        .WithMany("Workers")
+                        .HasForeignKey("intTeamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.DataModels.User.ApplicationUser", "Worker")
+                        .WithMany("Teams")
+                        .HasForeignKey("intWorkerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Team");
+
+                    b.Navigation("Worker");
+                });
+
             modelBuilder.Entity("Domain.DataModels.Intersections.WorkTaskComplaints", b =>
                 {
                     b.HasOne("Domain.DataModels.Complaints.Complaint", "Complaint")
@@ -1160,25 +1326,6 @@ namespace Persistence.Migrations
                     b.Navigation("Complaint");
 
                     b.Navigation("Task");
-                });
-
-            modelBuilder.Entity("Domain.DataModels.Intersections.WorkTaskMembers", b =>
-                {
-                    b.HasOne("Domain.DataModels.Tasks.WorkTask", "Task")
-                        .WithMany("Workers")
-                        .HasForeignKey("intTaskId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.DataModels.User.ApplicationUser", "Worker")
-                        .WithMany("Tasks")
-                        .HasForeignKey("intWorkerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Task");
-
-                    b.Navigation("Worker");
                 });
 
             modelBuilder.Entity("Domain.DataModels.Notifications.Notification", b =>
@@ -1206,6 +1353,12 @@ namespace Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Domain.DataModels.Intersections.Team", "Team")
+                        .WithMany()
+                        .HasForeignKey("intTeamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Domain.DataModels.Tasks.WorkTaskType", "TaskType")
                         .WithMany()
                         .HasForeignKey("intTypeId")
@@ -1217,6 +1370,8 @@ namespace Persistence.Migrations
                     b.Navigation("Status");
 
                     b.Navigation("TaskType");
+
+                    b.Navigation("Team");
                 });
 
             modelBuilder.Entity("Domain.DataModels.User.ApplicationUser", b =>
@@ -1307,6 +1462,11 @@ namespace Persistence.Migrations
                     b.Navigation("Complaints");
                 });
 
+            modelBuilder.Entity("Domain.DataModels.Intersections.Team", b =>
+                {
+                    b.Navigation("Workers");
+                });
+
             modelBuilder.Entity("Domain.DataModels.LookUps.Department", b =>
                 {
                     b.Navigation("Users");
@@ -1320,8 +1480,6 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.DataModels.Tasks.WorkTask", b =>
                 {
                     b.Navigation("Complaints");
-
-                    b.Navigation("Workers");
                 });
 
             modelBuilder.Entity("Domain.DataModels.User.ApplicationUser", b =>
@@ -1334,7 +1492,7 @@ namespace Persistence.Migrations
 
                     b.Navigation("Professions");
 
-                    b.Navigation("Tasks");
+                    b.Navigation("Teams");
                 });
 
             modelBuilder.Entity("Domain.DataModels.User.UserInfo", b =>

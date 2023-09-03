@@ -36,11 +36,7 @@ public class ActivateTaskByIdHandler : IRequestHandler<ActivateTaskCommand, Resu
             .Select(u => u.Id)
             .SingleOrDefaultAsync(cancellationToken: cancellationToken);
 
-        var isLeader = _context.TaskMembers.Any(
-            tm => tm.intTaskId == request.Id && tm.intWorkerId == userId && tm.blnIsLeader == true
-        );
-
-
+        var isLeader = _context.Teams.Any(tm => tm.intLeaderId == userId);
 
         //Start transaction
         using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
@@ -59,11 +55,10 @@ public class ActivateTaskByIdHandler : IRequestHandler<ActivateTaskCommand, Resu
 
                     await _context.SaveChangesAsync(cancellationToken);
 
-
                     var complaintIds = await _context.TasksComplaints
-                 .Where(q => q.intTaskId == request.Id)
-                 .Select(q => q.intComplaintId)
-                 .ToListAsync();
+                        .Where(q => q.intTaskId == request.Id)
+                        .Select(q => q.intComplaintId)
+                        .ToListAsync();
 
                     foreach (int complaintId in complaintIds)
                     {
@@ -72,17 +67,16 @@ public class ActivateTaskByIdHandler : IRequestHandler<ActivateTaskCommand, Resu
                         complaint.intStatusId = (int)ComplaintsConstant.complaintStatus.inProgress;
                         await _context.SaveChangesAsync(cancellationToken);
 
-
                         await _addTransactionHandler.Handle(
-                       new AddComplaintStatusChangeTransactionCommand(
-                               complaintId,
-                               (int)ComplaintsConstant.complaintStatus.inProgress
-                           ),
-                               cancellationToken
-                           );
+                            new AddComplaintStatusChangeTransactionCommand(
+                                complaintId,
+                                (int)ComplaintsConstant.complaintStatus.inProgress
+                            ),
+                            cancellationToken
+                        );
                         await _context.SaveChangesAsync(cancellationToken);
                     }
-        
+
                     await transaction.CommitAsync();
                     return Result<Unit>.Success(Unit.Value);
                 }
@@ -97,5 +91,5 @@ public class ActivateTaskByIdHandler : IRequestHandler<ActivateTaskCommand, Resu
             await transaction.RollbackAsync();
             return Result<Unit>.Failure("Task activation failed");
         }
-        }
+    }
 }
