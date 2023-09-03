@@ -6,37 +6,7 @@ import 'dart:convert';
 
 
 
-class PublicComplaintModel {
-  final int intComplaintId;
-  final String strUserName;
-  final String dtmDateCreated;
-  final String dtmDateFinished;
-  final String strComplaintTypeEn;
-  final String strComplaintTypeAr;
-  final String? strComment;
-  final String? strStatus;
-  final  intPrivacyId;
-  final  intVotersCount;
-  final  decLat;
-  final  decLng;
-  final int decPriority;
- 
 
-  PublicComplaintModel({
-    required this.intComplaintId,
-    required this.strUserName,
-    required this.dtmDateCreated,
-    required this.dtmDateFinished,
-    required this.strComplaintTypeEn,
-    required this.strComplaintTypeAr,
-    required this.strComment,
-    required this.strStatus,
-    required this.intPrivacyId,
-    required this.intVotersCount,
-    required this.decLat,
-    required this.decLng,
-    required this.decPriority,
-  });
 
 //   factory PublicComplaintModel.fromJson(Map<String, dynamic> json) {
 //     return PublicComplaintModel(
@@ -56,7 +26,7 @@ class PublicComplaintModel {
     
 //     );
 //   }
-}
+
 
 
 

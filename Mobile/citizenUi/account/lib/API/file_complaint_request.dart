@@ -1,11 +1,14 @@
 // ignore_for_file: avoid_print, unused_local_variablimport 'dart:convert';
 import 'dart:io';
+import 'package:account/Screens/File%20complaint/confirmPage.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'login_request.dart';
 
 class Complaint {
   Future<void> fileComplaint(
+    context,
     int intTypeId,
     int intPrivacyId,
     List<MediaFile> lstMedia,
@@ -57,6 +60,10 @@ class Complaint {
       
 
       if (response.statusCode == 200) {
+         Navigator.push(
+        context,
+       MaterialPageRoute(builder: (context) => confirm()),
+    );
         print(responseJson);
         print('Complaint assigned successfully.');
       } else {
