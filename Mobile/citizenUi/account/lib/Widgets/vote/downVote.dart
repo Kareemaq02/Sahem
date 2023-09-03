@@ -1,8 +1,8 @@
-// ignore_for_file: unused_local_variable, file_names, prefer_const_constructors
-
-import 'package:account/API/vote_complaint.dart';
 import 'package:flutter/material.dart';
 import 'package:like_button/like_button.dart' ;
+import 'package:account/API/vote_complaint.dart';
+// ignore_for_file: unused_local_variable, file_names, prefer_const_constructors
+
   
 
 class DownWidget extends StatefulWidget {
@@ -46,7 +46,12 @@ class _DownWidgetState extends State<DownWidget> {
   LikeButton(
     likeBuilder: (isLiked) {
        return 
-       isLiked|| widget.isVoted==1? Image.asset("assets/icons/downActive.png",scale: 1.1,) :
+       isLiked
+            ? Image.asset(
+                "assets/icons/downActive.png",
+                scale: 1.1,
+              )
+            :
        Image.asset("assets/icons/downInactive.png",scale: 1.1,) ;
     }, 
    onTap: (isLiked) async {
@@ -54,13 +59,13 @@ class _DownWidgetState extends State<DownWidget> {
       if (!isLiked && countPress==0) {
 
        
-         await a.DownVoteRequest(widget.complaintID,context);
-         countPress=1;
+          //  await a.DownVoteRequest(widget.complaintID,context);
+          //  countPress=1;
          
       }
       else if(countPress==1){
-        await a.removeVoteRequest(widget.complaintID,context);
-        countPress=0;
+          // await a.removeVoteRequest(widget.complaintID,context);
+          // countPress=0;
          
         
         

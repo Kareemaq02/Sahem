@@ -1,11 +1,11 @@
-// ignore_for_file: avoid_print
-
 import 'dart:convert';
-
-import 'package:account/API/login_request.dart';
-import 'package:account/Widgets/countProvider.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:account/API/login_request.dart';
+import 'package:account/Widgets/countProvider.dart';
+// ignore_for_file: avoid_print
+
+
 
 
 
@@ -33,7 +33,7 @@ class VoteComplaint{
     //  print(complaintId);
 
     if (response.statusCode == 200) {
-      countProvider.updateCount(countProvider.count + 1);
+        countProvider.updateCount(countProvider.count + 2);
       print('Voted successful');
 
       return response.statusCode;
