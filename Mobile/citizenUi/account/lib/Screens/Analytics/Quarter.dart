@@ -1,11 +1,12 @@
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Charts/PerformanceChart.dart';
-import 'package:account/Widgets/Charts/StyledFilterChip.dart';
+import 'package:account/Widgets/Buttons/StyledFilterChip.dart';
 import 'package:account/Widgets/CheckBoxes/CheckBox.dart';
 import 'package:account/Widgets/Displays/InfoDisplayBox.dart';
 import 'package:account/Widgets/appBar.dart';
 import 'package:account/Widgets/bottomNavBar.dart';
 import 'package:flutter/material.dart';
+import 'dart:math';
 import 'package:account/API/get_complaints_types.dart';
 
 class Quarter extends StatefulWidget {
@@ -16,22 +17,33 @@ class Quarter extends StatefulWidget {
 }
 
 class _QuarterState extends State<Quarter> {
+  final ScrollController _scrollController = ScrollController();
+
+  // Chart Data
+  DateTime startDate = DateTime(DateTime.now().year, 1, 1);
+  DateTime endDate = DateTime(DateTime.now().year, 3, 31);
+  List<ChartData> complaintData = [];
+  List<ChartData> taskData = [];
+
+  // Displays Data
+  int complaintCount = 0;
+  String avgResolve = "يومين";
+  String successRate = "66.7%";
+
+  // Render Vars
+  int region = 0;
+  int chart = 0;
+  List<int> selectedTypes = [];
+
+  // API Vars
+  late Future<List<Map<String, dynamic>>> _futureTypesObjs;
+
   @override
   void initState() {
     super.initState();
+    returnChartData();
     _futureTypesObjs = fetchTypesData();
   }
-
-  final ScrollController _scrollController = ScrollController();
-
-  // API Vars
-  int region = 0;
-  int chart = 0;
-  int complaintCount = 247;
-  String avgResolve = "يومين";
-  String successRate = "66.7%";
-  List<int> selectedTypes = [];
-  late Future<List<Map<String, dynamic>>> _futureTypesObjs;
 
   Future<List<Map<String, dynamic>>> fetchTypesData() async {
     var typesRequest = ComplaintTypeRequest();
@@ -45,6 +57,44 @@ class _QuarterState extends State<Quarter> {
       typesObjs.add(typeObj);
     }
     return typesObjs;
+  }
+
+  void returnChartData() {
+    // Vars Reset
+    complaintData.clear();
+    taskData.clear();
+    complaintCount = 0;
+    int tempTasks = 0;
+    // Mock API
+    final Random random = Random();
+    DateTime currentDate = startDate;
+    while (currentDate.isBefore(endDate)) {
+      final int randomValue = random.nextInt(67) + 71;
+      final int randomValue2 = random.nextInt(67) + 24;
+      complaintData.add(ChartData(currentDate, randomValue));
+      taskData.add(ChartData(currentDate, randomValue2));
+      currentDate = currentDate.add(const Duration(days: 7));
+      complaintCount += randomValue;
+      tempTasks += randomValue2;
+    }
+    int timeToSolveHours = random.nextInt(74) + 24;
+    var timeToSolveDays = timeToSolveHours / 24;
+    switch (timeToSolveDays.floor()) {
+      case 0:
+        avgResolve = "أقل من يوم";
+        break;
+      case 1:
+        avgResolve = "يوم";
+        break;
+      case 2:
+        avgResolve = "يومين";
+        break;
+      default:
+        avgResolve = "${timeToSolveDays.toStringAsFixed(1)} أيام";
+        break;
+    }
+    double tempAvg = tempTasks / complaintCount * 100;
+    successRate = "${tempAvg.toStringAsFixed(1)}%";
   }
 
   @override
@@ -94,11 +144,6 @@ class _QuarterState extends State<Quarter> {
                               scrollDirection: Axis.horizontal,
                               child: SizedBox(
                                 height: 0.07 * screenHeight,
-                                width: returnRegionsMockApi(
-                                            screenWidth, fullMarginX)
-                                        .length *
-                                    0.2 *
-                                    screenWidth,
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
                                   mainAxisAlignment:
@@ -156,7 +201,35 @@ class _QuarterState extends State<Quarter> {
                         ),
                       ],
                     ),
-                    const Expanded(child: PerformanceChart()),
+                    Expanded(
+                      child: GestureDetector(
+                        onHorizontalDragEnd: (DragEndDetails details) {
+                          double velocity = details.velocity.pixelsPerSecond.dx;
+                          if (velocity > 0) {
+                            setState(() {
+                              startDate =
+                                  startDate.subtract(const Duration(days: 91));
+                              endDate =
+                                  endDate.subtract(const Duration(days: 91));
+                              returnChartData();
+                            });
+                          } else {
+                            setState(() {
+                              startDate =
+                                  startDate.add(const Duration(days: 91));
+                              endDate = endDate.add(const Duration(days: 91));
+                              returnChartData();
+                            });
+                          }
+                        },
+                        child: PerformanceChart(
+                          complaintData: complaintData,
+                          taskData: taskData,
+                          startDate: startDate,
+                          endDate: endDate,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -335,6 +408,7 @@ class _QuarterState extends State<Quarter> {
           text: regionNames[i],
           onPressed: () {
             setState(() {
+              returnChartData();
               region = i;
               scrollRegions(i, screenWidth);
             });
@@ -349,7 +423,7 @@ class _QuarterState extends State<Quarter> {
   }
 
   void scrollRegions(int index, double screenWidth) {
-    double offset = 0.2 * screenWidth * index;
+    double offset = 0.12 * screenWidth * index;
     _scrollController.animateTo(
       offset,
       duration: const Duration(milliseconds: 600),

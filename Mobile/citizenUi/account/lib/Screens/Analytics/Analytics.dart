@@ -1,7 +1,10 @@
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Buttons/IconToggleButton.dart';
+import 'package:account/Widgets/Charts/AverageTimeChart.dart';
+import 'package:account/Widgets/Charts/ComplaintTaskChart.dart';
+import 'package:account/Widgets/Charts/PercentChart.dart';
 import 'package:account/Widgets/Charts/RatingChart.dart';
-import 'package:account/Widgets/Charts/StyledFilterChip.dart';
+import 'package:account/Widgets/Buttons/StyledFilterChip.dart';
 import 'package:account/Widgets/CheckBoxes/CheckBox.dart';
 import 'package:account/Widgets/appBar.dart';
 import 'package:account/Widgets/bottomNavBar.dart';
@@ -315,26 +318,30 @@ class _AnalyticsState extends State<Analytics> {
 }
 
 Widget renderChart(int chart) {
-  Widget sentChart = const Center(child: Text('Loading...'));
+  Widget sentChart;
   switch (chart) {
     case 1:
       sentChart = const RatingChart();
       break;
     case 2:
-      sentChart = const RatingChart();
+      sentChart = const PercentChart();
       break;
     case 3:
-      sentChart = const RatingChart();
+      sentChart = const AverageTimeChart();
       break;
     default:
-      sentChart = const RatingChart();
+      sentChart = const ComplaintTaskChart();
       break;
   }
   return FutureBuilder(
     future: Future.delayed(const Duration(milliseconds: 300)),
     builder: (context, snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) {
-        return const Center(child: Text('Loading...'));
+        return const Center(
+            child: SizedBox(
+                child: CircularProgressIndicator(
+          color: AppColor.main,
+        )));
       } else {
         return sentChart;
       }
