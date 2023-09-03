@@ -17,13 +17,13 @@ function AdminProffession() {
 
   return (
     <div>
-      <Typography variant="h1" sx={{ fontFamily: 'Droid Arabic Naskh, sans-serif' }}>عرض المهن</Typography>
+      <Typography variant="h1">View Proffessions</Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} md={8}>
           <ProffessionDataGrid data={proffession} />
         </Grid>
         <Grid item xs={12} md={4}>
-          <ProffessionForm refreshData={setProffession}/>
+          <ProffessionForm/>
         </Grid>
       </Grid>
     </div>

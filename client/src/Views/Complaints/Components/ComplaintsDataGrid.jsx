@@ -67,7 +67,7 @@ const ComplaintsDataGrid = ({ AddComplaint, data }) => {
   const columns = [
     {
       field: "button",
-      headerName: "",
+      headerName: "Action",
       renderCell: (params) => (
         <IconButton
           variant="contained"
@@ -78,10 +78,10 @@ const ComplaintsDataGrid = ({ AddComplaint, data }) => {
         </IconButton>
       ),
     },
-    { field: "intComplaintId", headerName: "رقم", flex: 0.5 },
+    { field: "intComplaintId", headerName: "ID", flex: 0.5 },
     {
       field: "strUserName",
-      headerName: "بواسطة",
+      headerName: "User",
       flex: 0.8,
       renderCell: (params) => (
         <Chip
@@ -94,10 +94,10 @@ const ComplaintsDataGrid = ({ AddComplaint, data }) => {
         />
       ),
     },
-    { field: "strComplaintTypeAr", headerName: "النوع", flex: 1 },
+    { field: "strComplaintTypeAr", headerName: "Type", flex: 1 },
     {
       field: "decPriority",
-      headerName: "الافضلية",
+      headerName: "Priority",
       flex: 1,
       renderCell: (params) => (
         <Box display="flex" alignItems="center" gap="0.5rem">
@@ -122,10 +122,10 @@ const ComplaintsDataGrid = ({ AddComplaint, data }) => {
         </Box>
       ),
     },
-    { field: "dtmDateCreated", headerName: "وقت الانشاء", flex: 1 },
+    { field: "dtmDateCreated", headerName: "Date Created", flex: 1 },
     {
       field: "strStatus",
-      headerName: "الحالة",
+      headerName: "Status",
       flex: 1,
       renderCell: (params) => (
         <Chip
@@ -155,7 +155,6 @@ const ComplaintsDataGrid = ({ AddComplaint, data }) => {
         getRowId={(row) => row.intComplaintId}
         components={{ Toolbar: GridToolbar }}
         density="compact"
-        sx={{fontWeight: 'bold'}}
       />
     </Box>
   );

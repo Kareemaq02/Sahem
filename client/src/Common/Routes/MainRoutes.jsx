@@ -36,7 +36,6 @@ const MyTask = Loadable(lazy(() => import("../../Views/MyTasks/index")));
 const RegWorker = Loadable(lazy(() => import("../../Views/WorkerReg/index")));
 const AccSettings = Loadable(lazy(() => import("../../Views/AccountSettings/index")));
 const MyWatches = Loadable(lazy(() => import("../../Views/MyWatchs/index")));
-const Message = Loadable(lazy(() => import("../../Views/Messages/index")));
 
 
 
@@ -119,15 +118,6 @@ const MainRoutes = {
         <PermissionsHelper
           allowedRoles={[Admin,User]}
           element={<CompMapUserGen />}
-        />
-      ),
-    },
-    {
-      path: "message",
-      element: (
-        <PermissionsHelper
-          allowedRoles={[Admin,User]}
-          element={<Message />}
         />
       ),
     },

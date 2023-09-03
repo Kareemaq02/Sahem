@@ -53,33 +53,50 @@ namespace Application.Handlers.Complaints
                 decLng = (decimal)request.ComplaintDTO.lstMedia.ElementAt(0).decLng,
             };
 
-            var query = from c in _context.Complaints
-                        join ca in _context.ComplaintAttachments on c.intId equals ca.intComplaintId
-                        let queryComplaintLatLng = new LatLng { decLat = ca.decLat, decLng = ca.decLng }
-                        where (c.intTypeId == request.ComplaintDTO.intTypeId
-                        && c.intPrivacyId == (int)ComplaintsConstant.complaintPrivacy.privacyPublic
-                        && c.intStatusId == (int)ComplaintsConstant.complaintStatus.Scheduled
-                        //|| c.intStatusId == (int)ComplaintsConstant.complaintStatus.approved
+            var query =
+                from c in _context.Complaints
+                join ca in _context.ComplaintAttachments on c.intId equals ca.intComplaintId
+                let queryComplaintLatLng = new LatLng { decLat = ca.decLat, decLng = ca.decLng }
+                where
+                    (
+                        c.intTypeId == request.ComplaintDTO.intTypeId
+                            && c.intPrivacyId
+                                == (int)ComplaintsConstant.complaintPrivacy.privacyPublic
+                            && c.intStatusId == (int)ComplaintsConstant.complaintStatus.Scheduled
                         || c.intStatusId == (int)ComplaintsConstant.complaintStatus.inProgress
-                        || c.intStatusId == (int)ComplaintsConstant.complaintStatus.waitingEvaluation)
-                        select new
+                        || c.intStatusId
+                            == (int)ComplaintsConstant.complaintStatus.waitingEvaluation
+                    )
+                select new
+                {
+                    Complaint = c,
+                    LatLng = queryComplaintLatLng,
+                    Attachments = ca
+                };
+
+            var closestComplaint = query
+                .AsEnumerable()
+                .Where(
+                    item =>
+                        EuclideanDistanceHelper.EuclideanDistance(similarLatLng, item.LatLng)
+                        <= EuclideanDistanceHelper.radiusInDegrees
+                )
+                .OrderBy(
+                    item => EuclideanDistanceHelper.EuclideanDistance(similarLatLng, item.LatLng)
+                )
+                .Select(
+                    item =>
+                        new
                         {
-                            Complaint = c,
-                            LatLng = queryComplaintLatLng,
-                            Attachments = ca
-                        };
-
-            var closestComplaint = query.AsEnumerable()
-                                        .Where(item => EuclideanDistanceHelper.EuclideanDistance(similarLatLng, item.LatLng) <= EuclideanDistanceHelper.radiusInDegrees)
-                                        .OrderBy(item => EuclideanDistanceHelper.EuclideanDistance(similarLatLng, item.LatLng))
-                                        .Select(item => new {
-                                            item.Complaint,
-                                            item.Attachments,
-                                            Distance = EuclideanDistanceHelper.EuclideanDistance(similarLatLng, item.LatLng)
-                                        })
-                                        .FirstOrDefault();
-
-
+                            item.Complaint,
+                            item.Attachments,
+                            Distance = EuclideanDistanceHelper.EuclideanDistance(
+                                similarLatLng,
+                                item.LatLng
+                            )
+                        }
+                )
+                .FirstOrDefault();
 
             if (closestComplaint == null)
             {
@@ -121,12 +138,20 @@ namespace Application.Handlers.Complaints
                         from c in _context.Complaints
                         join ca in _context.ComplaintAttachments on c.intId equals ca.intComplaintId
                         let complaintLatLng = new LatLng { decLat = ca.decLat, decLng = ca.decLng }
-                        let distance = Math.Sqrt(Math.Pow((double)(targetLatLng.decLat - complaintLatLng.decLat), 2)
-                        + Math.Pow((double)(targetLatLng.decLng - complaintLatLng.decLng), 2))
-                        where (distance <= radius
-                        && c.dtmDateCreated > DateTime.Now.AddHours(-24)
-                        && c.intUserID == userId
-                        && c.intTypeId == request.ComplaintDTO.intTypeId)
+                        let distance = Math.Sqrt(
+                            Math.Pow((double)(targetLatLng.decLat - complaintLatLng.decLat), 2)
+                                + Math.Pow(
+                                    (double)(targetLatLng.decLng - complaintLatLng.decLng),
+                                    2
+                                )
+                        )
+                        where
+                            (
+                                distance <= radius
+                                && c.dtmDateCreated > DateTime.Now.AddHours(-24)
+                                && c.intUserID == userId
+                                && c.intTypeId == request.ComplaintDTO.intTypeId
+                            )
                         select c;
 
                     var similarComplaintsCount = await query2.CountAsync();
@@ -134,9 +159,10 @@ namespace Application.Handlers.Complaints
                     if (similarComplaintsCount > 2)
                     {
                         await transaction.RollbackAsync();
-                        return Result<InsertComplaintDTO>.Failure("You have already submitted 3 complaints" +
-                            " in the same area within the last 24 hours");
-
+                        return Result<InsertComplaintDTO>.Failure(
+                            "You have already submitted 3 complaints"
+                                + " in the same area within the last 24 hours"
+                        );
                     }
                     var complaintAttachments = new List<ComplaintAttachment>();
                     foreach (var media in lstMedia)
@@ -144,7 +170,9 @@ namespace Application.Handlers.Complaints
                         if (media == null || media.fileMedia == null)
                         {
                             await transaction.RollbackAsync();
-                            return Result<InsertComplaintDTO>.Failure("File was not received (null).");
+                            return Result<InsertComplaintDTO>.Failure(
+                                "File was not received (null)."
+                            );
                         }
                         string extension = Path.GetExtension(media.fileMedia.FileName);
                         string fileName = $"{DateTime.UtcNow.Ticks}{extension}";
@@ -181,20 +209,15 @@ namespace Application.Handlers.Complaints
                     await _context.ComplaintAttachments.AddRangeAsync(complaintAttachments);
                     await _context.SaveChangesAsync(cancellationToken);
 
-
-                    await _transactionHandler.Handle
-                        (
-                        new AddComplaintStatusChangeTransactionCommand
-                        (
-                            complaint.intId
-                        ,
+                    await _transactionHandler.Handle(
+                        new AddComplaintStatusChangeTransactionCommand(
+                            complaint.intId,
                             (int)ComplaintsConstant.complaintStatus.pending
-                        )
-                        ,
-                         cancellationToken
-                        );
-  
-                    await _context.SaveChangesAsync (cancellationToken);
+                        ),
+                        cancellationToken
+                    );
+
+                    await _context.SaveChangesAsync(cancellationToken);
                     await transaction.CommitAsync();
                 }
                 catch (Exception)
@@ -213,8 +236,10 @@ namespace Application.Handlers.Complaints
                     intTypeId = closestComplaint.Complaint.intTypeId,
                     intPrivacyId = closestComplaint.Complaint.intPrivacyId,
                     blnHasSimilar = true,
-                    similarComplaintLstMedia = closestComplaint.Attachments != null
-                            ? closestComplaint.Complaint.Attachments.Select(
+                    similarComplaintLstMedia =
+                        closestComplaint.Attachments != null
+                            ? closestComplaint.Complaint.Attachments
+                                .Select(
                                     ca =>
                                         new Media
                                         {
@@ -226,13 +251,12 @@ namespace Application.Handlers.Complaints
                                             IsVideo = ca.blnIsVideo
                                         }
                                 )
-                                .ToList(): null,
-
+                                .ToList()
+                            : null,
                     strComment = closestComplaint.Complaint.strComment
                 };
 
-               return Result<InsertComplaintDTO>.Success(similarComplaintDTO);
-                
+                return Result<InsertComplaintDTO>.Success(similarComplaintDTO);
             }
         }
     }

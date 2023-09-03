@@ -25,8 +25,7 @@ import { TaskSchema } from "../Utils/Schemas";
 
 const TaskDetailsInput = ({ photos, complaint, NextStep }) => {
   const [taskTypes, setTaskTypes] = useState([]);
-  const { task, setTask, setStartDate, setDueDate } = useContext(TaskCreationContext);
-
+  const { task, setTask } = useContext(TaskCreationContext);
 
   useEffect(() => {
     const GetTaskTypes = async () => {
@@ -64,9 +63,6 @@ const TaskDetailsInput = ({ photos, complaint, NextStep }) => {
               taskType: data.taskType,
               comment: data.comment,
             });
-            setStartDate(dayjs(data.startDate)); // Update startDate in context
-
-            setDueDate(dayjs(data.dueDate)); // Update dueDate in context
             NextStep();
           })}
         >
@@ -101,7 +97,6 @@ const TaskDetailsInput = ({ photos, complaint, NextStep }) => {
               <FormDateTimePicker
                 name="dueDate"
                 minDateTime={methods.watch("startDate") || dayjs()}
-                onChange={(newDate) => setDueDate(newDate)}
               />
             </FlexBetween>
             <FormAutocompleteBox
@@ -114,8 +109,6 @@ const TaskDetailsInput = ({ photos, complaint, NextStep }) => {
               type="submit"
               variant="contained"
               sx={{ borderRadius: "1rem" }}
-              onChange={(newDate) => setDueDate(newDate)}
-
             >
               Next
             </Button>

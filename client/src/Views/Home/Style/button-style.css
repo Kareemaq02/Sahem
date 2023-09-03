@@ -1,0 +1,10 @@
+.upvote_green{
+color:#228B22 ;
+}
+.downvote_red{
+color: #DC143C !important;
+}
+.disabled{
+  pointer-events: none;
+  opacity: 0.5;
+}

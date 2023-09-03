@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Domain.DataModels.Notifications
 {
+    [Table("notification_tokens")]
     public class NotificationToken
     {
         [Column("ID")]
