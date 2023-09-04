@@ -4,6 +4,7 @@ import 'package:http/http.dart';
 import '../Screens/Login/login.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Screens/Home/publicFeed.dart';
+import 'package:account/Screens/MainMenu/MainMenu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore_for_file: avoid_print, use_build_context_synchronously, unnecessary_string_escapes, unused_import
@@ -51,7 +52,7 @@ class UserLogin{
 
        Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => const XDPublicFeed1(),
+            builder: (context) => const MainMenu(),
         ),
       );
 
