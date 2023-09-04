@@ -1,11 +1,11 @@
-import 'package:account/Widgets/checkBox.dart';
-import 'package:account/Widgets/fieldContainer.dart';
-import 'package:account/Widgets/text.dart';
-import 'package:account/API/login_request.dart';
-import 'package:account/Repository/color.dart';
-import 'package:account/Screens/Registration/register.dart';
-import 'package:account/Widgets/bottonContainer.dart';
 import 'package:flutter/material.dart';
+import 'package:account/Repository/color.dart';
+import 'package:account/API/login_request.dart';
+import 'package:account/Widgets/HelperWidegts/text.dart';
+import 'package:account/Screens/Registration/register.dart';
+import 'package:account/Widgets/HelperWidegts/checkBox.dart';
+import 'package:account/Widgets/Buttons/bottonContainer.dart';
+import 'package:account/Widgets/HelperWidegts/fieldContainer.dart';
 
 
  

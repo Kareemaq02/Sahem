@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart' as b;
 import 'package:geolocator/geolocator.dart';
-import 'package:account/Widgets/appBar.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:account/Widgets/Bars/appBar.dart';
 import 'package:account/Repository/mapLinks.dart';
-import 'package:account/Widgets/bottomNavBar.dart';
+import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/Widgets/MapWidgets/marker.dart';
 import 'package:account/Widgets/MapWidgets/mapCard.dart';
 import 'package:account/Widgets/MapWidgets/myLocationWidget.dart';
@@ -134,6 +134,9 @@ class FullMapState extends State<FullMap> with TickerProviderStateMixin {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+        resizeToAvoidBottomInset: false,
+        floatingActionButton: const CustomActionButton(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: BottomNavBar1(1),
         appBar: myAppBar(context, "الخريطة", false, screenWidth * 0.6),
         body: Stack(

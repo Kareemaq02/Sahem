@@ -1,10 +1,10 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:account/Repository/color.dart';
+import 'package:account/Widgets/countProvider.dart';
 
 // ignore_for_file: unused_local_variable, file_names, prefer_const_constructors
 
-import 'package:account/Repository/color.dart';
-import 'package:account/Widgets/countProvider.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class CountWidget extends StatefulWidget {
 

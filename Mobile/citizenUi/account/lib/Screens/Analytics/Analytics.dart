@@ -1,15 +1,17 @@
-import 'package:account/Repository/color.dart';
-import 'package:account/Widgets/Buttons/IconToggleButton.dart';
-import 'package:account/Widgets/Charts/AverageTimeChart.dart';
-import 'package:account/Widgets/Charts/ComplaintTaskChart.dart';
-import 'package:account/Widgets/Charts/PercentChart.dart';
-import 'package:account/Widgets/Charts/RatingChart.dart';
-import 'package:account/Widgets/Buttons/StyledFilterChip.dart';
-import 'package:account/Widgets/CheckBoxes/CheckBox.dart';
-import 'package:account/Widgets/appBar.dart';
-import 'package:account/Widgets/bottomNavBar.dart';
 import 'package:flutter/material.dart';
+import 'package:account/Repository/color.dart';
+import 'package:account/Widgets/Bars/appBar.dart';
 import 'package:account/API/get_complaints_types.dart';
+import 'package:account/Widgets/Bars/bottomNavBar.dart';
+import 'package:account/Widgets/Charts/RatingChart.dart';
+import 'package:account/Widgets/Charts/PercentChart.dart';
+import 'package:account/Widgets/CheckBoxes/CheckBox.dart';
+import 'package:account/Widgets/Charts/AverageTimeChart.dart';
+import 'package:account/Widgets/Buttons/IconToggleButton.dart';
+import 'package:account/Widgets/Buttons/StyledFilterChip.dart';
+import 'package:account/Widgets/Charts/ComplaintTaskChart.dart';
+
+
 
 class Analytics extends StatefulWidget {
   const Analytics({super.key});
@@ -73,7 +75,7 @@ class _AnalyticsState extends State<Analytics> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
-    double fullMarginY = 0.02 * screenHeight;
+    double fullMarginY = 0.01 * screenHeight;
     double halfMarginY = 0.01 * screenHeight;
 
     double fullMarginX = 0.04 * screenWidth;
@@ -126,7 +128,7 @@ class _AnalyticsState extends State<Analytics> {
       floatingActionButton: const CustomActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavBar1(0),
-      appBar: myAppBar(context, "الصفحه الرئيسية", false, 170),
+      appBar: myAppBar(context, "الصفحه الرئيسية", false, screenWidth * 0.35),
       body: Padding(
         padding: EdgeInsets.only(top: halfMarginY, bottom: halfMarginY),
         child: Column(

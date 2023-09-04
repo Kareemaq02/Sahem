@@ -1,9 +1,9 @@
 import 'dart:io';
-import 'package:account/API/file_complaint_request.dart';
-import 'package:account/Repository/color.dart';
 import 'package:flutter/material.dart';
+import 'package:account/Repository/color.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:page_indicator/page_indicator.dart';
+import 'package:account/API/file_complaint_request.dart';
 
   final _picker = ImagePicker();
   List<MediaFile> selectedMediaFiles = [];

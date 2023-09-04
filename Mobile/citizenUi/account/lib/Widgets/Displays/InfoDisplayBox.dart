@@ -1,5 +1,5 @@
-import 'package:account/Repository/color.dart';
 import 'package:flutter/material.dart';
+import 'package:account/Repository/color.dart';
 
 class InfoDisplayBox extends StatelessWidget {
   final double height;
@@ -54,7 +54,7 @@ class InfoDisplayBox extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 16.0),
+                    padding: const EdgeInsets.only(top: 18.0),
                     child: Align(
                       alignment: Alignment.center,
                       child: Text(

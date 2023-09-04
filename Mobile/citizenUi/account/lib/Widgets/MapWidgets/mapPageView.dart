@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:page_indicator/page_indicator.dart';
-import 'package:account/Screens/File%20complaint/complaints1.dart';
+
+final List<String> imageList = [
+  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7zjk6aWDXjWiB_mMUpuxQdzMxtXbyd8M5ag&usqp=CAU',
+  'img2.png',
+  'img3.png',
+];
 
 Widget mapPageView(context) {
   double screenHeight = MediaQuery.of(context).size.height;

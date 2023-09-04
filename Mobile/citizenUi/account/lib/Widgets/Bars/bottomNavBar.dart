@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
-import 'package:account/Screens/File%20complaint/fileComaplint.dart';
-import 'package:account/Screens/Home/public_feed.dart';
-import 'package:account/Screens/MainMenu/MainMenu.dart';
+import 'package:account/Screens/Map/mapView.dart';
 import 'package:account/Screens/Map/map_view.dart';
 import 'package:account/Screens/Profile/profile.dart';
-import 'package:account/Screens/Home/public_feed.dart';
-import 'package:account/Screens/File%20complaint/complaints1.dart';
+import 'package:account/Screens/Home/publicFeed.dart';
+import 'package:account/Screens/Home/publicFeed.dart';
+import 'package:account/Screens/MainMenu/MainMenu.dart';
+import 'package:account/Screens/File%20complaint/fileComaplint.dart';
 import 'package:account/Screens/View%20complaints/complaints_list.dart';
 
 // ignore_for_file: must_be_immutable, unused_local_variable, file_names
-
 
 class BottomNavBar1 extends StatefulWidget {
   int selectedIcon;
@@ -44,7 +43,7 @@ class _BottomNavBarState extends State<BottomNavBar1> {
     switch (_selectedIndex) {
       case 0:
         Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const XDPublicFeed1()));
+            MaterialPageRoute(builder: (context) => const MainMenu()));
         break;
       case 1:
         Navigator.of(context).pushReplacement(
@@ -56,7 +55,7 @@ class _BottomNavBarState extends State<BottomNavBar1> {
         break;
       case 3:
         Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const MainMenu()));
+            MaterialPageRoute(builder: (context) => const XDPublicFeed1()));
         break;
     }
   }
@@ -112,7 +111,7 @@ class _BottomNavBarState extends State<BottomNavBar1> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             _bottomNavBarItem(
-                onTap: () => _changeSelectedTab(0),
+                onTap: () => _changeSelectedTab(3),
                 icona: widget.selectedIcon == 3
                     ? const Icon(
                         Icons.person,
@@ -132,7 +131,7 @@ class _BottomNavBarState extends State<BottomNavBar1> {
                 onTap: () => _changeSelectedTab(1),
                 icona: widget.selectedIcon == 1
                     ? const Icon(
-                        Icons.map_outlined,
+                        Icons.map,
                         color: AppColor.main,
                         size: 23,
                       )
@@ -161,7 +160,7 @@ class _BottomNavBarState extends State<BottomNavBar1> {
               width: 15,
             ),
             _bottomNavBarItem(
-              onTap: () => _changeSelectedTab(3),
+              onTap: () => _changeSelectedTab(0),
               icona: widget.selectedIcon == 0
                   ? const Icon(
                       Icons.home,

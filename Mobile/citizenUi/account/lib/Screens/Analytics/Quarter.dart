@@ -1,13 +1,14 @@
-import 'package:account/Repository/color.dart';
-import 'package:account/Widgets/Charts/PerformanceChart.dart';
-import 'package:account/Widgets/Buttons/StyledFilterChip.dart';
-import 'package:account/Widgets/CheckBoxes/CheckBox.dart';
-import 'package:account/Widgets/Displays/InfoDisplayBox.dart';
-import 'package:account/Widgets/appBar.dart';
-import 'package:account/Widgets/bottomNavBar.dart';
-import 'package:flutter/material.dart';
 import 'dart:math';
+import 'package:flutter/material.dart';
+import 'package:account/Repository/color.dart';
+import 'package:account/Widgets/Bars/appBar.dart';
 import 'package:account/API/get_complaints_types.dart';
+import 'package:account/Widgets/Bars/bottomNavBar.dart';
+import 'package:account/Widgets/CheckBoxes/CheckBox.dart';
+import 'package:account/Widgets/Charts/PerformanceChart.dart';
+import 'package:account/Widgets/Displays/InfoDisplayBox.dart';
+import 'package:account/Widgets/Buttons/StyledFilterChip.dart';
+
 
 class Quarter extends StatefulWidget {
   const Quarter({super.key});
@@ -102,7 +103,7 @@ class _QuarterState extends State<Quarter> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
-    double fullMarginY = 0.02 * screenHeight;
+    double fullMarginY = 0.01 * screenHeight;
     double halfMarginY = 0.01 * screenHeight;
 
     double fullMarginX = 0.04 * screenWidth;
@@ -117,7 +118,7 @@ class _QuarterState extends State<Quarter> {
       floatingActionButton: const CustomActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavBar1(0),
-      appBar: myAppBar(context, "الصفحه الرئيسية", false, 170),
+      appBar: myAppBar(context, "الصفحه الرئيسية", false, screenWidth * 0.35),
       body: Padding(
         padding: EdgeInsets.only(top: halfMarginY, bottom: halfMarginY),
         child: Column(
