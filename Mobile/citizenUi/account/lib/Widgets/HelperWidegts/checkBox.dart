@@ -1,8 +1,8 @@
-
-
-import 'package:account/Repository/color.dart';
-import 'package:account/Widgets/text.dart';
 import 'package:flutter/material.dart';
+import 'package:account/Repository/color.dart';
+import 'package:account/Widgets/HelperWidegts/text.dart';
+
+
 
 
  bool isChecked = false;

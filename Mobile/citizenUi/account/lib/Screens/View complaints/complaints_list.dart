@@ -1,18 +1,18 @@
-// ignore_for_file: prefer_const_constructors, depend_on_referenced_packages, duplicate_ignore, unused_element, constant_identifier_names, library_private_types_in_public_api, avoid_print
-
 import 'dart:convert';
-import 'package:account/API/login_request.dart';
-import 'package:account/API/view_complaint_request.dart' as api;
-import 'package:account/Repository/color.dart';
-import 'package:account/Screens/View%20complaints/complaints_details.dart';
-import 'package:account/Widgets/appBar.dart';
-import 'package:account/Widgets/bottomNavBar.dart';
-import 'package:account/Widgets/myContainer.dart';
-import 'package:account/Widgets/text.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:timelines/timelines.dart';
 import 'package:animations/animations.dart';
+import 'package:account/Repository/color.dart';
+import 'package:account/API/login_request.dart';
+import 'package:account/Widgets/Bars/appBar.dart';
+import 'package:account/Widgets/Bars/bottomNavBar.dart';
+import 'package:account/Widgets/HelperWidegts/text.dart';
+import 'package:account/Widgets/HelperWidegts/myContainer.dart';
+import 'package:account/API/view_complaint_request.dart' as api;
+import 'package:account/Screens/View%20complaints/complaints_details.dart';
+// ignore_for_file: prefer_const_constructors, depend_on_referenced_packages, duplicate_ignore, unused_element, constant_identifier_names, library_private_types_in_public_api, avoid_print
+
 
  bool reminder=false;
 
@@ -63,7 +63,7 @@ Future<List<dynamic>> fetchComplaints() async {
       resizeToAvoidBottomInset: false,
       floatingActionButton:const CustomActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar:  BottomNavBar1(0),
+        bottomNavigationBar: BottomNavBar1(2),
       appBar:myAppBar(context,'بلاغاتي',true,130),
 
       body: Column(

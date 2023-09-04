@@ -1,20 +1,20 @@
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:account/Repository/color.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:account/Widgets/Bars/appBar.dart';
+import 'package:page_indicator/page_indicator.dart';
+import 'package:account/Widgets/Bars/bottomNavBar.dart';
+import 'package:account/API/file_complaint_request.dart';
+import 'package:account/Widgets/Buttons/bottonContainer.dart';
+import 'package:account/Screens/File%20complaint/dropdown.dart';
+import 'package:account/Screens/File%20complaint/pageView.dart';
+import 'package:account/Screens/File complaint/confirmPopup.dart';
 
 // ignore_for_file: use_build_context_synchronously
 
 
-import 'dart:io';
 
-import 'package:account/API/file_complaint_request.dart';
-import 'package:account/Repository/color.dart';
-import 'package:account/Screens/File%20complaint/dropdown.dart';
-import 'package:account/Screens/File%20complaint/pageView.dart';
-import 'package:account/Widgets/appBar.dart';
-import 'package:account/Widgets/bottomNavBar.dart';
-import 'package:account/Widgets/bottonContainer.dart';
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:page_indicator/page_indicator.dart';
-import 'package:account/Screens/File complaint/confirmPopup.dart';
 
 
 

@@ -1,3 +1,10 @@
+import 'package:flutter/material.dart';
+import 'package:account/Repository/color.dart';
+import '../../Widgets/HelperWidegts/popupBotton.dart';
+import 'package:account/API/file_complaint_request.dart';
+import 'package:account/Screens/File%20complaint/dropdown.dart';
+import 'package:account/Screens/File%20complaint/pageView.dart';
+
 
 
 
@@ -6,12 +13,6 @@
 
 // ignore_for_file: file_names, non_constant_identifier_names
 
-import 'package:account/API/file_complaint_request.dart';
-import 'package:account/Repository/color.dart';
-import 'package:account/Screens/File%20complaint/dropdown.dart';
-import 'package:account/Screens/File%20complaint/pageView.dart';
-import 'package:account/Widgets/popupBotton.dart';
-import 'package:flutter/material.dart';
 
 Complaint fileObj=Complaint();
 

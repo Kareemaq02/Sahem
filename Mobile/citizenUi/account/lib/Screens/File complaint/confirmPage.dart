@@ -1,12 +1,12 @@
-
-
-
-
-
-import 'package:account/Repository/color.dart';
-import 'package:account/Screens/Home/public_feed.dart';
-import 'package:account/Widgets/bottonContainer.dart';
 import 'package:flutter/material.dart';
+import 'package:account/Repository/color.dart';
+import 'package:account/Screens/Home/publicFeed.dart';
+import 'package:account/Widgets/Buttons/bottonContainer.dart';
+
+
+
+
+
 
 
 class confirm extends StatefulWidget {

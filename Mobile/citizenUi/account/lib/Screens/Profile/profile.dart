@@ -1,12 +1,13 @@
-import 'package:account/API/user_info_request.dart';
-import 'package:account/Repository/color.dart';
-import 'package:account/Screens/Profile/dataBox.dart';
-import 'package:account/Screens/Profile/logout.dart';
-import 'package:account/Screens/Profile/switchWidget.dart';
-import 'package:account/Screens/Profile/textButton.dart';
-import 'package:account/Widgets/appBar.dart';
-import 'package:account/Widgets/bottomNavBar.dart';
 import 'package:flutter/material.dart';
+import 'package:account/Repository/color.dart';
+import 'package:account/Widgets/Bars/appBar.dart';
+import 'package:account/API/user_info_request.dart';
+import 'package:account/Screens/Profile/logout.dart';
+import 'package:account/Screens/Profile/dataBox.dart';
+import 'package:account/Widgets/Bars/bottomNavBar.dart';
+import 'package:account/Screens/Profile/textButton.dart';
+import 'package:account/Screens/Profile/switchWidget.dart';
+
 
 
  bool isChecked = false;

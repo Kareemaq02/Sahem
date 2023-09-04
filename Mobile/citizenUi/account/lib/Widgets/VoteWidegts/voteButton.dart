@@ -1,10 +1,12 @@
-// ignore_for_file: unused_local_variable, file_names, prefer_const_constructors
-
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:like_button/like_button.dart' ;
 import 'package:account/API/vote_complaint.dart';
 import 'package:account/Widgets/countProvider.dart';
-import 'package:flutter/material.dart';
-import 'package:like_button/like_button.dart' ;
-import 'package:provider/provider.dart';
+
+
+// ignore_for_file: unused_local_variable, file_names, prefer_const_constructors
+
   
 
 class VoteWidget extends StatefulWidget {

@@ -1,12 +1,13 @@
-import 'package:account/API/watch_complaint_request.dart';
-import 'package:account/Repository/color.dart';
-import 'package:account/Widgets/vote/count.dart';
-import 'package:account/Widgets/vote/downVote.dart';
-import 'package:account/Widgets/vote/voteButton.dart';
-
-import 'package:account/Widgets/text.dart';
 import 'package:flutter/material.dart';
 import 'package:readmore/readmore.dart';
+import 'package:account/Repository/color.dart';
+import 'package:account/Widgets/VoteWidegts/count.dart';
+import 'package:account/Widgets/HelperWidegts/text.dart';
+import 'package:account/API/watch_complaint_request.dart';
+import 'package:account/Widgets/VoteWidegts/downVote.dart';
+import 'package:account/Widgets/VoteWidegts/voteButton.dart';
+
+
 
 WatchComplaint watchReq=WatchComplaint();
 

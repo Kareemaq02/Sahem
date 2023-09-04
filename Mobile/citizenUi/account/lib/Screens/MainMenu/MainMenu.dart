@@ -1,15 +1,15 @@
-import 'package:account/Repository/color.dart';
-import 'package:account/Screens/Analytics/Analytics.dart';
-import 'package:account/Screens/Analytics/Quarter.dart';
-import 'package:account/Screens/Home/public_feed.dart';
-import 'package:account/Screens/Profile/profile.dart';
-import 'package:account/Screens/View%20complaints/complaints_list.dart';
-import 'package:account/Widgets/Charts/RatingChart.dart';
-import 'package:account/Widgets/Displays/InfoDisplayBox.dart';
-import 'package:account/Widgets/appBar.dart';
-import 'package:account/Widgets/bottomNavBar.dart';
-import 'package:account/Widgets/Buttons/squareButtonWithStroke.dart';
 import 'package:flutter/material.dart';
+import 'package:account/Repository/color.dart';
+import 'package:account/Widgets/Bars/appBar.dart';
+import 'package:account/Screens/Profile/profile.dart';
+import 'package:account/Screens/Home/publicFeed.dart';
+import 'package:account/Widgets/Bars/bottomNavBar.dart';
+import 'package:account/Screens/Analytics/Quarter.dart';
+import 'package:account/Widgets/Charts/RatingChart.dart';
+import 'package:account/Screens/Analytics/Analytics.dart';
+import 'package:account/Widgets/Displays/InfoDisplayBox.dart';
+import 'package:account/Widgets/Buttons/squareButtonWithStroke.dart';
+import 'package:account/Screens/View%20complaints/complaints_list.dart';
 
 class MainMenu extends StatefulWidget {
   const MainMenu({super.key});
@@ -45,7 +45,7 @@ class _MainMenuState extends State<MainMenu> {
       floatingActionButton: const CustomActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavBar1(0),
-      appBar: myAppBar(context, "الصفحه الرئيسية", false, 170),
+      appBar: myAppBar(context, "الصفحه الرئيسية", false, screenWidth * 0.35),
       body: Padding(
         padding: EdgeInsets.only(top: halfMarginY, bottom: halfMarginY),
         child: Column(
