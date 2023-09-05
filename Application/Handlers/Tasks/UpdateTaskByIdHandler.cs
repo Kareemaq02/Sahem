@@ -48,7 +48,6 @@ public class UpdateTaskByIdHandler : IRequestHandler<UpdateTaskCommand, Result<U
 
         // transaction start...
         using var transaction = await _context.Database.BeginTransactionAsync();
-        var leaderCount = 0;
         try
         {
             var taskStatus = await _context.Tasks
@@ -83,6 +82,10 @@ public class UpdateTaskByIdHandler : IRequestHandler<UpdateTaskCommand, Result<U
                     task.dtmDateDeadline = request.updateTaskDTO.deadlineDate;
                     UpdateTaskDTO.deadlineDate = request.updateTaskDTO.deadlineDate;
                 }
+                else
+                {
+                    UpdateTaskDTO.deadlineDate = task.dtmDateDeadline;
+                }
 
                 if (request.updateTaskDTO.scheduledDate != DateTime.MinValue)
                 {
@@ -90,73 +93,42 @@ public class UpdateTaskByIdHandler : IRequestHandler<UpdateTaskCommand, Result<U
                     UpdateTaskDTO.scheduledDate = request.updateTaskDTO.scheduledDate;
                     ;
                 }
+                else
+                {
+                    UpdateTaskDTO.scheduledDate = task.dtmDateScheduled;
+                }
+
+                if (request.updateTaskDTO.intTeamId != 0)
+                {
+                    task.intTeamId = request.updateTaskDTO.intTeamId;
+                    UpdateTaskDTO.intTeamId = request.updateTaskDTO.intTeamId;
+                }
+                else {
+                    var AvailableTeamsIdsQuery =
+                        from teams in _context.Teams
+                        join t in _context.Tasks on teams.intId equals t.intTeamId
+                        where (
+                               (t.dtmDateDeadline > request.updateTaskDTO.deadlineDate && t.dtmDateScheduled > request.updateTaskDTO.deadlineDate)
+                                || (t.dtmDateDeadline < request.updateTaskDTO.scheduledDate && t.dtmDateScheduled < request.updateTaskDTO.scheduledDate)
+                                )
+                        select teams.intId;
+
+                                 if (!await (AvailableTeamsIdsQuery.ContainsAsync(request.updateTaskDTO.intTeamId)))
+                                 return Result<UpdateTaskDTO>.Failure("Team is not available at chosen dates");
+                    }
 
                 await _context.SaveChangesAsync(cancellationToken);
             }
             else
             {
+                await transaction.RollbackAsync(cancellationToken);
                 return Result<UpdateTaskDTO>.Failure("Failed to update the task.");
             }
         }
         catch (DbUpdateException)
         {
+            await transaction.RollbackAsync(cancellationToken);
             return Result<UpdateTaskDTO>.Failure("Failed to update task.");
-        }
-
-        try
-        {
-            if (
-                request.updateTaskDTO.workersList != null
-                && request.updateTaskDTO.workersList.Count != 0
-            )
-            {
-                var oldWorkersList = await _context.TeamMembers
-                    .Where(tm => tm.intTeamId == request.Id)
-                    .ToListAsync();
-
-                _context.TeamMembers.RemoveRange(oldWorkersList);
-                UpdateTaskDTO.workersList = request.updateTaskDTO.workersList;
-                foreach (var worker in request.updateTaskDTO.workersList)
-                {
-                    var user2 = await _context.Users.FindAsync(worker.intId);
-                    if (user2 == null)
-                    {
-                        await transaction.RollbackAsync();
-                        return Result<UpdateTaskDTO>.Failure($"Invalid user id: {worker.intId}");
-                    }
-
-                    var taskWorker = new TeamMembers
-                    {
-                        intWorkerId = worker.intId,
-                        intTeamId = request.Id,
-                        //blnIsLeader = worker.isLeader
-                    };
-
-                    await _context.TeamMembers.AddAsync(taskWorker);
-
-                    if (worker.isLeader)
-                    {
-                        leaderCount++;
-                    }
-                }
-
-                if (leaderCount == 0)
-                {
-                    await transaction.RollbackAsync();
-                    return Result<UpdateTaskDTO>.Failure("No leader was selected");
-                }
-
-                if (leaderCount > 1)
-                {
-                    await transaction.RollbackAsync();
-                    return Result<UpdateTaskDTO>.Failure("More than one leader was selected");
-                }
-            }
-        }
-        catch (Exception)
-        {
-            await transaction.RollbackAsync();
-            return Result<UpdateTaskDTO>.Failure("Unknown Error");
         }
 
         await _context.SaveChangesAsync(cancellationToken);
