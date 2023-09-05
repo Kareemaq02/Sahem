@@ -144,11 +144,6 @@ namespace Persistence
                     },
                     new ComplaintStatus
                     {
-                        strName = ConstantsDB.ComplaintStatusTypes.Approved,
-                        strNameAr = ConstantsDB.ComplaintStatusTypes.ApprovedAr
-                    },
-                    new ComplaintStatus
-                    {
                         strName = ConstantsDB.ComplaintStatusTypes.Scheduled,
                         strNameAr = ConstantsDB.ComplaintStatusTypes.ScheduledAr
                     },
