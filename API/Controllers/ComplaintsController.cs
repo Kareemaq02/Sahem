@@ -28,7 +28,7 @@ namespace API.Controllers
             );
         }
 
-        [HttpGet("analytics")] // .../api/complaints
+        [HttpGet("analytics")] // .../api/complaints/analytics
         public async Task<IActionResult> GetComplaintsAnalytics([FromQuery] ComplaintsFilter filter)
         {
             return HandleResult(
@@ -129,6 +129,16 @@ namespace API.Controllers
         public async Task<IActionResult> GetComplaintTypes()
         {
             return HandleResult(await Mediator.Send(new GetComplaintTypesListQuery()));
+        }
+
+        [HttpGet("admin/types")] // .../api/complaints/admin/types
+        public async Task<IActionResult> GetAdminComplaintTypes()
+        {
+            string authHeader = Request.Headers["Authorization"];
+            JwtSecurityTokenHandler tokenHandler = new();
+            JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
+            string strUserName = jwtToken.Claims.First(c => c.Type == "username").Value;
+            return HandleResult(await Mediator.Send(new GetAdminComplaintTypesListQuery(strUserName)));
         }
 
         [HttpPost("CreateType")] // .../api/complaints/CreateType
