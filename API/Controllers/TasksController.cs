@@ -43,8 +43,8 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new GetTaskTypesListQuery()));
         }
 
-        [HttpPost("{id}")] // .../api/tasks/id
-        public async Task<IActionResult> InsertTaskStats([FromForm] TaskDTO taskDTO, int id) // Create task for selected complaint
+        [HttpPost] // .../api/tasks
+        public async Task<IActionResult> InsertTaskStats([FromForm] TaskDTO taskDTO) // Create task for selected complaint
         {
             string authHeader = Request.Headers["Authorization"];
             JwtSecurityTokenHandler tokenHandler = new();
@@ -52,7 +52,7 @@ namespace API.Controllers
 
             taskDTO.strUserName = jwtToken.Claims.First(c => c.Type == "username").Value;
 
-            return HandleResult(await Mediator.Send(new InsertTaskCommand(taskDTO, id)));
+            return HandleResult(await Mediator.Send(new InsertTaskCommand(taskDTO)));
         }
 
         [HttpDelete("delete/{id}")] // .../api/tasks/delete/id
@@ -140,6 +140,18 @@ namespace API.Controllers
             return HandleResult(await Mediator.
                 Send(new AddComplaintToExistingTaskCommand(addComplaintToTaskDTO)));
 
+        }
+
+        [HttpGet("active")] //api/tasks/active
+        public async Task<IActionResult> GetCurrentActiveTask(string username)
+        {
+            string authHeader = Request.Headers["Authorization"];
+            JwtSecurityTokenHandler tokenHandler = new();
+            JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
+
+            username = jwtToken.Claims.First(c => c.Type == "username").Value;
+
+            return HandleResult(await Mediator.Send(new GetMyCurrentActiveTasksQuery(username)));
         }
     }
 }
