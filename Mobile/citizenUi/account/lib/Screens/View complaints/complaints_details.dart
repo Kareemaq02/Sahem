@@ -77,7 +77,7 @@ class _ComplaintViewState extends State<ComplaintDetailsScreen> {
                         color: AppColor.background,
                         child: Image.network(
                           imageList[
-                              position], // Use the correct image path here
+                              position], 
                           scale: 0.1,
                           fit: BoxFit.cover,
                         ),
@@ -135,23 +135,29 @@ Widget RowInfo(title, value) {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         //title
-        Text(
-          value,
-          //textDirection: TextDirection,
-          style: const TextStyle(
-            color: AppColor.secondary,
-            fontFamily: 'DroidArabicKufi',
-            fontSize: 10,
+        Align(
+          alignment: Alignment.topLeft,
+          child: Text(
+            value,
+            //textDirection: TextDirection,
+            style: const TextStyle(
+              color: AppColor.secondary,
+              fontFamily: 'DroidArabicKufi',
+              fontSize: 10,
+            ),
           ),
         ),
-        Text(
-          title,
-          style: const TextStyle(
-            color: AppColor.main,
-            fontFamily: 'DroidArabicKufi',
-            fontSize: 13,
+        Align(
+          alignment: Alignment.topRight,
+          child: Text(
+            title,
+            style: const TextStyle(
+              color: AppColor.main,
+              fontFamily: 'DroidArabicKufi',
+              fontSize: 13,
+            ),
+            // textDirection: TextDirection.rtl,
           ),
-          // textDirection: TextDirection.rtl,
         ),
        
       ],

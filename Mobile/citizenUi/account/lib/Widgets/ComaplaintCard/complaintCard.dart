@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/API/complaint_requests.dart';
 import 'package:account/API/send_reminder_Request.dart';
@@ -8,11 +9,14 @@ import 'package:account/Widgets/HelperWidegts/myContainer.dart';
 import 'package:account/Widgets/ComaplaintCard/timeLineWidget.dart';
 import 'package:account/Screens/View%20complaints/complaints_details.dart';
 
-class ComplaintCard2 extends StatelessWidget {
+class ComplaintCard2 extends StatefulWidget {
   final String type;
   final int status;
   final String date;
-  final String id;
+  final int id;
+  final double lat;
+  final double lng;
+  final int i;
 
   const ComplaintCard2({
     Key? key,
@@ -20,7 +24,35 @@ class ComplaintCard2 extends StatelessWidget {
     required this.date,
     required this.type,
     required this.id,
+    required this.lat,
+    required this.lng,
+    required this.i,
   }) : super(key: key);
+
+  @override
+  _ComplaintCard2sState createState() => _ComplaintCard2sState();
+}
+
+class _ComplaintCard2sState extends State<ComplaintCard2> {
+  @override
+  void initState() {
+    super.initState();
+    //fetchAddress();
+    //fetchComplaintStatusList();
+  }
+
+  List<ComaplintSatus> statusList = [];
+
+  getUserComplaint a = getUserComplaint();
+
+  Future<void> fetchComplaintStatusList() async {
+    try {
+      statusList = await a.fetchComaplintStatus(widget.id);
+    } catch (e) {
+      // Handle the exception/error here
+      print('Failed to fetch complaint statuses: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +75,7 @@ class ComplaintCard2 extends StatelessWidget {
                 children: [
                   CardButtons(context, 'تذكير', Colors.grey, AppColor.main, 0,
                       () {
-                    a.comaplintReminder(id);
+                    a.comaplintReminder(widget.id);
                   }),
                   SizedBox(width: screenWidth * 0.02),
                   CardButtons(context, 'معاينة', Colors.grey, AppColor.main,
@@ -52,7 +84,7 @@ class ComplaintCard2 extends StatelessWidget {
                       MaterialPageRoute(
                         builder: (context) {
                           Future<List<ComplaintModel>> complaintFuture =
-                              b.getComplaintById(id);
+                              b.getComplaintById(widget.id);
                           return FutureBuilder<List<ComplaintModel>>(
                             future: complaintFuture,
                             builder: (context, snapshot) {
@@ -78,7 +110,7 @@ class ComplaintCard2 extends StatelessWidget {
                     );
                   }),
                   const Spacer(),
-                  text(type, AppColor.textTitle),
+                  text(widget.type, AppColor.textTitle),
                 ],
               ),
               Padding(
@@ -88,7 +120,7 @@ class ComplaintCard2 extends StatelessWidget {
                 height: screenHeight * 0.015,
               ),
               Flexible(
-                child: timeLineWidget(),
+                child: timeLineWidget(2),
               ),
               Padding(
                 padding: EdgeInsets.only(right: screenWidth * 0.6),

@@ -20,7 +20,7 @@ class Status {
   Status(this.id, this.name);
 }
 
-Widget timeLineWidget() {
+Widget timeLineWidget(statusID) {
   getUserComplaint a = getUserComplaint();
   return SingleChildScrollView(
     scrollDirection: Axis.horizontal,

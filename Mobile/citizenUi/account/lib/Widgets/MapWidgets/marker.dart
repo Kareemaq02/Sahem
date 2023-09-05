@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 
-Widget markerWidegt() {
+Widget markerWidegt(int i) {
   return Stack(
     alignment: Alignment.center,
     children: [
@@ -22,10 +22,10 @@ Widget markerWidegt() {
             ),
           ],
         ),
-        child: const CircleAvatar(
+        child:  CircleAvatar(
           radius: 15,
           backgroundImage: AssetImage(
-            'assets/icons/pothole.jpg',
+            'assets/imges2/pic${i % 25}.jpg',
           ),
         ),
       ),
