@@ -61,6 +61,7 @@ class _XDComplaintsListState extends State<XDComplaintsList> {
                               id: data[index]['intComplaintId'],
                               lat: data[index]['latLng']["decLat"],
                               lng: data[index]['latLng']["decLng"],
+                              // lstMedia: data[index]['lstMedia']["data"],
                               i:index,
                              
                              

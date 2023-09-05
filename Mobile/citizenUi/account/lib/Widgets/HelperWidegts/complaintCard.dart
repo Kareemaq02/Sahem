@@ -23,7 +23,7 @@ class ComplaintCard extends StatefulWidget {
   final double lng;
   final int intComplaintId;
   int isVoted;
-  final bool? isWatched;
+  bool? isWatched;
   int i;
 
   ComplaintCard(
@@ -60,26 +60,6 @@ class _ComplaintCardsState extends State<ComplaintCard> {
     address = (await getAddressFromCoordinates(widget.lat, widget.lng))!;
     if (mounted) {
       setState(() {});
-    }
-  }
-
-  Future<String?> getAddressFromCoordinates(double lat, double lng) async {
-    try {
-      final List<Placemark> placemarks = await placemarkFromCoordinates(
-        lat,
-        lng,
-        localeIdentifier: 'ar',
-      );
-
-      if (placemarks.isNotEmpty) {
-        final Placemark placemark = placemarks[0];
-        final String? address = placemark.street;
-        return address;
-      } else {
-        return '';
-      }
-    } catch (e) {
-      return '$e';
     }
   }
 
@@ -252,24 +232,30 @@ class _ComplaintCardsState extends State<ComplaintCard> {
                     color: Colors.grey,
                     height: 25,
                   ),
-                 IconButton(
-                    onPressed: () {
+                  IconButton(
+                    onPressed: () async {
                       if (widget.isWatched == false) {
-                        watchReq.watchRequest(widget.intComplaintId);
+                        await watchReq.watchRequest(widget.intComplaintId);
                         setState(() {
-                          watchPressed = 1;
+                          widget.isWatched = true;
                         });
+                      } else {
+                        if (widget.isWatched == true) {
+                          await watchReq.unwatchRequest(widget.intComplaintId);
+                          setState(() {
+                            widget.isWatched = false;
+                          });
+                        }
                       }
                     },
                     icon: Icon(
                       Icons.bookmark_outline_sharp,
                       size: 29,
-                      color: widget.isWatched! || watchPressed == 1
+                      color: widget.isWatched == true || watchPressed == 1
                           ? AppColor.main
                           : Colors.grey,
                     ),
                   )
-
 
                 ],
               ),
@@ -278,5 +264,25 @@ class _ComplaintCardsState extends State<ComplaintCard> {
         ),
       ),
     );
+  }
+}
+
+Future<String?> getAddressFromCoordinates(double lat, double lng) async {
+  try {
+    final List<Placemark> placemarks = await placemarkFromCoordinates(
+      lat,
+      lng,
+      localeIdentifier: 'ar',
+    );
+
+    if (placemarks.isNotEmpty) {
+      final Placemark placemark = placemarks[0];
+      final String? address = placemark.street;
+      return address;
+    } else {
+      return '';
+    }
+  } catch (e) {
+    return '$e';
   }
 }

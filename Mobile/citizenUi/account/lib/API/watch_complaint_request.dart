@@ -2,9 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:account/API/login_request.dart';
 
-
 class WatchComplaint {
-  Future<int?> watchRequest(var complaintId) async {
+  Future<void> watchRequest(var complaintId) async {
     try {
       http.Response response = await http.post(
         Uri.parse(
@@ -15,28 +14,24 @@ class WatchComplaint {
           'Authorization': 'Bearer $token2'
         },
       );
-    
+
       if (response.statusCode == 200) {
-        token2 = jsonDecode(response.body);
-   
         print('watched successful');
 
-        return response.statusCode;
       } else {
         print('watch failed');
-        return response.statusCode;
       }
     } catch (e) {
       print(e.toString());
-      return 0;
+
     }
   }
 
-   Future<int?> unwatchRequest(var complaintId) async {
+  Future<void> unwatchRequest(var complaintId) async {
     try {
-      http.Response response = await http.post(
+      http.Response response = await http.delete(
         Uri.parse(
-            "https://10.0.2.2:5000/api/complaints/delete/$complaintId"),
+            "https://10.0.2.2:5000/api/complaints/removeFromWatchList/$complaintId"),
         headers: <String, String>{
           "Content-type": "application/json",
           "Accept": "application/json",
@@ -45,18 +40,12 @@ class WatchComplaint {
       );
 
       if (response.statusCode == 200) {
-        token2 = jsonDecode(response.body);
-
-        print('watched successful');
-
-        return response.statusCode;
+        print('unwatched successful');
       } else {
-        print('watch failed');
-        return response.statusCode;
+        print('un watch failed');
       }
     } catch (e) {
       print(e.toString());
-      return 0;
     }
   }
 }

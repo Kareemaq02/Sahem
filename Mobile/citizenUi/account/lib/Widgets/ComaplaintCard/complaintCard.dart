@@ -6,6 +6,7 @@ import 'package:account/API/send_reminder_Request.dart';
 import 'package:account/Widgets/HelperWidegts/text.dart';
 import 'package:account/Widgets/Buttons/buttonsForCards.dart';
 import 'package:account/Widgets/HelperWidegts/myContainer.dart';
+import 'package:account/Widgets/HelperWidegts/complaintCard.dart';
 import 'package:account/Widgets/ComaplaintCard/timeLineWidget.dart';
 import 'package:account/Screens/View%20complaints/complaints_details.dart';
 
@@ -17,6 +18,7 @@ class ComplaintCard2 extends StatefulWidget {
   final double lat;
   final double lng;
   final int i;
+  //final String pic;
 
   const ComplaintCard2({
     Key? key,
@@ -27,6 +29,7 @@ class ComplaintCard2 extends StatefulWidget {
     required this.lat,
     required this.lng,
     required this.i,
+    // required this.pic
   }) : super(key: key);
 
   @override
@@ -37,8 +40,7 @@ class _ComplaintCard2sState extends State<ComplaintCard2> {
   @override
   void initState() {
     super.initState();
-    //fetchAddress();
-    //fetchComplaintStatusList();
+    // fetchAddress();
   }
 
   List<ComaplintSatus> statusList = [];
@@ -51,6 +53,17 @@ class _ComplaintCard2sState extends State<ComplaintCard2> {
     } catch (e) {
       // Handle the exception/error here
       print('Failed to fetch complaint statuses: $e');
+    }
+  }
+
+
+  String address = "";
+
+  Future<void> fetchAddress() async {
+    address = (await getAddressFromCoordinates(widget.lat, widget.lng))!;
+    print(address);
+    if (mounted) {
+      setState(() {});
     }
   }
 
@@ -75,7 +88,7 @@ class _ComplaintCard2sState extends State<ComplaintCard2> {
                 children: [
                   CardButtons(context, 'تذكير', Colors.grey, AppColor.main, 0,
                       () {
-                    a.comaplintReminder(widget.id);
+                    a.comaplintReminder(widget.id, context);
                   }),
                   SizedBox(width: screenWidth * 0.02),
                   CardButtons(context, 'معاينة', Colors.grey, AppColor.main,
