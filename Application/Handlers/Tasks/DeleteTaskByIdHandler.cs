@@ -1,5 +1,4 @@
-﻿using Application.Commands;
-using Application.Core;
+﻿using Application.Core;
 using Domain.DataModels.Complaints;
 using Domain.DataModels.Tasks;
 using Domain.Resources;
@@ -27,8 +26,7 @@ namespace Application.Handlers
         )
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
-            try
-            {
+           
                 var TasksStatus = await _context.Tasks
                     .Where(c => c.intId == request.Id)
                     .Select(c => c.intStatusId)
@@ -36,12 +34,38 @@ namespace Application.Handlers
 
                 if (TasksStatus != (int)TasksConstant.taskStatus.inactive)
                     return Result<Unit>.Failure("Failed to delete the task.");
+            try
+            {
+                var complaintIds = await _context.TasksComplaints
+                      .Where(q => q.intTaskId == request.Id)
+                      .Select(q => q.intComplaintId)
+                      .ToListAsync();
+
+                foreach (int complaintId in complaintIds)
+                {
+                    var complaint = new Complaint { intId = complaintId };
+                    _context.Complaints.Attach(complaint);
+                    complaint.intStatusId = (int)ComplaintsConstant.complaintStatus.pending;
+                    await _context.SaveChangesAsync(cancellationToken);
+
+                    var complaintTransaction = await _context.ComplaintsStatuses
+                                       .Where(c => c.intComplaintId == complaintId && c.intStatusId
+                                       != (int)ComplaintsConstant.complaintStatus.pending)
+                                       .OrderBy(q => q.dtmTransDate)
+                                       .FirstOrDefaultAsync(cancellationToken);
+
+                    if (complaintTransaction != null)
+                        _context.ComplaintsStatuses.Remove(complaintTransaction);
+
+                    await _context.SaveChangesAsync(cancellationToken);
+                }
             }
             catch (DbUpdateException)
             {
                 await transaction.RollbackAsync();
-                return Result<Unit>.Failure("Failed to delete task.");
+                return Result<Unit>.Failure("Failed to delete tasks.");
             }
+
 
             try
             {
@@ -71,36 +95,7 @@ namespace Application.Handlers
                 await transaction.RollbackAsync();
                 return Result<Unit>.Failure("Failed to delete tasks.");
             }
-            try
-            {
-                var complaintIds = await _context.TasksComplaints
-                      .Where(q => q.intTaskId == request.Id)
-                      .Select(q => q.intComplaintId)
-                      .ToListAsync();
-
-                foreach (int complaintId in complaintIds)
-                {
-                    var complaint = new Complaint { intId = complaintId };
-                    _context.Complaints.Attach(complaint);
-                    complaint.intStatusId = (int)ComplaintsConstant.complaintStatus.pending;
-                    await _context.SaveChangesAsync(cancellationToken);
-
-
-                    await _transactionHandler.Handle(
-                   new AddComplaintStatusChangeTransactionCommand(
-                           complaintId,
-                           (int)ComplaintsConstant.complaintStatus.pending
-                       ),
-                           cancellationToken
-                       );
-                    await _context.SaveChangesAsync(cancellationToken);
-                }
-            }
-            catch (DbUpdateException)
-            {
-                await transaction.RollbackAsync();
-                return Result<Unit>.Failure("Failed to delete tasks.");
-            }
+           
             await transaction.CommitAsync();
             return Result<Unit>.Success(Unit.Value);
         }
