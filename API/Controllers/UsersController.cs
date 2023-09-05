@@ -71,11 +71,5 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new WhitelistUserByIdCommand(id)));
         }
 
-
-        [HttpGet("workers/available")] //api/users/workers/available
-        public async Task<IActionResult> GetAvailableWorkersList(DateTime startDate, DateTime endDate)
-        {
-            return HandleResult(await Mediator.Send(new GetAvailableWorkersListQuery(startDate,endDate)));
-        }
     }
 }
