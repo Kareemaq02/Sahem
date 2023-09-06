@@ -83,7 +83,7 @@ Widget buildConfirmDialog(BuildContext context, type, address, comment) {
                   BottonContainerPopup("استمرار", Colors.white, AppColor.main,
                       context, true, null, () {
                     fileObj.fileComplaint(context, dropdown.intID, 1,
-                        selectedMediaFiles, comment);
+                        selectedMediaFiles, 1, comment);
                   }),
                 ],
               ),

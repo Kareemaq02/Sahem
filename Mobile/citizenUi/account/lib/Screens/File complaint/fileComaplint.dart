@@ -156,14 +156,15 @@ class ComaplintState extends State<FileCompalint> {
                   border: Border.all(color: AppColor.main, width: 1),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Padding(
-                  padding: EdgeInsets.all(30.0),
+                child: Container(
+                  height: screenSize.height * 0.2,
                   child: TextField(
                     focusNode: textFieldFocusNode,
                     autofocus: true,
                     maxLines: null,
                     textDirection: TextDirection.rtl,
                     decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.only(left: 20.0, bottom: 50),
                       hintText: 'أضف تعليق ..',
                       border: InputBorder.none,
                       hintTextDirection: TextDirection.rtl,

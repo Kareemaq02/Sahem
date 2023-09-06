@@ -93,8 +93,8 @@ class FullMapState extends State<FullMap> with TickerProviderStateMixin {
 
   void _updateMarkerSize(var zoom) {
     final markerSizeTween = Tween<double>(
-      end: 10.0,
-      begin: 30.0,
+      end: 40.0,
+      begin: 40.0,
     );
 
     setState(() {
@@ -142,6 +142,7 @@ class FullMapState extends State<FullMap> with TickerProviderStateMixin {
         body: Stack(
           children: [
             FlutterMap(
+              mapController: mapController,
               options: MapOptions(
                 plugins: [
                   MarkerClusterPlugin(),
@@ -169,16 +170,35 @@ class FullMapState extends State<FullMap> with TickerProviderStateMixin {
                     'accessToken': MapConstants.access_token,
                   },
                 ),
+
+                // MarkerLayerOptions(markers: [
+                //   if (currentLocation != null)
+                //     Marker(
+                //       width: 40.0,
+                //       height: 40.0,
+                //       point: currentLocation!,
+                //       builder: (ctx) => Container(
+                //         child: Icon(
+                //           Icons.panorama_photosphere_select_outlined,
+                //           size: 40.0,
+                //           color: Colors.blue, // Customize the icon's color
+                //         ),
+                //       ),
+                //     ),
+                // ]),
+
                 MarkerClusterLayerOptions(
                   maxClusterRadius: 120,
-                  markers: markerLocations.map((location) {
+                  markers: markerLocations.asMap().entries.map((entry) {
+                    int index = entry.key;
+                    b.LatLng location = entry.value;
                     return Marker(
                       width: _markerSize,
                       height: _markerSize,
                       point: location,
                       builder: (context) {
                         return InkWell(
-                          child: markerWidegt(2),
+                          child: markerWidegt(index),
                           onTap: () => mapCard(context),
                         );
                       },
@@ -192,41 +212,59 @@ class FullMapState extends State<FullMap> with TickerProviderStateMixin {
                 ),
               ],
             ),
-            myLocationWidegt(),
+            filterIcon(context),
+            myLocationWidegt(() {
+              if (_currentPosition != null) {
+                _animatedMapMove(
+                  b.LatLng(
+                      _currentPosition!.latitude, _currentPosition!.longitude),
+                  15.0,
+                );
+              } else {}
+            }),
           ],
         ));
   }
 
   void _animatedMapMove(b.LatLng destLocation, double destZoom) {
-    final latTween = Tween<double>(
-        begin: mapController.center.latitude, end: destLocation.latitude);
-    final lngTween = Tween<double>(
-        begin: mapController.center.longitude, end: destLocation.longitude);
-    final zoomTween = Tween<double>(begin: mapController.zoom, end: destZoom);
+    if (_currentPosition != null) {
+      final latTween = Tween<double>(
+          begin: mapController.center.latitude, end: destLocation.latitude);
+      final lngTween = Tween<double>(
+          begin: mapController.center.longitude, end: destLocation.longitude);
+      final zoomTween = Tween<double>(begin: mapController.zoom, end: destZoom);
 
-    var controller = AnimationController(
-      duration: const Duration(milliseconds: 1000),
-      vsync: this,
-    );
-
-    Animation<double> animation =
-        CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn);
-
-    controller.addListener(() {
-      mapController.move(
-        b.LatLng(latTween.evaluate(animation), lngTween.evaluate(animation)),
-        zoomTween.evaluate(animation),
+      var controller = AnimationController(
+        duration: const Duration(milliseconds: 1000),
+        vsync: this,
       );
-    });
 
-    animation.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        controller.dispose();
-      } else if (status == AnimationStatus.dismissed) {
-        controller.dispose();
-      }
-    });
+      Animation<double> animation =
+          CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn);
 
-    controller.forward();
+      controller.addListener(() {
+        mapController.move(
+          b.LatLng(latTween.evaluate(animation), lngTween.evaluate(animation)),
+          zoomTween.evaluate(animation),
+        );
+      });
+
+      animation.addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          controller.dispose();
+        } else if (status == AnimationStatus.dismissed) {
+          controller.dispose();
+        }
+      });
+
+      controller.forward();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+              'Unable to move to current location. Location not available.'),
+        ),
+      );
+    }
   }
 }

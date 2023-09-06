@@ -139,7 +139,7 @@ Widget RowInfo(title, value) {
           alignment: Alignment.topLeft,
           child: Text(
             value,
-            //textDirection: TextDirection,
+            textDirection: TextDirection.rtl,
             style: const TextStyle(
               color: AppColor.secondary,
               fontFamily: 'DroidArabicKufi',

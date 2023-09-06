@@ -4,7 +4,7 @@ class Validation{
  
  String? inputValidate(String? value) {
      if (value!.isEmpty) {
-      return "Field is Required";
+      return "الرجاء تعبئة الحقل";
     } else {
       return null;
     }

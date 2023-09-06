@@ -39,7 +39,7 @@ class _XDComplaintsListState extends State<XDComplaintsList> {
         floatingActionButton: const CustomActionButton(),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: BottomNavBar1(2),
-        appBar: myAppBar(context, 'بلاغاتي', true, screenWidth * 0.25),
+        appBar: myAppBar(context, 'بلاغاتي', true, screenWidth * 0.40),
         body: Column(
           children: [
             Expanded(
@@ -61,12 +61,8 @@ class _XDComplaintsListState extends State<XDComplaintsList> {
                               id: data[index]['intComplaintId'],
                               lat: data[index]['latLng']["decLat"],
                               lng: data[index]['latLng']["decLng"],
-                              // lstMedia: data[index]['lstMedia']["data"],
                               i:index,
-                             
-                             
-
-                            ),
+                ),
                           ],
                         );
                       },

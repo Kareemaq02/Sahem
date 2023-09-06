@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Screens/Home/publicFeed.dart';
+import 'package:account/Screens/MainMenu/MainMenu.dart';
 import 'package:account/Widgets/Buttons/bottonContainer.dart';
 
 
@@ -35,7 +36,8 @@ class _MconfirmState extends State<confirm> {
         
         Image.asset("assets/icons/Frame 5.png",scale: 1.2,),
         SizedBox(height: 200,),
-        BottonContainer("الرجوع", Colors.white, AppColor.main,230,context,false,XDPublicFeed1(),(){})
+                BottonContainer("الرجوع", Colors.white, AppColor.main, 230,
+                    context, false, MainMenu(), () {})
       ]
       ), 
     ));

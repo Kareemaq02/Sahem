@@ -19,8 +19,7 @@ class Status {
 
   Status(this.id, this.name);
 }
-
-Widget timeLineWidget(statusID) {
+Widget timeLineWidget(int statusID) {
   getUserComplaint a = getUserComplaint();
   return SingleChildScrollView(
     scrollDirection: Axis.horizontal,
@@ -34,7 +33,7 @@ Widget timeLineWidget(statusID) {
         contentsAlign: ContentsAlign.alternating,
         connectionDirection: ConnectionDirection.before,
         connectorStyleBuilder: (context, index) {
-          return (index == 0)
+          return (index <= statusID) 
               ? ConnectorStyle.solidLine
               : ConnectorStyle.dashedLine;
         },
@@ -49,18 +48,17 @@ Widget timeLineWidget(statusID) {
                 if (index < statusData.length) {
                   TextStyle textStyle = const TextStyle(
                     fontSize: 7.9,
-                    color: AppColor.main,
                     fontFamily: 'DroidArabicKufi',
                   );
 
-                  // Check if index is greater than 1, and apply grey color.
-                  if (index > 0) {
+                  if (index <= statusID) {
+                    textStyle = textStyle.copyWith(color: AppColor.main);
+                  } else {
                     textStyle = textStyle.copyWith(color: Colors.grey);
                   }
 
                   return Text(
                     status[index].name.toString(),
-                    //statusData[index]['strName'],
                     style: textStyle,
                   );
                 } else {
@@ -72,7 +70,11 @@ Widget timeLineWidget(statusID) {
             },
           );
         },
-        indicatorStyleBuilder: (context, index) => IndicatorStyle.outlined,
+        indicatorStyleBuilder: (context, index) {
+          return (index <= statusID)
+              ? IndicatorStyle.dot
+              : IndicatorStyle.outlined;
+        },
         itemExtent: 73.0,
         itemCount: 7,
       ),

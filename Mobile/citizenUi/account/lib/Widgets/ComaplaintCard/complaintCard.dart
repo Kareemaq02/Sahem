@@ -40,7 +40,7 @@ class _ComplaintCard2sState extends State<ComplaintCard2> {
   @override
   void initState() {
     super.initState();
-    // fetchAddress();
+    fetchAddress();
   }
 
   List<ComaplintSatus> statusList = [];
@@ -61,7 +61,6 @@ class _ComplaintCard2sState extends State<ComplaintCard2> {
 
   Future<void> fetchAddress() async {
     address = (await getAddressFromCoordinates(widget.lat, widget.lng))!;
-    print(address);
     if (mounted) {
       setState(() {});
     }
@@ -133,12 +132,29 @@ class _ComplaintCard2sState extends State<ComplaintCard2> {
                 height: screenHeight * 0.015,
               ),
               Flexible(
-                child: timeLineWidget(2),
+                child: timeLineWidget(widget.status),
               ),
               Padding(
-                padding: EdgeInsets.only(right: screenWidth * 0.6),
-                child: text("ش ,وصفي التل , عمان", AppColor.secondary),
-              ),
+                padding: const EdgeInsets.only(top: 9.0),
+                child: Container(
+                  width: screenWidth * 1,
+                  child: Text(
+                    address,
+                    textDirection: TextDirection.ltr,
+                    style: const TextStyle(
+                      fontFamily: 'DroidArabicKufi',
+                      fontSize: 10,
+                      color: AppColor.secondary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    softWrap: true,
+                    overflow: TextOverflow.clip,
+                    maxLines: 1,
+                    textWidthBasis: TextWidthBasis.values[1],
+                  ),
+                ),
+              )
+              
             ],
           ),
         ),

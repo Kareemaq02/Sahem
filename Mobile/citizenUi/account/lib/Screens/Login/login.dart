@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/API/login_request.dart';
+import 'package:account/Validation/validations.dart';
 import 'package:account/Widgets/HelperWidegts/text.dart';
 import 'package:account/Screens/Registration/register.dart';
 import 'package:account/Widgets/Buttons/bottonContainer.dart';
@@ -10,7 +11,10 @@ import 'package:account/Widgets/HelperWidegts/fieldContainer.dart';
 
 TextEditingController usernameController = TextEditingController();
 TextEditingController passwordController = TextEditingController();
+final GlobalKey<FormState> _formKey1 = GlobalKey<FormState>();
+final GlobalKey<FormState> _formKey2 = GlobalKey<FormState>();
 UserLogin user = UserLogin();
+Validation a = Validation();
 
 class XDLogin extends StatefulWidget {
   const XDLogin({Key? key}) : super(key: key);
@@ -55,23 +59,37 @@ class _XDLoginState extends State<XDLogin> {
             const SizedBox(
               height: 30,
             ),
-            // FieldContainer(
-            //   context,
-            //   'اسم المستخدم',
-            //   false,
-            //   Icons.account_circle,
-            //   usernameController,
-            // ),
-            // const SizedBox(
-            //   height: 20,
-            // ),
-            // FieldContainer(
-            //   context,
-            //   ' كلمة السر',
-            //   true,
-            //   Icons.lock_outline,
-            //   passwordController,
-            // ),
+            Form(
+              key: _formKey1,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              child: FieldContainer(
+                context,
+                'اسم المستخدم',
+                false,
+                Icons.account_circle,
+                usernameController,
+                a.inputValidate,
+                TextInputType.text,
+                null,
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Form(
+              key: _formKey2,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              child: FieldContainer(
+                context,
+                ' كلمة السر',
+                true,
+                Icons.lock_outline,
+                passwordController,
+                a.inputValidate,
+                TextInputType.text,
+                null,
+              ),
+            ),
             const SizedBox(
               height: 15,
             ),

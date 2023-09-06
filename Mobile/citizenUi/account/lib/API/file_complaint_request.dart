@@ -1,10 +1,10 @@
-// ignore_for_file: avoid_print, unused_local_variablimport 'dart:convert';
 import 'dart:io';
-import 'package:account/Screens/File%20complaint/confirmPage.dart';
+import 'login_request.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:account/Screens/File%20complaint/confirmPage.dart';
+// ignore_for_file: avoid_print, unused_local_variablimport 'dart:convert';
 
-import 'login_request.dart';
 
 class Complaint {
   Future<void> fileComplaint(
@@ -12,6 +12,7 @@ class Complaint {
     int intTypeId,
     int intPrivacyId,
     List<MediaFile> lstMedia,
+    int intRegionId,
 
     String strComment,
   ) async {
@@ -30,6 +31,7 @@ class Complaint {
       request.fields['intTypeId'] = intTypeId.toString();
       request.fields['intPrivacyId'] = intPrivacyId.toString();
       request.fields['strComment'] = strComment;
+      request.fields['intRegionId'] = intRegionId.toString();
 
       // Add the files
    for (var index = 0; index < lstMedia.length; index++) {

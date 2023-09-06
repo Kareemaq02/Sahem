@@ -34,7 +34,7 @@ mapCard(context) {
                     height: screenHeight * 0.3,
                     width: screenWidth * 0.8,
                     decoration: BoxDecoration(
-                        color: Colors.grey,
+                        //color: Colors.grey,
                         borderRadius: BorderRadius.circular(20)),
                     child: mapPageView(context),
                   ),
