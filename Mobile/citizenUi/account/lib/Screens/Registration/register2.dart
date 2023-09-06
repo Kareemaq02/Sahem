@@ -168,18 +168,18 @@ Widget dropDownWidget(context,String fieldName,bool isVisible,fieldIcon,inputCon
               ],
             ),
             const SizedBox(height: 30,),
-        FieldContainer(context,'رقم جواز السفر' ,false,Icons.account_circle,passportNumController
-        ),
-           const SizedBox(height: 10,),
-        FieldContainer( context,'جنسية' ,false,Icons.account_circle,nationalityController
-        ),
-            const SizedBox(height: 10,),
-        FieldContainer(context,' اسم المستخدم ' ,false,Icons.email,usernameController3
-        ),
-           const SizedBox(height: 10,),
-         FieldContainer(context, ' كلمةالمرور' ,false,Icons.phone,passwordController3
+        // FieldContainer(context,'رقم جواز السفر' ,false,Icons.account_circle,passportNumController
+        // ),
+        //    const SizedBox(height: 10,),
+        // FieldContainer( context,'جنسية' ,false,Icons.account_circle,nationalityController
+        // ),
+        //     const SizedBox(height: 10,),
+        // FieldContainer(context,' اسم المستخدم ' ,false,Icons.email,usernameController3
+        // ),
+        //    const SizedBox(height: 10,),
+        //  FieldContainer(context, ' كلمةالمرور' ,false,Icons.phone,passwordController3
     
-        ),
+        // ),
            const SizedBox(height: 15,),
        
         SizedBox(height: 10,),

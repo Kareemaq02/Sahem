@@ -55,23 +55,23 @@ class _XDLoginState extends State<XDLogin> {
             const SizedBox(
               height: 30,
             ),
-            FieldContainer(
-              context,
-              'اسم المستخدم',
-              false,
-              Icons.account_circle,
-              usernameController,
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            FieldContainer(
-              context,
-              ' كلمة السر',
-              true,
-              Icons.lock_outline,
-              passwordController,
-            ),
+            // FieldContainer(
+            //   context,
+            //   'اسم المستخدم',
+            //   false,
+            //   Icons.account_circle,
+            //   usernameController,
+            // ),
+            // const SizedBox(
+            //   height: 20,
+            // ),
+            // FieldContainer(
+            //   context,
+            //   ' كلمة السر',
+            //   true,
+            //   Icons.lock_outline,
+            //   passwordController,
+            // ),
             const SizedBox(
               height: 15,
             ),
