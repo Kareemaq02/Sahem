@@ -6,6 +6,8 @@
 
         public string strFirstName { get; set; }
         public string strLastName { get; set; }
+        public string strFirstNameAr { get; set; }
+        public string strLastNameAr { get; set; }
         public Boolean isLeader { get; set; }
     }
 }

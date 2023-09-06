@@ -5,6 +5,7 @@ namespace Domain.ClientDTOs.Task
     public class DetailedTaskDTO
     {
         public int taskID { get; set; }
+        public int intTeamId { get; set; }
         public DateTime createdDate { get; set; }
         public DateTime finishedDate { get; set; }
         public DateTime scheduledDate { get; set; }

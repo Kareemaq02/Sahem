@@ -9,6 +9,8 @@ namespace Domain.ClientDTOs.Evaluation
         public string strUserName { get; set; }
         public string strComment { get; set; }
         public decimal decRating { get; set; }
-        public TaskDTO taskDTO { get; set; }
+        public decimal? decCost { get; set; }
+        public List<int> lstCompletedIds { get; set; } = new List<int>();
+        public List<int> lstFailedIds { get; set; } = new List<int>();
     }
 }

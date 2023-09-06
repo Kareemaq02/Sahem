@@ -36,7 +36,7 @@ public class ActivateTaskByIdHandler : IRequestHandler<ActivateTaskCommand, Resu
             .Select(u => u.Id)
             .SingleOrDefaultAsync(cancellationToken: cancellationToken);
 
-        var isLeader = _context.Teams.Any(tm => tm.intLeaderId == userId);
+        var isLeader = _context.Teams.Any(tm => tm.intLeaderId == userId); //Assuming a leader cant be a worker in another team
 
         //Start transaction
         using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
@@ -45,40 +45,54 @@ public class ActivateTaskByIdHandler : IRequestHandler<ActivateTaskCommand, Resu
             if (isLeader)
             {
                 var task = await _context.Tasks.FindAsync(request.Id);
+
+                var activeTasksCount = from t in _context.Tasks
+                                      join team in _context.Teams on t.intTeamId equals team.intId
+                                      where team.intLeaderId == userId && t.intStatusId == (int)TasksConstant.taskStatus.inProgress
+                                       select t;
+
+                if (await activeTasksCount.CountAsync() >= 1)
+                    return Result<Unit>.Failure("Please submit previously activated tasks before activating this one");
+
                 if (task.blnIsActivated == false)
                 {
-                    task.dtmDateActivated = DateTime.UtcNow;
-                    task.blnIsActivated = true;
-                    task.dtmDateLastModified = DateTime.UtcNow;
-                    task.intLastModifiedBy = userId;
-                    task.intStatusId = (int)TasksConstant.taskStatus.inProgress;
-
-                    await _context.SaveChangesAsync(cancellationToken);
-
-                    var complaintIds = await _context.TasksComplaints
-                        .Where(q => q.intTaskId == request.Id)
-                        .Select(q => q.intComplaintId)
-                        .ToListAsync();
-
-                    foreach (int complaintId in complaintIds)
+                    if (task.intStatusId == (int)TasksConstant.taskStatus.inactive)
                     {
-                        var complaint = new Complaint { intId = complaintId };
-                        _context.Complaints.Attach(complaint);
-                        complaint.intStatusId = (int)ComplaintsConstant.complaintStatus.inProgress;
+                        task.dtmDateActivated = DateTime.UtcNow;
+                        task.blnIsActivated = true;
+                        task.dtmDateLastModified = DateTime.UtcNow;
+                        task.intLastModifiedBy = userId;
+                        task.intStatusId = (int)TasksConstant.taskStatus.inProgress;
+
                         await _context.SaveChangesAsync(cancellationToken);
 
-                        await _addTransactionHandler.Handle(
-                            new AddComplaintStatusChangeTransactionCommand(
-                                complaintId,
-                                (int)ComplaintsConstant.complaintStatus.inProgress
-                            ),
-                            cancellationToken
-                        );
-                        await _context.SaveChangesAsync(cancellationToken);
+                        var complaintIds = await _context.TasksComplaints
+                            .Where(q => q.intTaskId == request.Id)
+                            .Select(q => q.intComplaintId)
+                            .ToListAsync();
+
+                        foreach (int complaintId in complaintIds)
+                        {
+                            var complaint = new Complaint { intId = complaintId };
+                            _context.Complaints.Attach(complaint);
+                            complaint.intStatusId = (int)ComplaintsConstant.complaintStatus.inProgress;
+                            await _context.SaveChangesAsync(cancellationToken);
+
+                            await _addTransactionHandler.Handle(
+                                new AddComplaintStatusChangeTransactionCommand(
+                                    complaintId,
+                                    (int)ComplaintsConstant.complaintStatus.inProgress
+                                ),
+                                cancellationToken
+                            );
+                            await _context.SaveChangesAsync(cancellationToken);
+                        }
+
+                        await transaction.CommitAsync();
+                        return Result<Unit>.Success(Unit.Value);
                     }
-
-                    await transaction.CommitAsync();
-                    return Result<Unit>.Success(Unit.Value);
+                    else
+                        return Result<Unit>.Failure("Only inactive tasks could be activated");
                 }
                 else
                     return Result<Unit>.Failure("Task has already been activated");

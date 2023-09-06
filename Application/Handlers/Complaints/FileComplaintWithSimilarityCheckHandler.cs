@@ -117,6 +117,7 @@ namespace Application.Handlers.Complaints
                         dtmDateLastReminded = DateTime.UtcNow,
                         intLastModifiedBy = userId,
                         dtmDateLastModified = DateTime.UtcNow,
+                        intRegionId = 1, //TODO Will be changed after we get the shape files
                     };
                     var complaintEntity = await _context.Complaints.AddAsync(complaint);
                     await _context.SaveChangesAsync(cancellationToken);

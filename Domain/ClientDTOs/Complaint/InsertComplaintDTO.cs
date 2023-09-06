@@ -14,5 +14,6 @@ namespace Domain.ClientDTOs.Complaint
         public List<Media> similarComplaintLstMedia { get; set; } = new List<Media>();
         public ICollection<InsertComplaintAttachmentsDTO> lstMedia { get; set; }
         public string strComment { get; set; }
+        public int intRegionId { get; set; } = 1;
     }
 }

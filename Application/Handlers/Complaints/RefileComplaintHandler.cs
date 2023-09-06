@@ -25,11 +25,7 @@ namespace Application.Handlers.Complaints
             CancellationToken cancellationToken
         )
         {
-            var complaintObj = await _context.Complaints
-                .Where(c => c.intId == request.ID)
-                .Select(c => new {complaintStatus = c.intStatusId,
-                        c.blnIsRefiled })
-                .FirstOrDefaultAsync(cancellationToken);
+     
 
             //Start Transaction
 
@@ -37,27 +33,28 @@ namespace Application.Handlers.Complaints
 
             try
             {
-                if (complaintObj.complaintStatus == (int)ComplaintsConstant.complaintStatus.completed)
-                {
-                    var complaint = new Complaint { intId = request.ID };
-                    _context.Complaints.Attach(complaint);
-                    complaint.intStatusId = (int)ComplaintsConstant.complaintStatus.waitingEvaluation;
+                var complaint = new Complaint { intId = request.ID };
+                _context.Complaints.Attach(complaint);
 
-                    await _context.SaveChangesAsync(cancellationToken);
-                }
-                else
-                    return Result<int>.Failure("Failed to update the complaint. Can't refile incomplete complaint.");
-
-                if (complaintObj.blnIsRefiled == false)
+                if (complaint.blnIsRefiled == false)
                 {
-                    var complaint = new Complaint { intId = request.ID };
-                    _context.Complaints.Attach(complaint);
+                    
                     complaint.blnIsRefiled = true;
 
                     await _context.SaveChangesAsync(cancellationToken);
                 }
                 else
                     return Result<int>.Failure("Can't refile a complaint more than once.");
+
+                if (complaint.intStatusId == (int)ComplaintsConstant.complaintStatus.completed)
+                {
+                    _context.Complaints.Attach(complaint);
+                    complaint.intStatusId = (int)ComplaintsConstant.complaintStatus.refiled;
+
+                    await _context.SaveChangesAsync(cancellationToken);
+                }
+                else
+                    return Result<int>.Failure("Failed to update the complaint. Can't refile incomplete complaint.");
 
                 await _transactionHandler.Handle(
                     new AddComplaintStatusChangeTransactionCommand

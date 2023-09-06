@@ -16,6 +16,6 @@ namespace Domain.ClientDTOs.Task
         public string strTypeNameAr { get; set; }
         public string strTaskStatus { get; set; }
         public bool blnIsTaskLeader { get; set; }
-        public List<TaskWorkerDTO> workersList { get; set; }
+        public bool blnIsActive { get; set; }
     }
 }

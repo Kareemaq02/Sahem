@@ -10,25 +10,25 @@ using Domain.DataModels.Complaints;
 using Domain.ClientDTOs.Evaluation;
 using Application.Handlers.Tasks;
 using Domain.ClientDTOs.Task;
+using Application.Commands;
 
 namespace Application.Handlers.Evaluations
 {
     public class SetTaskAsIncompletedHandler
         : IRequestHandler<IncompleteTaskCommand, Result<IncompleteDTO>>
     {
-        private readonly InsertTaskHandler _insertTaskHandler;
         private readonly DataContext _context;
         public readonly UserManager<ApplicationUser> _userManager;
-
+        private readonly AddComplaintStatusChangeTransactionHandler _changeTransactionHandler;
         public SetTaskAsIncompletedHandler(
-            InsertTaskHandler insertTaskHandler,
             DataContext context,
-            UserManager<ApplicationUser> userManager
+            UserManager<ApplicationUser> userManager,
+            AddComplaintStatusChangeTransactionHandler changeTransactionHandler
         )
         {
-            _insertTaskHandler = insertTaskHandler;
             _context = context;
             _userManager = userManager;
+            _changeTransactionHandler = changeTransactionHandler;
         }
 
         public async Task<Result<IncompleteDTO>> Handle(
@@ -36,20 +36,12 @@ namespace Application.Handlers.Evaluations
             CancellationToken cancellationToken
         )
         {
-            var taskDTO = new TaskDTO
-            {
-                strUserName = request.IncompleteDTO.strUserName,
-                decCost = request.IncompleteDTO.taskDTO.decCost,
-                scheduledDate = request.IncompleteDTO.taskDTO.scheduledDate,
-                deadlineDate = request.IncompleteDTO.taskDTO.deadlineDate,
-                strComment = request.IncompleteDTO.taskDTO.strComment,
-                workersList = request.IncompleteDTO.taskDTO.workersList
-            };
             var incompleteDTO = new IncompleteDTO
             {
                 strComment = request.IncompleteDTO?.strComment,
                 decRating = request.IncompleteDTO.decRating,
-                taskDTO = taskDTO
+                lstCompletedIds = request.IncompleteDTO.lstCompletedIds,
+                lstFailedIds = request.IncompleteDTO.lstFailedIds,
             };
 
             using var transaction = await _context.Database.BeginTransactionAsync();
@@ -72,16 +64,64 @@ namespace Application.Handlers.Evaluations
 
             try
             {
-                int complaintId = await _context.TasksComplaints
-                    .Where(q => q.intTaskId == request.Id)
-                    .Select(q => q.intComplaintId)
-                    .FirstOrDefaultAsync();
 
-                var complaint = new Complaint { intId = complaintId };
-                _context.Complaints.Attach(complaint);
-                complaint.intStatusId = (int)ComplaintsConstant.complaintStatus.Scheduled;
-                await _context.SaveChangesAsync(cancellationToken);
-                await transaction.CommitAsync();
+                foreach (int complaintId in request.IncompleteDTO.lstCompletedIds)
+                {
+                    //completed
+                    var complaint = new Complaint { intId = complaintId };
+                    _context.Complaints.Attach(complaint);
+                    complaint.intStatusId = (int)ComplaintsConstant.complaintStatus.completed;
+                    await _context.SaveChangesAsync(cancellationToken);
+
+                    await _changeTransactionHandler.Handle(
+                         new AddComplaintStatusChangeTransactionCommand(
+                                 complaintId,
+                                 (int)ComplaintsConstant.complaintStatus.completed
+                             ),
+                                 cancellationToken
+                             );
+                    await _context.SaveChangesAsync(cancellationToken);
+
+                }
+                
+            }
+            catch (DbUpdateException)
+            {
+                await transaction.RollbackAsync();
+                return Result<IncompleteDTO>.Failure("Failed to update complaint status.");
+            }
+            try
+            {
+
+                foreach (int complaintId in request.IncompleteDTO.lstFailedIds)
+                {
+                    //failed
+                    var complaint = new Complaint { intId = complaintId };
+                    _context.Complaints.Attach(complaint);
+                    complaint.intStatusId = (int)ComplaintsConstant.complaintStatus.pending;
+                    await _context.SaveChangesAsync(cancellationToken);
+
+                    var complaintTransaction = await _context.ComplaintsStatuses
+                                      .Where(c => c.intComplaintId == complaintId && c.intStatusId
+                                      != (int)ComplaintsConstant.complaintStatus.pending)
+                                      .OrderBy(q => q.dtmTransDate)
+                                      .FirstOrDefaultAsync(cancellationToken);
+
+                    if(complaintTransaction!=null)
+                    _context.ComplaintsStatuses.Remove(complaintTransaction);
+
+                    await _context.SaveChangesAsync(cancellationToken);
+
+                    await _changeTransactionHandler.Handle(
+                        new AddComplaintStatusChangeTransactionCommand(
+                                complaintId,
+                                (int)ComplaintsConstant.complaintStatus.pending
+                            ),
+                                cancellationToken
+                            );
+                    await _context.SaveChangesAsync(cancellationToken);
+                }
+
             }
             catch (DbUpdateException)
             {
@@ -89,11 +129,8 @@ namespace Application.Handlers.Evaluations
                 return Result<IncompleteDTO>.Failure("Failed to update complaint status.");
             }
 
-            var insertResult = await _insertTaskHandler.Handle(
-                new InsertTaskCommand(taskDTO, request.Id),
-                cancellationToken
-            );
-
+          
+            await transaction.CommitAsync();
             return Result<IncompleteDTO>.Success(incompleteDTO);
         }
     }

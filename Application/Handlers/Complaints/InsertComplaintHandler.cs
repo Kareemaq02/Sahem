@@ -65,6 +65,7 @@ namespace Application.Handlers.Complaints
                     dtmDateLastReminded = DateTime.UtcNow,
                     intLastModifiedBy = userId,
                     dtmDateLastModified = DateTime.UtcNow,
+                    intRegionId = 1, //TODO Will be changed after we get the shape files
                 };
                 var complaintEntity = await _context.Complaints.AddAsync(complaint);
                 await _context.SaveChangesAsync(cancellationToken);
@@ -133,10 +134,10 @@ namespace Application.Handlers.Complaints
                 await _context.SaveChangesAsync(cancellationToken);
                 await transaction.CommitAsync();
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 await transaction.RollbackAsync();
-                return Result<InsertComplaintDTO>.Failure("Unknown Error");
+                return Result<InsertComplaintDTO>.Failure("Unknown Error" + e);
             }
 
             return Result<InsertComplaintDTO>.Success(complaintDTO);

@@ -36,6 +36,8 @@ namespace Application.Handlers.Complaints
                 join ct in _context.ComplaintTypes on c.intTypeId equals ct.intId
                 join cs in _context.ComplaintStatus on c.intStatusId equals cs.intId
                 join cp in _context.ComplaintPrivacy on c.intPrivacyId equals cp.intId
+                join du in _context.DepartmentUsers on userId equals du.intUserId
+                where du.intDepartmentId == ct.intDepartmentId
                 select new
                 {
                     Complaint = c,

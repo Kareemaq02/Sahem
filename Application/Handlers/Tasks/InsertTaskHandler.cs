@@ -36,25 +36,37 @@ namespace Application.Handlers.Tasks
         )
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
-            var leaderCount = 0;
             var taskDTO = request.TaskDTO;
-            var workersList = taskDTO.workersList;
             int userId = await _context.Users
                 .Where(q => q.UserName == taskDTO.strUserName)
                 .Select(q => q.Id)
                 .FirstOrDefaultAsync();
-            int taskType = await _context.Complaints
-                .Where(q => q.intId == request.Id)
-                .Select(q => q.intTypeId)
-                .FirstOrDefaultAsync();
+
+            
+              var blnIsFromSameRegion = await _context.Complaints.
+                    Where(q => request.TaskDTO.lstComplaintIds.Contains(q.intId))
+                    .Select(q => q.intRegionId).Distinct().CountAsync() == 1;
+
+              var blnHasCorrectStatus = await _context.Complaints.
+                    Where(q => request.TaskDTO.lstComplaintIds.Contains(q.intId)
+                    && (q.intStatusId == (int)ComplaintsConstant.complaintStatus.refiled
+                    || q.intStatusId == (int)ComplaintsConstant.complaintStatus.pending))
+                    .Select(q => q.intId).CountAsync() == request.TaskDTO.lstComplaintIds.Count();
+
+            if (blnHasCorrectStatus == false)
+                return Result<TaskDTO>.Failure("Tasks could only be created for pending or refiled complaints.");
+
+            if (blnIsFromSameRegion == false)
+                return Result<TaskDTO>.Failure("Not all selected complaints are within the same region.");
 
             try
             {
+                //Tasks table
                 var task = new WorkTask //Date Activated and Date Finished should be null
                 {
                     intAdminId = userId,
                     intStatusId = (int)TasksConstant.taskStatus.inactive,
-                    intTypeId = taskType,
+                    intTypeId = request.TaskDTO.intTaskType,
                     decCost = request.TaskDTO.decCost ?? 0.00m,
                     dtmDateScheduled = request.TaskDTO.scheduledDate,
                     dtmDateDeadline = request.TaskDTO.deadlineDate,
@@ -62,96 +74,46 @@ namespace Application.Handlers.Tasks
                     strComment = request.TaskDTO.strComment,
                     dtmDateLastModified = DateTime.Now,
                     decRating = 0,
+                    intTeamId = request.TaskDTO.intTeamId,
                     blnIsDeleted = false
                 };
                 var taskEntity = await _context.Tasks.AddAsync(task);
                 await _context.SaveChangesAsync(cancellationToken);
 
-                try
+                if (request.TaskDTO.lstComplaintIds.Count == 0)
+                    return Result<TaskDTO>.Failure("Choose complaint(s)");
+                    //TaskComplaints table
+
+                    foreach (int complaintId in request.TaskDTO.lstComplaintIds)
                 {
-                    if (workersList == null || workersList.Count == 0)
-                    {
-                        await transaction.RollbackAsync();
-                        return Result<TaskDTO>.Failure("No Members were added");
-                    }
-                    int i = 0;
-                    foreach (var worker in workersList)
-                    {
-                        var user2 = await _context.Users.FindAsync(worker.intId);
-                        if (user2 == null)
-                        {
-                            await transaction.RollbackAsync();
-                            return Result<TaskDTO>.Failure($"Invalid user id: {worker.intId}");
-                        }
-
-                        if (user2.intUserTypeId != (int)UsersConstant.userTypes.worker)
-                        {
-                            await transaction.RollbackAsync();
-                            return Result<TaskDTO>.Failure($"Invalid worker id: {worker.intId}");
-                        }
-
-                        var workerNameQuery =
-                            from user in _context.UserInfos
-                            where user.intId == worker.intId
-                            select new { user.strFirstName, user.strLastName };
-                        var workerUser = await workerNameQuery.FirstOrDefaultAsync();
-
-                        taskDTO.workersList.ElementAt(i).strFirstName = workerUser.strFirstName;
-                        taskDTO.workersList.ElementAt(i).strLastName = workerUser.strLastName;
-                        i++;
-                        var taskWorker = new TeamMembers
-                        {
-                            intWorkerId = worker.intId,
-                            intTeamId = taskEntity.Entity.intId,
-                            //blnIsLeader = worker.isLeader
-                        };
-
-                        await _context.TeamMembers.AddAsync(taskWorker);
-
-                        if (worker.isLeader)
-                            leaderCount++;
-                    }
-
-                    if (leaderCount == 0)
-                    {
-                        await transaction.RollbackAsync();
-                        return Result<TaskDTO>.Failure("No leader was selected");
-                    }
-                    if (leaderCount > 1)
-                    {
-                        await transaction.RollbackAsync();
-                        return Result<TaskDTO>.Failure("More than one leader was selected");
-                    }
-
                     var taskComplaint = new WorkTaskComplaints
                     {
                         intTaskId = taskEntity.Entity.intId,
-                        intComplaintId = request.Id
+                        intComplaintId = complaintId
                     };
 
                     await _context.TasksComplaints.AddAsync(taskComplaint);
+                }
 
-                    var complaint = new Complaint { intId = request.Id };
+                //Complaints Table
+                foreach (int complaintId in request.TaskDTO.lstComplaintIds)
+                {
+                    var complaint = new Complaint { intId = complaintId };
                     _context.Complaints.Attach(complaint);
                     complaint.intStatusId = (int)ComplaintsConstant.complaintStatus.Scheduled;
                     await _context.SaveChangesAsync(cancellationToken);
 
+                    //Complaints_statuses Table
                     await _transactionHandler.Handle(
                         new AddComplaintStatusChangeTransactionCommand(
-                            request.Id,
+                            complaintId,
                             (int)ComplaintsConstant.complaintStatus.Scheduled
                         ),
                         cancellationToken
                     );
+
                     await _context.SaveChangesAsync(cancellationToken);
                 }
-                catch (Exception)
-                {
-                    await transaction.RollbackAsync();
-                    return Result<TaskDTO>.Failure("Unknown Error");
-                }
-
-                await _context.SaveChangesAsync(cancellationToken);
                 await transaction.CommitAsync();
             }
             catch (Exception ex)

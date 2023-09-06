@@ -10,7 +10,7 @@ namespace Domain.ClientDTOs.Task
         public DateTime scheduledDate { get; set; }
         public DateTime deadlineDate { get; set; }
         public string strComment { get; set; }
-        public List<TaskWorkerDTO> workersList { get; set; } = new List<TaskWorkerDTO>();
+        public int intTeamId { get; set; } = 0;
         public int intTaskTypeId { get; set; }
     }
 }

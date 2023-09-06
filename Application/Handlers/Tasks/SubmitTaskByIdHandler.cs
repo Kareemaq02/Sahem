@@ -45,7 +45,7 @@ namespace Application.Handlers.Complaints
                 .Select(u => u.Id)
                 .SingleOrDefaultAsync();
 
-            var isLeader = _context.Teams.Any(tm => tm.intLeaderId == userId);
+            var isLeader = _context.Teams.Any(tm => tm.intLeaderId == userId); //Assuming that a leader of a team can't be a worker in another team
 
             if (isLeader)
             {
@@ -59,8 +59,7 @@ namespace Application.Handlers.Complaints
                     var task = await _context.Tasks.FindAsync(request.id);
 
                     if (
-                        task.intStatusId != (int)TasksConstant.taskStatus.waitingEvaluation
-                        || task.intStatusId != (int)TasksConstant.taskStatus.completed
+                        task.intStatusId == (int)TasksConstant.taskStatus.inProgress
                     )
                     {
                         task.dtmDateLastModified = DateTime.UtcNow;
@@ -69,7 +68,7 @@ namespace Application.Handlers.Complaints
                         task.intStatusId = (int)TasksConstant.taskStatus.waitingEvaluation;
                         await _context.SaveChangesAsync(cancellationToken);
 
-                        if (lstMedia.Count == 0)
+                        if ( lstMedia.Count == 0 )
                         {
                             await transaction.RollbackAsync();
                             return Result<SubmitTaskDTO>.Failure("No file was Uploaded.");
@@ -78,6 +77,12 @@ namespace Application.Handlers.Complaints
                         var taskAttatchments = new List<ComplaintAttachment>();
                         foreach (var media in lstMedia)
                         {
+                            if (media.fileMedia == null)
+
+                            {
+                                await transaction.RollbackAsync();
+                                return Result<SubmitTaskDTO>.Failure("No file was Uploaded.");
+                            }
                             string extension = Path.GetExtension(media.fileMedia.FileName);
                             string fileName = $"{DateTime.UtcNow.Ticks}{extension}";
                             string directory = _configuration["FilesPath"];
@@ -96,27 +101,30 @@ namespace Application.Handlers.Complaints
                             using var stream = File.Create(filePath);
                             await media.fileMedia.CopyToAsync(stream, cancellationToken);
 
+                            
                             taskAttatchments.Add(
                                 new ComplaintAttachment
                                 {
-                                    intComplaintId = request.id,
+                                    intComplaintId = media.intComplaintId,
                                     strMediaRef = filePath,
                                     blnIsVideo = media.blnIsVideo,
                                     dtmDateCreated = DateTime.UtcNow,
                                     intCreatedBy = userId,
-                                    blnIsFromWorker = true
+                                    blnIsFromWorker = true,
+                                    decLat = media.decLatLng.decLat,
+                                    decLng = media.decLatLng.decLng
                                 }
-                            );
+
+                            );                          
                         }
+                        await _context.ComplaintAttachments.AddRangeAsync(taskAttatchments);
+                        await _context.SaveChangesAsync(cancellationToken);
 
-                        var complaintIds = await _context.TasksComplaints
-                            .Where(q => q.intTaskId == request.id)
-                            .Select(q => q.intComplaintId)
-                            .ToListAsync();
+   
 
-                        foreach (int complaintId in complaintIds)
+                        foreach (var media in lstMedia)
                         {
-                            var complaint = new Complaint { intId = complaintId };
+                            var complaint = new Complaint { intId = media.intComplaintId };
                             _context.Complaints.Attach(complaint);
                             complaint.intStatusId = (int)
                                 ComplaintsConstant.complaintStatus.waitingEvaluation;
@@ -124,7 +132,7 @@ namespace Application.Handlers.Complaints
 
                             await _changeTransactionHandler.Handle(
                                 new AddComplaintStatusChangeTransactionCommand(
-                                    complaintId,
+                                    media.intComplaintId,
                                     (int)ComplaintsConstant.complaintStatus.waitingEvaluation
                                 ),
                                 cancellationToken
@@ -136,12 +144,12 @@ namespace Application.Handlers.Complaints
                         await transaction.CommitAsync();
                     }
                     else
-                        return Result<SubmitTaskDTO>.Failure("The task has already been submitted");
+                        return Result<SubmitTaskDTO>.Failure("The task has must be active before being submitted");
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
                     await transaction.RollbackAsync();
-                    return Result<SubmitTaskDTO>.Failure("Unknown Error");
+                    return Result<SubmitTaskDTO>.Failure("Unknown Error " + e);
                 }
 
                 return Result<SubmitTaskDTO>.Success(submitTaskDTO);

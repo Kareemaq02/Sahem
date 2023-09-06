@@ -24,7 +24,6 @@
         {
             public const string Pending = "pending";
             public const string Rejected = "rejected";
-            public const string Approved = "approved";
             public const string Scheduled = "scheduled";
             public const string InProgress = "in progress";
             public const string WaitingEvaluation = "waiting evaluation";
@@ -33,7 +32,6 @@
 
             public const string PendingAr = "قيد الانتظار";
             public const string RejectedAr = "مرفوض";
-            public const string ApprovedAr = "موافق عليه";
             public const string ScheduledAr = "مجدول";
             public const string InProgressAr = "قيد العمل";
             public const string WaitingEvaluationAr = "انتظار التقييم";

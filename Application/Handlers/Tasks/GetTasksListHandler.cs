@@ -23,60 +23,43 @@ namespace Application.Handlers.Tasks
             CancellationToken cancellationToken
         )
         {
-            var query =
-                from t in _context.Tasks
-                join u in _context.Users on t.intAdminId equals u.Id
-                join ui in _context.UserInfos on u.intUserInfoId equals ui.intId
-                join tT in _context.TaskTypes on t.intTypeId equals tT.intId
-                join ts in _context.TaskStatus on t.intStatusId equals ts.intId
-                join tm in _context.TeamMembers on t.intId equals tm.intTeamId
-                group tm by new
-                {
-                    TaskID = t.intId,
-                    AdminUsername = u.UserName,
-                    Admin = ui.strFirstName + " " + ui.strLastName,
-                    AdminAr = ui.strFirstNameAr + " " + ui.strLastNameAr,
-                    TaskTypeID = tT.intId,
-                    TaskTypeEn = tT.strNameEn,
-                    TaskTypeAr = tT.strNameAr,
-                    ActivationDate = t.dtmDateActivated,
-                    FinishedDate = t.dtmDateFinished,
-                    ScheduledDate = t.dtmDateScheduled,
-                    DeadlineDate = t.dtmDateDeadline,
-                    TaskStatus = ts.strName,
-                    TaskStatusAr = ts.strNameAr,
-                    StatusId = ts.intId,
-                } into g
-                orderby g.Key.TaskID ascending
-                select new TaskListDTO
-                {
-                    taskID = g.Key.TaskID,
-                    adminUsername = g.Key.Admin,
-                    adminName = g.Key.Admin,
-                    adminNameAr = g.Key.AdminAr,
-                    intTaskTypeId = g.Key.TaskTypeID,
-                    strTypeNameEn = g.Key.TaskTypeEn,
-                    strTypeNameAr = g.Key.TaskTypeAr,
-                    activatedDate = g.Key.ActivationDate,
-                    finishedDate = g.Key.FinishedDate,
-                    scheduledDate = g.Key.ScheduledDate,
-                    deadlineDate = g.Key.DeadlineDate,
-                    intTaskStatusId = g.Key.StatusId,
-                    strTaskStatus = g.Key.TaskStatus,
-                    strTaskStatusAr = g.Key.TaskStatusAr,
-                    workersList = g.Select(
-                            x =>
-                                new TaskWorkerDTO
+            var query = from t in _context.Tasks
+                        join tt in _context.TaskTypes on t.intTypeId equals tt.intId
+                        join ts in _context.TaskStatus on t.intStatusId equals ts.intId
+                        join team in _context.Teams on t.intTeamId equals team.intId
+                        join d in _context.Departments on team.intDepartmentId equals d.intId
+                        orderby t.intId
+                        select new TaskListDTO
+                        {
+                            taskID = t.intId,
+                            strTypeNameEn = tt.strNameEn,
+                            strTypeNameAr = tt.strNameAr,
+                            strTaskStatus = ts.strName,
+                            strTaskStatusAr = ts.strNameAr,
+                            strDepartmentEn = d.strNameEn,
+                            strDepartmentAr = d.strNameAr,
+                            intTaskStatusId = ts.intId,
+                            intTaskTypeId = tt.intId,
+                            intTeamID = team.intId,
+                            activatedDate = t.dtmDateActivated,
+                            deadlineDate = t.dtmDateDeadline,
+                            finishedDate = t.dtmDateFinished,
+                            scheduledDate = t.dtmDateScheduled,
+                            adminName = t.Admin.UserInfo.strFirstName + " " + t.Admin.UserInfo.strLastName,
+                            adminNameAr = t.Admin.UserInfo.strFirstNameAr + " " + t.Admin.UserInfo.strLastNameAr,
+                            adminUsername = t.Admin.UserName,
+                            workersList = team.Workers.Select(
+                                w => new TaskWorkerDTO
                                 {
-                                    intId = x.Worker.Id,
-                                    strFirstName = x.Worker.UserInfo.strFirstName,
-                                    strLastName = x.Worker.UserInfo.strLastName,
-                                    //isLeader = x.blnIsLeader,
+                                    intId = w.intWorkerId,
+                                    strFirstName = w.Worker.UserInfo.strFirstName,
+                                    strLastName = w.Worker.UserInfo.strLastName,
+                                    strFirstNameAr = w.Worker.UserInfo.strFirstNameAr,
+                                    strLastNameAr = w.Worker.UserInfo.strLastNameAr,
+                                    isLeader = team.intLeaderId == w.intWorkerId
                                 }
-                        )
-                        .Distinct()
-                        .ToList()
-                };
+                                ).ToList()
+                        };
 
             var queryObject = query.AsQueryable();
 
