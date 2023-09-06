@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:account/Repository/color.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:page_indicator/page_indicator.dart';
+import 'package:account/Screens/Home/publicFeed.dart';
 import 'package:account/API/file_complaint_request.dart';
 
   final _picker = ImagePicker();
@@ -19,8 +21,66 @@ class _PageViewState extends State<MyPageView> {
 
   @override
   void initState() {
+    _getCurrentPosition();
     super.initState();
     controller = PageController();
+    
+  }
+
+  late var address;
+  bool _isDisposed = false;
+  double lat = 0.0;
+  double lng = 0.0;
+
+  @override
+  void dispose() {
+    late var address;
+    _isDisposed = true;
+    super.dispose();
+  }
+
+  String? _currentAddress;
+
+  Future<bool> _handleLocationPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('تم تعطيل خدمة الموقع الحالي. الرجاء تفعيل الخدمة')));
+      return false;
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('تم رفض أذونات الموقع')));
+        return false;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('تم رفض أذونات الموقع بشكل دائم.')));
+      return false;
+    }
+    return true;
+  }
+
+  Future<void> _getCurrentPosition() async {
+    final hasPermission = await _handleLocationPermission();
+
+    if (!hasPermission || _isDisposed) return;
+    try {
+      final position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      if (!_isDisposed) {
+        setState(() => currentPosition = position);
+      }
+    } catch (e) {}
   }
 
   void removeImage(int index, BuildContext context) {
@@ -35,7 +95,7 @@ class _PageViewState extends State<MyPageView> {
     if (index < selectedMediaFiles.length) {
       controller!.animateToPage(
         index,
-        duration: const Duration(milliseconds: 500), // Adjust the duration as needed.
+        duration: const Duration(milliseconds: 500), 
         curve: Curves.easeInOut,
       );
     }
@@ -48,7 +108,7 @@ class _PageViewState extends State<MyPageView> {
 
   Future<void> getImages(BuildContext context) async {
     final pickedFile = await _picker.pickImage(
-      source: ImageSource.gallery,
+      source: ImageSource.camera,
       imageQuality: 50,
     );
 
@@ -56,13 +116,19 @@ class _PageViewState extends State<MyPageView> {
       selectedMediaFiles.add(
         MediaFile(
           File(pickedFile.path),
-          31.958946, // Placeholder value for decLat
-          31.958946, // Placeholder value for decLng
+          currentPosition!.latitude,
+          currentPosition!.longitude, 
           false,
         ),
+       
       );
+
       setState(() {});
       print(selectedMediaFiles.length);
+      print(selectedMediaFiles.first);
+      print(
+        currentPosition!.longitude,
+      );
     } else {
       Navigator.pop(context);
     }
@@ -70,7 +136,7 @@ class _PageViewState extends State<MyPageView> {
 
   Widget stackButton(IconData icon, Function() onPressed) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(15.0),
       child: ClipOval(
         child: Material(
           color: AppColor.background,

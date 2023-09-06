@@ -168,7 +168,7 @@ class _MainMenuState extends State<MainMenu> {
                       content: "2,452"),
                   InfoDisplayBox(
                       height: 0.12 * screenHeight,
-                      width: 0.45 * screenWidth,
+                      width: 0.47 * screenWidth,
                       title: "متوسط مدة حل البلاغ",
                       content: "3 أيام"),
                 ],

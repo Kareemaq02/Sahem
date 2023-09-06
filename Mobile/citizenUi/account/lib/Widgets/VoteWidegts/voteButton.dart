@@ -1,123 +1,74 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:like_button/like_button.dart' ;
 import 'package:account/API/vote_complaint.dart';
-import 'package:account/Widgets/countProvider.dart';
-
 
 // ignore_for_file: unused_local_variable, file_names, prefer_const_constructors
-
-  
-
 class VoteWidget extends StatefulWidget {
- final int initialCount;
+  int initialCount;
   final int complaintID;
   final int isVoted;
-    VoteWidget({
+  final ValueChanged<VoteInfo> onVoteChanged;
+
+  VoteWidget({
     required this.initialCount,
     required this.complaintID,
     required this.isVoted,
+    required this.onVoteChanged,
   });
 
   @override
   _VoteWidgetState createState() => _VoteWidgetState();
 }
+
 class _VoteWidgetState extends State<VoteWidget> {
-
-
-
-  int countPress=0;
   VoteComplaint a = VoteComplaint();
+  int onPressed = 0;
 
   @override
-  void initState() {
-    super.initState();
-    countPress = widget.isVoted;
-    // print("here is init count: ${widget.initialCount} ${widget.complaintID}");
-    // print("here is : ${widget.isVoted}");
-
-  
-  }
-
-
-
-
- @override
   Widget build(BuildContext context) {
-    final countProvider = Provider.of<CountProvider>(context, listen: false);
-     //countProvider.updateCount(widget.initialCount);
+    bool isActive = widget.isVoted == 1;
 
-  return 
-  LikeButton(
-    likeBuilder: (isLiked) {
-       return 
-       isLiked|| widget.isVoted==1? Image.asset("assets/icons/upActive.png",scale: 1.1,) :
-       Image.asset("assets/icons/upInactive.png",scale: 1.1,) ;
-    }, 
-   onTap: (isLiked) async {
+    return GestureDetector(
+      onTap: () async {
+        if (!isActive) {
+          if (widget.isVoted == -1) {
+            await a.removeVoteRequest(widget.complaintID, context);
+          }
+          await a.sendVoteRequest(widget.complaintID, context);
+          onPressed = 1;
+          widget.initialCount++;
+        } else {
+          await a.removeVoteRequest(widget.complaintID, context);
+          widget.initialCount--;
+          onPressed = 0;
+        }
 
-      if (!isLiked && countPress==0) {
-      Image.asset("assets/icons/upInactive.png",scale: 1.1,);
-       
-         await a.sendVoteRequest(widget.complaintID,context);
-         countPress=1;
-         
-      }
-      else if(countPress==1){
-        await a.removeVoteRequest(widget.complaintID,context);
-        countPress=0;
-         
-        
-        
-      }
-      
-      return !isLiked;
-    },
-       
+        widget.onVoteChanged(
+          VoteInfo(
+            isActive ? widget.initialCount : widget.initialCount,
+            !isActive,
+          ),
+        );
+      },
+      child: Column(
+        children: [
+          isActive
+              ? Image.asset(
+                  "assets/icons/upActive.png",
+                  scale: 1.1,
+                )
+              : Image.asset(
+                  "assets/icons/upInactive.png",
+                  scale: 1.1,
+                ),
+        ],
+      ),
     );
-    
+  }
 }
 
+class VoteInfo {
+  final int count;
+  final bool isLiked;
+
+  VoteInfo(this.count, this.isLiked);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-// Widget downVote(count,comlaintID){
-//   return 
-//   LikeButton(
-//     likeBuilder: (isLiked) {
-//        return 
-//        isLiked? Image.asset("assets/icons/downActive.png",scale: 1.1,)  :
-//        Image.asset("assets/icons/downInactive.png",scale: 1.1,) ;
-  
-//     },
-    
-
-//    onTap: (isLiked) async {
-//       if (!isLiked) {
-//         VoteComplaint a = VoteComplaint();
-//          await a.DownVoteRequest(comlaintID,context);
-       
-//       }
-//       return !isLiked;
-//     },
-   
-//     );
-      
-// }
-
-
-
-
-
-
-

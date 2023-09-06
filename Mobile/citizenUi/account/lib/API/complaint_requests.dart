@@ -3,8 +3,6 @@ import 'package:http/http.dart' as http;
 import 'package:account/API/login_request.dart';
 // ignore_for_file: prefer_typing_uninitialized_variables, camel_case_types, avoid_print
 
-//import 'package:account/API/login_request.dart';
-
 class ComplaintModel {
   int intComplaintId;
   String strUserName;
@@ -101,15 +99,13 @@ class getUserComplaint {
     });
 
     if (response.statusCode == 200) {
-      print("ok");
-
       return jsonDecode(response.body.toString());
     } else {
       throw Exception('Failed to fetch complaints');
     }
   }
 
-  Future<List<ComplaintModel>> getComplaintById(String complaintId) async {
+  Future<List<ComplaintModel>> getComplaintById(var complaintId) async {
     var baseUrl = "https://10.0.2.2:5000/api/complaints/$complaintId";
 
     http.Response response = await http
@@ -137,4 +133,46 @@ class getUserComplaint {
       throw Exception('Failed to fetch complaints');
     }
   }
+
+  Future<List<ComaplintSatus>> fetchComaplintStatus(id) async {
+    final response = await http.get(
+      Uri.parse("https://10.0.2.2:5000/api/complaints/statuses/$id"),
+      headers: {
+        'Authorization': 'Bearer $token2',
+      },
+    );
+    if (response.statusCode == 200) {
+      List<dynamic> jsonList = jsonDecode(response.body);
+
+      List<ComaplintSatus> statusList = jsonList.map((json) {
+        return ComaplintSatus(
+          intComplaintId: json['intComplaintId'],
+          intComplaintStatusId: json['intComplaintStatusId'],
+          strStatusName: json['strStatusName'],
+          strStatusNameAr: json['strStatusNameAr'],
+          dtmTrans: DateTime.parse(json['dtmTrans']),
+        );
+      }).toList();
+
+      return statusList;
+    } else {
+      throw Exception('Failed22');
+    }
+  }
+}
+
+class ComaplintSatus {
+  int intComplaintId;
+  int intComplaintStatusId;
+  String strStatusName;
+  String strStatusNameAr;
+  DateTime dtmTrans;
+
+  ComaplintSatus({
+    required this.intComplaintId,
+    required this.intComplaintStatusId,
+    required this.strStatusName,
+    required this.strStatusNameAr,
+    required this.dtmTrans,
+  });
 }

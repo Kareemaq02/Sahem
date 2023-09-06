@@ -65,7 +65,7 @@ class FullMapState extends State<FullMap> with TickerProviderStateMixin {
       setState(() => _currentPosition = position);
       _getAddressFromLatLng(_currentPosition!);
     }).catchError((e) {
-      debugPrint(e);
+      //  debugPrint(e);
     });
   }
 
@@ -178,7 +178,7 @@ class FullMapState extends State<FullMap> with TickerProviderStateMixin {
                       point: location,
                       builder: (context) {
                         return InkWell(
-                          child: markerWidegt(),
+                          child: markerWidegt(2),
                           onTap: () => mapCard(context),
                         );
                       },

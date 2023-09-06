@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
+import 'package:account/API/complaint_requests.dart';
+import 'package:account/Screens/Home/publicFeed.dart';
 import 'package:account/API/get_complaints_types.dart';
 import 'package:account/Widgets/Filter/filterType.dart';
+import 'package:account/Widgets/CheckBoxes/CheckBox.dart';
 import 'package:account/API/get_complaints_with_filter.dart';
+import 'package:account/Widgets/ComaplaintCard/timeLineVertical.dart';
 
+List<int> selectedStatus = [];
 
-
-
- List<int> selectedStatus = [];
 class FilterPopup2 extends StatefulWidget {
   const FilterPopup2({Key? key}) : super(key: key);
 
@@ -17,158 +19,111 @@ class FilterPopup2 extends StatefulWidget {
 
 class _FilterPopup2State extends State<FilterPopup2> {
   late Future<List<ComplaintType>> futureData;
-  ComplaintTypeRequest type = ComplaintTypeRequest();
-
-
- 
+  getUserComplaint status = getUserComplaint();
 
   @override
   void initState() {
     super.initState();
-    futureData = type.getAllCategory();
-   
   }
-  
-
-
-
 
   @override
   Widget build(BuildContext context) {
-
-     List<Map<String, dynamic>> checkboxData2 = [
- 
-    {
-      "intId": 1,
-      "strName": "مقيد",
-      "isChecked": false,
-    },
-   
-    {
-      "intId": 3,
-        "strName": "موافق عليه",
-      "isChecked": false,
-    },
-     {
-       "intId": 4,
-       "strName": "مجدول",
-      "isChecked": false,
-    },
-   
-    
-  ];
-   return
-    AlertDialog(
+    return AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
       title: const Text(
         'حالة البلاغات',
         textAlign: TextAlign.center,
-        style: TextStyle( fontFamily:"DroidArabicKufi",),
+        style: TextStyle(
+          fontFamily: "DroidArabicKufi",
+        ),
       ),
+      titlePadding: EdgeInsets.all(8),
+      contentPadding: EdgeInsets.symmetric(horizontal: 2.0, vertical: 17),
       content: SizedBox(
-        height: 250,
+        height: 200,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Expanded(
               child: SingleChildScrollView(
-                child: ListView.builder(
-                  itemCount: checkboxData2.length,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (BuildContext context, int index) {
-                    final data = checkboxData2[index];
-                    final intTypeId = data["intId"] as int;
-                    final strNameAr = data["strName"] as String;
-                    bool isChecked = selectedStatus.contains(intTypeId);
-
-                    return Column(
-                      children: [
-                        checkboxWidget2(
-                          strNameAr,
-                          context,
-                          isChecked,
-                          intTypeId,
-                          (value) {
-                            setState(() {
-                              if (value!) {
-                               
-                                selectedStatus.add(intTypeId);
-                                 print(selectedStatus);
-                              } else {
-                                
-                                selectedStatus.remove(intTypeId);
-                              }
-                            });
-                          },
+                child: FutureBuilder(
+                  future: status.fetchStatus(),
+                  builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return Text('No status types available');
+                    } else {
+                      final categories = snapshot.data!;
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 10.0),
+                        child: Column(
+                          children: categories.map((category) {
+                            final int intTypeId = category["intId"];
+                            bool isChecked = selectedStatus.contains(intTypeId);
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: CheckBoxNew(
+                                key: widget.key,
+                                text: status2[intTypeId].name,
+                                isChecked: selectedStatus.contains(intTypeId),
+                                onChanged: () {
+                                  setState(() {
+                                    if (!selectedStatus.contains(intTypeId)) {
+                                      selectedStatus.add(intTypeId);
+                                    } else {
+                                      selectedStatus.remove(intTypeId);
+                                    }
+                                    print(selectedStatus);
+                                  });
+                                },
+                              ),
+                            );
+                          }).toList(),
                         ),
-                        const SizedBox(height: 20),
-                      ],
-                    );
+                      );
+                    }
                   },
                 ),
               ),
             ),
             const SizedBox(height: 10),
-          
             Container(
-              height:40 ,
+              height: 40,
               width: 125,
               child: ElevatedButton(
-               style: ButtonStyle(
-               padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.zero), 
-              backgroundColor: MaterialStateProperty.all<Color>(AppColor.main),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50), 
-               side: const BorderSide(
-                    color:AppColor.main,
-                    width: 1.3,
-                    //style: BorderStyle.solid,
+                  style: ButtonStyle(
+                    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                        EdgeInsets.zero),
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(AppColor.main),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
+                        side: const BorderSide(
+                          color: AppColor.main,
+                          width: 1.3,
+                          //style: BorderStyle.solid,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-                ),
-              ),
-                        
-                onPressed:() {
-                 // selectedTypes.clear(); 
-                 // selectedStatus.clear(); 
-                Navigator.of(context).pop();
-                getFilteredComplaints(selectedStatus,selectedTypes,31.961899172907753, 35.86508730906701);
-              //getFilteredComplaints(selectedTypes,selectedStatus,);
-              }, child: const Text("استمرار")),
+                  onPressed: () async {
+                    await getFilteredComplaints(selectedStatus, selectedTypes1,
+                        currentPosition!.latitude, currentPosition!.longitude);
+
+                    setState(() {});
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("استمرار")),
             ),
           ],
         ),
       ),
     );
   }
-}
-
-Widget checkboxWidget2(
-  String option, 
-  BuildContext context, 
-  bool? isChecked, 
-  int typeId, 
-  void Function(bool?) onChanged 
-) {
-  return GestureDetector(
-    onTap: () {
-      onChanged(!isChecked!); 
-    },
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Text(
-          option,
-          style: const TextStyle(color: AppColor.main, fontSize: 12, fontFamily: 'DroidArabicKufi'),
-        ),
-        SizedBox(width: MediaQuery.of(context).padding.right + 5),
-        Checkbox(
-          value: isChecked,
-          onChanged: onChanged, 
-          activeColor: AppColor.main,
-        ),
-      ],
-    ),
-  );
 }

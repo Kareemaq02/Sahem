@@ -1,8 +1,9 @@
-// ignore_for_file: constant_identifier_names
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// ignore_for_file: constant_identifier_names
+
+
 
 const String LAGUAGE_CODE = 'languageCode';
 
