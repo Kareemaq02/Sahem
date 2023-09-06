@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:account/API/login_request.dart';
 
 class ComapalintReminder {
-  Future<dynamic> comaplintReminder(int id, context) async {
+  Future<dynamic> comaplintReminder(int id, context1) async {
     final url = Uri.parse("https://10.0.2.2:5000/api/complaints/remind/$id");
 
     try {
@@ -18,27 +18,27 @@ class ComapalintReminder {
       );
       print(response.statusCode);
       if (response.statusCode == 200) {
-        _showDialog("تم إرسال تذكير بنجاح", context, response.statusCode);
+        _showDialog("تم إرسال تذكير بنجاح", context1, response.statusCode);
         return {};
       } else if (response.statusCode == 400) {
         final responseBody = jsonDecode(response.body);
-        _showDialog(responseBody, context, response.statusCode);
+        _showDialog(responseBody, context1, response.statusCode);
         return responseBody;
       } else {
         return null;
       }
     } catch (error) {
-      _showDialog('لا يمكن إرسال تذكير الأن. ', context, 401);
+      _showDialog('لا يمكن إرسال تذكير الأن. ', context1, 401);
       return null;
     }
   }
 }
 
-void _showDialog(String message, context, statusCode) {
+void _showDialog(String message, BuildContext context1, int statusCode) {
   showDialog(
-    context: context,
+    context: context1, 
     builder: (BuildContext context) {
-      Future.delayed(Duration(seconds: 3), () {
+      Future.delayed(Duration(seconds: 1), () {
         Navigator.of(context).pop();
       });
       return AlertDialog(

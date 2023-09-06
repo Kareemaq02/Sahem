@@ -8,21 +8,16 @@ import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/Screens/Profile/textButton.dart';
 import 'package:account/Screens/Profile/switchWidget.dart';
 
-
-
- bool isChecked = false;
 class Profile extends StatefulWidget {
-  const Profile({super.key});
+  const Profile({Key? key});
 
   @override
   _ProfileState createState() => _ProfileState();
 }
 
 class _ProfileState extends State<Profile> {
-
-
-     List<UserInfoModel> _userInfo=[];
-  getUserInfo user=getUserInfo();
+  List<UserInfoModel> _userInfo = [];
+  getUserInfo user = getUserInfo();
 
   @override
   void initState() {
@@ -30,8 +25,7 @@ class _ProfileState extends State<Profile> {
     _fetchUserInfo("520");
   }
 
-
-    Future<void> _fetchUserInfo(String userId) async {
+  Future<void> _fetchUserInfo(String userId) async {
     try {
       List<UserInfoModel> userInfo = await user.getUserInfoById(userId);
       setState(() {
@@ -39,79 +33,56 @@ class _ProfileState extends State<Profile> {
         print(_userInfo);
       });
     } catch (error) {
-
       print("Error fetching user info: $error");
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
- if (_userInfo.isEmpty) {
+    final screenSize = MediaQuery.of(context).size;
 
-    return const Center(child: CircularProgressIndicator());}
-      UserInfoModel userInfo = _userInfo[0];
+    if (_userInfo.isEmpty) {
+      return Center(child: CircularProgressIndicator());
+    }
+    UserInfoModel userInfo = _userInfo[0];
 
-   
-    return  Scaffold(
+    return Scaffold(
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
-      floatingActionButton:const CustomActionButton(),
+      floatingActionButton: const CustomActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar:BottomNavBar1(3),
-       appBar:myAppBar(context,"الإعدادات",false,170),
+      bottomNavigationBar: BottomNavBar1(3),
+      appBar: myAppBar(context, "الإعدادات", false, 170),
       body: Padding(
-        padding: const EdgeInsets.only(top:8.0,bottom: 8.0),
+        padding: EdgeInsets.only(
+          top: screenSize.height * 0.01,
+          bottom: screenSize.height * 0.01,
+          left: screenSize.width * 0.02,
+          right: screenSize.width * 0.02,
+        ),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              
-            Padding(
-              padding: const EdgeInsets.only(right:8.0,left: 8.0),
-              child: InfoBox( '${userInfo.strFirstName!} ${userInfo.strLastName!}',),
-            ),
-            SizedBox(height: 10,),
-            DataBox('أسم المستخدم',textButtn,userInfo.strUsername!,),
-            DataBox("البريد الالكتروني",textButtn,userInfo.strUsername!,),
-            DataBox("رقم الهاتف",textButtn,userInfo.strPhoneNumber!,),
-            DataBox("كلمة المرور",textButtn,"********"),
-            DataBox("استلام الاشعارات",switchV,"غير مفعل"),
-            DataBox("اللغة",toggleLang,"العربية"),
-           SizedBox(height: 10,),
-           logoutBox(context),
-            ],),
-            
+              InfoBox('${userInfo.strFirstName!} ${userInfo.strLastName!}'),
+              SizedBox(height: screenSize.height * 0.01),
+              DataBox(
+                  'أسم المستخدم',  userInfo.strUsername!, ),
+              DataBox("البريد الالكتروني", userInfo.strUsername!,
+                  ),
+              DataBox(
+                  "رقم الهاتف",  userInfo.strPhoneNumber!, ),
+              DataBox(
+                "كلمة المرور",
+                
+                "********",
+                
+              ),
+             // DataBox("استلام الاشعارات", switchV, "غير مفعل",),
+              logoutBox(context),
+            ],
+          ),
         ),
       ),
-
     );
-
   }
 }
-List<bool> _isSelected = [true, false];
-
-Widget toggleLang() {
-  return SizedBox(
-    //width: 80, // Set the desired width
-    height: 25, // Set the desired height
-    child: ToggleButtons(
-      renderBorder: true,
-      borderColor: AppColor.main, // Make sure AppColor.main is defined
-      borderRadius: BorderRadius.circular(20),
-      children: <Widget>[
-        Text('En',style: TextStyle(fontSize: 10),),
-        Text('ع',style: TextStyle(fontSize: 10),),
-      ],
-      isSelected: _isSelected,
-      color: Colors.grey,
-      selectedColor: Colors.white,
-      fillColor: AppColor.main,
-      onPressed: (int index) {
-        // setState(() {
-        //   _isSelected[index] = !_isSelected[index];
-        // });
-      },
-    ),
-  );
-}
-

@@ -1,12 +1,13 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:account/API/login_request.dart';
+
 // ignore_for_file: avoid_print, unused_import
 
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'login_request.dart';
 
 class EditInfo{
 
-var token3="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFidXJ1bW1hbm4iLCJmaXJzdE5hbWUiOiJydWJhIiwibGFzdE5hbWUiOiJhYnVydW1tYW4iLCJwaG9uZU51bWJlciI6IjA3OTg5ODk5OTkiLCJ1c2VyVHlwZSI6InVzZXIiLCJuYmYiOjE2OTAxODI2NzIsImV4cCI6MTY5Mjc3NDY3MiwiaWF0IjoxNjkwMTgyNjcyfQ.jMq9-vk97jJwzQ0PXRoDb5LoOD2fQxIo9B061-Hm3tI";
+
 
 
 Future<String> updateAccount(String strNewUserName, String strNewEmail,
@@ -14,20 +15,38 @@ Future<String> updateAccount(String strNewUserName, String strNewEmail,
   String url = 'https://10.0.2.2:5000/api/account/update';
 
   Map<String, String> headers = {
-    'Authorization': 'Bearer $token3',
+      'Authorization': 'Bearer $token2',
     'Content-Type': 'application/json', 
   };
 
-  Map<String, dynamic> body = {
-    "strNewUserName": strNewUserName,
-    "strNewEmail": strNewEmail,
-    "strNewPhoneNumber": strNewPhoneNumber,
-    "strOldPassword": "Pass@123",
-    "strNewPassword": strNewPassword,
-    "strNewLocation": strNewLocation
-  };
+  // Map<String, dynamic> body = {
+  //   "strNewUserName": strNewUserName,
+  //   "strNewEmail": strNewEmail,
+  //   "strNewPhoneNumber": strNewPhoneNumber,
+  //   "strOldPassword": "Pass@123",
+  //   "strNewPassword": strNewPassword,
+  //   "strNewLocation": strNewLocation
+  // };
+   Map<String, dynamic> body = {};
 
-  String requestBody = json.encode(body);
+    if (strNewUserName != null) {
+      body['strNewUserName'] = strNewUserName;
+    }
+    if (strNewEmail != null) {
+      body['strNewEmail'] = strNewEmail;
+    }
+    if (strNewPhoneNumber != null) {
+      body['strNewPhoneNumber'] = strNewPhoneNumber;
+    }
+    if (strNewPassword != null) {
+      body['strNewPassword'] = strNewPassword;
+    }
+    if (strNewLocation != null) {
+      body['strNewLocation'] = strNewLocation;
+    }
+
+    String requestBody = json.encode(body);
+
 
   try {
     final response = await http.put(Uri.parse(url), headers: headers, body: requestBody);
