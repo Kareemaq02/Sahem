@@ -33,12 +33,12 @@ class _XDPublicFeed1State extends State<XDPublicFeed1> {
     super.initState();
   }
 
-  // @override
-  // void dispose() {
-  //   late var address;
-  //   _isDisposed = true;
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    late var address;
+    _isDisposed = true;
+    super.dispose();
+  }
 
   String? _currentAddress;
 

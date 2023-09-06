@@ -1,60 +1,116 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:account/Repository/color.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
 import 'package:page_indicator/page_indicator.dart';
+import 'package:account/Screens/Home/publicFeed.dart';
 import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/API/file_complaint_request.dart';
 import 'package:account/Widgets/Buttons/bottonContainer.dart';
 import 'package:account/Screens/File%20complaint/dropdown.dart';
 import 'package:account/Screens/File%20complaint/pageView.dart';
+import 'package:account/Widgets/HelperWidegts/complaintCard.dart';
 import 'package:account/Screens/File complaint/confirmPopup.dart';
 
 // ignore_for_file: use_build_context_synchronously
 
-
-
-
-
-
 class FileCompalint extends StatefulWidget {
-
-   const FileCompalint({super.key}) ;
-   
+  const FileCompalint({super.key});
 
   @override
   State<FileCompalint> createState() => ComaplintState();
 }
 
 class ComaplintState extends State<FileCompalint> {
-
   late PageController controller;
   GlobalKey<PageContainerState> key = GlobalKey();
- TextEditingController commentController = TextEditingController();
+  TextEditingController commentController = TextEditingController();
+  final FocusNode textFieldFocusNode = FocusNode();
 
+  @override
+  void dispose() {
+    selectedMediaFiles.clear();
+    super.dispose();
+  }
 
-@override
-void dispose() {
+  @override
+  void initState() {
+    _getCurrentPosition();
+    fetchAddress();
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      getImages(context);
+    });
+  }
 
-  selectedMediaFiles.clear();
-  super.dispose();
-}
+  String address = "";
+  Future<void> fetchAddress() async {
+    address = (await getAddressFromCoordinates(
+        currentPosition!.latitude, currentPosition!.longitude))!;
+    if (mounted) {
+      setState(() {});
+      print(address);
+    }
+  }
 
- 
+  bool _isDisposed = false;
+  double lat = 0.0;
+  double lng = 0.0;
 
+  // @override
+  // void dispose() {
+  //   late var address;
+  //   _isDisposed = true;
+  //   super.dispose();
+  // }
 
-@override
-void initState() {
-  super.initState();
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    getImages(context);
-  });
-}
+  Future<bool> _handleLocationPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
 
-Future<void> getImages(BuildContext context) async {
-     final pickedFile = await ImagePicker().pickImage(
-      source: ImageSource.gallery,
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('تم تعطيل خدمة الموقع الحالي. الرجاء تفعيل الخدمة')));
+      return false;
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('تم رفض أذونات الموقع')));
+        return false;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('تم رفض أذونات الموقع بشكل دائم.')));
+      return false;
+    }
+    return true;
+  }
+
+  Future<void> _getCurrentPosition() async {
+    final hasPermission = await _handleLocationPermission();
+
+    if (!hasPermission || _isDisposed) return;
+    try {
+      final position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      if (!_isDisposed) {
+        setState(() => currentPosition = position);
+      }
+    } catch (e) {}
+  }
+
+  Future<void> getImages(BuildContext context) async {
+    final pickedFile = await ImagePicker().pickImage(
+      source: ImageSource.camera,
       imageQuality: 50,
     );
 
@@ -63,8 +119,8 @@ Future<void> getImages(BuildContext context) async {
         selectedMediaFiles.add(
           MediaFile(
             File(pickedFile.path),
-            31.958946, // Placeholder value for decLat
-            31.958946, // Placeholder value for decLng
+            currentPosition!.latitude,
+            currentPosition!.longitude,
             false,
           ),
         );
@@ -74,65 +130,76 @@ Future<void> getImages(BuildContext context) async {
     }
   }
 
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
-   
-    return  Scaffold(
-       backgroundColor: AppColor.background,
-      resizeToAvoidBottomInset: false,
-      floatingActionButton:const CustomActionButton(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar:BottomNavBar1(3),
-       appBar:myAppBar(context,"ارسال بلاغ",false,170),
-      body:
-       SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-         child: Column(
-          children: [ 
-          MyPageView(),
-          const MyDropDown(),
-          const SizedBox(height: 0,),
-           Padding(
-             padding: const EdgeInsets.all(8.0),
-             child: Container(
-             height: 150,
-             decoration: BoxDecoration(
-               border:Border.all(color: AppColor.main,width: 1),
-               borderRadius: BorderRadius.circular(10),
-             ),
-             child: const Padding(
-               padding: EdgeInsets.all(10.0),
-               child: TextField(
-                 maxLines: null, 
-                 decoration: InputDecoration(
-                   hintText: 'أضف تعليق ..',
-                   border: InputBorder.none,
-                   hintTextDirection: TextDirection.rtl,
-                   hintStyle: TextStyle(color: AppColor.main),
-                 ),
-                 
-               ),
-             )),
-           ),
-           const SizedBox(height: 10,), 
-            BottonContainer("استمرار", Colors.white, AppColor.main, 250,context,true,null,(){
-               showDialog(
-              context: context,
-              builder: (BuildContext context) => buildConfirmDialog(context,dropdown.stringName,"ش.وصفي التل.عمان",commentController.text),
-            );}), 
-            const SizedBox(height: 50,),
-        
-          
-          ],
-             ),
-       ),
-        ) ;                   
-     }
+    final screenSize = MediaQuery.of(context).size;
 
+    return GestureDetector(
+      onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: Scaffold(
+        backgroundColor: AppColor.background,
+        resizeToAvoidBottomInset: true,
+        bottomNavigationBar: BottomNavBar1(3),
+        appBar: myAppBar(context, "ارسال بلاغ", false, screenSize.width * 0.5),
+        body: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Column(
+            children: [
+              MyPageView(),
+              const MyDropDown(),
+              Container(
+                width: screenSize.width * 0.95,
+                padding: const EdgeInsets.all(8.0),
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColor.main, width: 1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.all(30.0),
+                  child: TextField(
+                    focusNode: textFieldFocusNode,
+                    autofocus: true,
+                    maxLines: null,
+                    textDirection: TextDirection.rtl,
+                    decoration: const InputDecoration(
+                      hintText: 'أضف تعليق ..',
+                      border: InputBorder.none,
+                      hintTextDirection: TextDirection.rtl,
+                      hintStyle: TextStyle(color: AppColor.main),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16.0), // Add spacing
+
+              BottonContainer(
+                "استمرار",
+                Colors.white,
+                AppColor.main,
+                screenSize.width * 0.5,
+                context,
+                true,
+                null,
+                () {
+                  FocusScope.of(context).unfocus();
+
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) => buildConfirmDialog(
+                        context,
+                        dropdown.stringName,
+                        address,
+                        commentController.text),
+                  );
+                },
+              ),
+              //const SizedBox(height: 50.0),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
-
