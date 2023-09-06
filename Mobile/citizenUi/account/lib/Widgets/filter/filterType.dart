@@ -1,7 +1,10 @@
-import 'package:account/API/get_complaints_types.dart';
-import 'package:account/Repository/color.dart';
-import 'package:account/Widgets/filter/filterStatus.dart';
 import 'package:flutter/material.dart';
+import 'package:account/Repository/color.dart';
+import 'package:account/API/get_complaints_types.dart';
+import 'package:account/Widgets/Filter/filterStatus.dart';
+
+
+
 
 
  List<int> selectedTypes = [];
@@ -22,7 +25,7 @@ class _FilterPopupState extends State<FilterPopup> {
   @override
   void initState() {
     super.initState();
-     selectedTypes.clear(); 
+     //selectedTypes.clear(); 
     futureData = type.getAllCategory();
    
   }
@@ -32,55 +35,80 @@ class _FilterPopupState extends State<FilterPopup> {
 
   @override
   Widget build(BuildContext context) {
+//   final filterModel = Provider.of<FilterModel>(context);
+// List<int> selectedTypes = filterModel.selectedType;
 
      List<Map<String, dynamic>> checkboxData = [
-    {
-      "intTypeId": 1,
-      "strNameAr": "مخلفات اعمال صيانة",
-      "isChecked": false,
-    },
-    {
-      "intTypeId": 12,
-      "strNameAr": "مخلفات اعمال بناء",
-      "isChecked": false,
-    },
-    {
-      "intTypeId": 23,
-      "strNameAr": "مخلفات اعمال صيانة",
-      "isChecked": false,
-    },
-     {
-      "intTypeId": 24,
-      "strNameAr": "مخلفات اعمال صيانة",
-      "isChecked": false,
-    },
-    {
-      "intTypeId": 25,
-      "strNameAr": "مخلفات اعمال بناء",
-      "isChecked": false,
-    },
-    {
-      "intTypeId": 26,
-      "strNameAr": "مخلفات اعمال صيانة",
-      "isChecked": false,
-    },
-        {
-      "intTypeId": 27,
-      "strNameAr": "مخلفات اعمال صيانة",
-      "isChecked": false,
-    },
-    {
-      "intTypeId": 28,
-      "strNameAr": "مخلفات اعمال بناء",
-      "isChecked": false,
-    },
-    {
-      "intTypeId": 30,
-      "strNameAr": "مخلفات اعمال صيانة",
-      "isChecked": false,
-    },
+
+  {
+    "intTypeId": 1,
+    "strNameAr": "تراكم النفايات",
+    "isChecked": false,
+  },
+  {
+    "intTypeId": 12,
+    "strNameAr": "تصدعات في  الشارع ",
+    "isChecked": false,
+  },
+  {
+    "intTypeId": 2,
+    "strNameAr": "مبعثرات حول الحاوية",
+    "isChecked": false,
+  },
+   {
+    "intTypeId": 11,
+    "strNameAr": "مناهل مفقودة ",
+    "isChecked": false,
+  },
+  {
+    "intTypeId": 14,
+    "strNameAr": "شواخص  غير قانونية",
+    "isChecked": false,
+  },
+  {
+    "intTypeId": 15,
+    "strNameAr": "شواخص  مكسوره",
+    "isChecked": false,
+  },
+  {
+    "intTypeId": 16,
+    "strNameAr": "شواخص  محجوبة",
+    "isChecked": false,
+  },
+  {
+    "intTypeId": 17,
+    "strNameAr": "انارة الشوارع معطلة",
+    "isChecked": false,
+  },
+  {
+    "intTypeId": 18,
+    "strNameAr": "تصدع جدار استنادي",
+    "isChecked": false,
+  },
+  {
+    "intTypeId": 19,
+    "strNameAr": "تكسر اطراف/ارصفة",
+    "isChecked": false,
+  },
+  {
+    "intTypeId": 21,
+    "strNameAr": "مخلفات اعمال بناء",
+    "isChecked": false,
+  },
+  {
+    "intTypeId": 22,
+    "strNameAr": "مخلفات اعمال صيانة",
+    "isChecked": false,
+  },
+   {
+    "intTypeId": 3,
+    "strNameAr": "مخلفات تقليم الاشجار",
+    "isChecked": false,
+  },
+];
+
     
-  ];
+
    return
     AlertDialog(
       title: const Text(

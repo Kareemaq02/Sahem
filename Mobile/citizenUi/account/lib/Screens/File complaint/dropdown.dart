@@ -1,15 +1,14 @@
-
-
-
-
-import 'package:account/API/get_complaints_types.dart';
-import 'package:account/Repository/color.dart';
 import 'package:flutter/material.dart';
+import 'package:account/Repository/color.dart';
+import 'package:account/API/get_complaints_types.dart';
 
 
 
 
 
+
+
+DropDownValue dropdown=DropDownValue(1, " ");
 class MyDropDown extends StatefulWidget {
 
    const MyDropDown({super.key}) ;
@@ -25,13 +24,12 @@ class _MyDropDownState extends State<MyDropDown> {
 
   //drop down List
 
-  late DropDownValue dropdown=DropDownValue(1, " ");
+
   late int intType;
   List<DropDownValue> items = [];
   late Future<List<ComplaintType>>_futureData;
   ComplaintTypeRequest type=ComplaintTypeRequest();
  
-   List<int> _lenght = [0, 1, 2,4];
 
 
 @override
@@ -49,7 +47,6 @@ void initState() {
   setState(() {
     items = data.map((item) => DropDownValue(item.intTypeId, item.strNameAr)).toList();
     dropdown = items[0];
-    print(items[0]);
   });
 }
 
@@ -86,7 +83,7 @@ void initState() {
               child: Row(
                 children: [
                    Text(item.strNameAr),
-                  Icon(Icons.report_gmailerrorred, color:AppColor.main,size: 20,),
+                  const Icon(Icons.report_gmailerrorred, color:AppColor.main,size: 20,),
                  
                 ],
               ),
@@ -100,35 +97,22 @@ void initState() {
 
          return DropdownButton(
           underline: Container(),
-          //enableFeedback: false,
+         
           alignment: Alignment.topRight,
-           borderRadius: BorderRadius.circular(10),
-          // icon:const Padding(
-          //       padding: EdgeInsets.all(8.0),
-          //       child: Row(
-          //         //mainAxisAlignment: MainAxisAlignment.spaceAround,
-          //         children: [
-          //           SizedBox(width:1,),
-          //         //Icon(Icons.arrow_drop_down_sharp,color:AppColor.main,),
-          //       // SizedBox(width:10,),
-          //          Icon(Icons.report_gmailerrorred, color:AppColor.main,size: 20,),
-             
-          //       ],),),   
-        value:dropdown ,
-        icon: const Icon(Icons.keyboard_arrow_down,color:AppColor.main),
-        items:items,
-        onChanged: (newValue) {
-          setState(() {
-            dropdown= newValue as DropDownValue;
-            print(dropdown.intID );
-            print(dropdown.stringName );
-           
-          });
-        },
+           borderRadius: BorderRadius.circular(10),  
+            value:dropdown ,
+            icon: const Icon(Icons.keyboard_arrow_down,color:AppColor.main),
+            items:items,
+            onChanged: (newValue) {
+              setState(() {
+                dropdown= newValue as DropDownValue;
+              
+              });
+            },
 
       );
     } else {
-      return const CircularProgressIndicator();
+      return const CircularProgressIndicator(color: AppColor.main,);
     }
   },
 ),

@@ -1,9 +1,10 @@
-import 'package:account/API/get_complaints_types.dart';
-import 'package:account/API/get_complaints_with_filter.dart';
-import 'package:account/Repository/color.dart';
-import 'package:account/Widgets/filter/filterStatus.dart';
-import 'package:account/Widgets/filter/filterType.dart';
 import 'package:flutter/material.dart';
+import 'package:account/Repository/color.dart';
+import 'package:account/API/get_complaints_types.dart';
+import 'package:account/Widgets/Filter/filterType.dart';
+import 'package:account/API/get_complaints_with_filter.dart';
+
+
 
 
  List<int> selectedStatus = [];
@@ -27,6 +28,7 @@ class _FilterPopup2State extends State<FilterPopup2> {
     futureData = type.getAllCategory();
    
   }
+  
 
 
 
@@ -41,11 +43,7 @@ class _FilterPopup2State extends State<FilterPopup2> {
       "strName": "مقيد",
       "isChecked": false,
     },
-    {
-      "intId": 2,
-        "strName": "رفض",
-      "isChecked": false,
-    },
+   
     {
       "intId": 3,
         "strName": "موافق عليه",
@@ -62,7 +60,7 @@ class _FilterPopup2State extends State<FilterPopup2> {
    return
     AlertDialog(
       title: const Text(
-        'انواع البلاغات',
+        'حالة البلاغات',
         textAlign: TextAlign.center,
         style: TextStyle( fontFamily:"DroidArabicKufi",),
       ),
@@ -135,7 +133,8 @@ class _FilterPopup2State extends State<FilterPopup2> {
                  // selectedTypes.clear(); 
                  // selectedStatus.clear(); 
                 Navigator.of(context).pop();
-               getFilteredComplaints(selectedTypes,selectedStatus);
+                getFilteredComplaints(selectedStatus,selectedTypes,31.961899172907753, 35.86508730906701);
+              //getFilteredComplaints(selectedTypes,selectedStatus,);
               }, child: const Text("استمرار")),
             ),
           ],

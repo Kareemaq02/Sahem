@@ -1,12 +1,13 @@
-import 'package:account/API/user_info_request.dart';
-import 'package:account/Repository/color.dart';
-import 'package:account/Screens/Profile/dataBox.dart';
-import 'package:account/Screens/Profile/logout.dart';
-import 'package:account/Screens/Profile/switchWidget.dart';
-import 'package:account/Screens/Profile/textButton.dart';
-import 'package:account/Widgets/appBar.dart';
-import 'package:account/Widgets/bottomNavBar.dart';
 import 'package:flutter/material.dart';
+import 'package:account/Repository/color.dart';
+import 'package:account/Widgets/Bars/appBar.dart';
+import 'package:account/API/user_info_request.dart';
+import 'package:account/Screens/Profile/logout.dart';
+import 'package:account/Screens/Profile/dataBox.dart';
+import 'package:account/Widgets/Bars/bottomNavBar.dart';
+import 'package:account/Screens/Profile/textButton.dart';
+import 'package:account/Screens/Profile/switchWidget.dart';
+
 
 
  bool isChecked = false;
@@ -61,27 +62,25 @@ class _ProfileState extends State<Profile> {
        appBar:myAppBar(context,"الإعدادات",false,170),
       body: Padding(
         padding: const EdgeInsets.only(top:8.0,bottom: 8.0),
-        child: Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                
-              Padding(
-                padding: const EdgeInsets.only(right:8.0,left: 8.0),
-                child: InfoBox( '${userInfo.strFirstName!} ${userInfo.strLastName!}',),
-              ),
-              SizedBox(height: 10,),
-              DataBox('أسم المستخدم',textButtn,userInfo.strUsername!,),
-              DataBox("البريد الالكتروني",textButtn,userInfo.strUsername!,),
-              DataBox("رقم الهاتف",textButtn,userInfo.strPhoneNumber!,),
-              DataBox("كلمة المرور",textButtn,"********"),
-              DataBox("استلام الاشعارات",switchV,"غير مفعل"),
-              DataBox("اللغة",toggleLang,"العربية"),
-             SizedBox(height: 10,),
-             logoutBox(context),
-              ],),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
               
-          ),
+            Padding(
+              padding: const EdgeInsets.only(right:8.0,left: 8.0),
+              child: InfoBox( '${userInfo.strFirstName!} ${userInfo.strLastName!}',),
+            ),
+            SizedBox(height: 10,),
+            DataBox('أسم المستخدم',textButtn,userInfo.strUsername!,),
+            DataBox("البريد الالكتروني",textButtn,userInfo.strUsername!,),
+            DataBox("رقم الهاتف",textButtn,userInfo.strPhoneNumber!,),
+            DataBox("كلمة المرور",textButtn,"********"),
+            DataBox("استلام الاشعارات",switchV,"غير مفعل"),
+            DataBox("اللغة",toggleLang,"العربية"),
+           SizedBox(height: 10,),
+           logoutBox(context),
+            ],),
+            
         ),
       ),
 

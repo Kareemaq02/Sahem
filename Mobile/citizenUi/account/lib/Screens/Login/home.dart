@@ -1,10 +1,10 @@
-// ignore_for_file: constant_identifier_names, unused_element, library_private_types_in_public_api, no_leading_underscores_for_local_identifiers, use_build_context_synchronously, avoid_print
-
+import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Screens/Login/login.dart';
 import 'package:account/Screens/Registration/register.dart';
-import 'package:account/Widgets/bottonContainer.dart';
-import 'package:flutter/material.dart';
+import 'package:account/Widgets/Buttons/bottonContainer.dart';
+// ignore_for_file: constant_identifier_names, unused_element, library_private_types_in_public_api, no_leading_underscores_for_local_identifiers, use_build_context_synchronously, avoid_print
+
 // import '../../Repository/language.dart';
 // import '../../Repository/language_constants.dart';
 
