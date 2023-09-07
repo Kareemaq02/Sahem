@@ -4,7 +4,7 @@ import 'package:account/Widgets/Bars/appBar.dart';
 import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/Widgets/Charts/RatingChart.dart';
 import 'package:account/Widgets/CheckBoxes/checkBox.dart';
-import 'package:account/Widgets/Charts/StyledFilterChip.dart';
+import 'package:account/Widgets/Filter/StyledFilterChip.dart';
 import 'package:account/Widgets/Displays/InfoDisplayBox.dart';
 
 class Quarter extends StatefulWidget {
@@ -150,8 +150,9 @@ class _QuarterState extends State<Quarter> {
       rowChildren.add(
         Padding(
           padding: padding,
-          child: CheckBoxNew(
+          child: StyledCheckBox(
             text: entry["strName"],
+            fontSize: 12,
             isChecked: entry["isChecked"],
             onChanged: checkboxFunction,
           ),
@@ -162,7 +163,7 @@ class _QuarterState extends State<Quarter> {
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
       // floatingActionButton: const CustomActionButton(),
-       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavBar1(0),
       appBar: myAppBar(context, "الصفحه الرئيسية", false, screenWidth * 0.35),
       body: Padding(

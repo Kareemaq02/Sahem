@@ -1,3 +1,4 @@
+import 'package:account/Screens/CreateTask/CreateTask.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
@@ -39,24 +40,26 @@ class _MainMenuState extends State<MainMenu> {
     double buttonHeight = 0.145 * screenHeight;
     double buttonWidth = 0.3 * screenWidth;
 
-    NaviTransition(pageName){
-     Navigator.push(
-       context,
-      PageRouteBuilder(
-      pageBuilder: (_, __, ___) => pageName,
-       transitionDuration: Duration(milliseconds:600),
-        transitionsBuilder: (_, a, __, c){
-         var scaleAnimation =Tween<double>(begin: 0.0, end: 1.0).animate(a);
-           return ScaleTransition(scale: scaleAnimation,child: c,
-                                        );
-                                      },
-                                    ));}
-    
+    NaviTransition(pageName) {
+      Navigator.push(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (_, __, ___) => pageName,
+          transitionDuration: Duration(milliseconds: 600),
+          transitionsBuilder: (_, a, __, c) {
+            var scaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(a);
+            return ScaleTransition(
+              scale: scaleAnimation,
+              child: c,
+            );
+          },
+        ),
+      );
+    }
 
     return Scaffold(
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
-    
       bottomNavigationBar: BottomNavBar1(0),
       appBar: myAppBar(context, "الصفحه الرئيسية", false, screenWidth * 0.35),
       body: Padding(
@@ -82,9 +85,8 @@ class _MainMenuState extends State<MainMenu> {
                             width: buttonWidth,
                             icon: Icons.settings_rounded,
                             text: "الإعدادات",
-                            onPressed: () => {NaviTransition(Profile())}
-                       ),
-                             // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const Profile()))}),
+                            onPressed: () => {NaviTransition(Profile())}),
+                        // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const Profile()))}),
                         SquareButtonWithStroke(
                             height: buttonHeight,
                             width: buttonWidth,
@@ -112,14 +114,15 @@ class _MainMenuState extends State<MainMenu> {
                             width: buttonWidth,
                             icon: Icons.forum_rounded,
                             text: "العمل الحالي",
-                            onPressed: () => {NaviTransition( CurrentTask())}),
-                            
+                            onPressed: () =>
+                                {NaviTransition(const CreateTask())}),
                         SquareButtonWithStroke(
                             height: buttonHeight,
                             width: buttonWidth,
                             icon: Icons.card_membership_rounded,
                             text: "الاعمال",
-                            onPressed: () => {NaviTransition(const XDTasksList())}),
+                            onPressed: () =>
+                                {NaviTransition(const XDTasksList())}),
                       ],
                     )
                   ],

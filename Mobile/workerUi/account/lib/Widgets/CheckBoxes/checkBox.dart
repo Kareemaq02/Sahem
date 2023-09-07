@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 
-class CheckBoxNew extends StatelessWidget {
+class StyledCheckBox extends StatelessWidget {
   final String text;
+  final double fontSize;
   final bool isChecked;
   final VoidCallback onChanged;
 
-  const CheckBoxNew({
+  const StyledCheckBox({
     super.key,
     required this.text,
+    required this.fontSize,
     required this.isChecked,
     required this.onChanged,
   });
@@ -24,7 +26,7 @@ class CheckBoxNew extends StatelessWidget {
             text,
             style: TextStyle(
                 color: isChecked ? AppColor.main : Colors.grey,
-                fontSize: 12,
+                fontSize: fontSize,
                 fontFamily: 'DroidArabicKufi'),
           ),
           Checkbox(
