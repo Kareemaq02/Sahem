@@ -20,7 +20,7 @@ class StyledCheckBox extends StatelessWidget {
     return GestureDetector(
       onTap: () => {onChanged()},
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             text,
@@ -29,17 +29,20 @@ class StyledCheckBox extends StatelessWidget {
                 fontSize: fontSize,
                 fontFamily: 'DroidArabicKufi'),
           ),
-          Checkbox(
-            value: isChecked,
-            onChanged: (bool? value) => {onChanged()},
-            activeColor: AppColor.main,
-            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            visualDensity: VisualDensity.compact,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(7.0),
-              side: const BorderSide(
-                color: AppColor.main,
-                width: 1.0,
+          Align(
+            alignment: Alignment.centerRight,
+            child: Checkbox(
+              value: isChecked,
+              onChanged: (bool? value) => {onChanged()},
+              activeColor: AppColor.main,
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              visualDensity: VisualDensity.compact,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(7.0),
+                side: const BorderSide(
+                  color: AppColor.main,
+                  width: 1.0,
+                ),
               ),
             ),
           ),

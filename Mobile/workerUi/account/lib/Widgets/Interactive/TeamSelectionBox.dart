@@ -2,7 +2,7 @@ import 'package:account/Repository/color.dart';
 import 'package:account/Utils/Team.dart';
 import 'package:account/Utils/TeamMembers.dart';
 import 'package:account/Widgets/Buttons/StyledButton.dart';
-import 'package:account/Widgets/CheckBoxes/checkBox.dart';
+import 'package:account/Widgets/CheckBoxes/StyledCheckBox.dart';
 import 'package:account/Widgets/Displays/TeamDisplay.dart';
 import 'package:account/Widgets/HelperWidgets/TitleText.dart';
 import 'package:account/Widgets/Popup/CheckBoxPopup.dart';
@@ -47,7 +47,7 @@ class _TeamSelectionBoxState extends State<TeamSelectionBox> {
 
   void getTeams() async {
     teamsRequest =
-        Future.delayed(const Duration(milliseconds: 3000), () => teamsList);
+        Future.delayed(const Duration(milliseconds: 300), () => teamsList);
     teamsList = await teamsRequest;
   }
 

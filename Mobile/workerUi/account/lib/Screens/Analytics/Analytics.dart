@@ -3,7 +3,7 @@ import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
 import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/Widgets/Charts/RatingChart.dart';
-import 'package:account/Widgets/CheckBoxes/checkBox.dart';
+import 'package:account/Widgets/CheckBoxes/StyledCheckBox.dart';
 import 'package:account/Widgets/Filter/StyledFilterChip.dart';
 import 'package:account/Widgets/Buttons/IconToggleButton.dart';
 

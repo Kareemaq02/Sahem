@@ -1,5 +1,5 @@
 import 'package:account/Widgets/Buttons/StyledButton.dart';
-import 'package:account/Widgets/CheckBoxes/checkBox.dart';
+import 'package:account/Widgets/CheckBoxes/StyledCheckBox.dart';
 import 'package:account/Widgets/HelperWidgets/TitleText.dart';
 import 'package:flutter/material.dart';
 
