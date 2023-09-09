@@ -1,5 +1,6 @@
 import 'package:account/API/ComplaintsAPI/View_Complaints_Request.dart';
 import 'package:account/Screens/CreateTask/CreateTaskDetails.dart';
+import 'package:account/Utils/NaviTranstion.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
@@ -79,28 +80,11 @@ class _CreateTaskState extends State<CreateTask> {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
-    NaviTransition(pageName) {
-      Navigator.push(
-        context,
-        PageRouteBuilder(
-          pageBuilder: (_, __, ___) => pageName,
-          transitionDuration: Duration(milliseconds: 600),
-          transitionsBuilder: (_, a, __, c) {
-            var scaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(a);
-            return ScaleTransition(
-              scale: scaleAnimation,
-              child: c,
-            );
-          },
-        ),
-      );
-    }
-
     return Scaffold(
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
       bottomNavigationBar: BottomNavBar1(0),
-      appBar: myAppBar(context, 'اضافة عمل', false, screenHeight * 0.3),
+      appBar: myAppBar(context, 'اضافة عمل', false, screenHeight * 0.28),
       body: SingleChildScrollView(
         controller: _scrollController,
         scrollDirection: Axis.vertical,
@@ -158,8 +142,9 @@ class _CreateTaskState extends State<CreateTask> {
                             ),
                           ),
                           InkWell(
-                            onTap: () =>
-                                {NaviTransition(const CreateTaskDetails())},
+                            onTap: () => {
+                              naviTransition(context, const CreateTaskDetails())
+                            },
                             child: Mycontainer(
                               screenHeight * 0.2,
                               Padding(

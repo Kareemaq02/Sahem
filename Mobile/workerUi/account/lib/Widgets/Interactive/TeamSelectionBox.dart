@@ -11,19 +11,17 @@ import 'package:flutter/material.dart';
 class TeamSelectionBox extends StatefulWidget {
   final double height;
   final double width;
-  final Future<List<TeamMembers>> teamRequest;
-  final List<TeamMembers> teamList;
   final double boxHeight;
   final double boxWidth;
+  final void Function(Team) onChecked;
 
   const TeamSelectionBox({
     Key? key,
     required this.height,
     required this.width,
-    required this.teamRequest,
-    required this.teamList,
     required this.boxHeight,
     required this.boxWidth,
+    required this.onChecked,
   }) : super(key: key);
 
   @override
@@ -31,24 +29,90 @@ class TeamSelectionBox extends StatefulWidget {
 }
 
 class _TeamSelectionBoxState extends State<TeamSelectionBox> {
+  late Future<List<TeamMembers>> teamMembersRequest;
+  List<TeamMembers> teamMembersList1 = [
+    TeamMembers(1, "asd بسام", true),
+    TeamMembers(2, "عمر احمد", false),
+    TeamMembers(3, "طلال بلال", false),
+    TeamMembers(4, "سيف محمد", false),
+  ];
+  List<TeamMembers> teamMembersList2 = [
+    TeamMembers(1, "محمد بسام", false),
+    TeamMembers(2, "عمر احمد", true),
+    TeamMembers(3, "طلال بلال", false),
+    TeamMembers(4, "سيف محمد", false),
+  ];
+  List<TeamMembers> teamMembersList3 = [
+    TeamMembers(1, "محمد بسام", false),
+    TeamMembers(2, "عمر احمد", false),
+    TeamMembers(3, "طلال بلال", true),
+    TeamMembers(4, "سيف محمد", false),
+  ];
+  List<TeamMembers> teamMembersList4 = [
+    TeamMembers(1, "محمد بسام", false),
+    TeamMembers(2, "عمر احمد", false),
+    TeamMembers(3, "طلال بلال", false),
+    TeamMembers(4, "سيف محمد", true),
+  ];
   late Future<List<Team>> teamsRequest;
   List<Team> teamsList = [
-    Team(1, "محمد بسام"),
+    Team(1, "asd بسام"),
     Team(2, "عمر احمد"),
     Team(3, "طلال بلال"),
     Team(4, "سيف محمد"),
   ];
 
+  List<TeamMembers> getSelectedTeam() {
+    switch (selectedTeamId) {
+      case 1:
+        return teamMembersList1;
+      case 2:
+        return teamMembersList2;
+      case 3:
+        return teamMembersList3;
+      case 4:
+        return teamMembersList4;
+      default:
+        return [];
+    }
+  }
+
+  int selectedTeamId = 0;
+  List<Team> filteredTeams = [];
+
   @override
   void initState() {
     super.initState();
     getTeams();
+    getTeamMembers();
+    filteredTeams.addAll(teamsList);
+  }
+
+  void getTeamMembers() async {
+    teamMembersRequest = Future.delayed(
+        const Duration(milliseconds: 300), () => getSelectedTeam());
   }
 
   void getTeams() async {
     teamsRequest =
         Future.delayed(const Duration(milliseconds: 300), () => teamsList);
     teamsList = await teamsRequest;
+  }
+
+  void filterTeams(String query, void Function(void Function()) refresh) {
+    if (query.isEmpty) {
+      setState(() {
+        filteredTeams = teamsList;
+      });
+      refresh(() => {});
+      return;
+    }
+    setState(() {
+      filteredTeams = teamsList
+          .where((team) => team.strLeaderName.contains(query))
+          .toList();
+      refresh(() => {});
+    });
   }
 
   @override
@@ -95,20 +159,38 @@ class _TeamSelectionBoxState extends State<TeamSelectionBox> {
                           text: "اختر فريق",
                           fontSize: 14,
                           onPressed: () {
-                            CheckBoxPopup(
-                              height: screenHeight * 0.5,
-                              title: "الفرق",
-                            ).showCheckBoxDialog(
-                              context,
-                              List.generate(
-                                teamsList.length,
-                                (index) => StyledCheckBox(
-                                  text: teamsList[index].strLeaderName,
-                                  fontSize: 16,
-                                  isChecked: false,
-                                  onChanged: () => {},
-                                ),
-                              ),
+                            setState(() {
+                              filterTeams("", (p0) => {});
+                            });
+                            showDialog(
+                              context: context,
+                              builder: (context) => StatefulBuilder(
+                                  builder: (context, setStateInsideDialog) {
+                                return CheckBoxPopup(
+                                  height: screenHeight * 0.5,
+                                  title: "الفرق",
+                                  search: (String query) =>
+                                      filterTeams(query, setStateInsideDialog),
+                                  checkBoxes: List.generate(
+                                    filteredTeams.length,
+                                    (index) => StyledCheckBox(
+                                      text: filteredTeams[index].strLeaderName,
+                                      fontSize: 16,
+                                      isChecked: selectedTeamId ==
+                                          filteredTeams[index].intId,
+                                      onChanged: () {
+                                        setState(() {});
+                                        setStateInsideDialog(() {
+                                          selectedTeamId =
+                                              filteredTeams[index].intId;
+                                          widget
+                                              .onChecked(filteredTeams[index]);
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                );
+                              }),
                             );
                           },
                         );
@@ -123,16 +205,19 @@ class _TeamSelectionBoxState extends State<TeamSelectionBox> {
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: FutureBuilder<List<TeamMembers>>(
-              future: widget.teamRequest,
+              future: teamMembersRequest,
               builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
+                if (snapshot.connectionState == ConnectionState.waiting ||
+                    getSelectedTeam().isEmpty) {
+                  return SizedBox(
+                    height: widget.boxHeight,
+                    child: const Center(
+                        child: TitleText(text: "لم يتم اختيار شعبة")),
+                  );
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 }
-                List<TeamMembers> team = widget.teamList.length > 1
-                    ? widget.teamList
-                    : snapshot.data!;
+                List<TeamMembers> team = getSelectedTeam();
 
                 return Row(
                   children: List.generate(

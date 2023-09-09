@@ -9,6 +9,8 @@ class FormTextField extends StatelessWidget {
   final String hintText;
   final bool? isDigitsOnly;
   final IconData? icon;
+  final EdgeInsetsGeometry? contentPadding;
+  final void Function(String)? onChanged;
 
   const FormTextField({
     super.key,
@@ -16,7 +18,9 @@ class FormTextField extends StatelessWidget {
     required this.width,
     required this.controller,
     required this.hintText,
+    this.contentPadding,
     this.isDigitsOnly,
+    this.onChanged,
     this.icon,
   });
 
@@ -24,7 +28,6 @@ class FormTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
-
     return Container(
       height: height,
       width: width,
@@ -42,12 +45,14 @@ class FormTextField extends StatelessWidget {
             fontSize: 14,
             fontFamily: 'DroidArabicKufi',
           ),
+          onChanged: onChanged,
           controller: controller,
           textDirection: TextDirection.rtl,
           inputFormatters: isDigitsOnly != null
               ? [FilteringTextInputFormatter.digitsOnly]
               : [],
           decoration: InputDecoration(
+            contentPadding: contentPadding,
             hintTextDirection: TextDirection.rtl,
             hintStyle: const TextStyle(
               color: Color.fromARGB(111, 201, 44, 107),

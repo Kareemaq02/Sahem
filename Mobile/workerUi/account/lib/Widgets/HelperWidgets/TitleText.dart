@@ -19,6 +19,7 @@ class TitleText extends StatelessWidget {
       textDirection: TextDirection.rtl,
       style: TextStyle(
         color: AppColor.textTitle,
+        fontWeight: FontWeight.bold,
         fontSize: fontSize ?? 16,
         fontFamily: 'DroidArabicKufi',
       ),
