@@ -9,9 +9,9 @@ Widget FieldContainer(
   bool isVisible,
   IconData fieldIcon,
   TextEditingController inputController,
-  FieldValidator? validator, // Validator function for input validation
-  TextInputType? keyboardType, // Specify the keyboard type
-  int? maxLength, // Specify the maximum length
+  // FieldValidator? validator, 
+  TextInputType? keyboardType, 
+  int? maxLength, 
 ) {
   final double screenWidth = MediaQuery.of(context).size.width;
   final double containerWidth = screenWidth * 0.75;
@@ -48,9 +48,10 @@ Widget FieldContainer(
           ),
           border: InputBorder.none,
         ),
-        keyboardType: keyboardType, // Set the keyboard type
-        maxLength: maxLength, // Set the maximum length
-        validator: validator, // Set the validator function
+        keyboardType: keyboardType,
+        maxLength: maxLength,
+        //  validator: validator,
+        onSaved: (newValue) => inputController.text = newValue!, 
       ),
     ),
   );

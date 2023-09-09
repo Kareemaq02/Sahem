@@ -3,7 +3,7 @@ import 'package:account/Repository/color.dart';
 import 'package:account/Screens/Login/login.dart';
 import 'package:account/Validation/validations.dart';
 import 'package:account/Widgets/HelperWidegts/text.dart';
-import 'package:account/Widgets/HelperWidegts/checkBox.dart';
+import 'package:account/Widgets/CheckBoxes/CheckBox.dart';
 import 'package:account/Screens/Registration/register1.dart';
 import 'package:account/Screens/Registration/register2.dart';
 import 'package:account/Widgets/Buttons/bottonContainer.dart';
@@ -20,15 +20,7 @@ TextEditingController FnameController = TextEditingController();
 TextEditingController LnameController = TextEditingController();
 TextEditingController PhoneController = TextEditingController();
 TextEditingController EmailController = TextEditingController();
-final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-final GlobalKey<FormState> _formKey1 = GlobalKey<FormState>();
-final GlobalKey<FormState> _formKey2 = GlobalKey<FormState>();
-final GlobalKey<FormState> _formKey3 = GlobalKey<FormState>();
 Validation a = Validation();
-
-// bool jordanian = false;
-// bool forign = false;
-
 class XDRegister extends StatefulWidget {
   const XDRegister({
     Key? key,
@@ -38,6 +30,7 @@ class XDRegister extends StatefulWidget {
 }
 
 class _XDRegisterState extends State<XDRegister> {
+  bool isJordanian = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,88 +63,54 @@ class _XDRegisterState extends State<XDRegister> {
                   const SizedBox(
                     height: 30,
                   ),
-                  Form(
-                    key: _formKey,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    child: FieldContainer(
-                      context,
-                      'اسم الأول',
-                      false,
-                      Icons.account_circle,
-                      FnameController,
-                      (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'الرجاء إدخال الاسم الأول';
-                        }
-                        return null; // Return null for no error
-                      },
-                      TextInputType.text, // For text input
-                      null, // No maximum length
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 50,
-                  ),
-                  Form(
-                    key: _formKey1,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    child: FieldContainer(
-                      context,
-                      'الاسم الأخير',
-                      false,
-                      Icons.account_circle,
-                      LnameController,
-                      (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'الرجاء إدخال الاسم الأخير';
-                        }
-                        return null; // Return null for no error
-                      },
-                      TextInputType.text, // For text input
-                      null, // No maximum length
-                    ),
+                  FieldContainer(
+                    context,
+                    'اسم الأول',
+                    false,
+                    Icons.account_circle,
+                    FnameController,
+                    TextInputType.text, 
+                    null,
                   ),
                   const SizedBox(
                     height: 10,
                   ),
-                  Form(
-                    key: _formKey2,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    child: FieldContainer(
-                      context,
-                      'البريد الالكتروني',
-                      false,
-                      Icons.email,
-                      EmailController,
-                      a.validateEmail,
-                      TextInputType.emailAddress, // For email input
-                      null, // No maximum length
-                    ),
+                  FieldContainer(
+                    context,
+                    'الاسم الأخير',
+                    false,
+                    Icons.account_circle,
+                    LnameController,
+                    TextInputType.text, 
+                    null, 
                   ),
                   const SizedBox(
                     height: 10,
                   ),
-                  Form(
-                    key: _formKey3,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    child: FieldContainer(
-                      context,
-                      'رقم الهاتف',
-                      false,
-                      Icons.phone,
-                      PhoneController,
-                      (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'الرجاء إدخال رقم الهاتف';
-                        } else if (value.length > 10) {
-                          return 'يجب أن يكون رقم الهاتف أقل من 10 أرقام';
-                        }
-                        return null; // Return null for no error
-                      },
-                      TextInputType.phone, // For phone input
-                      10, // Maximum length of 10 characters
-                    ),
+                  FieldContainer(
+                    context,
+                    'البريد الالكتروني',
+                    false,
+                    Icons.email,
+                    EmailController,
+                    //a.validateEmail,
+                    TextInputType.emailAddress, 
+                    null, 
                   ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  FieldContainer(
+                    context,
+                    'رقم الهاتف',
+                    false,
+                    Icons.phone_android,
+                    EmailController,
+                    //a.validateEmail,
+                    TextInputType.number, 
+                    null, 
+                  ),
+                  
                   const SizedBox(
                     height: 15,
                   ),
@@ -161,13 +120,29 @@ class _XDRegisterState extends State<XDRegister> {
                       SizedBox(
                         width: MediaQuery.of(context).padding.left + 50,
                       ),
-                      checkboxWidget("لا", context),
+                      CheckBoxNew(
+                        text: "لا",
+                        isChecked: isJordanian == false,
+                        onChanged: () {
+                          setState(() {
+                            isJordanian = false;
+                          });
+                        },
+                      ),
                       SizedBox(
                         width: MediaQuery.of(context).padding.left + 7,
                       ),
-                      checkboxWidget('نعم', context),
+                      CheckBoxNew(
+                        text: "نعم",
+                        isChecked: isJordanian == true,
+                        onChanged: () {
+                          setState(() {
+                            isJordanian = true;
+                          });
+                        },
+                      ),
                       SizedBox(
-                        width: MediaQuery.of(context).padding.left + 80,
+                        width: MediaQuery.of(context).padding.left + 40,
                       ),
                       const Text(
                         "هل أنت أردني؟",
@@ -179,18 +154,6 @@ class _XDRegisterState extends State<XDRegister> {
                     ],
                   ),
 
-                  // SizedBox(width: 2.5,),
-
-                  //        Checkbox(
-                  //         focusColor: AppColor.main,
-                  //         side: BorderSide(width: 1,color: AppColor.main,),
-                  //         onChanged: (value) {
-                  //         setState(() {
-                  //         isChecked = value!;
-                  //         });
-                  //   },
-                  //   value: isChecked,
-                  // ),
 
                   const SizedBox(
                     height: 10,
@@ -203,16 +166,11 @@ class _XDRegisterState extends State<XDRegister> {
                       240,
                       context,
                       false,
-                      (FnameController != null &&
-                              LnameController != null &&
-                              PhoneController != null &&
-                              EmailController != null)
-                          ? (selectedNationality ==
-                                  nationalitySelection.Jordanian
+                     
+                      isJordanian == true
                               ? XDRegister1()
-                              : XDRegister1())
-                          : XDRegister1(),
-                      null),
+                              : XDRegister2(),
+                      () {}),
 
                   const SizedBox(
                     height: 0,

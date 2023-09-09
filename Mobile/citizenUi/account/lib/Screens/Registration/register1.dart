@@ -1,20 +1,17 @@
-import 'package:adobe_xd/pinned.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:adobe_xd/page_link.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Screens/Login/login.dart';
-import '../../Repository/language_constants.dart';
 import 'package:account/Validation/validations.dart';
 import 'package:account/Widgets/HelperWidegts/text.dart';
-import 'package:account/Screens/Registration/register.dart';
-import 'package:account/Widgets/HelperWidegts/checkBox.dart';
+import 'package:account/Widgets/CheckBoxes/CheckBox.dart';
 import 'package:account/Widgets/Buttons/bottonContainer.dart';
 import 'package:account/Widgets/HelperWidegts/fieldContainer.dart';
+
+
+
 // ignore_for_file: prefer_const_constructors, constant_identifier_names, unused_element, depend_on_referenced_packages, non_constant_identifier_names, library_private_types_in_public_api, unnecessary_null_comparison
 
-String IdField = "National number";
+bool idNumber = true;
 late String _nationalNumber;
 late String _idNumber;
 late String _registrationNumber1;
@@ -75,54 +72,92 @@ class _XDRegister1State extends State<XDRegister1> {
                   ],
                 ),
                 const SizedBox(
-                  height: 30,
+                  height: 10,
                 ),
-                // FieldContainer(context,' الرقم الوطني' ,false,Icons.account_circle,nationalNumController
-                // ),
+                FieldContainer(
+                  context,
+                  'رقم الوطني',
+                  true,
+                  Icons.account_circle_rounded,
+                  passwordController4,
+                  TextInputType.number,
+                  null,
+                ),
                 SizedBox(
                   height: MediaQuery.of(context).padding.bottom + 7,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    checkboxWidget('رقم الهوية', context),
+                    CheckBoxNew(
+                      text: 'رقم الهوية',
+                      isChecked: idNumber == true,
+                      onChanged: () {
+                        setState(() {
+                          idNumber = true;
+                        });
+                      },
+                    ),
                     SizedBox(
                       width: MediaQuery.of(context).padding.left + 7,
                     ),
-                    checkboxWidget("رقم القيد", context),
+                    CheckBoxNew(
+                      text: " رقم القيد",
+                      isChecked: idNumber == false,
+                      onChanged: () {
+                        setState(() {
+                          idNumber = false
+                          ;
+                        });
+                      },
+                    ),
+
                     SizedBox(
-                      width: MediaQuery.of(context).padding.left + 35,
+                      width: MediaQuery.of(context).padding.left + 5,
                     ),
                     text(
                       "مستند التحقق",
                       AppColor.main,
                     ),
 
-                    // SizedBox(width: 2.5,),
-
-                    //        Checkbox(
-                    //         focusColor: AppColor.main,
-                    //         side: BorderSide(width: 1,color: AppColor.main,),
-                    //         onChanged: (value) {
-                    //         setState(() {
-                    //         isChecked = value!;
-                    //         });
-                    //   },
-                    //   value: isChecked,
-                    // ),
                   ],
                 ),
                 const SizedBox(
                   height: 10,
                 ),
-                //  FieldContainer(context,'رقم القيد' ,false,Icons.note_rounded,regNumberController
-                // ),
-                //     const SizedBox(height: 10,),
-                // FieldContainer(context,' اسم المستخدم ' ,false,Icons.account_circle_rounded,usernameContoller4
-                // ),
-                //    const SizedBox(height: 10,),
-                //  FieldContainer( context,'  كلمة السر' ,true,Icons.lock_outline,passwordController4
-                // ),
+                FieldContainer(
+                  context,
+                  'رقم القيد',
+                  true,
+                  Icons.note_rounded,
+                  passwordController4,
+                  TextInputType.number,
+                  null,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                FieldContainer(
+                  context,
+                  ' اسم المستخدم ',
+                  false,
+                  Icons.account_circle_rounded,
+                  usernameContoller4,
+                  TextInputType.text,
+                  null,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                FieldContainer(
+                  context,
+                  '  كلمة السر',
+                  true,
+                  Icons.lock_outline,
+                  passwordController4,
+                  TextInputType.text,
+                  null,
+                ),
                 const SizedBox(
                   height: 15,
                 ),

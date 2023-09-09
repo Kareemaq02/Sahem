@@ -11,9 +11,8 @@ class Validation{
   }
 
    String? validateMobile(String ?value) {
-// Indian Mobile number are of 10 digit only
     if (value!.length != 10) {
-      return 'Mobile Number must be of 10 digit';
+      return 'يجب ان يحتوي رقم الهاتف على 10 خانات';
     } else {
       return null;
     }
@@ -24,7 +23,7 @@ class Validation{
       return "Field is Required";
     } 
     if (value.length < 3) {
-      return 'Name must be more than 2 charater';
+      return 'يجب أن يحتوي الاسم أكثر من حرفين';
     } else {
       return null;
     }
@@ -32,15 +31,15 @@ class Validation{
 
   String? validateEmail(String? value) {
     String pattern =
-       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+"; // email validation regex pattern
+       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+"; 
     RegExp regex = RegExp(pattern);
      if (value!.isEmpty) {
       
-      return "Email is Required";
+      return "يرجى تعبئة الحقل";
      }
     else if (!regex.hasMatch(value)) {
        
-      return 'Please enter a valid email address';
+      return 'البريد الالكتروني غير صالح';
     } else {
       
       return null;
@@ -50,7 +49,7 @@ class Validation{
  
         if (value == null || value.isEmpty) {
          
-          return 'Username is required.';
+      return "يرجى تعبئة الحقل";
         }
         else if (!RegExp(r'^[a-z][a-z0-9_.-]*$').hasMatch(value)) {
           
@@ -58,7 +57,8 @@ class Validation{
         }
         else {
          
-          return null;} // Return null if the value is valid
+          return null;} 
+
       }
 }
 

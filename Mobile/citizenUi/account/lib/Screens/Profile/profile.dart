@@ -5,8 +5,7 @@ import 'package:account/API/user_info_request.dart';
 import 'package:account/Screens/Profile/logout.dart';
 import 'package:account/Screens/Profile/dataBox.dart';
 import 'package:account/Widgets/Bars/bottomNavBar.dart';
-import 'package:account/Screens/Profile/textButton.dart';
-import 'package:account/Screens/Profile/switchWidget.dart';
+
 
 class Profile extends StatefulWidget {
   const Profile({Key? key});

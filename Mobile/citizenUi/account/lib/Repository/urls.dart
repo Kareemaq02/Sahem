@@ -2,7 +2,7 @@
 
 class AppUrl {
  
-  static const String baseURL = "";
+  static const String baseURL = "https://10.0.2.2:5000/api";
   static const String login = "$baseURL/";
   static const String register = "$baseURL/";
   //static const String forgotPassword = baseURL + "/forgot-password";

@@ -12,7 +12,6 @@ import 'package:account/Widgets/HelperWidegts/fieldContainer.dart';
 TextEditingController usernameController = TextEditingController();
 TextEditingController passwordController = TextEditingController();
 final GlobalKey<FormState> _formKey1 = GlobalKey<FormState>();
-final GlobalKey<FormState> _formKey2 = GlobalKey<FormState>();
 UserLogin user = UserLogin();
 Validation a = Validation();
 
@@ -24,6 +23,18 @@ class XDLogin extends StatefulWidget {
 }
 
 class _XDLoginState extends State<XDLogin> {
+  //bool _autoValidate = false;
+
+  // void _validateInputs() {
+  //   if (_formKey1.currentState!.validate()) {
+  //     _formKey1.currentState!.save();
+  //   } else {
+  //     setState(() {
+  //      // _autoValidate = true;
+  //     });
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,36 +70,29 @@ class _XDLoginState extends State<XDLogin> {
             const SizedBox(
               height: 30,
             ),
-            Form(
-              key: _formKey1,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              child: FieldContainer(
-                context,
-                'اسم المستخدم',
-                false,
-                Icons.account_circle,
-                usernameController,
-                a.inputValidate,
-                TextInputType.text,
-                null,
-              ),
+            FieldContainer(
+              context,
+              'اسم المستخدم',
+              false,
+              Icons.account_circle,
+              usernameController,
+              //  a.inputValidate,
+              TextInputType.text,
+              null,
             ),
+            
             const SizedBox(
               height: 20,
             ),
-            Form(
-              key: _formKey2,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              child: FieldContainer(
-                context,
-                ' كلمة السر',
-                true,
-                Icons.lock_outline,
-                passwordController,
-                a.inputValidate,
-                TextInputType.text,
-                null,
-              ),
+            FieldContainer(
+              context,
+              ' كلمة السر',
+              true,
+              Icons.lock_outline,
+              passwordController,
+              //a.inputValidate,
+              TextInputType.text,
+              null,
             ),
             const SizedBox(
               height: 15,
@@ -113,7 +117,6 @@ class _XDLoginState extends State<XDLogin> {
                 const SizedBox(
                   width: 2.5,
                 ),
-                //Checkbox("", context),
               ],
             ),
             const SizedBox(
@@ -128,6 +131,7 @@ class _XDLoginState extends State<XDLogin> {
               true,
               null,
               () {
+                // _validateInputs();
                 user.login(
                   usernameController.text,
                   passwordController.text,

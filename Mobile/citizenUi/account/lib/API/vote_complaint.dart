@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+import 'package:account/Repository/urls.dart';
 import 'package:account/API/login_request.dart';
 
 // ignore_for_file: avoid_print
@@ -34,7 +35,7 @@ class VoteComplaint {
     try {
       http.Response response = await http.post(
         Uri.parse(
-            "https://10.0.2.2:5000/api/complaints/voteremove/$complaintId"),
+            "'${AppUrl.baseURL}/complaints/voteremove/$complaintId"),
         headers: <String, String>{
           "Content-type": "application/json",
           "Accept": "application/json",
