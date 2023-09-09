@@ -15,7 +15,7 @@ import 'package:account/Widgets/HelperWidegts/complaintCard.dart';
 import 'package:account/Screens/File complaint/confirmPopup.dart';
 
 // ignore_for_file: use_build_context_synchronously
-
+GlobalKey<PageContainerState> keyGlobal = GlobalKey();
 class FileCompalint extends StatefulWidget {
   const FileCompalint({super.key});
 
@@ -25,9 +25,10 @@ class FileCompalint extends StatefulWidget {
 
 class ComaplintState extends State<FileCompalint> {
   late PageController controller;
-  GlobalKey<PageContainerState> key = GlobalKey();
+
   TextEditingController commentController = TextEditingController();
   final FocusNode textFieldFocusNode = FocusNode();
+  bool _permissionRequested = false;
 
   @override
   void dispose() {
@@ -37,21 +38,26 @@ class ComaplintState extends State<FileCompalint> {
 
   @override
   void initState() {
-    _getCurrentPosition();
+    getImages(context);
+    //_getCurrentPosition();
+    
     fetchAddress();
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      getImages(context);
+   
     });
   }
 
   String address = "";
-  Future<void> fetchAddress() async {
-    address = (await getAddressFromCoordinates(
-        currentPosition!.latitude, currentPosition!.longitude))!;
-    if (mounted) {
-      setState(() {});
-      print(address);
+Future<void> fetchAddress() async {
+    if (currentPosition != null) {
+      address = (await getAddressFromCoordinates(
+          currentPosition!.latitude, currentPosition!.longitude))!;
+
+      if (mounted) {
+        setState(() {});
+        print(address);
+      }
     }
   }
 
@@ -59,16 +65,15 @@ class ComaplintState extends State<FileCompalint> {
   double lat = 0.0;
   double lng = 0.0;
 
-  // @override
-  // void dispose() {
-  //   late var address;
-  //   _isDisposed = true;
-  //   super.dispose();
-  // }
 
   Future<bool> _handleLocationPermission() async {
+    // if (_permissionRequested) {
+    //   return false;
+    // }
+
     bool serviceEnabled;
     LocationPermission permission;
+    _permissionRequested = true;
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
@@ -108,7 +113,7 @@ class ComaplintState extends State<FileCompalint> {
     } catch (e) {}
   }
 
-  Future<void> getImages(BuildContext context) async {
+ Future<void> getImages(BuildContext context) async {
     final pickedFile = await ImagePicker().pickImage(
       source: ImageSource.camera,
       imageQuality: 50,
@@ -119,11 +124,19 @@ class ComaplintState extends State<FileCompalint> {
         selectedMediaFiles.add(
           MediaFile(
             File(pickedFile.path),
-            currentPosition!.latitude,
-            currentPosition!.longitude,
+            null, // Set initial value of decLat to null
+            null, // Set initial value of decLng to null
             false,
           ),
         );
+      });
+
+      await _getCurrentPosition(); // Wait for latitude and longitude
+
+      setState(() {
+        final mediaFile = selectedMediaFiles.last;
+        mediaFile.decLat = currentPosition!.latitude;
+        mediaFile.decLng = currentPosition!.longitude;
       });
     } else {
       Navigator.pop(context);
@@ -139,6 +152,7 @@ class ComaplintState extends State<FileCompalint> {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Scaffold(
+        key: keyGlobal,
         backgroundColor: AppColor.background,
         resizeToAvoidBottomInset: true,
         bottomNavigationBar: BottomNavBar1(3),
@@ -183,10 +197,10 @@ class ComaplintState extends State<FileCompalint> {
                 context,
                 true,
                 null,
-                () {
+                () async {
                   FocusScope.of(context).unfocus();
 
-                  showDialog(
+                  await showDialog(
                     context: context,
                     builder: (BuildContext context) => buildConfirmDialog(
                         context,

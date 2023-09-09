@@ -10,7 +10,7 @@ class ComplaintModel {
   DateTime dtmDateFinished;
   String strComplaintTypeEn;
   String strComplaintTypeAr;
-  String strComment;
+  String? strComment = "";
   String strStatus;
   int intPrivacyId;
   String strPrivacyAr;
@@ -156,7 +156,7 @@ class getUserComplaint {
 
       return statusList;
     } else {
-      throw Exception('Failed22');
+      throw Exception('لا يتوفر شريط زمني لهذا البلاغ');
     }
   }
 }

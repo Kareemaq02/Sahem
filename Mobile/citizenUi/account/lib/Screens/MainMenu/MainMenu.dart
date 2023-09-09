@@ -45,7 +45,7 @@ class _MainMenuState extends State<MainMenu> {
       floatingActionButton: const CustomActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavBar1(0),
-      appBar: myAppBar(context, "الصفحه الرئيسية", false, screenWidth * 0.35),
+      appBar: myAppBar(context, "الصفحة الرئيسية", false, screenWidth * 0.35),
       body: Padding(
         padding: EdgeInsets.only(top: halfMarginY, bottom: halfMarginY),
         child: Column(

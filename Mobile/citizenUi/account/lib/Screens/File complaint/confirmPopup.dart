@@ -4,6 +4,7 @@ import '../../Widgets/HelperWidegts/popupBotton.dart';
 import 'package:account/API/file_complaint_request.dart';
 import 'package:account/Screens/File%20complaint/dropdown.dart';
 import 'package:account/Screens/File%20complaint/pageView.dart';
+import 'package:account/Screens/File%20complaint/fileComaplint.dart';
 
 // ignore_for_file: file_names, non_constant_identifier_names
 
@@ -22,6 +23,7 @@ Widget RowInfo(title, value) {
             value,
             textDirection: TextDirection.ltr,
             style: const TextStyle(
+              fontFamily: 'DroidArabicKufi',
               color: AppColor.secondary,
               fontSize: 12,
             ),
@@ -82,8 +84,17 @@ Widget buildConfirmDialog(BuildContext context, type, address, comment) {
                   ),
                   BottonContainerPopup("استمرار", Colors.white, AppColor.main,
                       context, true, null, () {
-                    fileObj.fileComplaint(context, dropdown.intID, 1,
-                        selectedMediaFiles, 1, comment);
+                    Navigator.of(context).pop();
+                    fileObj.checkSimilar(
+                        keyGlobal.currentContext,
+                        dropdown.intID,
+                        1,
+                        selectedMediaFiles,
+                        1,
+                        comment,
+                        address,
+                        type);
+                   
                   }),
                 ],
               ),

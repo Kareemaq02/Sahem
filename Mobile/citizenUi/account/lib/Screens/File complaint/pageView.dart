@@ -174,11 +174,14 @@ class _PageViewState extends State<MyPageView> {
               return Stack(
                 children: [
                   Center(
-                    child: Image.file(
-                      selectedMediaFiles[position].file,
-                      fit: BoxFit.cover,
-                      scale: 0.1,
-                    ),
+                    child: selectedMediaFiles[position].decLat == null ||
+                            selectedMediaFiles[position].decLng == null
+                        ? CircularProgressIndicator.adaptive()
+                        : Image.file(
+                            selectedMediaFiles[position].file!,
+                            fit: BoxFit.cover,
+                            scale: 0.1,
+                          ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

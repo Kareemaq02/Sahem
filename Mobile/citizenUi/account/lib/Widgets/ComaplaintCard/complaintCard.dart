@@ -92,6 +92,8 @@ class _ComplaintCard2sState extends State<ComplaintCard2> {
                   SizedBox(width: screenWidth * 0.02),
                   CardButtons(context, 'معاينة', Colors.grey, AppColor.main,
                       screenWidth * 0.12, () {
+                    print(widget.id);
+                    print(widget.type);
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) {
@@ -104,16 +106,20 @@ class _ComplaintCard2sState extends State<ComplaintCard2> {
                                   ConnectionState.waiting) {
                                 return Container();
                               } else if (snapshot.hasError) {
-                                return text(
-                                    'Error: ${snapshot.error}', AppColor.main);
+                                return Center(
+                                  child: text('لا يتوفر شريط زمني لهذا البلاغ',
+                                      AppColor.main),
+                                );
                               } else if (snapshot.hasData) {
                                 List<ComplaintModel> tasks = snapshot.data!;
                                 return ComplaintDetailsScreen(
                                   complaints: tasks,
+                                  address: address
                                 );
                               } else {
                                 return text(
-                                    'Error: ${snapshot.error}', AppColor.main);
+                                    'ا يتوفر شريط زمني لهذا البلاغ',
+                                    AppColor.main);
                               }
                             },
                           );
@@ -127,7 +133,13 @@ class _ComplaintCard2sState extends State<ComplaintCard2> {
               ),
               Padding(
                   padding: EdgeInsets.only(left: screenWidth * 0.7),
-                  child: text("قبل 5 ساعات ", AppColor.textBlue)),
+                child: Text(formatTimeDifference(widget.date),
+                    style: TextStyle(
+                      color: Color(0xff92a5c6),
+                      fontSize: 10,
+                      fontFamily: 'DroidArabicKufi',
+                    )),
+              ),
               SizedBox(
                 height: screenHeight * 0.015,
               ),

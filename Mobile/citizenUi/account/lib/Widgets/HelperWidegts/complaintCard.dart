@@ -63,6 +63,8 @@ class _ComplaintCardsState extends State<ComplaintCard> {
     }
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -141,8 +143,13 @@ class _ComplaintCardsState extends State<ComplaintCard> {
               ),
               //time
 
-              Text('قبل 5 ساعات',
-                  style: TextStyle(color: Color(0xff92a5c6), fontSize: 11)),
+              Text(formatTimeDifference(widget.dtmDateCreated),
+                  style: TextStyle(
+                    color: Color(0xff92a5c6),
+                    fontSize: 10,
+                    fontFamily: 'DroidArabicKufi',
+                  )),
+
 
               //description
               Expanded(
@@ -284,5 +291,31 @@ Future<String?> getAddressFromCoordinates(double lat, double lng) async {
     }
   } catch (e) {
     return '$e';
+  }
+}
+
+String formatTimeDifference(String apiDateString) {
+  final apiDate = DateTime.parse(apiDateString);
+  final currentDate = DateTime.now();
+  final timeDifference = currentDate.difference(apiDate);
+
+  if (timeDifference.inDays >= 365) {
+    final years = (timeDifference.inDays / 365).floor();
+    return 'قبل $years سنة';
+  } else if (timeDifference.inDays >= 30) {
+    final months = (timeDifference.inDays / 30).floor();
+    return 'قبل $months شهر';
+  } else if (timeDifference.inDays > 0) {
+    if (timeDifference.inDays == 1) {
+      return 'قبل يوم';
+    } else {
+      return 'قبل ${timeDifference.inDays} أيام';
+    }
+  } else if (timeDifference.inHours > 0) {
+    return 'قبل ${timeDifference.inHours} ساعات';
+  } else if (timeDifference.inMinutes > 0) {
+    return 'قبل ${timeDifference.inMinutes} دقائق';
+  } else {
+    return 'قبل ${timeDifference.inSeconds} ثواني';
   }
 }

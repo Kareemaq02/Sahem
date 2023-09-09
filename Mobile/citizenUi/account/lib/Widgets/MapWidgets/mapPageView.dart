@@ -45,7 +45,7 @@ Widget mapPageView(context) {
                     width: screenWidth * 0.2,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
-                      color: AppColor.main,
+                      color:position == 0? Colors.red : Colors.green,
                     ),
                     child: Center(
                       child: position == 0
