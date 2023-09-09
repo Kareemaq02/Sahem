@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import '../../Widgets/HelperWidegts/popupBotton.dart';
 import 'package:account/API/file_complaint_request.dart';
+import 'package:account/API/check_similarity_request.dart';
 import 'package:account/Screens/File%20complaint/dropdown.dart';
 import 'package:account/Screens/File%20complaint/pageView.dart';
-import 'package:account/Screens/File%20complaint/fileComaplint.dart';
+
 
 // ignore_for_file: file_names, non_constant_identifier_names
 
@@ -51,6 +52,7 @@ Widget RowInfo(title, value) {
 
 //confirm complaint
 Widget buildConfirmDialog(BuildContext context, type, address, comment) {
+  //print(address);
   return AlertDialog(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(20.0),
@@ -84,11 +86,8 @@ Widget buildConfirmDialog(BuildContext context, type, address, comment) {
                   ),
                   BottonContainerPopup("استمرار", Colors.white, AppColor.main,
                       context, true, null, () {
-                    Navigator.of(context).pop();
-                    fileObj.checkSimilar(
-                        keyGlobal.currentContext,
-                        dropdown.intID,
-                        1,
+                    // Navigator.of(context).pop();
+                    checkSimilar(context, dropdown.intID, 2,
                         selectedMediaFiles,
                         1,
                         comment,

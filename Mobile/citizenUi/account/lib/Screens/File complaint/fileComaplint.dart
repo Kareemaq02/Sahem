@@ -4,7 +4,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:account/Repository/color.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
-import 'package:page_indicator/page_indicator.dart';
 import 'package:account/Screens/Home/publicFeed.dart';
 import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/API/file_complaint_request.dart';
@@ -12,10 +11,11 @@ import 'package:account/Widgets/Buttons/bottonContainer.dart';
 import 'package:account/Screens/File%20complaint/dropdown.dart';
 import 'package:account/Screens/File%20complaint/pageView.dart';
 import 'package:account/Widgets/HelperWidegts/complaintCard.dart';
-import 'package:account/Screens/File complaint/confirmPopup.dart';
+import 'package:account/Screens/File%20complaint/confirmPopup.dart';
+
 
 // ignore_for_file: use_build_context_synchronously
-GlobalKey<PageContainerState> keyGlobal = GlobalKey();
+
 class FileCompalint extends StatefulWidget {
   const FileCompalint({super.key});
 
@@ -32,6 +32,7 @@ class ComaplintState extends State<FileCompalint> {
 
   @override
   void dispose() {
+    _isDisposed = true;
     selectedMediaFiles.clear();
     super.dispose();
   }
@@ -39,8 +40,6 @@ class ComaplintState extends State<FileCompalint> {
   @override
   void initState() {
     getImages(context);
-    //_getCurrentPosition();
-    
     fetchAddress();
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -49,16 +48,15 @@ class ComaplintState extends State<FileCompalint> {
   }
 
   String address = "";
-Future<void> fetchAddress() async {
+  Future<String?> fetchAddress() async {
     if (currentPosition != null) {
-      address = (await getAddressFromCoordinates(
-          currentPosition!.latitude, currentPosition!.longitude))!;
-
-      if (mounted) {
-        setState(() {});
-        print(address);
-      }
+      final newAddress = await getAddressFromCoordinates(
+        currentPosition!.latitude,
+        currentPosition!.longitude,
+      );
+      return newAddress;
     }
+    return null;
   }
 
   bool _isDisposed = false;
@@ -118,7 +116,7 @@ Future<void> fetchAddress() async {
       source: ImageSource.camera,
       imageQuality: 50,
     );
-
+    if (_isDisposed) return;
     if (pickedFile != null) {
       setState(() {
         selectedMediaFiles.add(
@@ -132,14 +130,14 @@ Future<void> fetchAddress() async {
       });
 
       await _getCurrentPosition(); // Wait for latitude and longitude
-
+      if (_isDisposed) return;
       setState(() {
         final mediaFile = selectedMediaFiles.last;
         mediaFile.decLat = currentPosition!.latitude;
         mediaFile.decLng = currentPosition!.longitude;
       });
     } else {
-      Navigator.pop(context);
+      // Navigator.pop(context);
     }
   }
 
@@ -152,10 +150,10 @@ Future<void> fetchAddress() async {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Scaffold(
-        key: keyGlobal,
+
         backgroundColor: AppColor.background,
         resizeToAvoidBottomInset: true,
-        bottomNavigationBar: BottomNavBar1(3),
+        bottomNavigationBar: BottomNavBar1(0),
         appBar: myAppBar(context, "ارسال بلاغ", false, screenSize.width * 0.5),
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
@@ -173,6 +171,7 @@ Future<void> fetchAddress() async {
                 child: Container(
                   height: screenSize.height * 0.2,
                   child: TextField(
+                    controller: commentController,
                     focusNode: textFieldFocusNode,
                     autofocus: true,
                     maxLines: null,
@@ -199,14 +198,12 @@ Future<void> fetchAddress() async {
                 null,
                 () async {
                   FocusScope.of(context).unfocus();
-
-                  await showDialog(
-                    context: context,
-                    builder: (BuildContext context) => buildConfirmDialog(
-                        context,
-                        dropdown.stringName,
-                        address,
-                        commentController.text),
+                  final newAddress = await fetchAddress();
+                  _showConfirmDialog(
+                    context,
+                    dropdown.stringName,
+                    newAddress ?? '',
+                    commentController.text,
                   );
                 },
               ),
@@ -217,4 +214,16 @@ Future<void> fetchAddress() async {
       ),
     );
   }
+}
+Future<void> _showConfirmDialog(
+    BuildContext context, String type, String address, String comment) async {
+  await showDialog(
+    context: context,
+    builder: (BuildContext context) => buildConfirmDialog(
+      context,
+      type,
+      address,
+      comment,
+    ),
+  );
 }
