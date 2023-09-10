@@ -57,7 +57,7 @@ class Complaint {
 
       final response = await request.send();
 
-      final responseJson = await response.stream.bytesToString();
+      //final responseJson = await response.stream.bytesToString();
 
       if (response.statusCode == 200) {
         print("file as new");

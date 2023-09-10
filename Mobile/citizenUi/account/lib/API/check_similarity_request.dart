@@ -8,7 +8,6 @@ import 'package:account/API/file_complaint_request.dart';
 import 'package:account/Screens/File%20complaint/confirmPage.dart';
 import 'package:account/Widgets/ComaplaintCard/similarityCard.dart';
 
-
 Future<dynamic> checkSimilar(
     BuildContext context,
     int intTypeId,
@@ -18,14 +17,7 @@ Future<dynamic> checkSimilar(
     String strComment,
     String address,
     String type) async {
-  // print(intTypeId);
-  // print(intPrivacyId);
-  // print(intPrivacyId);
-  // print(lstMedia);
-  // print(intRegionId);
-  // print(strComment);
-  // print(address);
-  // print(type);
+
   try {
     final request = http.MultipartRequest(
       'POST',
@@ -37,10 +29,10 @@ Future<dynamic> checkSimilar(
     request.headers['Content-Type'] = 'multipart/form-data';
 
     // Add the request fields
-    request.fields['intTypeId'] = "1";
-    request.fields['intPrivacyId'] = "2";
-    // request.fields['intTypeId'] = intTypeId.toString();
-    // request.fields['intPrivacyId'] = intPrivacyId.toString();
+    // request.fields['intTypeId'] = "1";
+    // request.fields['intPrivacyId'] = "2";
+    request.fields['intTypeId'] = intTypeId.toString();
+    request.fields['intPrivacyId'] = intPrivacyId.toString();
     request.fields['strComment'] = strComment;
     request.fields['intRegionId'] = intRegionId.toString();
 
@@ -57,10 +49,10 @@ Future<dynamic> checkSimilar(
       );
       request.files.add(multipartFile);
 
-      request.fields['lstMedia[$index].decLat'] = "31.970416";
-      request.fields['lstMedia[$index].decLng'] = "35.881530";
-      // request.fields['lstMedia[$index].decLat'] = mediaFile.decLat.toString();
-      // request.fields['lstMedia[$index].decLng'] = mediaFile.decLng.toString();
+      // request.fields['lstMedia[$index].decLat'] = "31.970416";
+      // request.fields['lstMedia[$index].decLng'] = "35.881530";
+      request.fields['lstMedia[$index].decLat'] = mediaFile.decLat.toString();
+      request.fields['lstMedia[$index].decLng'] = mediaFile.decLng.toString();
       request.fields['lstMedia[$index].blnIsVideo'] =
           mediaFile.blnIsVideo.toString();
     }
@@ -80,7 +72,7 @@ Future<dynamic> checkSimilar(
         var dataValue = similarComplaintLstMedia[0]['data'];
         String base64String = dataValue;
         Uint8List bytes = base64Decode(base64String);
-        print("here is truuueu");
+
         await showDialog(
             context: context,
             builder: (context) {
