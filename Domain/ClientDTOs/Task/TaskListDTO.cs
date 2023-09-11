@@ -1,4 +1,5 @@
 ﻿using Domain.ClientDTOs.User;
+using Domain.Helpers;
 
 namespace Domain.ClientDTOs.Task
 {
@@ -22,5 +23,6 @@ namespace Domain.ClientDTOs.Task
         public string strTaskStatus { get; set; }
         public string strTaskStatusAr { get; set; }
         public List<TaskWorkerDTO> workersList { get; set; }
+        public List<TaskMediaDTO> lstMedia { get; set; }
     }
 }

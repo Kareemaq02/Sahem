@@ -58,7 +58,23 @@ namespace Application.Handlers.Tasks
                                     strLastNameAr = w.Worker.UserInfo.strLastNameAr,
                                     isLeader = team.intLeaderId == w.intWorkerId
                                 }
-                                ).ToList()
+                                ).ToList(),
+                            lstMedia = t.Complaints.SelectMany(q => q.Complaint.Attachments
+                            .Select(q => 
+                            new TaskMediaDTO 
+                            {
+                                blnIsVideo = false,
+                                decLatLng = new Domain.Helpers.LatLng { decLat = q.decLat, decLng = q.decLng },
+                                Data = File.Exists(q.strMediaRef) ?
+                                Convert.ToBase64String(File.ReadAllBytes(q.strMediaRef))
+                                : null,
+                                region = new Domain.Helpers.RegionNames
+                                {
+                                    strRegionAr = q.Complaint.Region.strNameAr,
+                                    strRegionEn = q.Complaint.Region.strNameEn
+                                }
+
+                            })).ToList(),
                         };
 
             var queryObject = query.AsQueryable();
