@@ -1,11 +1,12 @@
+import 'package:account/API/login_request.dart';
+import 'package:account/Screens/Home/MainMenuWorker.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Screens/Map/mapView.dart';
-import 'package:account/Screens/Home/mainMenu.dart';
+import 'package:account/Screens/Home/MainMenuAdmin.dart';
 import 'package:account/Screens/View%20tasks/task_list.dart';
 import 'package:account/Screens/CurrentTask/currentTask.dart';
 // ignore_for_file: must_be_immutable, unused_local_variable, file_names
-
 
 class BottomNavBar1 extends StatefulWidget {
   int selectedIcon;
@@ -18,7 +19,7 @@ class BottomNavBar1 extends StatefulWidget {
 class _BottomNavBarState extends State<BottomNavBar1> {
   int _selectedIndex = 0;
 
-naviWithTransition( pgaeName) {
+  naviWithTransition(pgaeName) {
     Navigator.push(
         context,
         PageRouteBuilder(
@@ -29,24 +30,25 @@ naviWithTransition( pgaeName) {
         ));
   }
 
-
   _changeSelectedTab(int index) {
+    Widget menu =
+        userIsAdmin() ? const MainMenuAdmin() : const MainMenuWorker();
     setState(() {
       _selectedIndex = index;
     });
     switch (_selectedIndex) {
-      
       case 0:
-      naviWithTransition(const MainMenu());
+        naviWithTransition(menu);
         break;
       case 1:
-       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const FullMap1()));
-         break;
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const FullMap1()));
+        break;
       case 2:
         naviWithTransition(const XDTasksList());
         break;
       case 3:
-      naviWithTransition(const CurrentTask());
+        naviWithTransition(const CurrentTask());
         break;
     }
   }
@@ -86,13 +88,13 @@ naviWithTransition( pgaeName) {
   Widget build(BuildContext context) {
     return IntrinsicHeight(
       child: BottomAppBar(
-       //clipBehavior: Clip.antiAliasWithSaveLayer,
-        padding:  EdgeInsets.only(top: 10, left: 5, right: 5, bottom: 0),
+        //clipBehavior: Clip.antiAliasWithSaveLayer,
+        padding: EdgeInsets.only(top: 10, left: 5, right: 5, bottom: 0),
         shape: CircularNotchedRectangle(), //shape of notch
-                notchMargin: 5, //notche margin between floating button and bottom appbar
-                
+        notchMargin:
+            5, //notche margin between floating button and bottom appbar
+
         child: Row(
-       
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             _bottomNavBarItem(
@@ -126,7 +128,7 @@ naviWithTransition( pgaeName) {
                         size: 23,
                       ),
                 text: "الخريطة"),
-           const SizedBox(
+            const SizedBox(
               width: 20,
             ),
             _bottomNavBarItem(
@@ -167,6 +169,3 @@ naviWithTransition( pgaeName) {
     );
   }
 }
-
-
-

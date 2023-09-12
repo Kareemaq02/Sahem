@@ -3,8 +3,8 @@ import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
 import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/Widgets/Charts/RatingChart.dart';
-import 'package:account/Widgets/CheckBoxes/checkBox.dart';
-import 'package:account/Widgets/Charts/StyledFilterChip.dart';
+import 'package:account/Widgets/CheckBoxes/StyledCheckBox.dart';
+import 'package:account/Widgets/Filter/StyledFilterChip.dart';
 import 'package:account/Widgets/Buttons/IconToggleButton.dart';
 
 class Analytics extends StatefulWidget {
@@ -128,8 +128,9 @@ class _AnalyticsState extends State<Analytics> {
       rowChildren.add(
         Padding(
           padding: padding,
-          child: CheckBoxNew(
+          child: StyledCheckBox(
             text: entry["strName"],
+            fontSize: 12,
             isChecked: entry["isChecked"],
             onChanged: checkboxFunction,
           ),
@@ -143,7 +144,7 @@ class _AnalyticsState extends State<Analytics> {
       //floatingActionButton: const CustomActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavBar1(0),
-      appBar: myAppBar(context, "الصفحه الرئيسية", false, screenWidth*0.35),
+      appBar: myAppBar(context, "الصفحه الرئيسية", false, screenWidth * 0.35),
       body: Padding(
         padding: EdgeInsets.only(top: halfMarginY, bottom: halfMarginY),
         child: Column(

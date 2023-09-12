@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'Repository/language_constants.dart';
-import 'package:account/Screens/Map/mapView.dart';
 import 'package:account/Screens/Login/login.dart';
-import 'package:account/Screens/CurrentTask/mapView.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-//import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +10,7 @@ void main() {
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-    @override
+  @override
   State<MyApp> createState() => _MyAppState();
 
   static void setLocale(BuildContext context, Locale newLocale) {
@@ -22,6 +18,7 @@ class MyApp extends StatefulWidget {
     state?.setLocale(newLocale);
   }
 }
+
 class _MyAppState extends State<MyApp> {
   Locale? _locale;
 
@@ -31,20 +28,18 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-    @override
+  @override
   void didChangeDependencies() {
     getLocale().then((locale) => {setLocale(locale)});
     super.didChangeDependencies();
   }
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-    
         primarySwatch: Colors.blue,
       ),
       home: const XDLogin(),
@@ -53,9 +48,6 @@ class _MyAppState extends State<MyApp> {
       //onGenerateRoute: CustomRouter.generatedRoute,
       //initialRoute: homeRoute,
       locale: _locale,
-     
-     
     );
   }
 }
-
