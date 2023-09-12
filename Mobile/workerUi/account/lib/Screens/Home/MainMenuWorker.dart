@@ -1,4 +1,5 @@
-import 'package:account/Screens/CreateTask/CreateTask.dart';
+import 'package:account/Screens/CurrentTask/currentTask.dart';
+import 'package:account/Utils/NaviTranstion.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
@@ -8,18 +9,17 @@ import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/Widgets/Charts/RatingChart.dart';
 import 'package:account/Screens/Analytics/Analytics.dart';
 import 'package:account/Screens/View%20tasks/task_list.dart';
-import 'package:account/Screens/CurrentTask/currentTask.dart';
 import 'package:account/Widgets/Displays/InfoDisplayBox.dart';
 import 'package:account/Widgets/Buttons/squareButtonWithStroke.dart';
 
-class MainMenu extends StatefulWidget {
-  const MainMenu({super.key});
+class MainMenuWorker extends StatefulWidget {
+  const MainMenuWorker({super.key});
 
   @override
-  _MainMenuState createState() => _MainMenuState();
+  _MainMenuWorkerState createState() => _MainMenuWorkerState();
 }
 
-class _MainMenuState extends State<MainMenu> {
+class _MainMenuWorkerState extends State<MainMenuWorker> {
   @override
   void initState() {
     super.initState();
@@ -35,27 +35,9 @@ class _MainMenuState extends State<MainMenu> {
     double halfMarginY = 0.01 * screenHeight;
 
     double fullMarginX = 0.04 * screenWidth;
-    // double halfMarginX = 0.02 * screenWidth;
 
     double buttonHeight = 0.145 * screenHeight;
     double buttonWidth = 0.3 * screenWidth;
-
-    NaviTransition(pageName) {
-      Navigator.push(
-        context,
-        PageRouteBuilder(
-          pageBuilder: (_, __, ___) => pageName,
-          transitionDuration: Duration(milliseconds: 600),
-          transitionsBuilder: (_, a, __, c) {
-            var scaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(a);
-            return ScaleTransition(
-              scale: scaleAnimation,
-              child: c,
-            );
-          },
-        ),
-      );
-    }
 
     return Scaffold(
       backgroundColor: AppColor.background,
@@ -85,20 +67,22 @@ class _MainMenuState extends State<MainMenu> {
                             width: buttonWidth,
                             icon: Icons.settings_rounded,
                             text: "الإعدادات",
-                            onPressed: () => {NaviTransition(Profile())}),
-                        // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const Profile()))}),
+                            onPressed: () =>
+                                {naviTransition(context, const Profile())}),
                         SquareButtonWithStroke(
                             height: buttonHeight,
                             width: buttonWidth,
                             icon: Icons.timelapse_rounded,
                             text: "أداء الربع السنوي",
-                            onPressed: () => {NaviTransition(Quarter())}),
+                            onPressed: () =>
+                                {naviTransition(context, const Quarter())}),
                         SquareButtonWithStroke(
                             height: buttonHeight,
                             width: buttonWidth,
                             icon: Icons.bar_chart_rounded,
                             text: "الإحصائيات",
-                            onPressed: () => {NaviTransition(Analytics())}),
+                            onPressed: () =>
+                                {naviTransition(context, const Analytics())}),
                       ],
                     ),
                     Row(
@@ -112,17 +96,17 @@ class _MainMenuState extends State<MainMenu> {
                         SquareButtonWithStroke(
                             height: buttonHeight,
                             width: buttonWidth,
-                            icon: Icons.forum_rounded,
-                            text: "العمل الحالي",
+                            icon: Icons.spatial_tracking_sharp,
+                            text: "المهمه المفعله",
                             onPressed: () =>
-                                {NaviTransition(const CreateTask())}),
+                                {naviTransition(context, const CurrentTask())}),
                         SquareButtonWithStroke(
                             height: buttonHeight,
                             width: buttonWidth,
                             icon: Icons.card_membership_rounded,
                             text: "الاعمال",
                             onPressed: () =>
-                                {NaviTransition(const XDTasksList())}),
+                                {naviTransition(context, const XDTasksList())}),
                       ],
                     )
                   ],
