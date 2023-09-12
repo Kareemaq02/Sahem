@@ -1,11 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:account/Repository/urls.dart';
 import 'package:account/API/login_request.dart';
 
 class ComapalintReminder {
   Future<dynamic> comaplintReminder(int id, context1) async {
-    final url = Uri.parse("https://10.0.2.2:5000/api/complaints/remind/$id");
+    final url = Uri.parse("${AppUrl.baseURL}/complaints/remind/$id");
 
     try {
       final response = await http.put(

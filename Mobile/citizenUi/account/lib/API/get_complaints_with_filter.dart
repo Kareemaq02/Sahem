@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:account/Repository/urls.dart';
 import 'package:account/API/login_request.dart';
 
 
@@ -19,7 +20,7 @@ Future<List<dynamic>> getFilteredComplaints(
   }
 
   final url =
-      'https://10.0.2.2:5000/api/complaints/general?pageSize=10&pageNumber=2&intDistance=30&userLat=$lat&userLng=$lng'
+      '${AppUrl.baseURL}/complaints/general?pageSize=10&pageNumber=2&intDistance=30&userLat=$lat&userLng=$lng'
       '$statusIDsString'
       '$complaintTypeIDsString';
 

@@ -7,6 +7,7 @@ import 'package:page_indicator/page_indicator.dart';
 import 'package:account/Screens/Home/publicFeed.dart';
 import 'package:account/API/file_complaint_request.dart';
 
+
   final _picker = ImagePicker();
   List<MediaFile> selectedMediaFiles = [];
 
@@ -174,11 +175,14 @@ class _PageViewState extends State<MyPageView> {
               return Stack(
                 children: [
                   Center(
-                    child: Image.file(
-                      selectedMediaFiles[position].file,
-                      fit: BoxFit.cover,
-                      scale: 0.1,
-                    ),
+                    child: selectedMediaFiles[position].decLat == null ||
+                            selectedMediaFiles[position].decLng == null
+                        ? CircularProgressIndicator.adaptive()
+                        : Image.file(
+                            selectedMediaFiles[position].file!,
+                            fit: BoxFit.cover,
+                            scale: 0.1,
+                          ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

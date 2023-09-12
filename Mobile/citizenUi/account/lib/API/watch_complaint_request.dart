@@ -1,13 +1,14 @@
-import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:account/Repository/urls.dart';
 import 'package:account/API/login_request.dart';
+
 
 class WatchComplaint {
   Future<void> watchRequest(var complaintId) async {
     try {
       http.Response response = await http.post(
         Uri.parse(
-            "https://10.0.2.2:5000/api/complaints/addToWatchlist/$complaintId"),
+            "${AppUrl.baseURL}/complaints/addToWatchlist/$complaintId"),
         headers: <String, String>{
           "Content-type": "application/json",
           "Accept": "application/json",
@@ -31,7 +32,7 @@ class WatchComplaint {
     try {
       http.Response response = await http.delete(
         Uri.parse(
-            "https://10.0.2.2:5000/api/complaints/removeFromWatchList/$complaintId"),
+            "${AppUrl.baseURL}/complaints/removeFromWatchList/$complaintId"),
         headers: <String, String>{
           "Content-type": "application/json",
           "Accept": "application/json",

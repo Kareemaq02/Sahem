@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:account/Repository/urls.dart';
 import 'package:account/API/login_request.dart';
 
 // ignore_for_file: avoid_print, unused_import
@@ -12,7 +13,7 @@ class EditInfo{
 
 Future<String> updateAccount(String strNewUserName, String strNewEmail,
     String strNewPassword, String strNewPhoneNumber, String strNewLocation) async {
-  String url = 'https://10.0.2.2:5000/api/account/update';
+  String url = '${AppUrl.baseURL}/account/update';
 
   Map<String, String> headers = {
       'Authorization': 'Bearer $token2',
@@ -29,22 +30,12 @@ Future<String> updateAccount(String strNewUserName, String strNewEmail,
   // };
    Map<String, dynamic> body = {};
 
-    if (strNewUserName != null) {
-      body['strNewUserName'] = strNewUserName;
-    }
-    if (strNewEmail != null) {
+    body['strNewUserName'] = strNewUserName;
       body['strNewEmail'] = strNewEmail;
-    }
-    if (strNewPhoneNumber != null) {
       body['strNewPhoneNumber'] = strNewPhoneNumber;
-    }
-    if (strNewPassword != null) {
       body['strNewPassword'] = strNewPassword;
-    }
-    if (strNewLocation != null) {
       body['strNewLocation'] = strNewLocation;
-    }
-
+  
     String requestBody = json.encode(body);
 
 

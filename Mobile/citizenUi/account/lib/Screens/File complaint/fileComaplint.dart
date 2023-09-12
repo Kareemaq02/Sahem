@@ -4,7 +4,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:account/Repository/color.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
-import 'package:page_indicator/page_indicator.dart';
 import 'package:account/Screens/Home/publicFeed.dart';
 import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/API/file_complaint_request.dart';
@@ -12,7 +11,8 @@ import 'package:account/Widgets/Buttons/bottonContainer.dart';
 import 'package:account/Screens/File%20complaint/dropdown.dart';
 import 'package:account/Screens/File%20complaint/pageView.dart';
 import 'package:account/Widgets/HelperWidegts/complaintCard.dart';
-import 'package:account/Screens/File complaint/confirmPopup.dart';
+import 'package:account/Screens/File%20complaint/confirmPopup.dart';
+
 
 // ignore_for_file: use_build_context_synchronously
 
@@ -25,50 +25,53 @@ class FileCompalint extends StatefulWidget {
 
 class ComaplintState extends State<FileCompalint> {
   late PageController controller;
-  GlobalKey<PageContainerState> key = GlobalKey();
+
   TextEditingController commentController = TextEditingController();
   final FocusNode textFieldFocusNode = FocusNode();
+  bool _permissionRequested = false;
 
   @override
   void dispose() {
+    _isDisposed = true;
     selectedMediaFiles.clear();
     super.dispose();
   }
 
   @override
   void initState() {
-    _getCurrentPosition();
+    getImages(context);
     fetchAddress();
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      getImages(context);
+   
     });
   }
 
   String address = "";
-  Future<void> fetchAddress() async {
-    address = (await getAddressFromCoordinates(
-        currentPosition!.latitude, currentPosition!.longitude))!;
-    if (mounted) {
-      setState(() {});
-      print(address);
+  Future<String?> fetchAddress() async {
+    if (currentPosition != null) {
+      final newAddress = await getAddressFromCoordinates(
+        currentPosition!.latitude,
+        currentPosition!.longitude,
+      );
+      return newAddress;
     }
+    return null;
   }
 
   bool _isDisposed = false;
   double lat = 0.0;
   double lng = 0.0;
 
-  // @override
-  // void dispose() {
-  //   late var address;
-  //   _isDisposed = true;
-  //   super.dispose();
-  // }
 
   Future<bool> _handleLocationPermission() async {
+    // if (_permissionRequested) {
+    //   return false;
+    // }
+
     bool serviceEnabled;
     LocationPermission permission;
+    _permissionRequested = true;
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
@@ -108,25 +111,33 @@ class ComaplintState extends State<FileCompalint> {
     } catch (e) {}
   }
 
-  Future<void> getImages(BuildContext context) async {
+ Future<void> getImages(BuildContext context) async {
     final pickedFile = await ImagePicker().pickImage(
       source: ImageSource.camera,
       imageQuality: 50,
     );
-
+    if (_isDisposed) return;
     if (pickedFile != null) {
       setState(() {
         selectedMediaFiles.add(
           MediaFile(
             File(pickedFile.path),
-            currentPosition!.latitude,
-            currentPosition!.longitude,
+            null, // Set initial value of decLat to null
+            null, // Set initial value of decLng to null
             false,
           ),
         );
       });
+
+      await _getCurrentPosition(); // Wait for latitude and longitude
+      if (_isDisposed) return;
+      setState(() {
+        final mediaFile = selectedMediaFiles.last;
+        mediaFile.decLat = currentPosition!.latitude;
+        mediaFile.decLng = currentPosition!.longitude;
+      });
     } else {
-      Navigator.pop(context);
+      // Navigator.pop(context);
     }
   }
 
@@ -139,9 +150,10 @@ class ComaplintState extends State<FileCompalint> {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Scaffold(
+
         backgroundColor: AppColor.background,
         resizeToAvoidBottomInset: true,
-        bottomNavigationBar: BottomNavBar1(3),
+        bottomNavigationBar: BottomNavBar1(0),
         appBar: myAppBar(context, "ارسال بلاغ", false, screenSize.width * 0.5),
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
@@ -156,14 +168,16 @@ class ComaplintState extends State<FileCompalint> {
                   border: Border.all(color: AppColor.main, width: 1),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Padding(
-                  padding: EdgeInsets.all(30.0),
+                child: Container(
+                  height: screenSize.height * 0.2,
                   child: TextField(
+                    controller: commentController,
                     focusNode: textFieldFocusNode,
                     autofocus: true,
                     maxLines: null,
                     textDirection: TextDirection.rtl,
                     decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.only(left: 20.0, bottom: 50),
                       hintText: 'أضف تعليق ..',
                       border: InputBorder.none,
                       hintTextDirection: TextDirection.rtl,
@@ -182,16 +196,14 @@ class ComaplintState extends State<FileCompalint> {
                 context,
                 true,
                 null,
-                () {
+                () async {
                   FocusScope.of(context).unfocus();
-
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) => buildConfirmDialog(
-                        context,
-                        dropdown.stringName,
-                        address,
-                        commentController.text),
+                  final newAddress = await fetchAddress();
+                  _showConfirmDialog(
+                    context,
+                    dropdown.stringName,
+                    newAddress ?? '',
+                    commentController.text,
                   );
                 },
               ),
@@ -202,4 +214,16 @@ class ComaplintState extends State<FileCompalint> {
       ),
     );
   }
+}
+Future<void> _showConfirmDialog(
+    BuildContext context, String type, String address, String comment) async {
+  await showDialog(
+    context: context,
+    builder: (BuildContext context) => buildConfirmDialog(
+      context,
+      type,
+      address,
+      comment,
+    ),
+  );
 }

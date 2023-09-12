@@ -80,12 +80,18 @@ void initState() {
             value:  DropDownValue(item.intTypeId, item.strNameAr) ,
             child: Padding(
               padding: const EdgeInsets.only(left:60.0),
-              child: Row(
-                children: [
-                   Text(item.strNameAr),
-                  const Icon(Icons.report_gmailerrorred, color:AppColor.main,size: 20,),
-                 
-                ],
+                    child: SizedBox(
+                      height: 40,
+                      child: Row(
+                        children: [
+                          Text(item.strNameAr),
+                          const Icon(
+                            Icons.report_gmailerrorred,
+                            color: AppColor.main,
+                            size: 20,
+                          ),
+                        ],
+                      ),
               ),
             ),
           );
@@ -112,7 +118,7 @@ void initState() {
 
       );
     } else {
-      return const CircularProgressIndicator(color: AppColor.main,);
+              return Container();
     }
   },
 ),

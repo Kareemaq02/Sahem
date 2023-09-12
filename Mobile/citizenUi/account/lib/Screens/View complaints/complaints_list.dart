@@ -39,7 +39,7 @@ class _XDComplaintsListState extends State<XDComplaintsList> {
         floatingActionButton: const CustomActionButton(),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: BottomNavBar1(2),
-        appBar: myAppBar(context, 'بلاغاتي', true, screenWidth * 0.25),
+        appBar: myAppBar(context, 'بلاغاتي', true, screenWidth * 0.40),
         body: Column(
           children: [
             Expanded(
@@ -48,25 +48,23 @@ class _XDComplaintsListState extends State<XDComplaintsList> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     var data = snapshot.data as List<dynamic>?;
+                    var revList = data!.reversed.toList();
                     return ListView.builder(
-                      itemCount: data != null ? data.length : 0,
+                      //reverse: true,
+                      itemCount: revList != null ? revList.length : 0,
                       itemBuilder: (context, index) {
                 
                         return Column(
                           children: [
                             ComplaintCard2(
-                              type: data![index]['strComplaintTypeAr'],
-                              status: data[index]['intStatusId'],
-                              date: data[index]['dtmDateCreated'].toString(),
-                              id: data[index]['intComplaintId'],
-                              lat: data[index]['latLng']["decLat"],
-                              lng: data[index]['latLng']["decLng"],
-                              // lstMedia: data[index]['lstMedia']["data"],
+                              type: revList[index]['strComplaintTypeAr'],
+                              status: revList[index]['intStatusId'],
+                              date: revList[index]['dtmDateCreated'].toString(),
+                              id: revList[index]['intComplaintId'],
+                              lat: revList[index]['latLng']["decLat"],
+                              lng: revList[index]['latLng']["decLng"],
                               i:index,
-                             
-                             
-
-                            ),
+                ),
                           ],
                         );
                       },

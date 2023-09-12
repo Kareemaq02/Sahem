@@ -5,14 +5,18 @@ import 'package:page_indicator/page_indicator.dart';
 import 'package:account/API/complaint_requests.dart';
 import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/Widgets/HelperWidegts/myContainer.dart';
+import 'package:account/Widgets/HelperWidegts/complaintCard.dart';
 import 'package:account/Widgets/ComaplaintCard/timeLineVertical.dart';
+
 
 // ignore_for_file: library_private_types_in_public_api
 
 class ComplaintDetailsScreen extends StatefulWidget {
   final List<ComplaintModel> complaints;
+  final String address;
 
-  const ComplaintDetailsScreen({super.key, required this.complaints});
+  const ComplaintDetailsScreen(
+      {super.key, required this.complaints, required this.address});
 
   @override
   _ComplaintViewState createState() => _ComplaintViewState();
@@ -27,11 +31,22 @@ class _ComplaintViewState extends State<ComplaintDetailsScreen> {
 
   int selectedIndex = 0;
 
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+
+  
+ 
+
   @override
   Widget build(BuildContext context) {
     ComplaintModel complaint = widget.complaints.first;
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
+
 
 //   List<String> getImageUrls() {
 //   List<String> imageUrls = [];
@@ -51,7 +66,7 @@ class _ComplaintViewState extends State<ComplaintDetailsScreen> {
       floatingActionButton: const CustomActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavBar1(2),
-      appBar: myAppBar(context, 'الأعمال', false, screenHeight * 0.3),
+      appBar: myAppBar(context, 'بلاغاتي', false, screenHeight * 0.3),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
@@ -96,14 +111,14 @@ class _ComplaintViewState extends State<ComplaintDetailsScreen> {
                 Padding(
                   padding: EdgeInsets.all(screenWidth * 0.01),
                   child: Column(children: [
-                    RowInfo("رقم العمل", complaint.intComplaintId.toString()),
+                    RowInfo("رقم البلاغ", complaint.intComplaintId.toString()),
                     RowInfo("تاريخ الاضافة ",
                         complaint.dtmDateCreated.toString().substring(0, 10)),
                     RowInfo(
                         "نوع البلاغ", complaint.strComplaintTypeAr.toString()),
                     RowInfo(
                       "موقع البلاغ",
-                      "ش.وصفي التل ,عمان",
+                      widget.address,
                     ),
                   ]),
                 ),
@@ -117,7 +132,7 @@ class _ComplaintViewState extends State<ComplaintDetailsScreen> {
                 screenHeight * 0.68,
                 Padding(
                   padding: EdgeInsets.only(right: screenWidth * 0.10),
-                  child: timeLineVertical(),
+                  child: timeLineVertical(complaint.intComplaintId),
                 ),
               ),
             ),
@@ -139,7 +154,7 @@ Widget RowInfo(title, value) {
           alignment: Alignment.topLeft,
           child: Text(
             value,
-            //textDirection: TextDirection,
+            textDirection: TextDirection.rtl,
             style: const TextStyle(
               color: AppColor.secondary,
               fontFamily: 'DroidArabicKufi',

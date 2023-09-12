@@ -26,66 +26,80 @@ class Status {
 }
 
 getUserComplaint a = getUserComplaint();
-Widget timeLineVertical() {
-  return SingleChildScrollView(
-    scrollDirection: Axis.vertical,
-    child: FixedTimeline.tileBuilder(
-      theme: TimelineThemeData(
-        indicatorPosition: 1,
-        color: AppColor.line,
-        direction: Axis.vertical,
-      ),
-      builder: TimelineTileBuilder.connectedFromStyle(
-        contentsAlign: ContentsAlign.alternating,
-        connectionDirection: ConnectionDirection.before,
-        connectorStyleBuilder: (context, index) {
-          return (index == 0)
-              ? ConnectorStyle.solidLine
-              : ConnectorStyle.dashedLine;
-        },
-        contentsBuilder: (context, index) {
-          return FutureBuilder<List<dynamic>>(
-            future: a.fetchStatus(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Container();
-              } else if (snapshot.hasError) {
-                return Text(': ${snapshot.error}');
-              } else if (snapshot.hasData) {
-                List<dynamic> statusData = snapshot.data!;
+Widget timeLineVertical(int complaintId) {
+  return FutureBuilder<List<ComaplintSatus>>(
+    future: a.fetchComaplintStatus(complaintId),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return CircularProgressIndicator();
+      } else if (snapshot.hasError) {
+        return Text('Error: ${snapshot.error}');
+      } else if (snapshot.hasData) {
+        List<ComaplintSatus> statusData = snapshot.data!;
+
+        return SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: FixedTimeline.tileBuilder(
+            theme: TimelineThemeData(
+              indicatorPosition: 1,
+              color: AppColor.line,
+              direction: Axis.vertical,
+            ),
+            builder: TimelineTileBuilder.connectedFromStyle(
+              contentsAlign: ContentsAlign.alternating,
+              connectionDirection: ConnectionDirection.before,
+              connectorStyleBuilder: (context, index) {
+                return (index <= statusData.length)
+                    ? ConnectorStyle.solidLine
+                    : ConnectorStyle.dashedLine;
+              },
+              contentsBuilder: (context, index) {
                 if (index < status2.length) {
+                  Status status = status2[index];
                   TextStyle textStyle = const TextStyle(
                     fontSize: 11.9,
-                    color: AppColor.main,
                     fontFamily: 'DroidArabicKufi',
                   );
 
-                  if (index > 0) {
-                    textStyle = textStyle.copyWith(color: Colors.grey);
+                  if (statusData.isNotEmpty &&
+                      index == statusData.last.intComplaintStatusId - 1) {
+                    // Completed status, use API data
+                    ComaplintSatus apiStatus = statusData.last;
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 15.0),
+                      child: Text(
+                        '${apiStatus.strStatusNameAr}\n${apiStatus.dtmTrans.toString().substring(0, 10)}',
+                        style: textStyle.copyWith(color: AppColor.main),
+                      ),
+                    );
+                  } else {
+                    // Incomplete status, use placeholder data
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 15.0),
+                      child: Text(
+                        '${status.name}\n--:--:--',
+                        style: textStyle.copyWith(color: Colors.grey),
+                      ),
+                    );
                   }
-
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 15.0),
-                    child: Text(
-                      '${status2[index].name}\n${status2[index].time}',
-                      //statusData[index]['strName'],
-                      style: textStyle,
-                    ),
-                  );
-                } else {
-                  return const Text('No data for this index');
                 }
-              } else {
-                return Container();
-              }
-            },
-          );
-        },
-        indicatorStyleBuilder: (context, index) => IndicatorStyle.outlined,
-        //itemExtent: 73.0,
-        itemExtent: 107.0,
-        itemCount: 10,
-      ),
-    ),
+                return SizedBox.shrink();
+              },
+              indicatorStyleBuilder: (context, index) {
+                return (index < statusData.length)
+                    ? (index <= statusData.last.intComplaintStatusId)
+                        ? IndicatorStyle.dot
+                        : IndicatorStyle.outlined
+                    : IndicatorStyle.outlined;
+              },
+              itemExtent: 73.0,
+              itemCount: status2.length, // Render based on status2's length
+            ),
+          ),
+        );
+      } else {
+        return Text('No data available.');
+      }
+    },
   );
 }

@@ -48,13 +48,16 @@ import 'package:account/Widgets/Filter/filterType.dart';
                 ),
               ),
             ),
-            Text(title,
-                textDirection: TextDirection.rtl,
-                style: const TextStyle(
-                  color: AppColor.textTitle,
-                  fontSize: 19,
-                  fontFamily: 'DroidArabicKufi',
-                )),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Text(title,
+                  //textDirection: TextDirection.rtl,
+                  style: const TextStyle(
+                    color: AppColor.textTitle,
+                    fontSize: 19,
+                    fontFamily: 'DroidArabicKufi',
+                  )),
+            ),
           ],
         ),
       ),
