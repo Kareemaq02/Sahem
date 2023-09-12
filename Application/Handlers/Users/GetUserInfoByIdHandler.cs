@@ -24,7 +24,7 @@ namespace Application.Handlers.Complaints
         )
         {
             var result = await _context.Users
-                .Where(q => q.Id == request.id && q.intUserTypeId == (int)UsersConstant.userTypes.user)
+                .Where(q => q.Id == request.id)
                 .Join(
                     _context.UserInfos,
                     u => u.intUserInfoId,
@@ -47,6 +47,8 @@ namespace Application.Handlers.Complaints
                             boolIsActive = u.User.blnIsActive,
                             boolIsBlacklisted = u.User.blnIsBlacklisted,
                             boolIsVerified = u.User.blnIsVerified,
+                            strFirstNameAr = u.UserInfo.strFirstNameAr,
+                            strLastNameAr = u.UserInfo.strLastNameAr,
                         }
                 )
                 .FirstOrDefaultAsync();

@@ -4,6 +4,7 @@ using Application.Core;
 using Application.Queries.Complaints;
 using Application.Queries.Departments;
 using Application.Queries.Users;
+using Domain.ClientDTOs.Task;
 using Domain.ClientDTOs.User;
 using Domain.DataModels.User;
 using Domain.Resources;
@@ -69,6 +70,19 @@ namespace API.Controllers
         public async Task<IActionResult> WhitelistUserById(int id)
         {
             return HandleResult(await Mediator.Send(new WhitelistUserByIdCommand(id)));
+        }
+
+        [Authorize]
+        [HttpGet("info")] // .../api/users/info
+        public async Task<IActionResult> GetLoggedInUserInfo(string strUsername)
+        {
+            string authHeader = Request.Headers["Authorization"];
+            JwtSecurityTokenHandler tokenHandler = new();
+            JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
+
+            strUsername = jwtToken.Claims.First(c => c.Type == "username").Value;
+
+            return HandleResult(await Mediator.Send(new GetLoggedInUserInfoQuery(strUsername)));
         }
 
     }
