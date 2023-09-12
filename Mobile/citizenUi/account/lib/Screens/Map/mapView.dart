@@ -77,7 +77,7 @@ class FullMapState extends State<FullMap> with TickerProviderStateMixin {
       setState(() {
       });
     }).catchError((e) {
-      debugPrint(e);
+      //debugPrint(e);
     });
   }
 
@@ -162,7 +162,9 @@ class FullMapState extends State<FullMap> with TickerProviderStateMixin {
               ),
               layers: [
                 TileLayerOptions(
-                  urlTemplate: MapConstants.templeteURL,
+                  //urlTemplate: MapConstants.templeteURL,
+                  urlTemplate:
+                      "https://api.mapbox.com/styles/v1/rubaaburumman/cljqu0bkj010101o44i2a5nhm/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoicnViYWFidXJ1bW1hbiIsImEiOiJjbGdwbDMyaXkwNnVvM2ZtcjYxNTJoaHNyIn0.rG3Gztp7P5YwoY5NHtYAHA",
                   additionalOptions: {
                     'mapStyleId': MapConstants.style_URL,
                     'accessToken': MapConstants.access_token,

@@ -94,7 +94,7 @@ Future<dynamic> fileAsSimilar(var complaintId, context) async {
   try {
     http.Response response = await http.post(
       Uri.parse(
-          "https://10.0.2.2:5000/api/complaints/upvote/addToWatchList/similar/$complaintId"),
+          "${AppUrl.baseURL}/complaints/upvote/addToWatchList/similar/$complaintId"),
       headers: <String, String>{
         "Content-type": "application/json",
         "Accept": "application/json",

@@ -1,5 +1,6 @@
 // ignore_for_file: unused_local_variable, unnecessary_null_comparison
 
+import 'package:account/Widgets/HelperWidegts/text.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
@@ -53,7 +54,12 @@ class _XDComplaintsListState extends State<XDComplaintsList> {
                       //reverse: true,
                       itemCount: revList != null ? revList.length : 0,
                       itemBuilder: (context, index) {
-                
+                        print(data.length);
+                        if (revList.isEmpty) {
+                          return Center(
+                              child:
+                                  text("لا يوجد بلاغات مسجلة ", AppColor.main));
+                        }        
                         return Column(
                           children: [
                             ComplaintCard2(

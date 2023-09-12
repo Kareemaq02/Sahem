@@ -65,7 +65,7 @@ Widget DataBox(
   );
 }
 
-Widget InfoBox(name) {
+Widget InfoBox(name, nationalID) {
   return Container(
       height: 95,
       width: double.infinity,
@@ -88,10 +88,10 @@ Widget InfoBox(name) {
               ),
             ),
           ),
-          child: const Column(
+          child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
+            const Text(
                   'ربى أبورمان',
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -101,10 +101,10 @@ Widget InfoBox(name) {
                   ),
                 ),
                 Text(
-                  'الرقم الوطني: 20201501023',
+              'الرقم الوطني:$nationalID',
                   textDirection: TextDirection.rtl,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: AppColor.secondary,
                     fontSize: 11,
                     fontFamily: 'DroidArabicKufi',

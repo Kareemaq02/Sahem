@@ -11,12 +11,13 @@ import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/API/file_complaint_request.dart';
 import 'package:account/Widgets/Buttons/bottonContainer.dart';
 import 'package:account/Screens/File%20complaint/dropdown.dart';
-import 'package:account/Screens/File%20complaint/pageView.dart';
 import 'package:account/Widgets/HelperWidegts/complaintCard.dart';
 import 'package:account/Screens/File%20complaint/confirmPopup.dart';
-
+import 'package:page_indicator/page_indicator.dart';
 
 // ignore_for_file: use_build_context_synchronously
+final picker = ImagePicker();
+List<MediaFile> selectedMediaFiles = [];
 
 class FileCompalint extends StatefulWidget {
   const FileCompalint({super.key});
@@ -43,9 +44,8 @@ class ComaplintState extends State<FileCompalint> {
     getImages(context);
     fetchAddress();
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-   
-    });
+    controller = PageController();
+    WidgetsBinding.instance.addPostFrameCallback((_) {});
   }
 
   String address = "";
@@ -60,10 +60,28 @@ class ComaplintState extends State<FileCompalint> {
     return null;
   }
 
+  Widget stackButton(IconData icon, Function() onPressed) {
+    return Padding(
+      padding: const EdgeInsets.all(15.0),
+      child: ClipOval(
+        child: Material(
+          color: AppColor.background,
+          child: InkWell(
+            onTap: onPressed,
+            child: SizedBox(
+              width: 25,
+              height: 25,
+              child: Icon(icon, color: Colors.grey, size: 20),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   bool _isDisposed = false;
   double lat = 0.0;
   double lng = 0.0;
-
 
   Future<bool> _handleLocationPermission() async {
     // if (_permissionRequested) {
@@ -111,7 +129,7 @@ class ComaplintState extends State<FileCompalint> {
     } catch (e) {}
   }
 
- Future<void> getImages(BuildContext context) async {
+  Future<void> getImages(BuildContext context) async {
     final pickedFile = await ImagePicker().pickImage(
       source: ImageSource.camera,
       imageQuality: 50,
@@ -150,7 +168,6 @@ class ComaplintState extends State<FileCompalint> {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Scaffold(
-
         backgroundColor: AppColor.background,
         resizeToAvoidBottomInset: true,
         bottomNavigationBar: BottomNavBar1(0),
@@ -159,7 +176,61 @@ class ComaplintState extends State<FileCompalint> {
           scrollDirection: Axis.vertical,
           child: Column(
             children: [
-              const MyPageView(),
+              //const MyPageView(),
+              //-------pageView---------//
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
+                child: SizedBox(
+                  height: 210,
+                  child: PageIndicatorContainer(
+                    align: IndicatorAlign.bottom,
+                    length: selectedMediaFiles.length,
+                    indicatorSpace: 10.0,
+                    padding: const EdgeInsets.all(10),
+                    indicatorColor: Colors.grey,
+                    indicatorSelectorColor: Colors.blue,
+                    shape: IndicatorShape.circle(size: 7),
+                    child: PageView.builder(
+                      controller: controller,
+                      itemCount: selectedMediaFiles.length,
+                      itemBuilder: (context, position) {
+                        return Stack(
+                          children: [
+                            Center(
+                              child: selectedMediaFiles[position].decLat ==
+                                          null &&
+                                      selectedMediaFiles[position].decLng ==
+                                          null
+                                  ? const CircularProgressIndicator.adaptive()
+                                  : SizedBox(
+                                      width: double.infinity,
+                                      child: Image.file(
+                                        selectedMediaFiles[position].file,
+                                        fit: BoxFit.cover,
+                                        scale: 0.1,
+                                      ),
+                                    ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                stackButton(Icons.add, () {
+                                  addImage(context);
+                                  setState(() {});
+                                }),
+                                stackButton(Icons.delete, () {
+                                  removeImage(position, context);
+                                }),
+                              ],
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+
               const MyDropDown(),
               Container(
                 width: screenSize.width * 0.95,
@@ -214,7 +285,42 @@ class ComaplintState extends State<FileCompalint> {
       ),
     );
   }
+
+  void removeImage(int index, BuildContext context) {
+    if (index >= 0 &&
+        index < selectedMediaFiles.length &&
+        selectedMediaFiles.length != 1) {
+      selectedMediaFiles.removeAt(index);
+      setState(() {
+        //selectedMediaFiles.removeAt(index);
+      });
+    }
+    if (index < selectedMediaFiles.length) {
+      controller.animateToPage(
+        index,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    }
+    if (selectedMediaFiles.length == 1) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('يجب ان يحتوي البلاغ على صورة واحدة عالاقل')),
+      );
+    }
+  }
+
+  void addImage(BuildContext context) {
+    if (selectedMediaFiles.length <= 3) {
+      getImages(context);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('تجاوزت الحد الأقصى لالتقاط الصور')),
+      );
+    }
+  }
 }
+
 Future<void> _showConfirmDialog(
     BuildContext context, String type, String address, String comment) async {
   await showDialog(

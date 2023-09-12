@@ -1,3 +1,5 @@
+import 'package:account/Screens/Map/mapView.dart';
+
 import 'Screens/Login/home.dart';
 import 'package:flutter/material.dart';
 import 'Repository/language_constants.dart';
@@ -49,7 +51,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const XDHome(),
+      home: const FullMap(),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       locale: _locale,
