@@ -6,7 +6,8 @@
         {
             admin = 1,
             worker = 2,
-            user = 3
+            leader = 3,
+            user = 4
         }
     }
 }

@@ -256,6 +256,7 @@ class _TaskEvaluationState extends State<TaskEvaluation> {
                             context: context,
                             builder: (BuildContext builder) {
                               // reset dialog
+                              dialogHeight = screenHeight * 0.47;
                               statusChoice = 1;
                               rating = 2.5;
                               return StatefulBuilder(
