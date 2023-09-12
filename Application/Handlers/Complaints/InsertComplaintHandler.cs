@@ -53,6 +53,34 @@ namespace Application.Handlers.Complaints
             );
             try
             {
+                // Get Region based on lat and lng
+                RegionNames region = GetRegionName
+                       .getRegionNameByLatLng(request.ComplaintDTO.lstMedia.ElementAt(0).decLat
+                       , request.ComplaintDTO.lstMedia.ElementAt(0).decLng);
+
+
+
+                var existingRegionId = await _context.Regions
+                    .Where(q => q.strNameEn == region.strRegionEn)
+                    .Select(q => q.intId).SingleOrDefaultAsync();
+
+                complaintDTO.intRegionId = existingRegionId;
+
+
+                if (existingRegionId == 0)
+                {
+                    var regionEntity = await _context.Regions.AddAsync(new Region
+                    {
+                        strNameAr = region.strRegionAr,
+                        strNameEn = region.strRegionEn,
+                        strShapePath = "C:\\Fake\\Path\\Files\\test.shp"
+                    });
+
+                    await _context.SaveChangesAsync();
+                    existingRegionId = regionEntity.Entity.intId;
+                    complaintDTO.intRegionId = existingRegionId;
+                }
+
                 var complaint = new Complaint
                 {
                     intUserID = userId,
@@ -65,10 +93,12 @@ namespace Application.Handlers.Complaints
                     dtmDateLastReminded = DateTime.UtcNow,
                     intLastModifiedBy = userId,
                     dtmDateLastModified = DateTime.UtcNow,
-                    intRegionId = 1, //TODO Will be changed after we get the shape files
+                    intRegionId = existingRegionId, 
                 };
                 var complaintEntity = await _context.Complaints.AddAsync(complaint);
                 await _context.SaveChangesAsync(cancellationToken);
+
+                complaintDTO.intId = complaintEntity.Entity.intId;
 
                 if (lstMedia.Count == 0)
                 {
@@ -107,8 +137,8 @@ namespace Application.Handlers.Complaints
                         {
                             intComplaintId = complaintEntity.Entity.intId,
                             strMediaRef = filePath,
-                            decLat = (decimal)media.decLat,
-                            decLng = (decimal)media.decLng,
+                            decLat = media.decLat,
+                            decLng = media.decLng,
                             blnIsVideo = media.blnIsVideo,
                             dtmDateCreated = DateTime.UtcNow,
                             intCreatedBy = userId
