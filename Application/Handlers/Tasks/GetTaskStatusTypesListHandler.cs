@@ -27,11 +27,11 @@ namespace Application.Handlers.Complaints
                 select new StatusDTO
                 {
                     intId = q.intId,
-                    strName = q.strName
+                    strName = q.strName,
+                    strNameAr = q.strNameAr,
                 };
 
-            var result = await query
-                .AsNoTracking().ToListAsync();
+            var result = await query.AsNoTracking().ToListAsync();
 
             return Result<List<StatusDTO>>.Success(result);
         }
