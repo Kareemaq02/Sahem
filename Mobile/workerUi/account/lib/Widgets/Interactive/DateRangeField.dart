@@ -56,8 +56,8 @@ class DateRangeField extends StatelessWidget {
                     padding: EdgeInsets.only(right: screenWidth * 0.03),
                     child: Text(
                       "${formatDate(initialRange.startDate!)} - ${formatDate(initialRange.endDate!)}",
-                      style: const TextStyle(
-                        fontSize: 15,
+                      style: TextStyle(
+                        fontSize: width * 0.04,
                         fontWeight: FontWeight.bold,
                         color: AppColor.main,
                         fontFamily: 'DroidArabicKufi',
@@ -69,7 +69,7 @@ class DateRangeField extends StatelessWidget {
                     child: Icon(
                       Icons.calendar_today_outlined,
                       color: AppColor.main,
-                      size: screenHeight * 0.045,
+                      size: width * 0.075 + height * 0.075,
                     ),
                   ),
                 ],

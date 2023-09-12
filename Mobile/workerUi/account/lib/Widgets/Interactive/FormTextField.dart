@@ -37,7 +37,7 @@ class FormTextField extends StatelessWidget {
             color: AppColor.main, width: 1, style: BorderStyle.solid),
       ),
       child: Padding(
-        padding: EdgeInsets.only(right: screenWidth * 0.03),
+        padding: EdgeInsets.only(right: width * 0.03),
         child: TextFormField(
           style: const TextStyle(
             color: AppColor.main,

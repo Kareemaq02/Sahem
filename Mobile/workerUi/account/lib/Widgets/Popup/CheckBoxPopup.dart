@@ -72,16 +72,17 @@ class _CheckBoxPopupState extends State<CheckBoxPopup> {
             ),
             SizedBox(
               height: widget.height * 0.5,
-              child: Column(
-                children: widget.checkBoxes.isNotEmpty
-                    ? widget.checkBoxes
-                    : [
-                        const TitleText(
-                          text: "لا يوجد نتائج",
-                          fontSize: 14,
-                        )
-                      ],
-              ),
+              child: widget.checkBoxes.isNotEmpty
+                  ? Padding(
+                      padding: EdgeInsets.only(right: screenWidth * 0.27),
+                      child: Column(
+                        children: widget.checkBoxes,
+                      ),
+                    )
+                  : const TitleText(
+                      text: "لا يوجد نتائج",
+                      fontSize: 14,
+                    ),
             ),
             SizedBox(
               height: widget.height * 0.1,

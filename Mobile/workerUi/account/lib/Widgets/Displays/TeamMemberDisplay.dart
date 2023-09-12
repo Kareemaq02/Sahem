@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class TeamDisplay extends StatelessWidget {
+class TeamMemberDisplay extends StatelessWidget {
   final double height;
   final double width;
   final String name;
   final IconData icon;
   final Color color;
 
-  const TeamDisplay({
+  const TeamMemberDisplay({
     super.key,
     required this.height,
     required this.width,

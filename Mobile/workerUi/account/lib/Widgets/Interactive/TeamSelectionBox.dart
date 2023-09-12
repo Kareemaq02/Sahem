@@ -3,7 +3,7 @@ import 'package:account/Utils/Team.dart';
 import 'package:account/Utils/TeamMembers.dart';
 import 'package:account/Widgets/Buttons/StyledButton.dart';
 import 'package:account/Widgets/CheckBoxes/StyledCheckBox.dart';
-import 'package:account/Widgets/Displays/TeamDisplay.dart';
+import 'package:account/Widgets/Displays/TeamMemberDisplay.dart';
 import 'package:account/Widgets/HelperWidgets/TitleText.dart';
 import 'package:account/Widgets/Popup/CheckBoxPopup.dart';
 import 'package:flutter/material.dart';
@@ -29,30 +29,30 @@ class TeamSelectionBox extends StatefulWidget {
 }
 
 class _TeamSelectionBoxState extends State<TeamSelectionBox> {
-  late Future<List<TeamMembers>> teamMembersRequest;
-  List<TeamMembers> teamMembersList1 = [
-    TeamMembers(1, "asd بسام", true),
-    TeamMembers(2, "عمر احمد", false),
-    TeamMembers(3, "طلال بلال", false),
-    TeamMembers(4, "سيف محمد", false),
+  late Future<List<TeamMember>> teamMembersRequest;
+  List<TeamMember> teamMembersList1 = [
+    TeamMember(1, "asd بسام", true),
+    TeamMember(2, "عمر احمد", false),
+    TeamMember(3, "طلال بلال", false),
+    TeamMember(4, "سيف محمد", false),
   ];
-  List<TeamMembers> teamMembersList2 = [
-    TeamMembers(1, "محمد بسام", false),
-    TeamMembers(2, "عمر احمد", true),
-    TeamMembers(3, "طلال بلال", false),
-    TeamMembers(4, "سيف محمد", false),
+  List<TeamMember> teamMembersList2 = [
+    TeamMember(1, "محمد بسام", false),
+    TeamMember(2, "عمر احمد", true),
+    TeamMember(3, "طلال بلال", false),
+    TeamMember(4, "سيف محمد", false),
   ];
-  List<TeamMembers> teamMembersList3 = [
-    TeamMembers(1, "محمد بسام", false),
-    TeamMembers(2, "عمر احمد", false),
-    TeamMembers(3, "طلال بلال", true),
-    TeamMembers(4, "سيف محمد", false),
+  List<TeamMember> teamMembersList3 = [
+    TeamMember(1, "محمد بسام", false),
+    TeamMember(2, "عمر احمد", false),
+    TeamMember(3, "طلال بلال", true),
+    TeamMember(4, "سيف محمد", false),
   ];
-  List<TeamMembers> teamMembersList4 = [
-    TeamMembers(1, "محمد بسام", false),
-    TeamMembers(2, "عمر احمد", false),
-    TeamMembers(3, "طلال بلال", false),
-    TeamMembers(4, "سيف محمد", true),
+  List<TeamMember> teamMembersList4 = [
+    TeamMember(1, "محمد بسام", false),
+    TeamMember(2, "عمر احمد", false),
+    TeamMember(3, "طلال بلال", false),
+    TeamMember(4, "سيف محمد", true),
   ];
   late Future<List<Team>> teamsRequest;
   List<Team> teamsList = [
@@ -62,7 +62,7 @@ class _TeamSelectionBoxState extends State<TeamSelectionBox> {
     Team(4, "سيف محمد"),
   ];
 
-  List<TeamMembers> getSelectedTeam() {
+  List<TeamMember> getSelectedTeam() {
     switch (selectedTeamId) {
       case 1:
         return teamMembersList1;
@@ -204,7 +204,8 @@ class _TeamSelectionBoxState extends State<TeamSelectionBox> {
           ),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            child: FutureBuilder<List<TeamMembers>>(
+            reverse: true,
+            child: FutureBuilder<List<TeamMember>>(
               future: teamMembersRequest,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting ||
@@ -217,7 +218,7 @@ class _TeamSelectionBoxState extends State<TeamSelectionBox> {
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 }
-                List<TeamMembers> team = getSelectedTeam();
+                List<TeamMember> team = getSelectedTeam();
 
                 return Row(
                   children: List.generate(
@@ -226,7 +227,7 @@ class _TeamSelectionBoxState extends State<TeamSelectionBox> {
                       return Padding(
                         padding: EdgeInsets.symmetric(
                             horizontal: screenWidth * 0.02),
-                        child: TeamDisplay(
+                        child: TeamMemberDisplay(
                           height: widget.boxHeight,
                           width: widget.boxWidth,
                           name: team[index].strName,

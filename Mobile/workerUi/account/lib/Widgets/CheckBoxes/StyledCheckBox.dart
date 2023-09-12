@@ -20,7 +20,7 @@ class StyledCheckBox extends StatelessWidget {
     return GestureDetector(
       onTap: () => {onChanged()},
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Text(
             text,
