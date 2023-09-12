@@ -8,7 +8,6 @@ import 'package:page_indicator/page_indicator.dart';
 import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/Widgets/HelperWidgets/myContainer.dart';
 
-// ignore_for_file: library_private_types_in_public_api
 class CreateTask extends StatefulWidget {
   const CreateTask({super.key});
 
@@ -143,7 +142,12 @@ class _CreateTaskState extends State<CreateTask> {
                           ),
                           InkWell(
                             onTap: () => {
-                              naviTransition(context, const CreateTaskDetails())
+                              naviTransition(
+                                context,
+                                CreateTaskDetails(
+                                  intComplaintId: complaint.intComplaintId,
+                                ),
+                              )
                             },
                             child: Mycontainer(
                               screenHeight * 0.2,
