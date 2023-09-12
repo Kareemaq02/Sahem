@@ -1,13 +1,8 @@
 import 'dart:convert';
+import 'package:account/Utils/LatLng.dart';
+
 import '../login_request.dart';
 import 'package:http/http.dart' as http;
-
-class LatLng {
-  double lat;
-  double lng;
-
-  LatLng({required this.lat, required this.lng});
-}
 
 class ComplaintModel {
   int intComplaintId;
@@ -89,7 +84,7 @@ class PendingComplaints {
       Uri.parse(
           "https://10.0.2.2:5000/api/complaints?pageSize=10&pageNumber=$pageNumber&lstComplaintStatusIds=1"),
       headers: {
-        'Authorization': 'Bearer $token2',
+        'Authorization': 'Bearer $userToken',
       },
     );
 

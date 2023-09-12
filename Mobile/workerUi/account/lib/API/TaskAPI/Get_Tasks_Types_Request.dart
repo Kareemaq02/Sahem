@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:account/API/login_request.dart';
+import 'package:account/Repository/urls.dart';
 import 'package:http/http.dart' as http;
 
 class TaskType {
@@ -27,11 +28,11 @@ class TaskType {
 
 class TaskTypeRequest {
   Future<List<TaskType>> getAllCategory() async {
-    var baseUrl = "https://10.0.2.2:5000/api/tasks/types";
+    var baseUrl = "${AppUrl.baseURL}tasks/types";
     http.Response response = await http.get(
       Uri.parse(baseUrl),
       headers: {
-        'Authorization': 'Bearer $token2',
+        'Authorization': 'Bearer $userToken',
       },
     );
 
@@ -39,7 +40,7 @@ class TaskTypeRequest {
       var jsonData = json.decode(response.body) as List;
       return jsonData.map((element) => TaskType.fromJson(element)).toList();
     } else {
-      throw Exception('Failed to load complaint types');
+      throw Exception('Failed to load task types');
     }
   }
 }

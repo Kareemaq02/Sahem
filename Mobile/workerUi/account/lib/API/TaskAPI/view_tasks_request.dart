@@ -65,9 +65,7 @@ class TaskModel {
       ),
       lstMedia: List<dynamic>.from(json['lstMedia']),
     );
-    
   }
-  
 }
 
 class WorkersList {
@@ -92,56 +90,48 @@ class WorkersList {
   }
 }
 
-
-
-
 class WorkerTask {
-
   Future<List<dynamic>> fetchUserTasks() async {
-  final response = await http.get(Uri.parse("https://10.0.2.2:5000/api/tasks/loggedInWorker"),
-   headers: {
-          'Authorization': 'Bearer $token2',
-        }
-  );
+    final response = await http.get(
+        Uri.parse("https://10.0.2.2:5000/api/tasks/loggedInWorker"),
+        headers: {
+          'Authorization': 'Bearer $userToken',
+        });
 
-  if (response.statusCode == 200) {
-
-    return jsonDecode(response.body.toString());
-  } else {
-    throw Exception('Failed to fetch Tasks');
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body.toString());
+    } else {
+      throw Exception('Failed to fetch Tasks');
+    }
   }
-}
- 
- 
-Future<List<TaskModel>> getWorkerTasksDetails(var id) async {
+
+  Future<List<TaskModel>> getWorkerTasksDetails(var id) async {
     var baseUrl = "https://10.0.2.2:5000/api/tasks/details/$id";
 
-    http.Response response = await http
-        .get(Uri.parse(baseUrl), headers: {'Authorization': 'Bearer $token2'});
+    http.Response response = await http.get(Uri.parse(baseUrl),
+        headers: {'Authorization': 'Bearer $userToken'});
 
     if (response.statusCode == 200) {
       //print(response.body);
-       var jsonData = json.decode(response.body) as Map<String, dynamic>;
+      var jsonData = json.decode(response.body) as Map<String, dynamic>;
       TaskModel task = TaskModel.fromJson(jsonData);
       return [task];
-      } else {
-        throw Exception('JSON data is not in the expected format.');
-      }
-    } 
-    
-  
-
-  Future<List<dynamic>> fetchStatus() async {
-  final response = await http
-      .get(Uri.parse("https://10.0.2.2:5000/api/tasks/status/list"), headers: {
-    'Authorization': 'Bearer $token2',
-  });
-
-  if (response.statusCode == 200) {
-    return jsonDecode(response.body.toString());
-  } else {
-    throw Exception('Failed to fetch complaints');
+    } else {
+      throw Exception('JSON data is not in the expected format.');
+    }
   }
 
-}
+  Future<List<dynamic>> fetchStatus() async {
+    final response = await http.get(
+        Uri.parse("https://10.0.2.2:5000/api/tasks/status/list"),
+        headers: {
+          'Authorization': 'Bearer $userToken',
+        });
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body.toString());
+    } else {
+      throw Exception('Failed to fetch complaints');
+    }
+  }
 }
