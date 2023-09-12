@@ -168,8 +168,8 @@ class _XDRegisterState extends State<XDRegister> {
                       false,
                      
                       isJordanian == true
-                              ? XDRegister1()
-                              : XDRegister2(),
+                              ? const XDRegister1()
+                              : const XDRegister2(),
                       () {}),
 
                   const SizedBox(

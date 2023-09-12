@@ -1,3 +1,6 @@
+// ignore_for_file: library_private_types_in_public_api, non_constant_identifier_names
+
+import 'package:account/Widgets/CheckBoxes/CheckBox.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/API/login_request.dart';
@@ -6,14 +9,15 @@ import 'package:account/Widgets/HelperWidegts/text.dart';
 import 'package:account/Screens/Registration/register.dart';
 import 'package:account/Widgets/Buttons/bottonContainer.dart';
 import 'package:account/Widgets/HelperWidegts/fieldContainer.dart';
+import 'package:flutter/services.dart';
 
 
 
 TextEditingController usernameController = TextEditingController();
 TextEditingController passwordController = TextEditingController();
-final GlobalKey<FormState> _formKey1 = GlobalKey<FormState>();
 UserLogin user = UserLogin();
 Validation a = Validation();
+bool remeberMe = false;
 
 class XDLogin extends StatefulWidget {
   const XDLogin({Key? key}) : super(key: key);
@@ -79,6 +83,7 @@ class _XDLoginState extends State<XDLogin> {
               //  a.inputValidate,
               TextInputType.text,
               null,
+                remeberMe
             ),
             
             const SizedBox(
@@ -93,6 +98,8 @@ class _XDLoginState extends State<XDLogin> {
               //a.inputValidate,
               TextInputType.text,
               null,
+              remeberMe,
+
             ),
             const SizedBox(
               height: 15,
@@ -101,21 +108,26 @@ class _XDLoginState extends State<XDLogin> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 58.0),
+                  padding: const EdgeInsets.only(left: 40.0),
                   child: text(
                     "نسيت كلمة السر؟",
                     AppColor.main,
                   ),
                 ),
                 SizedBox(
-                  width: MediaQuery.of(context).padding.left + 35,
-                ),
-                text(
-                  "تذكر تسجيل الدخول",
-                  AppColor.main,
+                  width: MediaQuery.of(context).padding.left + 15,
                 ),
                 const SizedBox(
                   width: 2.5,
+                ),
+                CheckBoxNew(
+                  text: "تذكر تسجيل الدخول",
+                  isChecked: remeberMe,
+                  onChanged: () {
+                    setState(() {
+                      remeberMe = !remeberMe;
+                    });
+                  },
                 ),
               ],
             ),
@@ -131,7 +143,9 @@ class _XDLoginState extends State<XDLogin> {
               true,
               null,
               () {
-                // _validateInputs();
+                if (remeberMe == true) {
+                  TextInput.finishAutofillContext();
+                }
                 user.login(
                   usernameController.text,
                   passwordController.text,

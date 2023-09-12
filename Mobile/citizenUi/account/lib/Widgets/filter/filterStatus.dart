@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, library_private_types_in_public_api, avoid_print, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/API/complaint_requests.dart';
@@ -39,8 +41,8 @@ class _FilterPopup2State extends State<FilterPopup2> {
           fontFamily: "DroidArabicKufi",
         ),
       ),
-      titlePadding: EdgeInsets.all(8),
-      contentPadding: EdgeInsets.symmetric(horizontal: 2.0, vertical: 17),
+      titlePadding: const EdgeInsets.all(8),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 17),
       content: SizedBox(
         height: 200,
         child: Column(
@@ -52,11 +54,11 @@ class _FilterPopup2State extends State<FilterPopup2> {
                   future: status.fetchStatus(),
                   builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
+                      return const CircularProgressIndicator();
                     } else if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return Text('No status types available');
+                      return const Text('No status types available');
                     } else {
                       final categories = snapshot.data!;
                       return Padding(
@@ -64,7 +66,6 @@ class _FilterPopup2State extends State<FilterPopup2> {
                         child: Column(
                           children: categories.map((category) {
                             final int intTypeId = category["intId"];
-                            bool isChecked = selectedStatus.contains(intTypeId);
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: CheckBoxNew(
@@ -92,7 +93,7 @@ class _FilterPopup2State extends State<FilterPopup2> {
               ),
             ),
             const SizedBox(height: 10),
-            Container(
+            SizedBox(
               height: 40,
               width: 125,
               child: ElevatedButton(

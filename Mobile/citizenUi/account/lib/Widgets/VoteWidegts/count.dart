@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 
@@ -6,7 +8,7 @@ import 'package:account/Repository/color.dart';
 class CountWidget extends StatefulWidget {
   final int initialCount;
 
-  CountWidget({
+  const CountWidget({super.key, 
     required this.initialCount,
   });
 

@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:io';
 import 'login_request.dart';
 import 'package:flutter/material.dart';
@@ -63,7 +65,7 @@ class Complaint {
         print("file as new");
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => confirm()),
+          MaterialPageRoute(builder: (context) => const confirm()),
         );
         //print(responseJson);
         print('Complaint assigned successfully.');
@@ -104,7 +106,7 @@ Future<dynamic> fileAsSimilar(var complaintId, context) async {
       print("file as similar");
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => confirm()),
+        MaterialPageRoute(builder: (context) => const confirm()),
       );
 
       print('successful');

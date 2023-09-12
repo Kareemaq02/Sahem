@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field, file_names, library_private_types_in_public_api, prefer_typing_uninitialized_variables, use_build_context_synchronously, empty_catches, avoid_print
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -12,6 +14,8 @@ import 'package:account/API/file_complaint_request.dart';
   List<MediaFile> selectedMediaFiles = [];
 
 class MyPageView extends StatefulWidget {
+  const MyPageView({super.key});
+
   @override
   _PageViewState createState() => _PageViewState();
 }
@@ -35,7 +39,6 @@ class _PageViewState extends State<MyPageView> {
 
   @override
   void dispose() {
-    late var address;
     _isDisposed = true;
     super.dispose();
   }
@@ -177,9 +180,9 @@ class _PageViewState extends State<MyPageView> {
                   Center(
                     child: selectedMediaFiles[position].decLat == null ||
                             selectedMediaFiles[position].decLng == null
-                        ? CircularProgressIndicator.adaptive()
+                        ? const CircularProgressIndicator.adaptive()
                         : Image.file(
-                            selectedMediaFiles[position].file!,
+                            selectedMediaFiles[position].file,
                             fit: BoxFit.cover,
                             scale: 0.1,
                           ),

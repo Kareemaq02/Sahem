@@ -1,6 +1,6 @@
+// ignore_for_file: unused_local_variable, unnecessary_null_comparison
+
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
 import 'package:account/API/complaint_requests.dart';

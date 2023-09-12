@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, avoid_print
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -39,7 +41,7 @@ void _showDialog(String message, BuildContext context1, int statusCode) {
   showDialog(
     context: context1, 
     builder: (BuildContext context) {
-      Future.delayed(Duration(seconds: 1), () {
+      Future.delayed(const Duration(seconds: 1), () {
         Navigator.of(context).pop();
       });
       return AlertDialog(
@@ -65,7 +67,7 @@ void _showDialog(String message, BuildContext context1, int statusCode) {
             ),
           ],
         ),
-        actions: <Widget>[],
+        actions: const <Widget>[],
       );
     },
   );

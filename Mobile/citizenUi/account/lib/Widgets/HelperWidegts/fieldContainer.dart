@@ -1,6 +1,7 @@
+// ignore_for_file: file_names, non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
-
 
 typedef String? FieldValidator(String? value);
 Widget FieldContainer(
@@ -9,13 +10,14 @@ Widget FieldContainer(
   bool isVisible,
   IconData fieldIcon,
   TextEditingController inputController,
-  // FieldValidator? validator, 
-  TextInputType? keyboardType, 
-  int? maxLength, 
+    // FieldValidator? validator,
+    TextInputType? keyboardType,
+    int? maxLength,
+    [bool enableAutofill = false]
 ) {
   final double screenWidth = MediaQuery.of(context).size.width;
   final double containerWidth = screenWidth * 0.75;
-  final double containerHeight = 45;
+  const double containerHeight = 45;
 
   return Container(
     height: containerHeight,
@@ -51,7 +53,10 @@ Widget FieldContainer(
         keyboardType: keyboardType,
         maxLength: maxLength,
         //  validator: validator,
-        onSaved: (newValue) => inputController.text = newValue!, 
+        onSaved: (newValue) => inputController.text = newValue!,
+        autofillHints: enableAutofill
+            ? [AutofillHints.newUsername, AutofillHints.password]
+            : null,
       ),
     ),
   );

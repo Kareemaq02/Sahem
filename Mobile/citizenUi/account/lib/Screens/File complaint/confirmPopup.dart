@@ -18,7 +18,7 @@ Widget RowInfo(title, value) {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         //title
-        Container(
+        SizedBox(
           width: 115,
           child: Text(
             value,

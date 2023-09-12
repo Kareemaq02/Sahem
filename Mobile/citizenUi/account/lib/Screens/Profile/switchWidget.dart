@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:account/Repository/color.dart';
 import 'package:flutter/material.dart';
 
@@ -31,10 +33,6 @@ Widget toggleLang() {
       renderBorder: true,
       borderColor: AppColor.main, // Make sure AppColor.main is defined
       borderRadius: BorderRadius.circular(20),
-      children: <Widget>[
-        const Text('En',style: TextStyle(fontSize: 10),),
-        const Text('ع',style: TextStyle(fontSize: 10),),
-      ],
       isSelected: _isSelected,
       color: Colors.grey,
       selectedColor: Colors.white,
@@ -44,6 +42,10 @@ Widget toggleLang() {
         //   _isSelected[index] = !_isSelected[index];
         // });
       },
+      children: const <Widget>[
+        Text('En',style: TextStyle(fontSize: 10),),
+        Text('ع',style: TextStyle(fontSize: 10),),
+      ],
     ),
   );
 }

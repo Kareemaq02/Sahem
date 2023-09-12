@@ -1,5 +1,6 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:timelines/timelines.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/API/complaint_requests.dart';
@@ -31,7 +32,7 @@ Widget timeLineVertical(int complaintId) {
     future: a.fetchComaplintStatus(complaintId),
     builder: (context, snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) {
-        return CircularProgressIndicator();
+        return const CircularProgressIndicator();
       } else if (snapshot.hasError) {
         return Text('Error: ${snapshot.error}');
       } else if (snapshot.hasData) {
@@ -83,7 +84,7 @@ Widget timeLineVertical(int complaintId) {
                     );
                   }
                 }
-                return SizedBox.shrink();
+                return const SizedBox.shrink();
               },
               indicatorStyleBuilder: (context, index) {
                 return (index < statusData.length)
@@ -98,7 +99,7 @@ Widget timeLineVertical(int complaintId) {
           ),
         );
       } else {
-        return Text('No data available.');
+        return const Text('No data available.');
       }
     },
   );

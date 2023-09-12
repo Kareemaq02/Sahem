@@ -18,8 +18,8 @@ Widget logoutBox(context) {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center, // Center the content horizontally
           children: [
-            Icon(Icons.logout_outlined, color: AppColor.secondary),
-            SizedBox(width: 8), // Add some spacing between icon and text
+            const Icon(Icons.logout_outlined, color: AppColor.secondary),
+            const SizedBox(width: 8), // Add some spacing between icon and text
             TextButton(
               onPressed:() => {
                 Navigator.push(
@@ -27,7 +27,7 @@ Widget logoutBox(context) {
                 MaterialPageRoute(builder: (context) => const XDLogin()),
               )
               },
-              child: Text(
+              child: const Text(
                 "تسجيل الخروج",style: TextStyle(fontFamily:'DroidArabicKufi' ,color: AppColor.textBlue),
                 textAlign: TextAlign.center,
               ),

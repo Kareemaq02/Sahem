@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/MapWidgets/mapPageView.dart';
@@ -38,7 +40,7 @@ mapCard(context) {
                         borderRadius: BorderRadius.circular(20)),
                     child: mapPageView(context),
                   ),
-                  Divider(
+                  const Divider(
                     color: AppColor.line,
                     thickness: 1.5,
                   ),

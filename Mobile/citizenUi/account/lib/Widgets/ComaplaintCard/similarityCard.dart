@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, prefer_typing_uninitialized_variables, library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/API/file_complaint_request.dart';
@@ -13,7 +15,7 @@ class SimilarityCard extends StatefulWidget {
   final String comment;
   final media;
 
-  SimilarityCard({
+  const SimilarityCard({super.key, 
     required this.compplaintID,
     required this.image,
     required this.typeID,

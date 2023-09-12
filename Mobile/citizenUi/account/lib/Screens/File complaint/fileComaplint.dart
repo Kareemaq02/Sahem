@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, empty_catches
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -28,7 +30,6 @@ class ComaplintState extends State<FileCompalint> {
 
   TextEditingController commentController = TextEditingController();
   final FocusNode textFieldFocusNode = FocusNode();
-  bool _permissionRequested = false;
 
   @override
   void dispose() {
@@ -71,7 +72,6 @@ class ComaplintState extends State<FileCompalint> {
 
     bool serviceEnabled;
     LocationPermission permission;
-    _permissionRequested = true;
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
@@ -159,7 +159,7 @@ class ComaplintState extends State<FileCompalint> {
           scrollDirection: Axis.vertical,
           child: Column(
             children: [
-              MyPageView(),
+              const MyPageView(),
               const MyDropDown(),
               Container(
                 width: screenSize.width * 0.95,
@@ -168,7 +168,7 @@ class ComaplintState extends State<FileCompalint> {
                   border: Border.all(color: AppColor.main, width: 1),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Container(
+                child: SizedBox(
                   height: screenSize.height * 0.2,
                   child: TextField(
                     controller: commentController,

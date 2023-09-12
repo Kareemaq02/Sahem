@@ -1,9 +1,13 @@
+// ignore_for_file: file_names, camel_case_types, library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Screens/MainMenu/MainMenu.dart';
 import 'package:account/Widgets/Buttons/bottonContainer.dart';
 
 class confirm extends StatefulWidget {
+  const confirm({super.key});
+
   @override
   _MconfirmState createState() => _MconfirmState();
 }
@@ -21,11 +25,11 @@ class _MconfirmState extends State<confirm> {
                   "assets/icons/Frame 5.png",
                   scale: 1.2,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 200,
                 ),
                 BottonContainer("الرجوع", Colors.white, AppColor.main, 230,
-                    context, false, MainMenu(), () {})
+                    context, false, const MainMenu(), () {})
               ]),
         ));
   }

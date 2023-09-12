@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
@@ -8,7 +10,7 @@ import 'package:account/Widgets/Bars/bottomNavBar.dart';
 
 
 class Profile extends StatefulWidget {
-  const Profile({Key? key});
+  const Profile({super.key,});
 
   @override
   _ProfileState createState() => _ProfileState();
@@ -41,7 +43,7 @@ class _ProfileState extends State<Profile> {
     final screenSize = MediaQuery.of(context).size;
 
     if (_userInfo.isEmpty) {
-      return Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator());
     }
     UserInfoModel userInfo = _userInfo[0];
 
