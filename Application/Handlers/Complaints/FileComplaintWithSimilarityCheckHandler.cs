@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Persistence;
+using System.Globalization;
 
 namespace Application.Handlers.Complaints
 {
@@ -49,8 +50,8 @@ namespace Application.Handlers.Complaints
 
             var similarLatLng = new LatLng
             {
-                decLat = (decimal)request.ComplaintDTO.lstMedia.ElementAt(0).decLat,
-                decLng = (decimal)request.ComplaintDTO.lstMedia.ElementAt(0).decLng,
+                decLat = request.ComplaintDTO.lstMedia.ElementAt(0).decLat,
+                decLng = request.ComplaintDTO.lstMedia.ElementAt(0).decLng,
             };
 
             var query =
@@ -64,8 +65,8 @@ namespace Application.Handlers.Complaints
                                 == (int)ComplaintsConstant.complaintPrivacy.privacyPublic
                             && c.intStatusId == (int)ComplaintsConstant.complaintStatus.Scheduled
                         || c.intStatusId == (int)ComplaintsConstant.complaintStatus.inProgress
-                        || c.intStatusId
-                            == (int)ComplaintsConstant.complaintStatus.waitingEvaluation
+                        || c.intStatusId == (int)ComplaintsConstant.complaintStatus.waitingEvaluation
+                        || c.intStatusId == (int)ComplaintsConstant.complaintStatus.pending
                     )
                 select new
                 {
@@ -100,11 +101,37 @@ namespace Application.Handlers.Complaints
 
             if (closestComplaint == null)
             {
-                using var transaction = await _context.Database.BeginTransactionAsync(
-                    cancellationToken
-                );
+                using var transaction = await _context.Database.BeginTransactionAsync();
                 try
                 {
+                    // Get Region based on lat and lng
+                    RegionNames region = GetRegionName
+                           .getRegionNameByLatLng(similarLatLng.decLat, similarLatLng.decLng);
+
+                   
+
+                    var existingRegionId = await _context.Regions
+                        .Where(q => q.strNameEn == region.strRegionEn)
+                        .Select(q => q.intId).SingleOrDefaultAsync();
+
+                    complaintDTO.intRegionId = existingRegionId;
+                    
+
+                    if (existingRegionId == 0)
+                    {
+                        var regionEntity = await _context.Regions.AddAsync(new Region
+                        {
+                            strNameAr = region.strRegionAr,
+                            strNameEn = region.strRegionEn,
+                            strShapePath = "C:\\Fake\\Path\\Files\\test.shp"
+                        });
+
+                        await _context.SaveChangesAsync();
+                        existingRegionId = regionEntity.Entity.intId;
+                        complaintDTO.intRegionId = existingRegionId;
+                    }
+
+
                     var complaint = new Complaint
                     {
                         intUserID = userId,
@@ -117,10 +144,12 @@ namespace Application.Handlers.Complaints
                         dtmDateLastReminded = DateTime.UtcNow,
                         intLastModifiedBy = userId,
                         dtmDateLastModified = DateTime.UtcNow,
-                        intRegionId = 1, //TODO Will be changed after we get the shape files
+                        intRegionId = existingRegionId
                     };
                     var complaintEntity = await _context.Complaints.AddAsync(complaint);
                     await _context.SaveChangesAsync(cancellationToken);
+                    Console.WriteLine(DateTime.UtcNow.ToString("dd dddd , MMMM, yyyy", new CultureInfo("ar-AE")));
+                    complaintDTO.intId = complaintEntity.Entity.intId;
 
                     if (lstMedia.Count == 0)
                     {
@@ -131,8 +160,8 @@ namespace Application.Handlers.Complaints
                     double radius = 0.0002245;
                     var targetLatLng = new LatLng
                     {
-                        decLat = (decimal)request.ComplaintDTO.lstMedia.ElementAt(0).decLat,
-                        decLng = (decimal)request.ComplaintDTO.lstMedia.ElementAt(0).decLng,
+                        decLat = request.ComplaintDTO.lstMedia.ElementAt(0).decLat,
+                        decLng = request.ComplaintDTO.lstMedia.ElementAt(0).decLng,
                     };
 
                     var query2 =
@@ -198,8 +227,8 @@ namespace Application.Handlers.Complaints
                             {
                                 intComplaintId = complaintEntity.Entity.intId,
                                 strMediaRef = filePath,
-                                decLat = (decimal)media.decLat,
-                                decLng = (decimal)media.decLng,
+                                decLat = media.decLat,
+                                decLng = media.decLng,
                                 blnIsVideo = media.blnIsVideo,
                                 dtmDateCreated = DateTime.UtcNow,
                                 intCreatedBy = userId
@@ -221,10 +250,10 @@ namespace Application.Handlers.Complaints
                     await _context.SaveChangesAsync(cancellationToken);
                     await transaction.CommitAsync();
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
                     await transaction.RollbackAsync();
-                    return Result<InsertComplaintDTO>.Failure("Unknown Error");
+                    return Result<InsertComplaintDTO>.Failure("Unknown Error" + e.ToString());
                 }
 
                 return Result<InsertComplaintDTO>.Success(complaintDTO);
@@ -254,7 +283,8 @@ namespace Application.Handlers.Complaints
                                 )
                                 .ToList()
                             : null,
-                    strComment = closestComplaint.Complaint.strComment
+                    strComment = closestComplaint.Complaint.strComment,
+                    intRegionId = closestComplaint.Complaint.intRegionId
                 };
 
                 return Result<InsertComplaintDTO>.Success(similarComplaintDTO);
