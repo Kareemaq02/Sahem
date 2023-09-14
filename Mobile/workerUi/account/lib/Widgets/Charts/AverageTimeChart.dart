@@ -2,14 +2,14 @@ import 'package:account/Repository/color.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-class RateData {
-  RateData(this.region, this.rate);
+class TimeData {
+  TimeData(this.region, this.time);
   final String region;
-  final double rate;
+  final Duration time;
 }
 
-class RatingChart extends StatelessWidget {
-  const RatingChart({
+class AverageTimeChart extends StatelessWidget {
+  const AverageTimeChart({
     Key? key,
   }) : super(key: key);
 
@@ -18,15 +18,15 @@ class RatingChart extends StatelessWidget {
     //MediaQuery
     double screenWidth = MediaQuery.of(context).size.width;
 
-    final data = <RateData>[
-      RateData("راس العين", 3.6),
-      RateData("جبل النزهة", 2.2),
-      RateData("شفا بدران", 3.4),
-      RateData("المقابلين", 4.7),
-      RateData("الياسمين", 2.7),
-      RateData("ماركا", 1.4),
-      RateData("جبل الحسين", 2.5),
-      RateData("ابو نصير", 3.4),
+    final data = <TimeData>[
+      TimeData("راس العين", const Duration(hours: 16)),
+      TimeData("جبل النزهة", const Duration(hours: 26)),
+      TimeData("شفا بدران", const Duration(hours: 49)),
+      TimeData("المقابلين", const Duration(hours: 24)),
+      TimeData("الياسمين", const Duration(hours: 23)),
+      TimeData("ماركا", const Duration(hours: 32)),
+      TimeData("جبل الحسين", const Duration(hours: 21)),
+      TimeData("ابو نصير", const Duration(hours: 66)),
     ];
 
     return SizedBox(
@@ -39,7 +39,7 @@ class RatingChart extends StatelessWidget {
         ),
         primaryXAxis: CategoryAxis(
           isInversed: true,
-          visibleMinimum: 3.5,
+          visibleMinimum: 3,
           labelStyle: const TextStyle(
             fontSize: 10,
             color: AppColor.secondary,
@@ -62,26 +62,24 @@ class RatingChart extends StatelessWidget {
             fontFamily: 'DroidArabicKufi',
           ),
           title: AxisTitle(
-            text: 'التقييم',
+            text: 'الساعات',
             textStyle: const TextStyle(
               fontSize: 12,
               color: AppColor.textTitle,
               fontFamily: 'DroidArabicKufi',
             ),
           ),
-          maximum: 5,
-          minimum: 0,
         ),
         series: <ChartSeries>[
-          ColumnSeries<RateData, String>(
+          ColumnSeries<TimeData, String>(
             dataSource: data,
-            xValueMapper: (RateData rates, _) => rates.region,
-            yValueMapper: (RateData rates, _) => rates.rate,
-            name: 'Rates',
+            xValueMapper: (TimeData times, _) => times.region,
+            yValueMapper: (TimeData times, _) => times.time.inHours,
+            name: 'Times',
             dataLabelSettings: const DataLabelSettings(
               isVisible: true,
             ),
-            color: AppColor.main,
+            color: const Color.fromARGB(255, 7, 204, 194),
             width: 0.35,
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(10),

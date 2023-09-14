@@ -2,8 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
-// ignore_for_file: avoid_types_as_parameter_names
-// ignore: non_constant_identifier_names
 
 Widget myContainer(double height, Widget childWidget) {
   return Container(
@@ -30,10 +28,10 @@ Widget myContainer(double height, Widget childWidget) {
           bottomRight: Radius.circular(10),
         ),
         child: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             border: Border(
               bottom: BorderSide(
-                width: 3.5,
+                width: height * 0.05,
                 color: AppColor.main,
               ),
             ),

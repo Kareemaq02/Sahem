@@ -1,6 +1,9 @@
 import 'dart:math';
 import 'package:account/API/ComplaintsAPI/Get_Complaints_Types.dart';
+import 'package:account/Utils/Team.dart';
+import 'package:account/Widgets/Charts/TeamChart.dart';
 import 'package:account/Widgets/CheckBoxes/StyledCheckBox.dart';
+import 'package:account/Widgets/Interactive/TeamSelectionBox.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
@@ -9,15 +12,32 @@ import 'package:account/Widgets/Charts/PerformanceChart.dart';
 import 'package:account/Widgets/Displays/InfoDisplayBox.dart';
 import 'package:account/Widgets/Buttons/StyledFilterChip.dart';
 
-class Quarter extends StatefulWidget {
-  const Quarter({super.key});
+class TeamAnalytics extends StatefulWidget {
+  const TeamAnalytics({super.key});
 
   @override
-  _QuarterState createState() => _QuarterState();
+  _TeamAnalyticsState createState() => _TeamAnalyticsState();
 }
 
-class _QuarterState extends State<Quarter> {
+class _TeamAnalyticsState extends State<TeamAnalytics> {
   final ScrollController _scrollController = ScrollController();
+  Team selectedTeam = Team(0, "0");
+  DateTime selectedDate = DateTime.now().subtract(const Duration(days: 7));
+  int timeframe = 1;
+
+  Future<void> selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
+  }
 
   // Chart Data
   DateTime startDate = DateTime(DateTime.now().year, 1, 1);
@@ -36,13 +56,14 @@ class _QuarterState extends State<Quarter> {
   List<int> selectedTypes = [];
 
   // API Vars
-  late Future<List<Map<String, dynamic>>> _futureTypesObjs;
+  void setTeam(Team team) {
+    selectedTeam = team;
+  }
 
   @override
   void initState() {
     super.initState();
     returnChartData();
-    _futureTypesObjs = fetchTypesData();
   }
 
   Future<List<Map<String, dynamic>>> fetchTypesData() async {
@@ -105,11 +126,58 @@ class _QuarterState extends State<Quarter> {
     double fullMarginY = 0.01 * screenHeight;
     double halfMarginY = 0.01 * screenHeight;
 
-    double fullMarginX = 0.04 * screenWidth;
+    // double fullMarginX = 0.04 * screenWidth;
     double halfMarginX = 0.02 * screenWidth;
 
     double boxHeight = 0.15 * screenHeight;
     double boxWidth = 0.31 * screenWidth;
+
+    double teamWidth = screenWidth * 0.92;
+    double teamHeight = screenHeight * 0.24;
+
+    final timechips = [
+      StyledFilterChip(
+          selected: timeframe == 1,
+          text: "اسبوع",
+          onPressed: () => setState(() {
+                timeframe = 1;
+                selectedDate = DateTime.now().subtract(const Duration(days: 7));
+              })),
+      StyledFilterChip(
+          selected: timeframe == 2,
+          text: "شهر",
+          onPressed: () => setState(() {
+                timeframe = 2;
+                selectedDate =
+                    DateTime.now().subtract(const Duration(days: 30));
+              })),
+      StyledFilterChip(
+          selected: timeframe == 3,
+          text: "3 اشهر",
+          onPressed: () => setState(() {
+                timeframe = 3;
+                selectedDate =
+                    DateTime.now().subtract(const Duration(days: 91));
+              })),
+      StyledFilterChip(
+          selected: timeframe == 4,
+          text: "سنه",
+          onPressed: () => setState(() {
+                timeframe = 4;
+                selectedDate =
+                    DateTime.now().subtract(const Duration(days: 365));
+              })),
+      StyledFilterChip(
+        selected: timeframe == 5,
+        text: "أخر",
+        onPressed: () => setState(
+          () {
+            timeframe = 5;
+            selectDate(context);
+          },
+        ),
+      ),
+    ];
 
     return Scaffold(
       backgroundColor: AppColor.background,
@@ -132,73 +200,10 @@ class _QuarterState extends State<Quarter> {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Stack(
-                      children: [
-                        Align(
-                          alignment: Alignment.center,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: SingleChildScrollView(
-                              controller: _scrollController,
-                              scrollDirection: Axis.horizontal,
-                              child: SizedBox(
-                                height: 0.07 * screenHeight,
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: returnRegionsMockApi(
-                                      screenWidth, fullMarginX),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: IgnorePointer(
-                            child: Container(
-                              height: 0.07 * screenHeight,
-                              width: 0.25 * screenWidth,
-                              decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(10),
-                                ),
-                                gradient: LinearGradient(
-                                  begin: Alignment.centerLeft,
-                                  end: Alignment.centerRight,
-                                  colors: [
-                                    Colors.white,
-                                    Color.fromARGB(0, 255, 255, 255)
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: IgnorePointer(
-                            child: Container(
-                              height: 0.07 * screenHeight,
-                              width: 0.25 * screenWidth,
-                              decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(10),
-                                ),
-                                gradient: LinearGradient(
-                                  begin: Alignment.centerRight,
-                                  end: Alignment.centerLeft,
-                                  colors: [
-                                    Colors.white,
-                                    Color.fromARGB(0, 255, 255, 255)
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: timechips,
                     ),
                     Expanded(
                       child: GestureDetector(
@@ -221,105 +226,20 @@ class _QuarterState extends State<Quarter> {
                             });
                           }
                         },
-                        child: PerformanceChart(
-                          complaintData: complaintData,
-                          taskData: taskData,
-                          startDate: startDate,
-                          endDate: endDate,
-                        ),
+                        child: const TeamChart(),
                       ),
                     ),
                   ],
                 ),
               ),
             ),
-            Container(
-              height: 0.17 * screenHeight,
-              width: 0.95 * screenWidth,
-              margin: EdgeInsets.only(top: halfMarginY),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10), color: Colors.white),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(
-                        top: fullMarginY / 4,
-                        bottom: halfMarginY,
-                        right: fullMarginX,
-                        left: fullMarginX),
-                    child: const Align(
-                      alignment: Alignment.topRight,
-                      child: Text("أنواع البلاغات",
-                          textAlign: TextAlign.right,
-                          textDirection: TextDirection.rtl,
-                          style: TextStyle(
-                            color: AppColor.textTitle,
-                            fontSize: 14,
-                            fontFamily: 'DroidArabicKufi',
-                          )),
-                    ),
-                  ),
-                  FutureBuilder<List<Map<String, dynamic>>>(
-                    future: _futureTypesObjs,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const CircularProgressIndicator();
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      } else {
-                        var typesObjs = snapshot.data!;
-                        int halfLength = (typesObjs.length / 2).ceil();
-                        return SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          reverse: true,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                mainAxisSize: MainAxisSize.max,
-                                children: typesObjs
-                                    .sublist(0, halfLength)
-                                    .asMap()
-                                    .entries
-                                    .map((entry) {
-                                  return renderCheckBox(
-                                    entry,
-                                    typesObjs,
-                                    fullMarginX,
-                                  );
-                                }).toList(),
-                              ),
-                              SizedBox(
-                                height: fullMarginY,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                mainAxisSize: MainAxisSize.max,
-                                children: typesObjs
-                                    .sublist(halfLength)
-                                    .asMap()
-                                    .entries
-                                    .map((entry) {
-                                  return renderCheckBox(
-                                    entry,
-                                    typesObjs,
-                                    fullMarginX,
-                                  );
-                                }).toList(),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-                    },
-                  ),
-                ],
-              ),
+            // Team Box
+            TeamSelectionBox(
+              height: teamHeight,
+              width: teamWidth,
+              boxHeight: boxHeight,
+              boxWidth: boxWidth,
+              onChecked: setTeam,
             ),
             Expanded(
               child: Padding(
@@ -335,18 +255,18 @@ class _QuarterState extends State<Quarter> {
                     InfoDisplayBox(
                         height: boxHeight,
                         width: boxWidth,
-                        title: "عدد البلاغات",
-                        content: complaintCount.toString()),
+                        title: "نسبة النجاح",
+                        content: successRate),
                     InfoDisplayBox(
                         height: boxHeight,
                         width: boxWidth,
-                        title: "مدة المهام",
+                        title: "التقييم",
                         content: avgResolve),
                     InfoDisplayBox(
                         height: boxHeight,
                         width: boxWidth,
-                        title: "نسبة النجاح",
-                        content: successRate),
+                        title: "عدد البلاغات",
+                        content: complaintCount.toString()),
                   ],
                 ),
               ),
