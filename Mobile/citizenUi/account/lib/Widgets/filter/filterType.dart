@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, library_private_types_in_public_api, avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/API/get_complaints_types.dart';
@@ -38,8 +40,8 @@ class _FilterPopupState extends State<FilterPopup> {
           fontFamily: "DroidArabicKufi",
         ),
       ),
-      titlePadding: EdgeInsets.all(8),
-      contentPadding: EdgeInsets.symmetric(horizontal: 2.0, vertical: 17),
+      titlePadding: const EdgeInsets.all(8),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 17),
       content: SizedBox(
         height: 200,
         child: Column(
@@ -52,11 +54,11 @@ class _FilterPopupState extends State<FilterPopup> {
                   builder:
                       (context, AsyncSnapshot<List<ComplaintType>> snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
+                      return const CircularProgressIndicator();
                     } else if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return Text('No complaint types available');
+                      return const Text('No complaint types available');
                     } else {
                       final categories = snapshot.data!;
                       return Padding(
@@ -65,7 +67,6 @@ class _FilterPopupState extends State<FilterPopup> {
                           children: categories.map((category) {
                             final int intTypeId = category.intTypeId;
                             final String strNameAr = category.strNameAr;
-                            bool isChecked = selectedTypes1.contains(intTypeId);
 
                             return Padding(
                               padding:

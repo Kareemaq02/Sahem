@@ -1,5 +1,6 @@
+// ignore_for_file: file_names, library_private_types_in_public_api, avoid_print
+
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/API/complaint_requests.dart';
 import 'package:account/API/send_reminder_Request.dart';
@@ -134,7 +135,7 @@ class _ComplaintCard2sState extends State<ComplaintCard2> {
               Padding(
                   padding: EdgeInsets.only(left: screenWidth * 0.7),
                 child: Text(formatTimeDifference(widget.date),
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Color(0xff92a5c6),
                       fontSize: 10,
                       fontFamily: 'DroidArabicKufi',
@@ -148,7 +149,7 @@ class _ComplaintCard2sState extends State<ComplaintCard2> {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 9.0),
-                child: Container(
+                child: SizedBox(
                   width: screenWidth * 1,
                   child: Text(
                     address,

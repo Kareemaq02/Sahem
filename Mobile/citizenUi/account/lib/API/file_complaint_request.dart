@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:io';
 import 'login_request.dart';
 import 'package:flutter/material.dart';
@@ -63,7 +65,7 @@ class Complaint {
         print("file as new");
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => confirm()),
+          MaterialPageRoute(builder: (context) => const confirm()),
         );
         //print(responseJson);
         print('Complaint assigned successfully.');
@@ -92,7 +94,7 @@ Future<dynamic> fileAsSimilar(var complaintId, context) async {
   try {
     http.Response response = await http.post(
       Uri.parse(
-          "https://10.0.2.2:5000/api/complaints/upvote/addToWatchList/similar/$complaintId"),
+          "${AppUrl.baseURL}/complaints/upvote/addToWatchList/similar/$complaintId"),
       headers: <String, String>{
         "Content-type": "application/json",
         "Accept": "application/json",
@@ -104,7 +106,7 @@ Future<dynamic> fileAsSimilar(var complaintId, context) async {
       print("file as similar");
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => confirm()),
+        MaterialPageRoute(builder: (context) => const confirm()),
       );
 
       print('successful');

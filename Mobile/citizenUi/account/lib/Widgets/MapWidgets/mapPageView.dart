@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:page_indicator/page_indicator.dart';
@@ -39,12 +41,13 @@ Widget mapPageView(context) {
                 ),
                 Positioned(
                   top: 5,
-                  left: 65,
+                  left: 90,
                   child: Container(
                     height: screenHeight * 0.03,
                     width: screenWidth * 0.2,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: Colors.white),
                       color:position == 0? Colors.red : Colors.green,
                     ),
                     child: Center(

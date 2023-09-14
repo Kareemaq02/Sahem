@@ -1,5 +1,6 @@
+// ignore_for_file: file_names, empty_catches
+
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
@@ -35,12 +36,10 @@ class _XDPublicFeed1State extends State<XDPublicFeed1> {
 
   @override
   void dispose() {
-    late var address;
     _isDisposed = true;
     super.dispose();
   }
 
-  String? _currentAddress;
 
   Future<bool> _handleLocationPermission() async {
     bool serviceEnabled;

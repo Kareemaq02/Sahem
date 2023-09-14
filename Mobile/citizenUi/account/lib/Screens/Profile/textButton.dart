@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable, file_names, library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/API/edit_user_info_request.dart';
@@ -6,7 +8,7 @@ class EditButton extends StatefulWidget {
   final String label;
   final String currentData;
 
-  EditButton({
+  const EditButton({super.key, 
     required this.label,
     required this.currentData,
   });

@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:readmore/readmore.dart';
 import 'package:geocoding/geocoding.dart';
@@ -27,7 +29,8 @@ class ComplaintCard extends StatefulWidget {
   int i;
 
   ComplaintCard(
-      {required this.dtmDateCreated,
+      {super.key,
+      required this.dtmDateCreated,
       required this.strComplaintTypeEn,
       required this.strComment,
       required this.intVotersCount,
@@ -127,7 +130,7 @@ class _ComplaintCardsState extends State<ComplaintCard> {
                   Column(
                     children: [
                       Text(
-                        widget.strUserName1 + widget.strUserName2,
+                        widget.strUserName1 + " " + widget.strUserName2,
                         textDirection: TextDirection.rtl,
                         style: const TextStyle(
                           fontFamily: 'Euclid Circular A',
@@ -144,7 +147,7 @@ class _ComplaintCardsState extends State<ComplaintCard> {
               //time
 
               Text(formatTimeDifference(widget.dtmDateCreated),
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Color(0xff92a5c6),
                     fontSize: 10,
                     fontFamily: 'DroidArabicKufi',
@@ -170,7 +173,7 @@ class _ComplaintCardsState extends State<ComplaintCard> {
                     fontSize: 10,
                     color: Colors.grey,
                   ),
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontFamily: 'DroidArabicKufi',
                       fontWeight: FontWeight.w300,
                       fontSize: 10,
@@ -179,7 +182,7 @@ class _ComplaintCardsState extends State<ComplaintCard> {
               ),
 
             
-              Container(
+              SizedBox(
                 height: screenHeight * 0.48,
                 child: Image.asset(
                   'assets/imges2/pic${widget.i % 25}.jpg',
@@ -191,7 +194,7 @@ class _ComplaintCardsState extends State<ComplaintCard> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   // address
-                  Container(
+                  SizedBox(
                     width: screenWidth * 0.4,
                     child: Text(
                       address,

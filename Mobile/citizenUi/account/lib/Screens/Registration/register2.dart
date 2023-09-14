@@ -15,7 +15,7 @@ import 'package:account/Widgets/Buttons/bottonContainer.dart';
 import 'package:account/Widgets/HelperWidegts/fieldContainer.dart';
 // ignore_for_file: constant_identifier_names, unused_element, unused_import, depend_on_referenced_packages, avoid_print, library_private_types_in_public_api
 
-late String dropdownValue = "";
+String dropdownValue = "";
 late List<String> dropdownItems;
 Map<String, String> _nationalities = {};
 
@@ -54,7 +54,7 @@ class _XDRegister2State extends State<XDRegister2> {
       context, String fieldName, bool isVisible, fieldIcon, inputController) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double containerWidth = screenWidth * 0.75;
-    final double containerHeight = 45;
+    const double containerHeight = 45;
 
     return Container(
         height: containerHeight,
@@ -134,10 +134,10 @@ class _XDRegister2State extends State<XDRegister2> {
                     Container(
                       width: 55,
                       height: 100,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                           color: Colors.grey, shape: BoxShape.circle),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
                     const Text(
@@ -193,13 +193,13 @@ class _XDRegister2State extends State<XDRegister2> {
                   height: 15,
                 ),
 
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
 
                 BottonContainer("استمرار", Colors.white, AppColor.main, 240,
-                    context, false, XDLogin(), null),
-                SizedBox(
+                    context, false, const XDLogin(), null),
+                const SizedBox(
                   height: 15,
                 ),
                 Row(

@@ -37,11 +37,11 @@ Widget clusterWidget(clusterSize) {
   return Container(
     width: 70,
     height: 70,
-    padding: EdgeInsets.all(2),
+    padding: const EdgeInsets.all(2),
     decoration: BoxDecoration(
       //color: Colors.white,
       borderRadius: BorderRadius.circular(100),
-      boxShadow: [
+      boxShadow: const [
         BoxShadow(
           color: AppColor.main,
           offset: Offset(0, 3),
@@ -53,7 +53,7 @@ Widget clusterWidget(clusterSize) {
     child: Center(
       child: Text(
         clusterSize.toString(),
-        style: TextStyle(fontSize: 16, color: Colors.white),
+        style: const TextStyle(fontSize: 16, color: Colors.white),
       ),
     ),
   );

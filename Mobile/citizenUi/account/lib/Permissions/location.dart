@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, avoid_types_as_parameter_names, use_function_type_syntax_for_parameters, non_constant_identifier_names
 
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';

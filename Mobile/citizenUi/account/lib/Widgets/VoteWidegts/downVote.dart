@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously, must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:account/API/vote_complaint.dart';
 import 'package:account/Widgets/VoteWidegts/voteButton.dart';
@@ -9,7 +11,7 @@ class DownVote extends StatefulWidget {
   final int isVoted;
   final ValueChanged<VoteInfo> onVoteChanged;
 
-  DownVote({
+  DownVote({super.key, 
     required this.initialCount,
     required this.complaintID,
     required this.isVoted,

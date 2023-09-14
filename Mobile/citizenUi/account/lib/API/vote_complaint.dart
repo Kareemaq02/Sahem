@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:http/http.dart' as http;
 import 'package:account/Repository/urls.dart';
 import 'package:account/API/login_request.dart';
@@ -8,7 +10,7 @@ class VoteComplaint {
   Future<dynamic> sendVoteRequest(var complaintId, context) async {
     try {
       http.Response response = await http.post(
-        Uri.parse("https://10.0.2.2:5000/api/complaints/vote/$complaintId"),
+        Uri.parse("${AppUrl.baseURL}/complaints/vote/$complaintId"),
         headers: <String, String>{
           "Content-type": "application/json",
           "Accept": "application/json",
@@ -35,7 +37,7 @@ class VoteComplaint {
     try {
       http.Response response = await http.post(
         Uri.parse(
-            "'${AppUrl.baseURL}/complaints/voteremove/$complaintId"),
+            "${AppUrl.baseURL}/complaints/voteremove/$complaintId"),
         headers: <String, String>{
           "Content-type": "application/json",
           "Accept": "application/json",
@@ -60,7 +62,7 @@ class VoteComplaint {
   Future<dynamic> DownVoteRequest(var complaintId, context) async {
     try {
       http.Response response = await http.post(
-        Uri.parse("https://10.0.2.2:5000/api/complaints/votedown/$complaintId"),
+        Uri.parse("${AppUrl.baseURL}/complaints/votedown/$complaintId"),
         headers: <String, String>{
           "Content-type": "application/json",
           "Accept": "application/json",

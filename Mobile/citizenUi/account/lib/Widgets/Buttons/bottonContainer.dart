@@ -1,4 +1,6 @@
 
+// ignore_for_file: file_names, non_constant_identifier_names
+
 import 'package:account/Repository/color.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +14,7 @@ Widget BottonContainer(
   pageName,
   Function()? onPressed, 
 ) {
-  return Container(
+  return SizedBox(
     height: 49,
     width: width,
     child: ElevatedButton(

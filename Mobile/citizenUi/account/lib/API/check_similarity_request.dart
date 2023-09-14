@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, use_build_context_synchronously
+
 import 'dart:convert';
 import 'dart:typed_data';
 import 'login_request.dart';
@@ -60,7 +62,9 @@ Future<dynamic> checkSimilar(
     final response = await request.send();
 
     final responseJson = await response.stream.bytesToString();
-
+    print(lstMedia.first.decLat);
+    print(lstMedia.first..decLng);
+    print(intTypeId);
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(responseJson);
       final bool blnHasSimilar = jsonResponse['blnHasSimilar'];
@@ -90,7 +94,7 @@ Future<dynamic> checkSimilar(
       } else {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context1) => confirm()),
+          MaterialPageRoute(builder: (context1) => const confirm()),
         );
       }
 

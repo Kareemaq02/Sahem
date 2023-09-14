@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, depend_on_referenced_packages, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart' as b;
@@ -26,7 +28,6 @@ class FullMapState extends State<FullMap> with TickerProviderStateMixin {
   late final MapController mapController;
   late double _markerSize;
 
-  String? _currentAddress;
   Position? _currentPosition;
 
   Future<bool> _handleLocationPermission() async {
@@ -73,13 +74,10 @@ class FullMapState extends State<FullMap> with TickerProviderStateMixin {
     await placemarkFromCoordinates(
             _currentPosition!.latitude, _currentPosition!.longitude)
         .then((List<Placemark> placemarks) {
-      Placemark place = placemarks[0];
       setState(() {
-        _currentAddress =
-            '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}, ${place.postalCode}';
       });
     }).catchError((e) {
-      debugPrint(e);
+      //debugPrint(e);
     });
   }
 
@@ -131,7 +129,7 @@ class FullMapState extends State<FullMap> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
+   // final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -164,7 +162,9 @@ class FullMapState extends State<FullMap> with TickerProviderStateMixin {
               ),
               layers: [
                 TileLayerOptions(
-                  urlTemplate: MapConstants.templeteURL,
+                  //urlTemplate: MapConstants.templeteURL,
+                  urlTemplate:
+                      "https://api.mapbox.com/styles/v1/rubaaburumman/cljqu0bkj010101o44i2a5nhm/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoicnViYWFidXJ1bW1hbiIsImEiOiJjbGdwbDMyaXkwNnVvM2ZtcjYxNTJoaHNyIn0.rG3Gztp7P5YwoY5NHtYAHA",
                   additionalOptions: {
                     'mapStyleId': MapConstants.style_URL,
                     'accessToken': MapConstants.access_token,
@@ -260,7 +260,7 @@ class FullMapState extends State<FullMap> with TickerProviderStateMixin {
       controller.forward();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text(
               'Unable to move to current location. Location not available.'),
         ),
