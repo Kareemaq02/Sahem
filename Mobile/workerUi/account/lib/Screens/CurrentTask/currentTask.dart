@@ -8,7 +8,6 @@ import 'package:account/Screens/CurrentTask/googleMap.dart';
 import 'package:account/Screens/SubmitTask/submitTask.dart';
 import 'package:account/Widgets/Buttons/buttonsForCards.dart';
 import 'package:account/Widgets/HelperWidgets/myContainer.dart';
-// ignore_for_file: depend_on_referenced_packages, constant_identifier_names, unused_element, library_private_types_in_public_api, prefer_typing_uninitialized_variables, use_build_context_synchronously, duplicate_ignore
 
 class CurrentTask extends StatefulWidget {
   const CurrentTask({Key? key}) : super(key: key);
@@ -70,7 +69,7 @@ class _XDPublicFeed1State extends State<CurrentTask> {
               ),
               Padding(
                 padding: EdgeInsets.all(screenWidth * 0.02),
-                child: Mycontainer(
+                child: myContainer(
                     screenHeight * 0.22,
                     Padding(
                       padding: EdgeInsets.all(screenWidth * 0.02),

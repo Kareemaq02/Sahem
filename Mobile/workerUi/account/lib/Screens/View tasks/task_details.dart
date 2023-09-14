@@ -87,7 +87,7 @@ class _ComplaintViewState extends State<ComplaintDetailsScreen> {
             // //complaintinfo
             Padding(
               padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
-              child: Mycontainer(
+              child: myContainer(
                 screenHeight * 0.2,
                 //foregroundDecoration: BoxDecoration(borderRadius: BorderRadius.circular(10),),
                 Padding(
@@ -109,7 +109,7 @@ class _ComplaintViewState extends State<ComplaintDetailsScreen> {
             // //satus details
             Padding(
               padding: EdgeInsets.all(screenWidth * 0.02),
-              child: Mycontainer(
+              child: myContainer(
                 screenHeight * 0.68,
                 Padding(
                   padding: EdgeInsets.only(right: screenWidth * 0.10),
@@ -131,7 +131,7 @@ Widget RowInfo(title, value) {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         //title
-       
+
         Text(
           title,
           style: const TextStyle(
@@ -139,9 +139,9 @@ Widget RowInfo(title, value) {
             fontFamily: 'DroidArabicKufi',
             fontSize: 13,
           ),
-         // textDirection: TextDirection.rtl,
+          // textDirection: TextDirection.rtl,
         ),
-         Text(
+        Text(
           value,
           //textDirection: TextDirection,
           style: const TextStyle(
@@ -150,7 +150,6 @@ Widget RowInfo(title, value) {
             fontSize: 10,
           ),
         ),
-
       ],
     ),
   );

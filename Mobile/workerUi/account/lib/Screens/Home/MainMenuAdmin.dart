@@ -1,3 +1,4 @@
+import 'package:account/Screens/Analytics/TeamAnalytics.dart';
 import 'package:account/Screens/CreateTask/CreateTask.dart';
 import 'package:account/Screens/TaskEvaluation/TaskEvaluation.dart';
 import 'package:account/Utils/NaviTranstion.dart';
@@ -9,7 +10,6 @@ import 'package:account/Screens/Analytics/Quarter.dart';
 import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/Widgets/Charts/RatingChart.dart';
 import 'package:account/Screens/Analytics/Analytics.dart';
-import 'package:account/Screens/View%20tasks/task_list.dart';
 import 'package:account/Widgets/Displays/InfoDisplayBox.dart';
 import 'package:account/Widgets/Buttons/squareButtonWithStroke.dart';
 
@@ -91,31 +91,34 @@ class _MainMenuAdminState extends State<MainMenuAdmin> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         SquareButtonWithStroke(
-                            height: buttonHeight,
-                            width: buttonWidth,
-                            icon: Icons.task_alt_rounded,
-                            text: "تقييم المهام",
-                            onPressed: () => {
-                                  naviTransition(
-                                      context,
-                                      const TaskEvaluation(
-                                        taskId: 1,
-                                      ))
-                                }),
+                          height: buttonHeight,
+                          width: buttonWidth,
+                          icon: Icons.groups_outlined,
+                          text: "الشعب",
+                          onPressed: () =>
+                              {naviTransition(context, const TeamAnalytics())},
+                        ),
                         SquareButtonWithStroke(
-                            height: buttonHeight,
-                            width: buttonWidth,
-                            icon: Icons.spatial_tracking_sharp,
-                            text: "اضافة مهام",
-                            onPressed: () =>
-                                {naviTransition(context, const CreateTask())}),
+                          height: buttonHeight,
+                          width: buttonWidth,
+                          icon: Icons.task_alt_rounded,
+                          text: "تقييم المهام",
+                          onPressed: () => {
+                            naviTransition(
+                                context,
+                                const TaskEvaluation(
+                                  taskId: 2,
+                                ))
+                          },
+                        ),
                         SquareButtonWithStroke(
-                            height: buttonHeight,
-                            width: buttonWidth,
-                            icon: Icons.card_membership_rounded,
-                            text: "الاعمال",
-                            onPressed: () =>
-                                {naviTransition(context, const XDTasksList())}),
+                          height: buttonHeight,
+                          width: buttonWidth,
+                          icon: Icons.spatial_tracking_sharp,
+                          text: "اضافة مهام",
+                          onPressed: () =>
+                              {naviTransition(context, const CreateTask())},
+                        ),
                       ],
                     )
                   ],
@@ -161,7 +164,12 @@ class _MainMenuAdminState extends State<MainMenuAdmin> {
             // Chart
             Expanded(
               child: Container(
-                  margin: EdgeInsets.only(bottom: halfMarginY),
+                  margin:
+                      EdgeInsets.only(top: halfMarginY, bottom: halfMarginY),
+                  width: 0.95 * screenWidth,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white),
                   child: const RatingChart()),
             )
           ],

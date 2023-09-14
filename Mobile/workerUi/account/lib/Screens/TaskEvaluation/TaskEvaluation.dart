@@ -1,8 +1,6 @@
 import 'package:account/API/TaskAPI/Get_A_Task_Request.dart';
 import 'package:account/Screens/Results/FailurePage.dart';
 import 'package:account/Screens/Results/SuccessPage.dart';
-import 'package:account/Utils/DateFormatter.dart';
-import 'package:account/Utils/TeamMembers.dart';
 import 'package:account/Widgets/Buttons/StyledButton.dart';
 import 'package:account/Widgets/CheckBoxes/StyledCheckBox.dart';
 import 'package:account/Widgets/Displays/TeamViewBox.dart';
@@ -15,8 +13,9 @@ import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
 import 'package:page_indicator/page_indicator.dart';
 import 'package:account/Widgets/Bars/bottomNavBar.dart';
-import 'package:account/Widgets/HelperWidgets/myContainer.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+
+import '../../Widgets/HelperWidgets/myContainer.dart';
 
 class TaskEvaluation extends StatefulWidget {
   final int taskId;
@@ -57,40 +56,40 @@ class _TaskEvaluationState extends State<TaskEvaluation> {
   }
 
   void getTaskDetails(int taskId) async {
-    // taskDetailsRequest = TaskDetailsRequest().getTaskDetails(taskId);
-    taskDetailsRequest = Future.delayed(
-      const Duration(milliseconds: 300),
-      () => TaskDetails(
-        intTaskID: 1,
-        decCost: 2421.21,
-        decUserRating: 0,
-        dtmCreatedDate:
-            formatDate(DateTime.now().subtract(const Duration(days: 7))),
-        dtmScheduledDate:
-            formatDate(DateTime.now().subtract(const Duration(days: 5))),
-        dtmActivatedDate:
-            formatDate(DateTime.now().subtract(const Duration(days: 4))),
-        dtmFinishedDate:
-            formatDate(DateTime.now().subtract(const Duration(days: 2))),
-        dtmDeadlineDate:
-            formatDate(DateTime.now().subtract(const Duration(days: 1))),
-        dtmLastModifiedDate:
-            formatDate(DateTime.now().subtract(const Duration(days: 2))),
-        strAdminFirstName: "محمد",
-        strAdminLastName: "بسام",
-        strComment: "",
-        strTypeNameAr: "مبعثرات حول الحاوية",
-        strTypeNameEn: "Scatter waste",
-        strTaskStatus: "completed",
-        workersList: <TeamMember>[
-          TeamMember(1, "محمد بسام", false),
-          TeamMember(2, "عمر احمد", true),
-          TeamMember(3, "طلال بلال", false),
-          TeamMember(4, "سيف محمد", false),
-        ],
-        lstMedia: List.empty(),
-      ),
-    );
+    taskDetailsRequest = TaskDetailsRequest().getTaskDetails(taskId);
+    // taskDetailsRequest = Future.delayed(
+    //   const Duration(milliseconds: 300),
+    //   () => TaskDetails(
+    //     intTaskID: 1,
+    //     decCost: 2421.21,
+    //     decUserRating: 0,
+    //     dtmCreatedDate:
+    //         formatDate(DateTime.now().subtract(const Duration(days: 7))),
+    //     dtmScheduledDate:
+    //         formatDate(DateTime.now().subtract(const Duration(days: 5))),
+    //     dtmActivatedDate:
+    //         formatDate(DateTime.now().subtract(const Duration(days: 4))),
+    //     dtmFinishedDate:
+    //         formatDate(DateTime.now().subtract(const Duration(days: 2))),
+    //     dtmDeadlineDate:
+    //         formatDate(DateTime.now().subtract(const Duration(days: 1))),
+    //     dtmLastModifiedDate:
+    //         formatDate(DateTime.now().subtract(const Duration(days: 2))),
+    //     strAdminFirstName: "محمد",
+    //     strAdminLastName: "بسام",
+    //     strComment: "",
+    //     strTypeNameAr: "مبعثرات حول الحاوية",
+    //     strTypeNameEn: "Scatter waste",
+    //     strTaskStatus: "completed",
+    //     workersList: <TeamMember>[
+    //       TeamMember(1, "محمد بسام", false),
+    //       TeamMember(2, "عمر احمد", true),
+    //       TeamMember(3, "طلال بلال", false),
+    //       TeamMember(4, "سيف محمد", false),
+    //     ],
+    //     lstMedia: List.empty(),
+    //   ),
+    // );
     taskDetails = await taskDetailsRequest;
   }
 
@@ -201,7 +200,7 @@ class _TaskEvaluationState extends State<TaskEvaluation> {
                         ),
                       ),
                     ),
-                    Mycontainer(
+                    myContainer(
                       screenHeight * 0.2,
                       Padding(
                         padding: EdgeInsets.all(screenWidth * 0.01),
