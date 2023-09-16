@@ -130,7 +130,7 @@ class _ComplaintCardsState extends State<ComplaintCardPublicForm> {
                   Column(
                     children: [
                       Text(
-                        widget.strUserName1 + " " + widget.strUserName2,
+                        "${widget.strUserName1} ${widget.strUserName2}",
                         textDirection: TextDirection.rtl,
                         style: const TextStyle(
                           fontFamily: 'DroidArabicKufi',

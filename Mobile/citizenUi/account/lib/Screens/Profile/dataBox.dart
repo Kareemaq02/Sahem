@@ -1,8 +1,8 @@
-// ignore_for_file: file_names, non_constant_identifier_names
-
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Screens/Profile/textButton.dart';
+// ignore_for_file: file_names, non_constant_identifier_names
+
 
 
 
@@ -91,10 +91,10 @@ Widget InfoBox(name, nationalID) {
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-            const Text(
-                  'ربى أبورمان',
+            Text(
+              name,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+              style: const TextStyle(
                     color: AppColor.main,
                     fontSize: 20,
                     fontFamily: 'DroidArabicKufi',

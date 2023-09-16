@@ -8,6 +8,10 @@ import 'package:account/Widgets/CheckBoxes/CheckBox.dart';
 import 'package:account/Widgets/Charts/PerformanceChart.dart';
 import 'package:account/Widgets/Displays/InfoDisplayBox.dart';
 import 'package:account/Widgets/Buttons/StyledFilterChip.dart';
+// ignore_for_file: library_private_types_in_public_api
+
+// ignore_for_file: file_names
+
 
 
 class Quarter extends StatefulWidget {

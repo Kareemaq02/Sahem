@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
+import 'package:account/main.dart';
 import 'package:http/http.dart'as http;
 import 'package:account/Repository/urls.dart';
 import 'package:account/API/login_request.dart';
@@ -44,6 +45,7 @@ class ComplaintType {
 
 
 class ComplaintTypeRequest{
+  final token2 = prefs!.getString('token');
 Future<List<ComplaintType>> getAllCategory() async {
   var baseUrl = "${AppUrl.baseURL}/complaints/types";
   http.Response response = await http.get(

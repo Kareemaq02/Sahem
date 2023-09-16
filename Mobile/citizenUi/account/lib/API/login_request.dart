@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart';
+import 'package:account/main.dart';
 import '../Screens/Login/login.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Repository/urls.dart';
@@ -10,9 +11,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore_for_file: avoid_print, use_build_context_synchronously, unnecessary_string_escapes, unused_import
 
-var token2 = "";
+
 
 class UserLogin {
+   var token2 = "";
   Future<void> login(
       String username, String password, BuildContext context) async {
     print(username);
@@ -38,8 +40,8 @@ class UserLogin {
         print('Login successful');
 
         // Save the token in shared preferences
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('token', token2);
+         prefs = await SharedPreferences.getInstance();
+        await prefs!.setString('token', token2);
         print(token2);
 
         Navigator.of(context).pushReplacement(

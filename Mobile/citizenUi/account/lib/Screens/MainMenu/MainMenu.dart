@@ -10,6 +10,10 @@ import 'package:account/Screens/Analytics/Analytics.dart';
 import 'package:account/Widgets/Displays/InfoDisplayBox.dart';
 import 'package:account/Widgets/Buttons/squareButtonWithStroke.dart';
 import 'package:account/Screens/View%20complaints/complaints_list.dart';
+// ignore_for_file: library_private_types_in_public_api
+
+// ignore_for_file: file_names
+
 
 class MainMenu extends StatefulWidget {
   const MainMenu({super.key});

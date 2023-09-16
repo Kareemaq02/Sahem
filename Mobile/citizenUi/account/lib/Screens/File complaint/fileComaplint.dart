@@ -153,9 +153,6 @@ class ComaplintState extends State<FileCompalint> {
         final mediaFile = selectedMediaFiles.last;
         mediaFile.decLat = currentPosition!.latitude;
         mediaFile.decLng = currentPosition!.longitude;
-        print(selectedMediaFiles.last);
-        print(mediaFile.decLat);
-        print(mediaFile.decLng);
       });
     } else {
       // Navigator.pop(context);

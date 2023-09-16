@@ -10,6 +10,8 @@ import 'package:account/Widgets/Charts/AverageTimeChart.dart';
 import 'package:account/Widgets/Buttons/IconToggleButton.dart';
 import 'package:account/Widgets/Buttons/StyledFilterChip.dart';
 import 'package:account/Widgets/Charts/ComplaintTaskChart.dart';
+// ignore_for_file: file_names
+
 
 
 
@@ -17,6 +19,7 @@ class Analytics extends StatefulWidget {
   const Analytics({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _AnalyticsState createState() => _AnalyticsState();
 }
 

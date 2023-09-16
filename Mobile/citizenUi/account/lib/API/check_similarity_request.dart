@@ -1,15 +1,16 @@
 import 'dart:convert';
 import 'dart:typed_data';
-import 'login_request.dart';
+import 'package:account/main.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:account/Repository/urls.dart';
 import 'package:account/API/file_complaint_request.dart';
 import 'package:account/Screens/File%20complaint/confirmPage.dart';
 import 'package:account/Widgets/ComaplaintCard/similarityCard.dart';
+
 // ignore_for_file: avoid_print, use_build_context_synchronously
 
-
+final token2 = prefs!.getString('token');
 Future<dynamic> checkSimilar(
     BuildContext context,
     int intTypeId,
