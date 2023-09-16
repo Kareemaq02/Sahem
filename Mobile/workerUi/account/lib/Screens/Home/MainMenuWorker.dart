@@ -1,7 +1,6 @@
-import 'package:account/Screens/CurrentTask/currentTask.dart';
-import 'package:account/Utils/NaviTranstion.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
+import 'package:account/Utils/NaviTranstion.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
 import 'package:account/Screens/Profile/profile.dart';
 import 'package:account/Screens/Analytics/Quarter.dart';
@@ -9,8 +8,11 @@ import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/Widgets/Charts/RatingChart.dart';
 import 'package:account/Screens/Analytics/Analytics.dart';
 import 'package:account/Screens/View%20tasks/task_list.dart';
+import 'package:account/Screens/CurrentTask/currentTask.dart';
 import 'package:account/Widgets/Displays/InfoDisplayBox.dart';
 import 'package:account/Widgets/Buttons/squareButtonWithStroke.dart';
+// ignore_for_file: file_names
+
 
 class MainMenuWorker extends StatefulWidget {
   const MainMenuWorker({super.key});

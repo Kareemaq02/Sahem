@@ -1,7 +1,11 @@
+import '../HelperWidgets/rowInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Map/pageView.dart';
-import 'package:account/Screens/View%20tasks/task_details.dart';
+// ignore_for_file: file_names
+
+
+
 
 mapCard(context) {
   final screenHeight = MediaQuery.of(context).size.height;
@@ -37,7 +41,7 @@ mapCard(context) {
                         borderRadius: BorderRadius.circular(20)),
                     child: mapPageView(context),
                   ),
-                  Divider(color:AppColor.line,thickness: 1.5,),
+                  const Divider(color:AppColor.line,thickness: 1.5,),
                   SizedBox(height: screenHeight * 0.02),
                   RowInfo("رقم البلاغ", "2526"),
                   RowInfo("نوع البلاغ", "حفر بناء"),

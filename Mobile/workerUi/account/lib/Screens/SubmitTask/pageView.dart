@@ -5,6 +5,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:page_indicator/page_indicator.dart';
 import 'package:account/Screens/SubmitTask/submitTask.dart';
 import 'package:account/API/TaskAPI/submit_task_request.dart';
+// ignore_for_file: use_build_context_synchronously
+
+// ignore_for_file: file_names
+
+// ignore_for_file: unused_local_variable
+
 
 final _picker = ImagePicker();
 //List<MediaFile> selectedMediaFiles = [];
@@ -64,7 +70,6 @@ class _PageViewState extends State<MyPageView> {
         ),
       );
       setState(() {});
-      print(selectedMediaFiles.length);
     } else {
       Navigator.pop(context);
     }
@@ -116,16 +121,14 @@ class _PageViewState extends State<MyPageView> {
               itemBuilder: (context, position) {
                 return Stack(
                   children: [
-                    Container(
-                      child: Center(
-                        child: AspectRatio(
-                           aspectRatio: 1/ 1,
-                          child: Image.file(
-                            scale: 0.1,
-                            selectedMediaFiles[position].file,
-                            fit: BoxFit.fitHeight,
-                           // scale: 0.1,
-                          ),
+                    Center(
+                      child: AspectRatio(
+                         aspectRatio: 1/ 1,
+                        child: Image.file(
+                          scale: 0.1,
+                          selectedMediaFiles[position].file,
+                          fit: BoxFit.fitHeight,
+                         // scale: 0.1,
                         ),
                       ),
                     ),

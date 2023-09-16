@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:page_indicator/page_indicator.dart';
 import 'package:account/Screens/SubmitTask/submitTask.dart';
+// ignore_for_file: file_names
+
+// ignore_for_file: unused_local_variable
+
 
 Widget mapPageView(context){
    double screenHeight = MediaQuery.of(context).size.height;

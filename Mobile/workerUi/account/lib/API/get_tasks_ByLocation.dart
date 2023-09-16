@@ -1,5 +1,9 @@
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:http/http.dart' as http;
+// ignore_for_file: prefer_typing_uninitialized_variables
+
+// ignore_for_file: file_names
+
 
 
 
@@ -69,8 +73,6 @@ Future<List<dynamic>> getComplaintsByLocation(double decLat, double decLng) asyn
 
     body : body,
   );
-print(response.body);
-print(response.statusCode);
   if (response.statusCode == 200) {
     List<dynamic> complaints = json.decode(response.body);
     return complaints;

@@ -5,6 +5,8 @@ import 'package:account/Repository/color.dart';
 import 'package:account/Repository/mapLinks.dart';
 import 'package:flutter_map/plugin_api.dart' as a;
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+// ignore_for_file: file_names
+
 
 class FullMap extends StatefulWidget {
   const FullMap({super.key});

@@ -1,7 +1,10 @@
-import 'package:account/API/login_request.dart';
+import 'package:account/main.dart';
 import 'package:http/http.dart' as http;
+// ignore_for_file: empty_catches
+
 
 class TaskActivation {
+    final userToken = prefs!.getString('token');
   void activateTask(intTaskId) async {
     final url =
         Uri.parse("https://10.0.2.2:5000/api/tasks/activate/$intTaskId");
@@ -16,15 +19,11 @@ class TaskActivation {
 
         // body: json.encode({'key': 'value'}),
       );
-      print(response.body);
 
       if (response.statusCode == 200) {
-        print('Task activated successfully.');
       } else {
-        print('Failed to activate task. Status code: ${response.statusCode}');
       }
     } catch (error) {
-      print('Error: $error');
     }
   }
 }

@@ -7,6 +7,8 @@ import 'package:account/Widgets/TaskCard/timeLineWidget.dart';
 import 'package:account/Widgets/HelperWidgets/myContainer.dart';
 import 'package:account/API/TaskAPI/activate_task_request.dart';
 import 'package:account/Screens/View%20tasks/task_details.dart';
+// ignore_for_file: file_names
+
 
 class TaskCard extends StatelessWidget {
   final String comment;
@@ -64,7 +66,7 @@ class TaskCard extends StatelessWidget {
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
-                                return CircularProgressIndicator();
+                                return const CircularProgressIndicator();
                               } else if (snapshot.hasError) {
                                 return text(
                                     'Error: ${snapshot.error}', AppColor.main);
