@@ -1,10 +1,10 @@
-// ignore_for_file: file_names, prefer_typing_uninitialized_variables, library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/API/file_complaint_request.dart';
 import 'package:account/Widgets/HelperWidegts/popupBotton.dart';
 import 'package:account/Screens/File%20complaint/confirmPopup.dart';
+// ignore_for_file: file_names, prefer_typing_uninitialized_variables, library_private_types_in_public_api
+
 
 class SimilarityCard extends StatefulWidget {
   final int compplaintID;
@@ -32,6 +32,7 @@ class SimilarityCard extends StatefulWidget {
 class _SimilarityCardState extends State<SimilarityCard> {
   @override
   Widget build(BuildContext context) {
+    print(widget.compplaintID);
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 

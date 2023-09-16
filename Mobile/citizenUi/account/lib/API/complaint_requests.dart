@@ -122,17 +122,19 @@ class getUserComplaint {
   }
 
   Future<List<dynamic>> fetchStatus() async {
-    final response = await http.get(
-        Uri.parse("https://10.0.2.2:5000/api/complaints/status/list"),
-        headers: {
-          'Authorization': 'Bearer $token2',
-        });
+    // final response = await http.get(
+    //     Uri.parse("https://10.0.2.2:5000/api/complaints/status/list"),
+    //     headers: {
+    //       'Authorization': 'Bearer $token2',
+    //     }
+    //     );
 
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body.toString());
-    } else {
-      throw Exception('Failed to fetch complaints');
-    }
+    // if (response.statusCode == 200) {
+    //   return jsonDecode(response.body.toString());
+    // } else {
+    //   throw Exception('Failed to fetch complaints');
+    // }
+    return [];
   }
 
   Future<List<ComaplintSatus>> fetchComaplintStatus(id) async {

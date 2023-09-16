@@ -1,5 +1,3 @@
-import 'package:account/Screens/Map/mapView.dart';
-
 import 'Screens/Login/home.dart';
 import 'package:flutter/material.dart';
 import 'Repository/language_constants.dart';
