@@ -5,6 +5,8 @@ import 'package:account/Widgets/HelperWidgets/text.dart';
 import 'package:account/Widgets/HelperWidgets/checkBox.dart';
 import 'package:account/Widgets/Buttons/bottonContainer.dart';
 import 'package:account/Widgets/HelperWidgets/fieldContainer.dart';
+// ignore_for_file: non_constant_identifier_names
+
 
 TextEditingController usernameController = TextEditingController();
 TextEditingController passwordController = TextEditingController();

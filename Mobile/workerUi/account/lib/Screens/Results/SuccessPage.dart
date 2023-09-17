@@ -1,10 +1,12 @@
+import 'package:lottie/lottie.dart';
+import 'package:flutter/material.dart';
 import 'package:account/API/login_request.dart';
 import 'package:account/Screens/Home/MainMenuAdmin.dart';
 import 'package:account/Screens/Home/MainMenuWorker.dart';
 import 'package:account/Widgets/Buttons/StyledButton.dart';
 import 'package:account/Widgets/HelperWidgets/TitleText.dart';
-import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
+// ignore_for_file: file_names
+
 
 class SuccessPage extends StatelessWidget {
   final String text;

@@ -1,16 +1,21 @@
+import 'dart:convert';
+import 'package:account/main.dart';
+import 'package:http/http.dart' as http;
+
+// ignore_for_file: file_names
+
 // ignore_for_file: camel_case_types
 
-import 'dart:convert';
 
 //import 'package:account/API/login_request.dart';
-import 'package:account/API/login_request.dart';
-import 'package:http/http.dart' as http;
 
 class UserInfoModel {
   int? intId;
   String? strUsername;
   String? strFirstName;
   String? strLastName;
+  String? strFirstNameAr;
+  String? strLastNameAr;
   bool? boolIsVerified;
   bool? boolIsActive;
   bool? boolIsBlacklisted;
@@ -24,6 +29,8 @@ class UserInfoModel {
     required this.intId,
     required this.strUsername,
     required this.strFirstName,
+    required this.strFirstNameAr,
+    required this.strLastNameAr,
     required this.strLastName,
     required this.boolIsVerified,
     required this.boolIsActive,
@@ -41,6 +48,8 @@ class UserInfoModel {
       strUsername: json['strUsername'],
       strFirstName: json['strFirstName'],
       strLastName: json['strLastName'],
+      strFirstNameAr: json['strFirstNameAr'],
+      strLastNameAr: json['strLastNameAr'],
       boolIsVerified: json['boolIsVerified'],
       boolIsActive: json['boolIsActive'],
       boolIsBlacklisted: json['boolIsBlacklisted'],
@@ -54,8 +63,9 @@ class UserInfoModel {
 }
 
 class getUserInfo {
-  Future<List<UserInfoModel>> getUserInfoById(String userId) async {
-    var baseUrl = "https://10.0.2.2:5000/api/users/$userId";
+  Future<List<UserInfoModel>> getUserInfoById() async {
+      final userToken = prefs!.getString('token');
+    var baseUrl = "https://10.0.2.2:5000/api/users/info";
     // print(complaintId);
     http.Response response = await http.get(Uri.parse(baseUrl),
         headers: {'Authorization': 'Bearer $userToken'});

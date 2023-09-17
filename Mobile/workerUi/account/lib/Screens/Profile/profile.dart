@@ -7,7 +7,8 @@ import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/Screens/Profile/textButton.dart';
 import 'package:account/Screens/Profile/switchWidget.dart';
 import 'package:account/API/ProfileAPI/user_info_request%20copy.dart';
-
+// ignore_for_file: avoid_print
+// ignore_for_file: library_private_types_in_public_api
 
 
 class Profile extends StatefulWidget {
@@ -24,15 +25,14 @@ class _ProfileState extends State<Profile> {
   @override
   void initState() {
     super.initState();
-    _fetchUserInfo("520");
+    _fetchUserInfo();
   }
 
-  Future<void> _fetchUserInfo(String userId) async {
+  Future<void> _fetchUserInfo() async {
     try {
-      List<UserInfoModel> userInfo = await user.getUserInfoById(userId);
+      List<UserInfoModel> userInfo = await user.getUserInfoById();
       setState(() {
         _userInfo = userInfo;
-        print(_userInfo);
       });
     } catch (error) {
       print("Error fetching user info: $error");
@@ -45,7 +45,7 @@ class _ProfileState extends State<Profile> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     if (_userInfo.isEmpty) {
-      return Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator());
     }
     UserInfoModel userInfo = _userInfo[0];
 
@@ -66,14 +66,19 @@ class _ProfileState extends State<Profile> {
                 padding: EdgeInsets.symmetric(
                   horizontal: screenWidth * 0.02,
                 ),
-                child: InfoBox('${userInfo.strFirstName!} ${userInfo.strLastName!}'),
+                child: InfoBox(
+                    userInfo.strFirstNameAr != null
+                        ? '${userInfo.strFirstNameAr!} ${userInfo.strLastNameAr!}'
+                        : "أحمد النعيمات",
+                    userInfo.strNationalId),
               ),
               SizedBox(height: screenHeight * 0.02),
               DataBox(
-                'أسم المستخدم',
-                textButtn,
-                userInfo.strUsername!,
-              ),
+                  'أسم المستخدم',
+                  textButtn,
+                  userInfo.strFirstNameAr != null
+                      ? '${userInfo.strFirstNameAr!} ${userInfo.strLastNameAr!}'
+                      : "أحمد النعيمات"),
               DataBox(
                 "البريد الالكتروني",
                 textButtn,
@@ -86,7 +91,6 @@ class _ProfileState extends State<Profile> {
               ),
               DataBox("كلمة المرور", textButtn, "********"),
               DataBox("استلام الاشعارات", switchV, "غير مفعل"),
-              DataBox("اللغة", toggleLang, "العربية"),
               SizedBox(height: screenHeight * 0.02),
               logoutBox(context),
             ],
@@ -97,30 +101,4 @@ class _ProfileState extends State<Profile> {
   }
 }
 
-List<bool> _isSelected = [true, false];
-
-Widget toggleLang() {
-  return SizedBox(
-    //width: 80, // Set the desired width
-    height: 25, // Set the desired height
-    child: ToggleButtons(
-      renderBorder: true,
-      borderColor: AppColor.main, // Make sure AppColor.main is defined
-      borderRadius: BorderRadius.circular(20),
-      children: <Widget>[
-        Text('En',style: TextStyle(fontSize: 10),),
-        Text('ع',style: TextStyle(fontSize: 10),),
-      ],
-      isSelected: _isSelected,
-      color: Colors.grey,
-      selectedColor: Colors.white,
-      fillColor: AppColor.main,
-      onPressed: (int index) {
-        // setState(() {
-        //   _isSelected[index] = !_isSelected[index];
-        // });
-      },
-    ),
-  );
-}
 

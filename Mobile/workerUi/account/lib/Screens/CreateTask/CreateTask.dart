@@ -1,12 +1,16 @@
-import 'package:account/API/ComplaintsAPI/View_Complaints_Request.dart';
-import 'package:account/Screens/CreateTask/CreateTaskDetails.dart';
-import 'package:account/Utils/NaviTranstion.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
+import '../../Widgets/HelperWidgets/rowInfo.dart';
+import 'package:account/Utils/NaviTranstion.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
 import 'package:page_indicator/page_indicator.dart';
 import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/Widgets/HelperWidgets/myContainer.dart';
+import 'package:account/Screens/CreateTask/CreateTaskDetails.dart';
+import 'package:account/API/ComplaintsAPI/View_Complaints_Request.dart';
+// ignore_for_file: file_names
+
+
 
 class CreateTask extends StatefulWidget {
   const CreateTask({super.key});
@@ -200,30 +204,38 @@ class _CreateTaskState extends State<CreateTask> {
     );
   }
 }
-
-Widget RowInfo(title, value) {
-  return Padding(
-    padding: const EdgeInsets.all(2.0),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          title,
-          style: const TextStyle(
-            color: AppColor.main,
-            fontFamily: 'DroidArabicKufi',
-            fontSize: 13,
-          ),
-        ),
-        Text(
-          value,
-          style: const TextStyle(
-            color: AppColor.secondary,
-            fontFamily: 'DroidArabicKufi',
-            fontSize: 10,
-          ),
-        ),
-      ],
-    ),
-  );
-}
+// Widget RowInfo(title, value) {
+//   return Padding(
+//     padding: const EdgeInsets.all(2.0),
+//     child: Row(
+//       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//       children: [
+//         //title
+//         Align(
+//           alignment: Alignment.topLeft,
+//           child: Text(
+//             value,
+//             textDirection: TextDirection.rtl,
+//             style: const TextStyle(
+//               color: AppColor.secondary,
+//               fontFamily: 'DroidArabicKufi',
+//               fontSize: 10,
+//             ),
+//           ),
+//         ),
+//         Align(
+//           alignment: Alignment.topRight,
+//           child: Text(
+//             title,
+//             style: const TextStyle(
+//               color: AppColor.main,
+//               fontFamily: 'DroidArabicKufi',
+//               fontSize: 13,
+//             ),
+//             // textDirection: TextDirection.rtl,
+//           ),
+//         ),
+//       ],
+//     ),
+//   );
+// }

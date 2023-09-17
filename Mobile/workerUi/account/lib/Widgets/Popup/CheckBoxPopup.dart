@@ -1,8 +1,12 @@
-import 'package:account/Widgets/Buttons/StyledButton.dart';
-import 'package:account/Widgets/CheckBoxes/StyledCheckBox.dart';
-import 'package:account/Widgets/HelperWidgets/TitleText.dart';
-import 'package:account/Widgets/Interactive/FormTextField.dart';
 import 'package:flutter/material.dart';
+import 'package:account/Widgets/Buttons/StyledButton.dart';
+import 'package:account/Widgets/HelperWidgets/TitleText.dart';
+import 'package:account/Widgets/CheckBoxes/StyledCheckBox.dart';
+import 'package:account/Widgets/Interactive/FormTextField.dart';
+// ignore_for_file: library_private_types_in_public_api
+
+// ignore_for_file: file_names
+
 
 class CheckBoxPopup extends StatefulWidget {
   final double height;
@@ -10,7 +14,7 @@ class CheckBoxPopup extends StatefulWidget {
   final List<StyledCheckBox> checkBoxes;
   final void Function(String)? search;
 
-  CheckBoxPopup({
+  const CheckBoxPopup({
     Key? key,
     required this.height,
     required this.title,

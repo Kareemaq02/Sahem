@@ -1,11 +1,12 @@
-// ignore_for_file: avoid_print, unused_local_variablimport 'dart:convert';
 import 'dart:io';
-import 'package:account/API/login_request.dart';
-import 'package:account/Widgets/Popup/confirmPage.dart';
+import 'package:account/main.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:account/Widgets/Popup/confirmPage.dart';
+// ignore_for_file: avoid_print, unused_local_variablimport 'dart:convert';
 
 class SubmitTask {
+    final userToken =prefs!.getString('token');
   Future<void> submitTask(context, String intTaskId, List<MediaFile> lstMedia,
       String strComment) async {
     try {
@@ -49,7 +50,7 @@ class SubmitTask {
       if (response.statusCode == 200) {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => confirm()),
+          MaterialPageRoute(builder: (context) => const confirm()),
         );
         print(responseJson);
         print('Task submited successfully.');

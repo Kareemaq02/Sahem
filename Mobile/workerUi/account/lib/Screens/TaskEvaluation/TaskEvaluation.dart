@@ -1,21 +1,28 @@
-import 'package:account/API/TaskAPI/Get_A_Task_Request.dart';
-import 'package:account/Screens/Results/FailurePage.dart';
-import 'package:account/Screens/Results/SuccessPage.dart';
-import 'package:account/Widgets/Buttons/StyledButton.dart';
-import 'package:account/Widgets/CheckBoxes/StyledCheckBox.dart';
-import 'package:account/Widgets/Displays/TeamViewBox.dart';
-import 'package:account/Widgets/HelperWidgets/TitleText.dart';
-import 'package:account/Widgets/Interactive/DateRangeField.dart';
-import 'package:account/Widgets/Interactive/FormTextField.dart';
-import 'package:account/Widgets/Interactive/RatingWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
 import 'package:page_indicator/page_indicator.dart';
-import 'package:account/Widgets/Bars/bottomNavBar.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
-
 import '../../Widgets/HelperWidgets/myContainer.dart';
+import 'package:account/Widgets/Bars/bottomNavBar.dart';
+import 'package:account/Widgets/HelperWidgets/info.dart';
+import 'package:account/Screens/Results/FailurePage.dart';
+import 'package:account/Screens/Results/SuccessPage.dart';
+import 'package:account/Widgets/Buttons/StyledButton.dart';
+import 'package:account/Widgets/Displays/TeamViewBox.dart';
+import 'package:account/API/TaskAPI/Get_A_Task_Request.dart';
+import 'package:account/Widgets/HelperWidgets/TitleText.dart';
+import 'package:account/Widgets/Interactive/RatingWidget.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:account/Widgets/CheckBoxes/StyledCheckBox.dart';
+import 'package:account/Widgets/Interactive/FormTextField.dart';
+import 'package:account/Widgets/Interactive/DateRangeField.dart';
+// ignore_for_file: unused_local_variable
+
+// ignore_for_file: file_names
+
+// ignore_for_file: library_private_types_in_public_api
+
+
 
 class TaskEvaluation extends StatefulWidget {
   final int taskId;
@@ -101,7 +108,6 @@ class _TaskEvaluationState extends State<TaskEvaluation> {
       'strComment': commentController.text,
       'taskId': widget.taskId,
     };
-    print(data);
     // final response = await request(data)
     // if (response.statusCode == 200) {
 
@@ -461,29 +467,3 @@ class _TaskEvaluationState extends State<TaskEvaluation> {
   }
 }
 
-Widget RowInfo(title, value) {
-  return Padding(
-    padding: const EdgeInsets.all(2.0),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          title,
-          style: const TextStyle(
-            color: AppColor.main,
-            fontFamily: 'DroidArabicKufi',
-            fontSize: 13,
-          ),
-        ),
-        Text(
-          value,
-          style: const TextStyle(
-            color: AppColor.secondary,
-            fontFamily: 'DroidArabicKufi',
-            fontSize: 10,
-          ),
-        ),
-      ],
-    ),
-  );
-}

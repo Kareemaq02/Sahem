@@ -1,12 +1,16 @@
-
-import 'package:account/Repository/color.dart';
 import 'package:flutter/material.dart';
+import 'package:account/Repository/color.dart';
+// ignore_for_file: file_names
+
+
+// ignore_for_file: non_constant_identifier_names
+
 
 Widget FieldContainer(context,String fieldName,bool isVisible,fieldIcon,inputController)
 {
   final double screenWidth = MediaQuery.of(context).size.width;
   final double containerWidth = screenWidth * 0.75; 
-  final double containerHeight = 45;
+  const double containerHeight = 45;
 
   return   Container(
               height:containerHeight ,

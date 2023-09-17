@@ -1,4 +1,8 @@
 import 'package:url_launcher/url_launcher.dart';
+// ignore_for_file: deprecated_member_use
+
+// ignore_for_file: file_names
+
 
 
 void navigateToGoogleMaps(double currentLat, double currentLng, double destinationLat, double destinationLng) async {

@@ -1,7 +1,15 @@
+import '../HelperWidgets/rowInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
-import 'package:account/Widgets/Map/pageView.dart';
-import 'package:account/Screens/View%20tasks/task_details.dart';
+import 'package:account/Screens/CreateTask/CreateTask.dart';
+import 'package:account/Widgets/MapWidgets/mapPageView.dart';
+// ignore_for_file: unused_import
+
+
+// ignore_for_file: file_names
+
+
+
 
 mapCard(context) {
   final screenHeight = MediaQuery.of(context).size.height;
@@ -21,7 +29,7 @@ mapCard(context) {
             top: 10.0,
           ),
           content: SizedBox(
-            height: screenHeight *0.55,
+            height: screenHeight * 0.55,
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(8.0),
               child: Column(
@@ -33,14 +41,17 @@ mapCard(context) {
                     height: screenHeight * 0.3,
                     width: screenWidth * 0.8,
                     decoration: BoxDecoration(
-                        color: Colors.grey,
+                        //color: Colors.grey,
                         borderRadius: BorderRadius.circular(20)),
                     child: mapPageView(context),
                   ),
-                  Divider(color:AppColor.line,thickness: 1.5,),
+                  const Divider(
+                    color: AppColor.line,
+                    thickness: 1.5,
+                  ),
                   SizedBox(height: screenHeight * 0.02),
                   RowInfo("رقم البلاغ", "2526"),
-                  RowInfo("نوع البلاغ", "حفر بناء"),
+                  RowInfo("نوع البلاغ", " تجمع نفايات"),
                   RowInfo("تاربخ الانتهاء", "قبل 5 ساعات"),
                   RowInfo("موقع البلاغ", "ش.وصفي التل"),
                 ],
@@ -51,10 +62,6 @@ mapCard(context) {
       });
 }
 
-
-Widget beforeAfter(){
-  return Container(
-
-    
-  );
+Widget beforeAfter() {
+  return Container();
 }

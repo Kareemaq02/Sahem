@@ -1,6 +1,8 @@
 import 'dart:convert';
 import '../login_request.dart';
+import 'package:account/main.dart';
 import 'package:http/http.dart' as http;
+
 // ignore_for_file: prefer_typing_uninitialized_variables, camel_case_types, avoid_print
 
 class TaskModel {
@@ -91,6 +93,7 @@ class WorkersList {
 }
 
 class WorkerTask {
+    final userToken = prefs!.getString('token');
   Future<List<dynamic>> fetchUserTasks() async {
     final response = await http.get(
         Uri.parse("https://10.0.2.2:5000/api/tasks/loggedInWorker"),

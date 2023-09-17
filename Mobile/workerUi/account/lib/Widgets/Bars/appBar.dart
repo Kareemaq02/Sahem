@@ -1,11 +1,11 @@
-
-
-
-
-
+import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Filter/filterType.dart';
-import 'package:flutter/material.dart';
+
+
+
+
+
 
  myAppBar(BuildContext context,title,visible,double space){
   return
@@ -42,7 +42,7 @@ import 'package:flutter/material.dart';
               ),
             ),
           
-             Text(title,textDirection:TextDirection.rtl,style:TextStyle(color: AppColor.textTitle,fontSize: 19,fontFamily:'DroidArabicKufi',)),
+             Text(title,textDirection:TextDirection.rtl,style:const TextStyle(color: AppColor.textTitle,fontSize: 19,fontFamily:'DroidArabicKufi',)),
          
             ],),),
      ),);

@@ -1,7 +1,9 @@
 import 'dart:convert';
-import 'package:account/API/login_request.dart';
-import 'package:account/Repository/urls.dart';
+import 'package:account/main.dart';
 import 'package:http/http.dart' as http;
+import 'package:account/Repository/urls.dart';
+// ignore_for_file: file_names
+
 
 class TaskType {
   int intId;
@@ -27,6 +29,7 @@ class TaskType {
 }
 
 class TaskTypeRequest {
+    final userToken =prefs!.getString('token');
   Future<List<TaskType>> getAllCategory() async {
     var baseUrl = "${AppUrl.baseURL}tasks/types";
     http.Response response = await http.get(

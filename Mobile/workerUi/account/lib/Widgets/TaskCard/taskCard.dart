@@ -7,6 +7,8 @@ import 'package:account/Widgets/TaskCard/timeLineWidget.dart';
 import 'package:account/Widgets/HelperWidgets/myContainer.dart';
 import 'package:account/API/TaskAPI/activate_task_request.dart';
 import 'package:account/Screens/View%20tasks/task_details.dart';
+// ignore_for_file: file_names
+
 
 class TaskCard extends StatelessWidget {
   final String comment;
@@ -46,12 +48,16 @@ class TaskCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  CardButtons(context, 'تفعيل', Colors.grey,
-                      isLeader ? Colors.grey : AppColor.main, 0, () {
-                    b.activateTask(id);
+                  CardButtons(
+                      context,
+                      'تفعيل',
+                      !isLeader ? Colors.grey : AppColor.main,
+                      !isLeader ? Colors.grey : AppColor.main,
+                      0, () {
+                    isLeader == true ? b.activateTask(id) : null;
                   }),
                   SizedBox(width: screenWidth * 0.02),
-                  CardButtons(context, 'معاينة', Colors.grey, AppColor.main,
+                  CardButtons(context, 'معاينة', AppColor.main, AppColor.main,
                       screenWidth * 0.12, () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
@@ -64,7 +70,7 @@ class TaskCard extends StatelessWidget {
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
-                                return CircularProgressIndicator();
+                                return const CircularProgressIndicator();
                               } else if (snapshot.hasError) {
                                 return text(
                                     'Error: ${snapshot.error}', AppColor.main);
@@ -94,7 +100,7 @@ class TaskCard extends StatelessWidget {
                 height: screenHeight * 0.015,
               ),
               Flexible(
-                child: timeLineWidget(),
+                child: timeLineWidget(status),
               ),
               Padding(
                 padding: EdgeInsets.only(right: screenWidth * 0.6),
