@@ -63,10 +63,10 @@ namespace Application.Handlers.Complaints
                         c.intTypeId == request.ComplaintDTO.intTypeId
                             && c.intPrivacyId
                                 == (int)ComplaintsConstant.complaintPrivacy.privacyPublic
-                            && c.intStatusId == (int)ComplaintsConstant.complaintStatus.Scheduled
+                            && (c.intStatusId == (int)ComplaintsConstant.complaintStatus.Scheduled
                         || c.intStatusId == (int)ComplaintsConstant.complaintStatus.inProgress
                         || c.intStatusId == (int)ComplaintsConstant.complaintStatus.waitingEvaluation
-                        || c.intStatusId == (int)ComplaintsConstant.complaintStatus.pending
+                        || c.intStatusId == (int)ComplaintsConstant.complaintStatus.pending)
                     )
                 select new
                 {
