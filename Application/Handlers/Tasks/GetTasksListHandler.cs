@@ -4,6 +4,7 @@ using Domain.ClientDTOs.Task;
 using Domain.ClientDTOs.User;
 using LinqKit;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace Application.Handlers.Tasks
@@ -23,12 +24,20 @@ namespace Application.Handlers.Tasks
             CancellationToken cancellationToken
         )
         {
+
+            var userId = await _context.Users
+             .Where(u => u.UserName == request.strUsername)
+             .Select(u => u.Id)
+             .SingleOrDefaultAsync(cancellationToken: cancellationToken);
+
+
             var query = from t in _context.Tasks
                         join tt in _context.TaskTypes on t.intTypeId equals tt.intId
                         join ts in _context.TaskStatus on t.intStatusId equals ts.intId
                         join team in _context.Teams on t.intTeamId equals team.intId
                         join d in _context.Departments on team.intDepartmentId equals d.intId
                         orderby t.intId
+                       where(t.intAdminId == userId)
                         select new TaskListDTO
                         {
                             taskID = t.intId,
@@ -63,6 +72,7 @@ namespace Application.Handlers.Tasks
                             .Select(q => 
                             new TaskMediaDTO 
                             {
+                                intComplaintId = q.intComplaintId,
                                 blnIsVideo = false,
                                 decLatLng = new Domain.Helpers.LatLng { decLat = q.decLat, decLng = q.decLng },
                                 Data = File.Exists(q.strMediaRef) ?
