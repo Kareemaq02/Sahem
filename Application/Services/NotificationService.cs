@@ -1,11 +1,12 @@
 ﻿using Persistence;
 using System.Text;
-using Google.Apis.Auth.OAuth2;
 using System.Text.Json;
 using System.Net.Http.Headers;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Google.Apis.Auth.OAuth2;
 
-namespace API.Services
+namespace Application.Services
 {
     public class NotificationService
     {

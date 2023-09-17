@@ -10,6 +10,10 @@ using Microsoft.EntityFrameworkCore;
 using Domain.Resources;
 using Domain.DataModels.Complaints;
 using Application.Commands;
+using Application.Services;
+using Domain.DataModels.Notifications;
+using Domain.Helpers;
+using System.Threading.Tasks;
 
 namespace Application.Handlers.Tasks
 {
@@ -18,16 +22,22 @@ namespace Application.Handlers.Tasks
         private readonly DataContext _context;
         public readonly UserManager<ApplicationUser> _userManager;
         public readonly AddComplaintStatusChangeTransactionHandler _transactionHandler;
+        private readonly IMediator _mediator;
+        private readonly NotificationService _notificationService;
 
         public InsertTaskHandler(
             DataContext context,
             UserManager<ApplicationUser> userManager,
-            AddComplaintStatusChangeTransactionHandler transactionHandler
+            AddComplaintStatusChangeTransactionHandler transactionHandler,
+            IMediator mediator,
+            NotificationService notificationService
         )
         {
             _context = context;
             _userManager = userManager;
             _transactionHandler = transactionHandler;
+            _mediator = mediator;
+            _notificationService = notificationService;
         }
 
         public async Task<Result<TaskDTO>> Handle(
@@ -84,8 +94,8 @@ namespace Application.Handlers.Tasks
                     return Result<TaskDTO>.Failure("Choose complaint(s)");
                     //TaskComplaints table
 
-                    foreach (int complaintId in request.TaskDTO.lstComplaintIds)
-                {
+               foreach (int complaintId in request.TaskDTO.lstComplaintIds)
+               {
                     var taskComplaint = new WorkTaskComplaints
                     {
                         intTaskId = taskEntity.Entity.intId,
@@ -93,7 +103,58 @@ namespace Application.Handlers.Tasks
                     };
 
                     await _context.TasksComplaints.AddAsync(taskComplaint);
-                }
+
+                    // send notifications to users that their complaint is in progress
+                    try
+                    {
+                        //Insert into Notifications Table
+
+                        var ComplaintUserId = await _context.Complaints
+                            .Where(q => q.intId == complaintId).Select(c => c.intUserID).SingleOrDefaultAsync();
+
+                        var username = await _context.Users.
+                            Where(q => q.Id == ComplaintUserId).Select(c => c.UserName).SingleOrDefaultAsync();
+
+                        // Get Notification body and header
+                        var notificationLayout = await _context.NotificationTypes
+                           .Where(q => q.intId == (int)NotificationConstant.NotificationType.complaintStatusChangeNotification)
+                           .Select(q => new NotificationLayout
+                           {
+                               strHeaderAr = q.strHeaderAr,
+                               strBodyAr = q.strBodyAr,
+                               strBodyEn = q.strBodyEn,
+                               strHeaderEn = q.strHeaderEn
+                           }).SingleOrDefaultAsync();
+
+                        if (notificationLayout == null)
+                            throw new Exception("Notification Type table is empty");
+
+                        string headerAr = notificationLayout.strHeaderAr;
+                        string bodyAr = notificationLayout.strBodyAr + " #" + complaintId + " إلى 'مجدول'. سيتم مراجعة شكوتك من قبل فريقنا وسنقوم بإعلامك بأي تحديثات جديدة. نشكرك على صبرك.";
+                        string headerEn = notificationLayout.strHeaderEn;
+                        string strBodyEn = notificationLayout.strBodyEn + " #" + complaintId + " has been updated to 'Scheduled' status. Your complaint is under review by our team, and we will notify you of any new updates. Thank you for your patience.";
+
+                        await _mediator.
+                            Send(new InsertNotificationCommand(new Notification
+                            {
+                                intTypeId = (int)NotificationConstant.NotificationType.complaintStatusChangeNotification,
+                                intUserId = ComplaintUserId,
+
+                                strHeaderAr = headerAr,
+                                strBodyAr = bodyAr,
+
+                                strHeaderEn = headerEn,
+                                strBodyEn = strBodyEn,
+                            }));
+
+
+                        await _notificationService.SendNotification(ComplaintUserId, headerAr, bodyAr);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.ToString());
+                    }
+               }
 
                 //Complaints Table
                 foreach (int complaintId in request.TaskDTO.lstComplaintIds)
@@ -114,7 +175,7 @@ namespace Application.Handlers.Tasks
 
                     await _context.SaveChangesAsync(cancellationToken);
                 }
-                await transaction.CommitAsync();
+                
             }
             catch (Exception ex)
             {
@@ -122,6 +183,65 @@ namespace Application.Handlers.Tasks
                 return Result<TaskDTO>.Failure(ex.Message);
             }
 
+            var workersListQuery = from teamMembers in _context.TeamMembers
+                                   where(teamMembers.intTeamId == request.TaskDTO.intTeamId)
+                                   select teamMembers.intWorkerId;
+
+            List<int> workersList = await workersListQuery.ToListAsync();
+
+            foreach (int workerId in workersList)
+            {
+                // send notifications to workers that task is activated
+                try
+                {
+                    //Insert into Notifications Table
+
+                    var username = await _context.Users.
+                        Where(q => q.Id == workerId).Select(c => c.UserName).SingleOrDefaultAsync();
+
+                    // Get Notification body and header
+                    var notificationLayout = await _context.NotificationTypes
+                       .Where(q => q.intId == (int)NotificationConstant.NotificationType.taskCreationNotification)
+                       .Select(q => new NotificationLayout
+                       {
+                           strHeaderAr = q.strHeaderAr,
+                           strBodyAr = q.strBodyAr,
+                           strBodyEn = q.strBodyEn,
+                           strHeaderEn = q.strHeaderEn
+                       }).SingleOrDefaultAsync();
+
+                    if (notificationLayout == null)
+                        throw new Exception("Notification Type table is empty");
+
+                    string headerAr = notificationLayout.strHeaderAr;
+                    string bodyAr = notificationLayout.strBodyAr + " " + request.TaskDTO.deadlineDate.ToString() + ". يرجى مراجعة تفاصيل المهمة وضمان الانتهاء في الوقت المحدد.";
+                    string headerEn = notificationLayout.strHeaderEn;
+                    string strBodyEn = notificationLayout.strBodyEn + " " + request.TaskDTO.deadlineDate.ToString() + ". Please review the task details and ensure timely completion";
+
+                    await _mediator.
+                        Send(new InsertNotificationCommand(new Notification
+                        {
+                            intTypeId = (int)NotificationConstant.NotificationType.taskCreationNotification,
+                            intUserId = workerId,
+
+                            strHeaderAr = headerAr,
+                            strBodyAr = bodyAr,
+
+                            strHeaderEn = headerEn,
+                            strBodyEn = strBodyEn,
+                        }));
+
+
+                    await _notificationService.SendNotification(workerId, headerAr, bodyAr);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.ToString());
+                }
+
+            }
+
+            await transaction.CommitAsync();
             return Result<TaskDTO>.Success(taskDTO);
         }
     }

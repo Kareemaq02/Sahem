@@ -7,6 +7,9 @@ using Domain.DataModels.User;
 using Microsoft.EntityFrameworkCore;
 using Application.Commands;
 using Domain.Resources;
+using Application.Services;
+using Domain.Helpers;
+using Domain.DataModels.Notifications;
 
 public class RejectComplaintByIdHandler
     : IRequestHandler<RejectComplaintByIdCommand, Result<string>>
@@ -14,16 +17,22 @@ public class RejectComplaintByIdHandler
     private readonly DataContext _context;
     public readonly UserManager<ApplicationUser> _userManager;
     private readonly AddComplaintStatusChangeTransactionHandler _transactionHandler;
+    private readonly NotificationService _notificationService;
+    private readonly IMediator _mediator;
 
     public RejectComplaintByIdHandler(
         DataContext context,
         UserManager<ApplicationUser> userManager,
-        AddComplaintStatusChangeTransactionHandler transactionHandler
+        AddComplaintStatusChangeTransactionHandler transactionHandler,
+        NotificationService notificationService,
+        IMediator mediator
     )
     {
         _context = context;
         _userManager = userManager;
         _transactionHandler = transactionHandler;
+        _notificationService = notificationService;
+        _mediator = mediator;
     }
 
     public async Task<Result<string>> Handle(
@@ -35,7 +44,6 @@ public class RejectComplaintByIdHandler
             .Where(u => u.UserName == request.username)
             .Select(u => u.Id)
             .SingleOrDefaultAsync(cancellationToken: cancellationToken);
-
 
         // transaction start...
 
@@ -70,6 +78,57 @@ public class RejectComplaintByIdHandler
             await transaction.RollbackAsync();
             return Result<string>.Failure("Failed to update complaint.");
         }
+
+
+        try
+        {
+            //Insert into Notifications Table
+
+            var rejectedComplaintUserId = await _context.Complaints
+                .Where(q => q.intId == request.Id).Select(c => c.intUserID).SingleOrDefaultAsync();
+
+            var username = await _context.Users.
+                Where(q => q.Id == rejectedComplaintUserId).Select(c => c.UserName).SingleOrDefaultAsync();
+
+            // Get Notification body and header
+            var notificationLayout = await _context.NotificationTypes
+               .Where(q => q.intId == (int)NotificationConstant.NotificationType.rejectedComplaintNotification)
+               .Select(q => new NotificationLayout { 
+                   strHeaderAr = q.strHeaderAr,
+                   strBodyAr = q.strBodyAr,
+                   strBodyEn = q.strBodyEn,
+                   strHeaderEn = q.strHeaderEn
+               }).SingleOrDefaultAsync();
+
+            if (notificationLayout == null)
+                throw new Exception("Notification Type table is empty");
+
+            string headerAr = notificationLayout.strHeaderAr;
+            string bodyAr = notificationLayout.strBodyAr + " " + request.Id;
+            string headerEn = notificationLayout.strHeaderEn;
+            string strBodyEn = notificationLayout.strBodyEn + " " + request.Id + " has been rejected.";
+
+            await _mediator.
+                Send(new InsertNotificationCommand(new Notification
+                {
+                    intTypeId = (int)NotificationConstant.NotificationType.rejectedComplaintNotification,
+                    intUserId = rejectedComplaintUserId,
+
+                    strHeaderAr = headerAr,
+                    strBodyAr = bodyAr,
+
+                    strHeaderEn = headerEn,
+                    strBodyEn = strBodyEn,
+                }));
+
+
+            await _notificationService.SendNotification(rejectedComplaintUserId, headerAr, bodyAr);
+        }
+        catch (Exception e){
+            Console.WriteLine(e.ToString());
+        }
+
+
         await transaction.CommitAsync();
         return Result<string>.Success("Complaint rejected.");
     }

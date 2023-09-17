@@ -22,15 +22,7 @@ namespace Application.Handlers.Notifications
             CancellationToken cancellationToken
         )
         {
-            var userId = await _context.Users
-                .Where(u => u.UserName == request.strUsername)
-                .Select(u => u.Id)
-                .SingleOrDefaultAsync(cancellationToken: cancellationToken);
-
-            var notificationEntity = await _context.Notifications.AddAsync(
-                new Notification { intTypeId = request.intTypeId, intUserId = userId },
-                cancellationToken
-            );
+            var notificationEntity = await _context.Notifications.AddAsync(request.Notification);
 
             var notification = notificationEntity.Entity;
 
