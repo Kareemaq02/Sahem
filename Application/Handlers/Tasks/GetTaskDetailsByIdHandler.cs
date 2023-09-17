@@ -71,10 +71,30 @@ namespace Application.Handlers.Tasks
                                             intId = ca.intWorkerId,
                                             strFirstName = ca.Worker.UserInfo.strFirstName,
                                             strLastName = ca.Worker.UserInfo.strLastName,
+                                            strFirstNameAr = ca.Worker.UserInfo.strFirstNameAr,
+                                            strLastNameAr = ca.Worker.UserInfo.strLastNameAr,
                                             isLeader = t.Team.intLeaderId == ca.intWorkerId
                                         }
                                 )
-                                .ToList()
+                                .ToList(),
+                    lstMedia = t.Complaints.SelectMany(q => q.Complaint.Attachments
+                           .Select(q =>
+                           new TaskMediaDTO
+                           {
+                               intComplaintId = q.intComplaintId,
+                               blnIsVideo = false,
+                               decLatLng = new LatLng { decLat = q.decLat, decLng = q.decLng },
+                               Data = File.Exists(q.strMediaRef) ?
+                               Convert.ToBase64String(File.ReadAllBytes(q.strMediaRef))
+                               : null,
+                               region = new RegionNames
+                               {
+                                   strRegionAr = q.Complaint.Region.strNameAr,
+                                   strRegionEn = q.Complaint.Region.strNameEn
+                               }
+
+                           })).ToList()
+
                 };
 
             var result = await query.FirstOrDefaultAsync();

@@ -1,7 +1,6 @@
 ﻿using Application.Core;
 using Application.Queries.Users;
 using Domain.ClientDTOs.User;
-using Domain.Resources;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
