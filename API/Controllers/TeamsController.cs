@@ -1,11 +1,7 @@
 ﻿using Application;
-using Application.Commands;
 using Application.Core;
-using Application.Queries.Tasks;
 using Application.Queries.Teams;
 using Application.Queries.Users;
-using Domain.ClientDTOs.Department;
-using Domain.ClientDTOs.Task;
 using Domain.ClientDTOs.Team;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -63,6 +59,29 @@ namespace API.Controllers
         public async Task<IActionResult> GetAvailableTeamsList(DateTime startDate, DateTime endDate)
         {
             return HandleResult(await Mediator.Send(new GetAvailableTeamsListQuery(startDate, endDate)));
+        }
+
+        [HttpGet("available/{id}")] //api/teams/available/id
+        public async Task<IActionResult> CheckIfTeamIsAvailable(DateTime startDate, DateTime endDate, int id)
+        {
+            return HandleResult(await Mediator.Send(new CheckIfTeamIsAvailableByIdQuery(startDate, endDate, id)));
+        }
+
+        [HttpPost("worker/vacation/{id}")] //api/teams/worker/vacation/id
+        public async Task<IActionResult> GiveWorkeraVacation(int id, DateTime dtmDateFrom, DateTime dtmDateTo)
+        {
+            return HandleResult(await Mediator.Send(new GiveWorkeraVacationCommand(id, dtmDateFrom, dtmDateTo)));
+        }
+
+        [HttpGet("admin")] //api/teams/admin    
+        public async Task<IActionResult> GetLoggedInAdminTeamsList(string strUsername)
+        {
+            string authHeader = Request.Headers["Authorization"];
+            JwtSecurityTokenHandler tokenHandler = new();
+            JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
+
+            strUsername = jwtToken.Claims.First(c => c.Type == "username").Value;
+            return HandleResult(await Mediator.Send(new GetLoggedInAdminTeamsQuery(strUsername)));
         }
     }
 }
