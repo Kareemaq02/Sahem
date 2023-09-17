@@ -1,16 +1,20 @@
 ﻿using Application.Commands;
 using Application.Core;
+using Application.Services;
 using Domain.ClientDTOs.Complaint;
 using Domain.ClientDTOs.Task;
 using Domain.DataModels.Complaints;
 using Domain.DataModels.Intersections;
+using Domain.DataModels.Notifications;
 using Domain.DataModels.User;
+using Domain.Helpers;
 using Domain.Resources;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Persistence;
+using System.Threading.Tasks;
 
 namespace Application.Handlers.Complaints
 {
@@ -20,18 +24,24 @@ namespace Application.Handlers.Complaints
         private readonly IConfiguration _configuration;
         public readonly UserManager<ApplicationUser> _userManager;
         private readonly AddComplaintStatusChangeTransactionHandler _changeTransactionHandler;
+        private readonly IMediator _mediator;
+        private readonly NotificationService _notificationService;
 
         public SubmitTaskByIdHandler(
             AddComplaintStatusChangeTransactionHandler changeTransactionHandler,
             DataContext context,
             IConfiguration configuration,
-            UserManager<ApplicationUser> userManager
+            UserManager<ApplicationUser> userManager,
+            IMediator mediator,
+            NotificationService notificationService
         )
         {
             _changeTransactionHandler = changeTransactionHandler;
             _context = context;
             _configuration = configuration;
             _userManager = userManager;
+            _mediator = mediator;
+            _notificationService = notificationService;
         }
 
         public async Task<Result<SubmitTaskDTO>> Handle(
@@ -45,7 +55,9 @@ namespace Application.Handlers.Complaints
                 .Select(u => u.Id)
                 .SingleOrDefaultAsync();
 
-            var isLeader = _context.Teams.Any(tm => tm.intLeaderId == userId); //Assuming that a leader of a team can't be a worker in another team
+            var task = await _context.Tasks.FindAsync(request.id); ;
+            var taskTeam = await _context.Teams.Where(q => q.intId == task.intTeamId).SingleOrDefaultAsync();
+            var isLeader = taskTeam.intLeaderId == userId; //Assuming that a leader of a team can't be a worker in another team
 
             if (isLeader)
             {
@@ -56,19 +68,54 @@ namespace Application.Handlers.Complaints
                 );
                 try
                 {
-                    var task = await _context.Tasks.FindAsync(request.id);
+
+
+                    if (task == null)
+                        return Result<SubmitTaskDTO>.Failure("Failed to Submit Task");
+
+                    
 
                     if (
                         task.intStatusId == (int)TasksConstant.taskStatus.inProgress
                     )
                     {
+                        var teamMembersCount = await _context.TeamMembers
+                        .Where(q => q.intTeamId == task.intTeamId).CountAsync();
+
+
+                        if ((teamMembersCount - 1) != request.SubmitTaskDTO.lstWorkersRatings.Count())
+                        {
+                            await transaction.RollbackAsync();
+                            return Result<SubmitTaskDTO>.Failure("Failed to Submit Task, you need to rate all workers before submiting");
+                        }
+
+
+                        foreach (var workerRating in request.SubmitTaskDTO.lstWorkersRatings)
+                        {
+                            if (workerRating.intWorkerId == taskTeam.intLeaderId)
+                            {
+                                await transaction.RollbackAsync();
+                                return Result<SubmitTaskDTO>.Failure("Failed to Submit Task. Leader cant rate himself");
+                            }
+
+                            await _context.AddAsync(new WorkTaskMemberRating
+                            {
+                                intTaskId = task.intId,
+                                intUserId = workerRating.intWorkerId,
+                                decRating = workerRating.decRating
+                            });
+                            await _context.SaveChangesAsync();
+
+                        }
+
+
                         task.dtmDateLastModified = DateTime.UtcNow;
                         task.intLastModifiedBy = userId;
                         task.strComment = submitTaskDTO.strComment;
                         task.intStatusId = (int)TasksConstant.taskStatus.waitingEvaluation;
                         await _context.SaveChangesAsync(cancellationToken);
 
-                        if ( lstMedia.Count == 0 )
+                        if (lstMedia.Count == 0)
                         {
                             await transaction.RollbackAsync();
                             return Result<SubmitTaskDTO>.Failure("No file was Uploaded.");
@@ -101,7 +148,7 @@ namespace Application.Handlers.Complaints
                             using var stream = File.Create(filePath);
                             await media.fileMedia.CopyToAsync(stream, cancellationToken);
 
-                            
+
                             taskAttatchments.Add(
                                 new ComplaintAttachment
                                 {
@@ -115,36 +162,105 @@ namespace Application.Handlers.Complaints
                                     decLng = media.decLatLng.decLng
                                 }
 
-                            );                          
+                            );
                         }
                         await _context.ComplaintAttachments.AddRangeAsync(taskAttatchments);
                         await _context.SaveChangesAsync(cancellationToken);
 
-   
+
 
                         foreach (var media in lstMedia)
                         {
-                            var complaint = new Complaint { intId = media.intComplaintId };
-                            _context.Complaints.Attach(complaint);
-                            complaint.intStatusId = (int)
-                                ComplaintsConstant.complaintStatus.waitingEvaluation;
-                            await _context.SaveChangesAsync(cancellationToken);
+                            try
+                            {
+                                var complaint = new Complaint { intId = media.intComplaintId };
+                                _context.Complaints.Attach(complaint);
+                                complaint.intStatusId = (int)
+                                    ComplaintsConstant.complaintStatus.waitingEvaluation;
+                                await _context.SaveChangesAsync(cancellationToken);
 
-                            await _changeTransactionHandler.Handle(
-                                new AddComplaintStatusChangeTransactionCommand(
-                                    media.intComplaintId,
-                                    (int)ComplaintsConstant.complaintStatus.waitingEvaluation
-                                ),
-                                cancellationToken
-                            );
-                            await _context.SaveChangesAsync(cancellationToken);
+                                await _changeTransactionHandler.Handle(
+                                    new AddComplaintStatusChangeTransactionCommand(
+                                        media.intComplaintId,
+                                        (int)ComplaintsConstant.complaintStatus.waitingEvaluation
+                                    ),
+                                    cancellationToken
+                                );
+                                await _context.SaveChangesAsync(cancellationToken);
+                            }
+                            catch 
+                            {
+                                await transaction.RollbackAsync();
+                                return Result<SubmitTaskDTO>.Failure("Task Submition Failed.");
+
+                            }
+
+
+
+                            try
+                            {
+                                //Insert into Notifications Table
+
+                                var inProgressComplaintUserId = await _context.Complaints
+                                    .Where(q => q.intId == media.intComplaintId).Select(c => c.intUserID).SingleOrDefaultAsync();
+
+                                var username = await _context.Users.
+                                    Where(q => q.Id == inProgressComplaintUserId).Select(c => c.UserName).SingleOrDefaultAsync();
+
+                                // Get Notification body and header
+                                /*var notificationLayout = await _context.NotificationTypes
+                                   .Where(q => q.intId == (int)NotificationConstant.NotificationType.complaintStatusChangeNotification)
+                                   .Select(q => new NotificationLayout
+                                   {
+                                       strHeaderAr = q.strHeaderAr,
+                                       strBodyAr = q.strBodyAr,
+                                       strBodyEn = q.strBodyEn,
+                                       strHeaderEn = q.strHeaderEn
+                                   }).SingleOrDefaultAsync();
+
+                                if (notificationLayout == null)
+                                {
+                                    await transaction.RollbackAsync();
+                                    throw new Exception("Notification Type table is empty");
+                                }
+
+                                string headerAr = notificationLayout.strHeaderAr;
+                                string bodyAr = notificationLayout.strBodyAr + " #" + media.intComplaintId + " إلى 'انتظار التقييم'. سيتم مراجعة شكوتك من قبل فريقنا وسنقوم بإعلامك بأي تحديثات جديدة. نشكرك على صبرك.";
+                                string headerEn = notificationLayout.strHeaderEn;
+                                string strBodyEn = notificationLayout.strBodyEn + " #" + media.intComplaintId + " has been updated to 'Waiting Evaluation' status. Your complaint is under review by our team, and we will notify you of any new updates. Thank you for your patience.";
+
+                                await _mediator.
+                                    Send(new InsertNotificationCommand(new Notification
+                                    {
+                                        intTypeId = (int)NotificationConstant.NotificationType.complaintStatusChangeNotification,
+                                        intUserId = inProgressComplaintUserId,
+
+                                        strHeaderAr = headerAr,
+                                        strBodyAr = bodyAr,
+
+                                        strHeaderEn = headerEn,
+                                        strBodyEn = strBodyEn,
+                                    }));
+
+
+                                await _notificationService.SendNotification(inProgressComplaintUserId, headerAr, bodyAr);*/
+                            }
+                            catch (Exception e)
+                            {
+                                await transaction.RollbackAsync();
+                                return Result<SubmitTaskDTO>.Failure("Failed to Submit Task" + e);
+
+                            }
                         }
                         // Alter it to link the attachment with the complaint, not the task
                         //await _context.TaskAttachments.AddRangeAsync(taskAttatchments);
                         await transaction.CommitAsync();
                     }
                     else
-                        return Result<SubmitTaskDTO>.Failure("The task has must be active before being submitted");
+                    {
+                        await transaction.RollbackAsync();
+                        return Result<SubmitTaskDTO>.Failure("The task  must be active before being submitted");
+                    }
                 }
                 catch (Exception e)
                 {
@@ -155,7 +271,9 @@ namespace Application.Handlers.Complaints
                 return Result<SubmitTaskDTO>.Success(submitTaskDTO);
             }
             else
+            {
                 return Result<SubmitTaskDTO>.Failure("Only the leader can submit the task");
+            }
         }
     }
 }
