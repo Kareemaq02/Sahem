@@ -21,6 +21,6 @@ namespace Domain.ClientDTOs.Task
         public string strAdminFirstName { get; set; }
         public string strAdminLastName { get; set; }
         public List<TaskWorkerDTO> workersList { get; set; }
-        public List<MediaDTO> lstMedia { get; set; }
+        public List<TaskMediaDTO> lstMedia { get; set; }
     }
 }
