@@ -1,29 +1,50 @@
+import 'package:flutter/material.dart';
+import 'package:account/Repository/color.dart';
+// ignore_for_file: file_names
+
 // ignore_for_file: non_constant_identifier_names
 
-import 'package:flutter/material.dart';
-
-Widget CardButtons(context, text, textColor, boxColor, width, whatToDo) {
+Widget CardButtons(
+  context,
+  text,
+  textColor,
+  boxColor,
+  width,
+  borderColor,
+  whatToDo,
+) {
   final screenWidth = MediaQuery.of(context).size.width;
   return Container(
     height: screenWidth * 0.077,
     decoration: BoxDecoration(
-      borderRadius: const BorderRadius.all(Radius.circular(10)),
-      border:
-          Border.all(color: textColor, width: 1.3, style: BorderStyle.solid),
+      borderRadius: BorderRadius.circular(40), 
     ),
     child: ElevatedButton(
       style: ButtonStyle(
+        overlayColor: MaterialStateProperty.all<Color>(AppColor.main),
         backgroundColor: MaterialStateProperty.all<Color>(boxColor),
+        side: MaterialStateProperty.all<BorderSide>(
+          BorderSide(color: borderColor, width: 2),
+        ),
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(40),
+          ),
+        ),
       ),
       onPressed: () {
         whatToDo();
       },
       child: Text(
         text,
-        //textDirection: TextDirection.rtl,
-        style: const TextStyle(
-            color: Colors.white, fontSize: 12, fontWeight: FontWeight.w500),
+        style: TextStyle(
+          color: textColor,
+          fontSize: 10,
+          fontWeight: FontWeight.w500,
+          fontFamily: 'DroidArabicKufi',
+        ),
       ),
     ),
   );
 }
+

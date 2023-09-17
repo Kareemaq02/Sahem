@@ -1,5 +1,3 @@
-// ignore_for_file: non_constant_identifier_names
-
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
@@ -8,6 +6,8 @@ import 'package:account/API/complaint_requests.dart';
 import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/Widgets/HelperWidegts/myContainer.dart';
 import 'package:account/Widgets/ComaplaintCard/timeLineVertical.dart';
+// ignore_for_file: non_constant_identifier_names
+
 
 
 // ignore_for_file: library_private_types_in_public_api
@@ -130,7 +130,7 @@ class _ComplaintViewState extends State<ComplaintDetailsScreen> {
             Padding(
               padding: EdgeInsets.all(screenWidth * 0.02),
               child: myContainer(
-                screenHeight * 0.68,
+                screenHeight * 0.50,
                 Padding(
                   padding: EdgeInsets.only(right: screenWidth * 0.10),
                   child: timeLineVertical(complaint.intComplaintId),

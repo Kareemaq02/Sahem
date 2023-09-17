@@ -1,18 +1,19 @@
-// ignore_for_file: file_names
-
 import 'package:flutter/material.dart';
 import 'package:timelines/timelines.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/API/complaint_requests.dart';
+// ignore_for_file: file_names
 
-List<Status> status = [
+
+List<Status> status1 = [
+
   Status(1, ' قيد الانتظار'),
-  Status(2, 'موافق عليه'),
+  Status(2, 'مرفوض'),
   Status(3, 'مجدول'),
-  Status(4, 'موافق عليه'),
-  Status(5, 'قيد العمل'),
-  Status(6, 'انتظار التقييم'),
-  Status(7, 'منجز'),
+  Status(4, 'قيد العمل'),
+  Status(5, 'انتظار التقييم'),
+  Status(6, 'منجز'),
+  Status(7, 'بلاغ معاد'),
 ];
 
 class Status {
@@ -21,13 +22,14 @@ class Status {
 
   Status(this.id, this.name);
 }
+
 Widget timeLineWidget(int statusID) {
   getUserComplaint a = getUserComplaint();
   return SingleChildScrollView(
     scrollDirection: Axis.horizontal,
     child: FixedTimeline.tileBuilder(
       theme: TimelineThemeData(
-        indicatorPosition: 1,
+        indicatorPosition: 0,
         color: AppColor.line,
         direction: Axis.horizontal,
       ),
@@ -35,9 +37,18 @@ Widget timeLineWidget(int statusID) {
         contentsAlign: ContentsAlign.alternating,
         connectionDirection: ConnectionDirection.before,
         connectorStyleBuilder: (context, index) {
-          return (index <= statusID) 
-              ? ConnectorStyle.solidLine
-              : ConnectorStyle.dashedLine;
+          if (index == 0) {
+            ConnectorStyle.solidLine;
+          }
+          if (statusID > 1) {
+            return (index <= statusID - 1)
+                ? ConnectorStyle.solidLine
+                : ConnectorStyle.dashedLine;
+          } else {
+            return (index <= statusID)
+                ? ConnectorStyle.solidLine
+                : ConnectorStyle.dashedLine;
+          }
         },
         contentsBuilder: (context, index) {
           return FutureBuilder<List<dynamic>>(
@@ -47,22 +58,33 @@ Widget timeLineWidget(int statusID) {
                 return Text(': ${snapshot.error}');
               } else if (snapshot.hasData) {
                 List<dynamic> statusData = snapshot.data!;
-                if (index < statusData.length) {
+                if (index < status1.length && index != 1) {
                   TextStyle textStyle = const TextStyle(
-                    fontSize: 7.9,
+                    fontSize: 8.9,
                     fontFamily: 'DroidArabicKufi',
                   );
-
-                  if (index <= statusID) {
-                    textStyle = textStyle.copyWith(color: AppColor.main);
+                  
+                  if (statusID > 1) {
+                    if (index <= statusID - 1) {
+                      textStyle = textStyle.copyWith(color: AppColor.main);
+                    } else {
+                      textStyle = textStyle.copyWith(color: Colors.grey);
+                    }
                   } else {
-                    textStyle = textStyle.copyWith(color: Colors.grey);
+                    if (index <= statusID) {
+                      textStyle = textStyle.copyWith(color: AppColor.main);
+                    } else {
+                      textStyle = textStyle.copyWith(color: Colors.grey);
+                    }
                   }
 
                   return Text(
-                    status[index].name.toString(),
+                    status1[index].name.toString(),
                     style: textStyle,
                   );
+                }
+                if (index == 1) {
+                  return Container();
                 } else {
                   return const Text('No data for this index');
                 }
@@ -73,12 +95,15 @@ Widget timeLineWidget(int statusID) {
           );
         },
         indicatorStyleBuilder: (context, index) {
-          return (index <= statusID)
+          if (index == 1) {
+            return IndicatorStyle.transparent;
+          }
+          return (index <= statusID - 1)
               ? IndicatorStyle.dot
               : IndicatorStyle.outlined;
         },
         itemExtent: 73.0,
-        itemCount: 7,
+        itemCount: 6,
       ),
     ),
   );

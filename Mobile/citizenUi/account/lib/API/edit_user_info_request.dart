@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:account/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:account/Repository/urls.dart';
 import 'package:account/API/login_request.dart';
@@ -6,6 +7,7 @@ import 'package:account/API/login_request.dart';
 // ignore_for_file: avoid_print, unused_import
 
 class EditInfo {
+  final token2 = prefs!.getString('token');
   Future<String> updateAccount(
       String strNewUserName,
       String strNewEmail,
