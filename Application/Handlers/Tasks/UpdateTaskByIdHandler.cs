@@ -3,29 +3,34 @@ using MediatR;
 using Persistence;
 using Microsoft.AspNetCore.Identity;
 using Domain.DataModels.User;
-using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Application.Commands;
 using Domain.Resources;
 using Domain.DataModels.Tasks;
-using Domain.DataModels.Intersections;
 using Domain.ClientDTOs.Task;
+using Domain.DataModels.Notifications;
+using Application.Services;
+using System.Globalization;
+using Application.Queries.Users;
 
 public class UpdateTaskByIdHandler : IRequestHandler<UpdateTaskCommand, Result<UpdateTaskDTO>>
 {
     private readonly DataContext _context;
-    private readonly IConfiguration _configuration;
     public readonly UserManager<ApplicationUser> _userManager;
+    private readonly IMediator _mediator;
+    private readonly NotificationService _notificationService;
 
     public UpdateTaskByIdHandler(
         DataContext context,
-        IConfiguration configuration,
-        UserManager<ApplicationUser> userManager
+        UserManager<ApplicationUser> userManager,
+        IMediator mediator,
+        NotificationService notificationService
     )
     {
         _context = context;
-        _configuration = configuration;
         _userManager = userManager;
+        _mediator = mediator;
+        _notificationService = notificationService;
     }
 
     public async Task<Result<UpdateTaskDTO>> Handle(
@@ -38,11 +43,6 @@ public class UpdateTaskByIdHandler : IRequestHandler<UpdateTaskCommand, Result<U
             .Select(u => u.Id)
             .SingleOrDefaultAsync(cancellationToken: cancellationToken);
 
-        /*    var newTaskStartDate = request.updateTaskDTO.scheduledDate;
-            var newTaskDeadlineDate = request.updateTaskDTO.deadlineDate;
-            var newTaskComment = request.updateTaskDTO.strComment;
-            var newWorkersList = request.updateTaskDTO.workersList;
-            var newTaskTypeId = request.updateTaskDTO.intTaskTypeId;*/
 
         var UpdateTaskDTO = new UpdateTaskDTO { };
 
@@ -104,18 +104,12 @@ public class UpdateTaskByIdHandler : IRequestHandler<UpdateTaskCommand, Result<U
                     UpdateTaskDTO.intTeamId = request.updateTaskDTO.intTeamId;
                 }
                 else {
-                    var AvailableTeamsIdsQuery =
-                        from teams in _context.Teams
-                        join t in _context.Tasks on teams.intId equals t.intTeamId
-                        where (
-                               (t.dtmDateDeadline > request.updateTaskDTO.deadlineDate && t.dtmDateScheduled > request.updateTaskDTO.deadlineDate)
-                                || (t.dtmDateDeadline < request.updateTaskDTO.scheduledDate && t.dtmDateScheduled < request.updateTaskDTO.scheduledDate)
-                                )
-                        select teams.intId;
-
-                                 if (!await (AvailableTeamsIdsQuery.ContainsAsync(request.updateTaskDTO.intTeamId)))
-                                 return Result<UpdateTaskDTO>.Failure("Team is not available at chosen dates");
-                    }
+                    var teamAvailabilityResult = await _mediator.Send(new CheckIfTeamIsAvailableByIdQuery(
+                        startDate: request.updateTaskDTO.scheduledDate,
+                          endDate: request.updateTaskDTO.deadlineDate,
+                           intTeamId: task.intTeamId
+                        ));
+                }
 
                 await _context.SaveChangesAsync(cancellationToken);
             }
@@ -130,6 +124,68 @@ public class UpdateTaskByIdHandler : IRequestHandler<UpdateTaskCommand, Result<U
             await transaction.RollbackAsync(cancellationToken);
             return Result<UpdateTaskDTO>.Failure("Failed to update task.");
         }
+
+
+ 
+
+
+    /*    string updateNotificationEn = $"Task Id: {request.Id}\n"+$"Scheduled Date: {UpdateTaskDTO.scheduledDate}" +
+            $"\n Deadline Date: {UpdateTaskDTO.deadlineDate}\n Comment: {UpdateTaskDTO.strComment}" +
+            $" \n Team Number: {UpdateTaskDTO.intTeamId}\n";
+
+        string updateNotificationAr = $"رقم المهمة: {request.Id}\nتاريخ الجدولة: {UpdateTaskDTO.scheduledDate.ToString("dd/MM/yyyy hh:mm:ss tt")}" +
+             $"\nتاريخ الاستحقاق: {UpdateTaskDTO.deadlineDate.ToString("dd/MM/yyyy hh:mm:ss tt")}\nالتعليق: {UpdateTaskDTO.strComment}" +
+             $" \nرقم الفريق: {UpdateTaskDTO.intTeamId}\n";
+
+        
+
+        var workersListQuery = from t in _context.Tasks
+                               join team in _context.Teams on t.intTeamId equals team.intId
+                               join teamMembers in _context.TeamMembers on team.intId equals teamMembers.intTeamId
+                               where(t.intId == request.Id)
+                               select teamMembers.intWorkerId;
+
+        List<int> workersList = await workersListQuery.Distinct().ToListAsync();
+
+        foreach (int workerId in workersList)
+        {
+            // send notifications to workers that task is activated
+            try
+            {
+                //Insert into Notifications Table
+
+                var username = await _context.Users.
+                    Where(q => q.Id == workerId).Select(c => c.UserName).SingleOrDefaultAsync();
+
+     
+
+
+                string headerAr = "تم تحديث إحدى مهامك.";
+                string bodyAr = updateNotificationAr;
+                string headerEn = "One of your tasks has been updated.";
+                string strBodyEn = updateNotificationEn;
+                await _mediator.
+                    Send(new InsertNotificationCommand(new Notification
+                    {
+                        intTypeId = 8,
+                        intUserId = workerId,
+
+                        strHeaderAr = headerAr,
+                        strBodyAr = bodyAr,
+
+                        strHeaderEn = headerEn,
+                        strBodyEn = strBodyEn,
+                    }));
+
+
+                await _notificationService.SendNotification(workerId, headerAr, bodyAr);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+
+        }*/
 
         await _context.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync();
