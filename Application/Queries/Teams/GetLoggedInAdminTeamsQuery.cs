@@ -4,6 +4,6 @@ using MediatR;
 
 namespace Application.Queries.Users
 {
-    public record GetAvailableTeamsListQuery(DateTime startDate, DateTime endDate) :
+    public record GetLoggedInAdminTeamsQuery(string strUsername) :
         IRequest<Result<List<TeamListDTO>>>;
 }

@@ -1,11 +1,13 @@
-﻿using Application.Core;
-using Application.Queries.Teams;
-using Domain.ClientDTOs.Task;
+﻿using Application.Commands;
+using Application.Core;
+using Application.Services;
 using Domain.ClientDTOs.Team;
 using Domain.DataModels.Intersections;
+using Domain.DataModels.Notifications;
+using Domain.Helpers;
+using Domain.Resources;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using MySqlX.XDevAPI.Common;
 using Persistence;
 
 namespace Application.Handlers.Teams
@@ -14,10 +16,14 @@ namespace Application.Handlers.Teams
         : IRequestHandler<CreateTeamCommand, Result<CreateTeamDTO>>
     {
         private readonly DataContext _context;
+        private readonly IMediator _mediator;
+        private readonly NotificationService _notificationService;
 
-        public CreateTeamHandler(DataContext context)
+        public CreateTeamHandler(DataContext context, IMediator mediator, NotificationService notificationService)
         {
             _context = context;
+            _mediator = mediator;
+            _notificationService = notificationService;
         }
 
         public async Task<Result<CreateTeamDTO>> Handle(
@@ -80,6 +86,58 @@ namespace Application.Handlers.Teams
                             intTeamId = newTeamEntity.Entity.intId,
                             intWorkerId = member.intWorkerId
                         });
+
+
+
+                        try
+                        {
+                            //Insert into Notifications Table
+
+                            var workerId = await _context.Complaints
+                                .Where(q => q.intId == member.intWorkerId).Select(c => c.intUserID).SingleOrDefaultAsync();
+
+                            var username = await _context.Users.
+                                Where(q => q.Id == workerId).Select(c => c.UserName).SingleOrDefaultAsync();
+
+                            // Get Notification body and header
+                            var notificationLayout = await _context.NotificationTypes
+                               .Where(q => q.intId == (int)NotificationConstant.NotificationType.workerAddedToTeamNotification)
+                               .Select(q => new NotificationLayout
+                               {
+                                   strHeaderAr = q.strHeaderAr,
+                                   strBodyAr = q.strBodyAr,
+                                   strBodyEn = q.strBodyEn,
+                                   strHeaderEn = q.strHeaderEn
+                               }).SingleOrDefaultAsync();
+
+                            if (notificationLayout == null)
+                                throw new Exception("Notification Type table is empty");
+
+                            string headerAr = notificationLayout.strHeaderAr;
+                            string bodyAr = "فريق رقم #" + request.createTeamDTO.intTeamId + " " + notificationLayout.strBodyAr;
+                            string headerEn = notificationLayout.strHeaderEn;
+                            string strBodyEn = "Team #" + request.createTeamDTO.intTeamId + " " + notificationLayout.strBodyEn;
+
+                            await _mediator.
+                                Send(new InsertNotificationCommand(new Notification
+                                {
+                                    intTypeId = (int)NotificationConstant.NotificationType.workerAddedToTeamNotification,
+                                    intUserId = workerId,
+
+                                    strHeaderAr = headerAr,
+                                    strBodyAr = bodyAr,
+
+                                    strHeaderEn = headerEn,
+                                    strBodyEn = strBodyEn,
+                                }));
+
+
+                            await _notificationService.SendNotification(workerId, headerAr, bodyAr);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e.ToString());
+                        }
                     }
                     await _context.TeamMembers.AddRangeAsync(lstTeamMembers);
                     await _context.SaveChangesAsync(cancellationToken);

@@ -1,8 +1,6 @@
-﻿using Domain.ClientDTOs.User;
-
-namespace Domain.ClientDTOs.Team
+﻿namespace Domain.ClientDTOs.Team
 {
-    public class TeamDTO
+    public class TeamListDTO
     {
         public int intTeamId { get; set; }
         public int intTeamLeaderId { get; set; }
@@ -13,6 +11,5 @@ namespace Domain.ClientDTOs.Team
         public string strTeamLeaderLastNameAr { get; set; }
         public string strDepartmentNameAr { get; set; }
         public string strDepartmentNameEn { get; set; }
-        public List<TaskWorkerDTO> lstWorkers { get; set; }
     }
 }
