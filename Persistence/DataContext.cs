@@ -178,6 +178,24 @@ namespace Persistence
                 .WithMany(q => q.Tasks)
                 .HasForeignKey(q => q.intComplaintId);
 
+            // Task_Rating intersection table
+            builder.Entity<WorkTaskRating>(
+             tr =>
+                {
+                  tr.HasKey(tr => new { tr.intUserId, tr.intTaskId});
+                  tr.Property(tr => tr.decRating).HasColumnType("decimal(18, 2)").IsRequired();
+                }
+                );
+            // Task_Member_rating intersection table
+            builder.Entity<WorkTaskMemberRating>(
+             tmr =>
+             {
+                 tmr.HasKey(tmr => new { tmr.intUserId, tmr.intTaskId });
+                 tmr.Property(tmr => tmr.decRating).HasColumnType("decimal(18, 2)").IsRequired();
+             }
+                );
+
+
             // Department_Users intersection table
             builder.Entity<DepartmentUsers>(
                 q => q.HasKey(q => new { q.intUserId, q.intDepartmentId })
@@ -230,6 +248,8 @@ namespace Persistence
         public DbSet<WorkTaskStatus> TaskStatus { get; set; }
         public DbSet<WorkTaskType> TaskTypes { get; set; }
         public DbSet<WorkTaskComplaints> TasksComplaints { get; set; }
+        public DbSet<WorkTaskRating> TaskRatings { get; set; }   
+        public DbSet<WorkTaskMemberRating> TasksMembersRatings { get; set; }
 
         // Departments DataSets
         public DbSet<Department> Departments { get; set; }

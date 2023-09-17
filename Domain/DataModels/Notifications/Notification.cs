@@ -28,5 +28,21 @@ namespace Domain.DataModels.Notifications
         [Column("IS_READ")]
         [Required]
         public Boolean blnIsRead { get; set; }
+
+        [Column("HEADER_AR")]
+        [Required]
+        public string strHeaderAr { get; set; }
+
+        [Column("BODY_AR")]
+        [Required]
+        public string strBodyAr { get; set; }
+
+        [Column("HEADER_EN")]
+        [Required]
+        public string strHeaderEn { get; set; }
+
+        [Column("BODY_EN")]
+        [Required]
+        public string strBodyEn { get; set; }
     }
 }
