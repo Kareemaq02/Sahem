@@ -51,7 +51,7 @@ mapCard(context) {
                   ),
                   SizedBox(height: screenHeight * 0.02),
                   RowInfo("رقم البلاغ", "2526"),
-                  RowInfo("نوع البلاغ", "حفر بناء"),
+                  RowInfo("نوع البلاغ", " تجمع نفايات"),
                   RowInfo("تاربخ الانتهاء", "قبل 5 ساعات"),
                   RowInfo("موقع البلاغ", "ش.وصفي التل"),
                 ],

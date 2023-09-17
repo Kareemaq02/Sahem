@@ -14,7 +14,7 @@ Widget CardButtons(context, text, textColor, boxColor, width, whatToDo) {
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
         side: MaterialStateProperty.all<BorderSide>(
-          BorderSide(color: AppColor.main, width: 2),
+          BorderSide(color: boxColor, width: 2),
         ),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
@@ -27,8 +27,8 @@ Widget CardButtons(context, text, textColor, boxColor, width, whatToDo) {
       },
       child: Text(
         text,
-        style: const TextStyle(
-          color: AppColor.main,
+        style: TextStyle(
+          color: textColor,
           fontSize: 10,
           fontWeight: FontWeight.w500,
           fontFamily: 'DroidArabicKufi',

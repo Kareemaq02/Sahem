@@ -42,7 +42,7 @@ class _BottomNavBarState extends State<BottomNavBar1> {
         break;
       case 1:
         Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const FullMap()));
+            MaterialPageRoute(builder: (context) => const FullMap1()));
         break;
       case 2:
         naviWithTransition(const XDTasksList());

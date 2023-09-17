@@ -12,14 +12,14 @@ import 'package:account/Widgets/MapWidgets/myLocationWidget.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 // ignore_for_file: file_names, depend_on_referenced_packages, use_build_context_synchronously
 
-class FullMap extends StatefulWidget {
-  const FullMap({super.key});
+class FullMap1 extends StatefulWidget {
+  const FullMap1({super.key});
 
   @override
   State createState() => FullMapState();
 }
 
-class FullMapState extends State<FullMap> with TickerProviderStateMixin {
+class FullMapState extends State<FullMap1> with TickerProviderStateMixin {
   //MapboxMap? mapboxMap;
   final pageController = PageController();
   int selectedIndex = 0;

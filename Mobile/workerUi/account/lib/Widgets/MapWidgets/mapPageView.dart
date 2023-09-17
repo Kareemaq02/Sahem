@@ -40,7 +40,7 @@ Widget mapPageView(context) {
                 ),
                 Positioned(
                   top: 5,
-                  left: 70,
+                  left: screenWidth * 0.25,
                   child: Container(
                     height: screenHeight * 0.03,
                     width: screenWidth * 0.2,
