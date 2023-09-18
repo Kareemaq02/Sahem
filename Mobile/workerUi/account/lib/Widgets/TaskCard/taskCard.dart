@@ -13,7 +13,7 @@ import 'package:account/Screens/View%20tasks/task_details.dart';
 class TaskCard extends StatelessWidget {
   final String comment;
   final String type;
-  final String status;
+  final int status;
   final String date;
   final String id;
   final String deadline;
@@ -90,12 +90,32 @@ class TaskCard extends StatelessWidget {
                     );
                   }),
                   const Spacer(),
+                 
                   text(type, AppColor.textTitle),
                 ],
               ),
-              Padding(
-                  padding: EdgeInsets.only(left: screenWidth * 0.7),
-                  child: text("قبل 5 ساعات ", AppColor.textBlue)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Visibility(
+                    visible: status == 4 || status == 5,
+                    child: Container(
+                        height: screenWidth * 0.055,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(40),
+                            border: Border.all(color: AppColor.main, width: 2)),
+                        child: Text(
+                          statusList[status - 1].name,
+                          style: const TextStyle(
+                            fontSize: 7,
+                            fontFamily: 'DroidArabicKufi',
+                            color: AppColor.main,
+                          ),
+                        )),
+                  ),
+                  text("قبل 5 ساعات ", AppColor.textBlue),
+                ],
+              ),
               SizedBox(
                 height: screenHeight * 0.015,
               ),

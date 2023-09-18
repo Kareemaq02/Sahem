@@ -118,6 +118,9 @@ class _XDLoginState extends State<XDLogin> {
                         context);
                   },
                 ),
+                SizedBox(
+                  height: MediaQuery.of(context).viewInsets.bottom + 10,
+                ),
                 //const SizedBox(height: 10,),
               ]),
         ));
