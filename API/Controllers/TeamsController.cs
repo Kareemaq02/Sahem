@@ -83,5 +83,11 @@ namespace API.Controllers
             strUsername = jwtToken.Claims.First(c => c.Type == "username").Value;
             return HandleResult(await Mediator.Send(new GetLoggedInAdminTeamsQuery(strUsername)));
         }
+
+        [HttpGet("analytics/{id}")] //api/teams/analytics/id
+        public async Task<IActionResult> GetTeamAnalyticsById(int id)
+        {
+            return HandleResult(await Mediator.Send(new GetTeamAnalyticsByIdQuery(id)));
+        }
     }
 }
