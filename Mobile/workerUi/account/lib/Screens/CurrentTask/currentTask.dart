@@ -8,6 +8,10 @@ import 'package:account/Screens/CurrentTask/googleMap.dart';
 import 'package:account/Screens/SubmitTask/submitTask.dart';
 import 'package:account/Widgets/Buttons/buttonsForCards.dart';
 import 'package:account/Widgets/HelperWidgets/myContainer.dart';
+// ignore_for_file: file_names
+
+// ignore_for_file: library_private_types_in_public_api
+
 
 class CurrentTask extends StatefulWidget {
   const CurrentTask({Key? key}) : super(key: key);
@@ -64,7 +68,8 @@ class _XDPublicFeed1State extends State<CurrentTask> {
                     left: screenWidth * 0.15, right: screenWidth * 0.15),
                 child: const Divider(
                   color: Colors.yellow,
-                  endIndent: 15,
+                  endIndent: 2,
+                  indent: 1,
                 ),
               ),
               Padding(

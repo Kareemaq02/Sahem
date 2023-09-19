@@ -1,16 +1,22 @@
-
 import 'dart:io';
-
-import 'package:account/API/TaskAPI/submit_task_request.dart';
-import 'package:account/Repository/color.dart';
-import 'package:account/Screens/SubmitTask/pageView.dart';
-import 'package:account/Widgets/Bars/appBar.dart';
-import 'package:account/Widgets/Bars/bottomNavBar.dart';
-import 'package:account/Widgets/Buttons/bottonContainer.dart';
-import 'package:account/Widgets/Popup/popup.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:account/Repository/color.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:account/Widgets/Bars/appBar.dart';
+import 'package:account/Widgets/Popup/popup.dart';
 import 'package:page_indicator/page_indicator.dart';
+import 'package:account/Widgets/Bars/bottomNavBar.dart';
+import 'package:account/Screens/SubmitTask/pageView.dart';
+import 'package:account/API/TaskAPI/submit_task_request.dart';
+import 'package:account/Widgets/Buttons/bottonContainer.dart';
+// ignore_for_file: file_names
+
+// ignore_for_file: use_build_context_synchronously
+
+
+// ignore_for_file: non_constant_identifier_names
+
+
 
 
 
@@ -46,7 +52,6 @@ class _ComaplintState extends State<FinishTask> {
   void initState() {
     getImages(context);
     super.initState();
-    print(selectedMediaFiles.length);
     // WidgetsBinding.instance.addPostFrameCallback((_) {
      
       
@@ -102,7 +107,7 @@ class _ComaplintState extends State<FinishTask> {
         scrollDirection: Axis.vertical,
          child: Column(
           children: [ 
-          MyPageView(),
+          const MyPageView(),
          
           //const SizedBox(height: 0,),
            Padding(

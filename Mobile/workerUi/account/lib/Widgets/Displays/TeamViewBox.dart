@@ -1,8 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Utils/TeamMembers.dart';
-import 'package:account/Widgets/Displays/TeamMemberDisplay.dart';
 import 'package:account/Widgets/HelperWidgets/TitleText.dart';
-import 'package:flutter/material.dart';
+import 'package:account/Widgets/Displays/TeamMemberDisplay.dart';
+// ignore_for_file: file_names
+
 
 class TeamViewBox extends StatelessWidget {
   final double height;

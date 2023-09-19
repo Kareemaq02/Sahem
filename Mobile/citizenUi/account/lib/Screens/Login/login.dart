@@ -1,17 +1,14 @@
-// ignore_for_file: library_private_types_in_public_api, non_constant_identifier_names
-
-import 'package:account/Widgets/CheckBoxes/CheckBox.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/API/login_request.dart';
 import 'package:account/Validation/validations.dart';
 import 'package:account/Widgets/HelperWidegts/text.dart';
+import 'package:account/Widgets/CheckBoxes/CheckBox.dart';
 import 'package:account/Screens/Registration/register.dart';
 import 'package:account/Widgets/Buttons/bottonContainer.dart';
 import 'package:account/Widgets/HelperWidegts/fieldContainer.dart';
-import 'package:flutter/services.dart';
-
-
+// ignore_for_file: library_private_types_in_public_api, non_constant_identifier_names
 
 TextEditingController usernameController = TextEditingController();
 TextEditingController passwordController = TextEditingController();
@@ -27,18 +24,6 @@ class XDLogin extends StatefulWidget {
 }
 
 class _XDLoginState extends State<XDLogin> {
-  //bool _autoValidate = false;
-
-  // void _validateInputs() {
-  //   if (_formKey1.currentState!.validate()) {
-  //     _formKey1.currentState!.save();
-  //   } else {
-  //     setState(() {
-  //      // _autoValidate = true;
-  //     });
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,17 +60,15 @@ class _XDLoginState extends State<XDLogin> {
               height: 30,
             ),
             FieldContainer(
-              context,
-              'اسم المستخدم',
-              false,
-              Icons.account_circle,
-              usernameController,
-              //  a.inputValidate,
-              TextInputType.text,
-              null,
-                remeberMe
-            ),
-            
+                context,
+                'اسم المستخدم',
+                false,
+                Icons.account_circle,
+                usernameController,
+                //  a.inputValidate,
+                TextInputType.text,
+                null,
+                remeberMe),
             const SizedBox(
               height: 20,
             ),
@@ -99,7 +82,6 @@ class _XDLoginState extends State<XDLogin> {
               TextInputType.text,
               null,
               remeberMe,
-
             ),
             const SizedBox(
               height: 15,
@@ -107,15 +89,8 @@ class _XDLoginState extends State<XDLogin> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 40.0),
-                  child: text(
-                    "نسيت كلمة السر؟",
-                    AppColor.main,
-                  ),
-                ),
                 SizedBox(
-                  width: MediaQuery.of(context).padding.left + 15,
+                  width: MediaQuery.of(context).padding.left + 120,
                 ),
                 const SizedBox(
                   width: 2.5,
@@ -158,7 +133,10 @@ class _XDLoginState extends State<XDLogin> {
               children: [
                 text(" تسجيل حساب جديد ", AppColor.main),
                 TextButton(
-                  onPressed: () => navigatorCostum(context, const XDRegister()),
+                  onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const XDRegister())),
                   child: text("ليس لديك حساب؟", AppColor.secondary),
                 )
               ],
@@ -171,12 +149,4 @@ class _XDLoginState extends State<XDLogin> {
       ),
     );
   }
-}
-
-
-navigatorCostum(BuildContext context, PageName) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => PageName),
-  );
 }

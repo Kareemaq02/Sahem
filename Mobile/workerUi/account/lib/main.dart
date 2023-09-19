@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
-import 'Repository/language_constants.dart';
 import 'package:account/Screens/Login/login.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+// import 'Repository/language_constants.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-void main() {
+SharedPreferences? prefs;
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized(); 
+  prefs = await SharedPreferences.getInstance();
   runApp(const MyApp());
 }
 
@@ -13,24 +18,24 @@ class MyApp extends StatefulWidget {
   @override
   State<MyApp> createState() => _MyAppState();
 
-  static void setLocale(BuildContext context, Locale newLocale) {
-    _MyAppState? state = context.findAncestorStateOfType<_MyAppState>();
-    state?.setLocale(newLocale);
-  }
+  // static void setLocale(BuildContext context, Locale newLocale) {
+  //   _MyAppState? state = context.findAncestorStateOfType<_MyAppState>();
+  //   state?.setLocale(newLocale);
+  // }
 }
 
 class _MyAppState extends State<MyApp> {
-  Locale? _locale;
+  //Locale? _locale;
 
-  setLocale(Locale locale) {
-    setState(() {
-      _locale = locale;
-    });
-  }
+  // setLocale(Locale locale) {
+  //   setState(() {
+  //     _locale = locale;
+  //   });
+  // }
 
   @override
   void didChangeDependencies() {
-    getLocale().then((locale) => {setLocale(locale)});
+    // getLocale().then((locale) => {setLocale(locale)});
     super.didChangeDependencies();
   }
 
@@ -43,11 +48,11 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.blue,
       ),
       home: const XDLogin(),
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
+      // localizationsDelegates: AppLocalizations.localizationsDelegates,
+      // supportedLocales: AppLocalizations.supportedLocales,
       //onGenerateRoute: CustomRouter.generatedRoute,
       //initialRoute: homeRoute,
-      locale: _locale,
+    //  locale: _locale,
     );
   }
 }

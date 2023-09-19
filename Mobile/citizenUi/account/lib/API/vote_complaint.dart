@@ -1,12 +1,14 @@
-// ignore_for_file: non_constant_identifier_names
-
+import 'package:account/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:account/Repository/urls.dart';
-import 'package:account/API/login_request.dart';
+// ignore_for_file: non_constant_identifier_names
+
+
 
 // ignore_for_file: avoid_print
 
 class VoteComplaint {
+   final token2 = prefs!.getString('token');
   Future<dynamic> sendVoteRequest(var complaintId, context) async {
     try {
       http.Response response = await http.post(

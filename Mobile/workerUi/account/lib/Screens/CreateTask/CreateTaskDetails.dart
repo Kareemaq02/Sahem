@@ -1,22 +1,26 @@
-import 'package:account/API/TaskAPI/Get_Tasks_Types_Request.dart';
-import 'package:account/Screens/Results/FailurePage.dart';
-import 'package:account/Screens/Results/SuccessPage.dart';
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:account/Utils/Team.dart';
+import 'package:account/Repository/color.dart';
 import 'package:account/Utils/DateFormatter.dart';
 import 'package:account/Utils/DropDownValue.dart';
-import 'package:account/Utils/Team.dart';
-import 'package:account/Widgets/Buttons/OutlinedStyledButton.dart';
-import 'package:account/Widgets/Buttons/StyledButton.dart';
-import 'package:account/Widgets/DropDown/StyledDropDown.dart';
-import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
 import 'package:account/Widgets/Bars/bottomNavBar.dart';
+import 'package:account/Screens/Results/FailurePage.dart';
+import 'package:account/Screens/Results/SuccessPage.dart';
+import 'package:account/Widgets/Buttons/StyledButton.dart';
+import 'package:account/Widgets/DropDown/StyledDropDown.dart';
 import 'package:account/Widgets/HelperWidgets/TitleText.dart';
-import 'package:account/Widgets/Interactive/DateRangeField.dart';
-import 'package:account/Widgets/Interactive/FormTextField.dart';
-import 'package:account/Widgets/Interactive/TeamSelectionBox.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
-import 'package:flutter/material.dart';
-import 'dart:async';
+import 'package:account/Widgets/Interactive/FormTextField.dart';
+import 'package:account/Widgets/Interactive/DateRangeField.dart';
+import 'package:account/API/TaskAPI/Get_Tasks_Types_Request.dart';
+import 'package:account/Widgets/Buttons/OutlinedStyledButton.dart';
+import 'package:account/Widgets/Interactive/TeamSelectionBox.dart';
+// ignore_for_file: unused_local_variable
+
+// ignore_for_file: file_names
+
 
 // ignore_for_file: library_private_types_in_public_api
 class CreateTaskDetails extends StatefulWidget {
@@ -85,7 +89,6 @@ class _CreateTaskDetailsState extends State<CreateTaskDetails> {
       'intTeamId': selectedTeam.intId,
       'lstComplaintIds': [widget.intComplaintId],
     };
-    print(data);
     // final response = await request(data)
     // if (response.statusCode == 200) {
 

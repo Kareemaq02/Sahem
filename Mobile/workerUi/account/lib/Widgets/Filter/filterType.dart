@@ -1,7 +1,9 @@
-
+import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Filter/filterStatus.dart';
-import 'package:flutter/material.dart';
+// ignore_for_file: file_names
+
+
 
 
  List<int> selectedTypes = [];
@@ -117,7 +119,6 @@ class _FilterPopupState extends State<FilterPopup> {
                               if (value!) {
                                
                                 selectedTypes.add(intTypeId);
-                                 print(selectedTypes);
                               } else {
                                 
                                 selectedTypes.remove(intTypeId);
@@ -134,7 +135,7 @@ class _FilterPopupState extends State<FilterPopup> {
             ),
             const SizedBox(height: 10),
           
-            Container(
+            SizedBox(
               height:40 ,
               width: 125,
               child: ElevatedButton(

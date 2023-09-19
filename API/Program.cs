@@ -24,7 +24,7 @@ builder.Services.AddIdentityService(builder.Configuration);
 builder.Services.AddTransient<InsertTaskHandler>();
 builder.Services.AddTransient<AddComplaintStatusChangeTransactionHandler>();
 builder.Services.AddTransient<GetComplaintByIdHandler>();
-builder.Services.AddScoped<NotificationService>();
+builder.Services.AddScoped<NotificationService>(); //Added a service for notifications
 
 var app = builder.Build();
 

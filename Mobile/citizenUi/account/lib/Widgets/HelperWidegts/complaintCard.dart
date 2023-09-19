@@ -1,5 +1,3 @@
-// ignore_for_file: file_names, library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
 import 'package:readmore/readmore.dart';
 import 'package:geocoding/geocoding.dart';
@@ -10,10 +8,12 @@ import 'package:account/API/watch_complaint_request.dart';
 import 'package:account/Widgets/VoteWidegts/downVote.dart';
 import 'package:account/Widgets/VoteWidegts/voteButton.dart';
 import 'package:account/Widgets/ComaplaintCard/timeLineWidget.dart';
+// ignore_for_file: file_names, library_private_types_in_public_api
+
 // ignore_for_file: must_be_immutable
 
 
-class ComplaintCard extends StatefulWidget {
+class ComplaintCardPublicForm extends StatefulWidget {
   final String dtmDateCreated;
   final String strComplaintTypeEn;
   final String strComment;
@@ -28,7 +28,7 @@ class ComplaintCard extends StatefulWidget {
   bool? isWatched;
   int i;
 
-  ComplaintCard(
+  ComplaintCardPublicForm(
       {super.key,
       required this.dtmDateCreated,
       required this.strComplaintTypeEn,
@@ -48,7 +48,7 @@ class ComplaintCard extends StatefulWidget {
   _ComplaintCardsState createState() => _ComplaintCardsState();
 }
 
-class _ComplaintCardsState extends State<ComplaintCard> {
+class _ComplaintCardsState extends State<ComplaintCardPublicForm> {
   @override
   void initState() {
     super.initState();
@@ -118,11 +118,11 @@ class _ComplaintCardsState extends State<ComplaintCard> {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         text(
-                          status[widget.statusID].name,
-                          AppColor.secondary,
+                          status1[widget.statusID + 2].name,
+                          AppColor.main,
                         ),
                         const Icon(Icons.circle,
-                            color: AppColor.secondary, size: 10),
+                            color: AppColor.main, size: 10),
                       ],
                     ),
                   ),
@@ -130,11 +130,11 @@ class _ComplaintCardsState extends State<ComplaintCard> {
                   Column(
                     children: [
                       Text(
-                        widget.strUserName1 + " " + widget.strUserName2,
+                        "${widget.strUserName1} ${widget.strUserName2}",
                         textDirection: TextDirection.rtl,
                         style: const TextStyle(
-                          fontFamily: 'Euclid Circular A',
-                          fontSize: 13,
+                          fontFamily: 'DroidArabicKufi',
+                          fontSize: 11.5,
                           color: AppColor.textTitle,
                           fontWeight: FontWeight.w700,
                         ),
@@ -309,12 +309,8 @@ String formatTimeDifference(String apiDateString) {
     final months = (timeDifference.inDays / 30).floor();
     return 'قبل $months شهر';
   } else if (timeDifference.inDays > 0) {
-    if (timeDifference.inDays == 1) {
-      return 'قبل يوم';
-    } else {
-      return 'قبل ${timeDifference.inDays} أيام';
-    }
-  } else if (timeDifference.inHours > 0) {
+    return 'قبل ${timeDifference.inDays} يوم';
+  } else if (timeDifference.inHours >= 3) {
     return 'قبل ${timeDifference.inHours} ساعات';
   } else if (timeDifference.inMinutes > 0) {
     return 'قبل ${timeDifference.inMinutes} دقائق';
