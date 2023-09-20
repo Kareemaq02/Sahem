@@ -8,7 +8,7 @@ import 'package:account/Widgets/Popup/confirmPage.dart';
 class SubmitTask {
     final userToken =prefs!.getString('token');
   Future<void> submitTask(context, String intTaskId, List<MediaFile> lstMedia,
-      String strComment) async {
+      String strComment,) async {
     try {
       final request = http.MultipartRequest(
         'POST',
@@ -34,6 +34,8 @@ class SubmitTask {
           filename: mediaFile.file.path.split('/').last,
         );
         request.files.add(multipartFile);
+        request.fields['lstMedia[$index].decLat'] = mediaFile.decLat.toString();
+        request.fields['lstMedia[$index].decLng'] = mediaFile.decLng.toString();
 
         request.fields['lstMedia[$index].blnIsVideo'] =
             mediaFile.blnIsVideo.toString();
@@ -64,8 +66,11 @@ class SubmitTask {
 }
 
 class MediaFile {
-  final File file;
-  final bool blnIsVideo = false;
+  File file;
+  double? decLat;
+  double? decLng;
+  bool blnIsVideo;
 
-  MediaFile(this.file, blnIsVideo);
+  MediaFile(this.file, this.decLat, this.decLng, this.blnIsVideo);
 }
+

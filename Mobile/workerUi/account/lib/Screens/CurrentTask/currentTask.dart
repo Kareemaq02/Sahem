@@ -87,7 +87,7 @@ class _XDPublicFeed1State extends State<CurrentTask> {
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
       bottomNavigationBar: BottomNavBar1(3),
-      appBar: myAppBar(context, ' العمل الحالي ', false, screenWidth * 0.4),
+      appBar: myAppBar(context, ' العمل الحالي ', false, screenWidth * 0.5),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(

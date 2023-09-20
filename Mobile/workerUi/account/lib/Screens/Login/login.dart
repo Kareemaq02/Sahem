@@ -19,14 +19,11 @@ class XDLogin extends StatefulWidget {
 }
 
 class _XDLoginState extends State<XDLogin> {
-  //  login(){
-
-  //  UserLogin user=UserLogin();
-  //  user.login(usernameController.text,passwordController.text,context);
-  // }
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: Center(
@@ -78,7 +75,7 @@ class _XDLoginState extends State<XDLogin> {
                       ),
                     ),
                     SizedBox(
-                      width: MediaQuery.of(context).padding.left + 35,
+                      width: MediaQuery.of(context).padding.left + screenWidth*0.2
                     ),
 
                     text(

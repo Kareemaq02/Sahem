@@ -24,12 +24,14 @@ class _XDTasksListState extends State<XDTasksList> {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
         backgroundColor: AppColor.background,
         resizeToAvoidBottomInset: false,
       
         bottomNavigationBar: BottomNavBar1(2),
-        appBar: myAppBar(context, 'الاعمال', true, 130),
+        appBar: myAppBar(context, 'الاعمال', false, screenWidth * 0.65),
         body: Column(
           children: [
             Expanded(
