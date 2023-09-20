@@ -22,5 +22,6 @@ namespace Domain.ClientDTOs.Complaint
         public List<Media> lstMediaAfter { get; set; }
         public List<Media> lstMediaBefore { get; set; }
         public bool blnIsCompleted { get; set; } 
+        public bool blnIsRated { get; set; }
     }
 }
