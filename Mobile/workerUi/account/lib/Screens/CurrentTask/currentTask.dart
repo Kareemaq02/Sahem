@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
 import 'package:account/Widgets/Bars/bottomNavBar.dart';
@@ -24,15 +25,58 @@ class _XDPublicFeed1State extends State<CurrentTask> {
   var reminder = false;
   var type = "";
   bool teamLeader = true;
-  double currentLat = 37.7749; // User's current latitude
-  double currentLng = -122.4194; // User's current longitude
-  double destinationLat = 37.3352; // Destination latitude
-  double destinationLng = -122.0477; // Destination longitude
+  double destinationLat = 32.00685936542326;
+  double destinationLng = 35.86430898176924;
 
   @override
   void initState() {
     super.initState();
+    _getCurrentPosition();
   }
+
+  
+  Position? _currentPosition;
+
+  Future<bool> _handleLocationPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('تم تعطيل خدمة الموقع الحالي. الرجاء تفعيل الخدمة')));
+      return false;
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('تم رفض أذونات الموقع')));
+        return false;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('تم رفض أذونات الموقع بشكل دائم.')));
+      return false;
+    }
+    return true;
+  }
+
+  Future<void> _getCurrentPosition() async {
+    final hasPermission = await _handleLocationPermission();
+
+    if (!hasPermission) return;
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) {
+      setState(() => _currentPosition = position);
+    }).catchError((e) {
+      //  debugPrint(e);
+    });
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +87,7 @@ class _XDPublicFeed1State extends State<CurrentTask> {
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
       bottomNavigationBar: BottomNavBar1(3),
-      appBar: myAppBar(context, ' العمل الحالي ', false, screenWidth * 0.4),
+      appBar: myAppBar(context, ' العمل الحالي ', false, screenWidth * 0.5),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
@@ -87,11 +131,14 @@ class _XDPublicFeed1State extends State<CurrentTask> {
                               CardButtons(
                                 context,
                                 'اتجاهات',
-                                Colors.grey,
+                                AppColor.main,
                                 AppColor.main,
                                 screenWidth * 0.6,
-                                () {
-                                  navigateToGoogleMaps(currentLat, currentLng,
+                                () async {
+                                  await _getCurrentPosition();
+                                  navigateToGoogleMaps(
+                                      _currentPosition!.altitude,
+                                      _currentPosition!.longitude,
                                       destinationLat, destinationLng);
                                 },
                               ),
@@ -99,8 +146,8 @@ class _XDPublicFeed1State extends State<CurrentTask> {
                               CardButtons(
                                   context,
                                   'معاينة',
-                                  Colors.grey,
-                                  teamLeader ? AppColor.main : Colors.grey,
+                                  !teamLeader ? AppColor.main : Colors.grey,
+                                  !teamLeader ? AppColor.main : Colors.grey,
                                   screenWidth * 0.6, () {
                                 Navigator.push(
                                     context,

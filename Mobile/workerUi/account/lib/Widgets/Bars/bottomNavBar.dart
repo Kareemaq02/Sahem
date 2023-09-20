@@ -110,7 +110,7 @@ class _BottomNavBarState extends State<BottomNavBar1> {
                         color: Colors.grey,
                         size: 23,
                       ),
-                text: "العمل الحالي"),
+                text: "المهمة المفعلة"),
             const SizedBox(
               width: 15,
             ),

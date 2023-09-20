@@ -1,11 +1,11 @@
-// ignore_for_file: prefer_const_constructors, depend_on_referenced_packages, duplicate_ignore, unused_element, constant_identifier_names, library_private_types_in_public_api, avoid_print
-
-import 'package:account/API/TaskAPI/view_tasks_request.dart';
+import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
 import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/Widgets/TaskCard/taskCard.dart';
-import 'package:flutter/material.dart';
+import 'package:account/API/TaskAPI/view_tasks_request.dart';
+// ignore_for_file: prefer_const_constructors, depend_on_referenced_packages, duplicate_ignore, unused_element, constant_identifier_names, library_private_types_in_public_api, avoid_print
+
 
 class XDTasksList extends StatefulWidget {
   const XDTasksList({Key? key}) : super(key: key);
@@ -24,12 +24,14 @@ class _XDTasksListState extends State<XDTasksList> {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
         backgroundColor: AppColor.background,
         resizeToAvoidBottomInset: false,
       
         bottomNavigationBar: BottomNavBar1(2),
-        appBar: myAppBar(context, 'الاعمال', true, 130),
+        appBar: myAppBar(context, 'الاعمال', false, screenWidth * 0.65),
         body: Column(
           children: [
             Expanded(
@@ -46,11 +48,12 @@ class _XDTasksListState extends State<XDTasksList> {
                             TaskCard(
                               comment: data![index]['strComment'].toString(),
                               type: data[index]['strTypeNameAr'].toString(),
-                              status: data[index]['strStatus'].toString(),
+                              status: data[index]['intTaskStatusId'],
                               date: data[index]['activatedDate'].toString(),
                               id: data[index]['taskId'].toString(),
                               isLeader: data[index]['blnIsTaskLeader'],
                               deadline: data[index]['deadlineDate'],
+                              
                             ),
                           ],
                         );
