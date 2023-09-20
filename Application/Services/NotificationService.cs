@@ -2,7 +2,6 @@
 using System.Text;
 using System.Text.Json;
 using System.Net.Http.Headers;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Google.Apis.Auth.OAuth2;
 
@@ -39,28 +38,36 @@ namespace Application.Services
             fcmUrl = _configuration["NotificationsAPI"];
         }
 
-        public async Task<HttpResponseMessage> SendNotification(int userId, string strHeaderAr, string strBodyAr)
+        public void SendNotifications(List<int> userIds, string strHeaderAr, string strBodyAr)
         {
-            string registrationToken = await _context.NotificationTokens
-                .Where(nt => nt.intUserId == userId)
-                .Select(nt => nt.strToken)
-                .FirstOrDefaultAsync();
-
-            var payload = new
+            foreach (int userId in userIds)
             {
-                message = new
+                string registrationToken = _context.NotificationTokens
+                    .Where(nt => nt.intUserId == userId)
+                    .Select(nt => nt.strToken)
+                    .FirstOrDefault();
+
+                if (!string.IsNullOrEmpty(registrationToken))
                 {
-                    token = registrationToken,
-                    notification = new
+                    var payload = new
                     {
-                        title = strHeaderAr,
-                        body = strBodyAr
-                    }
+                        message = new
+                        {
+                            token = registrationToken,
+                            notification = new { title = strHeaderAr, body = strBodyAr }
+                        }
+                    };
+
+                    var jsonPayload = JsonSerializer.Serialize(payload);
+
+                    // Fire-and-forget task to send the notification
+                    _ = SendNotificationAsync(jsonPayload);
                 }
-            };
+            }
+        }
 
-            var jsonPayload = JsonSerializer.Serialize(payload);
-
+        private async Task SendNotificationAsync(string jsonPayload)
+        {
             using (var client = new HttpClient(new HttpClientHandler()))
             {
                 client.BaseAddress = new Uri(fcmUrl);
@@ -75,9 +82,9 @@ namespace Application.Services
 
                 var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                var response = await client.PostAsync(fcmUrl, content);
 
-                return response;
+                // Send the notification asynchronously without awaiting the response
+                var _ = client.PostAsync(fcmUrl, content);
             }
         }
     }
