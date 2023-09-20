@@ -1,27 +1,24 @@
+import 'package:flutter/material.dart';
+import 'package:account/Repository/color.dart';
 // ignore_for_file: file_names
 
-import 'package:account/Repository/color.dart';
-import 'package:flutter/material.dart';
-
-
-bool status =false;
+bool status = false;
 Widget switchV() {
   return Transform.scale(
-    scale: 0.7, // Change the scale factor to resize the Switch
+    scale: 0.7,
     child: Switch(
       activeColor: Colors.white,
-      activeTrackColor:AppColor.main ,
+      activeTrackColor: AppColor.main,
       value: status,
       onChanged: (value) {
         // setState(() {
-        //   status = value; // Update the state based on the click
+        //   status = value;
         // });
       },
       splashRadius: 20,
     ),
   );
 }
-
 
 List<bool> _isSelected = [true, false];
 
@@ -43,10 +40,15 @@ Widget toggleLang() {
         // });
       },
       children: const <Widget>[
-        Text('En',style: TextStyle(fontSize: 10),),
-        Text('ع',style: TextStyle(fontSize: 10),),
+        Text(
+          'En',
+          style: TextStyle(fontSize: 10),
+        ),
+        Text(
+          'ع',
+          style: TextStyle(fontSize: 10),
+        ),
       ],
     ),
   );
 }
-

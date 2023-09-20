@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:timelines/timelines.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/API/complaint_requests.dart';
+// ignore_for_file: unused_local_variable
+
 // ignore_for_file: file_names
 
 
@@ -30,22 +32,20 @@ Widget timeLineWidget(int statusID) {
     child: FixedTimeline.tileBuilder(
       theme: TimelineThemeData(
         indicatorPosition: 0,
-        color: AppColor.line,
+        color: statusID == 2 || statusID == 7 ? Colors.grey : AppColor.line,
         direction: Axis.horizontal,
       ),
       builder: TimelineTileBuilder.connectedFromStyle(
         contentsAlign: ContentsAlign.alternating,
         connectionDirection: ConnectionDirection.before,
         connectorStyleBuilder: (context, index) {
-          if (index == 0) {
-            ConnectorStyle.solidLine;
-          }
+
           if (statusID > 1) {
             return (index <= statusID - 1)
                 ? ConnectorStyle.solidLine
                 : ConnectorStyle.dashedLine;
           } else {
-            return (index <= statusID)
+            return (index <= statusID - 1)
                 ? ConnectorStyle.solidLine
                 : ConnectorStyle.dashedLine;
           }
@@ -68,6 +68,9 @@ Widget timeLineWidget(int statusID) {
                     if (index <= statusID - 1) {
                       textStyle = textStyle.copyWith(color: AppColor.main);
                     } else {
+                      textStyle = textStyle.copyWith(color: Colors.grey);
+                    }
+                    if (statusID == 2 || statusID == 7) {
                       textStyle = textStyle.copyWith(color: Colors.grey);
                     }
                   } else {

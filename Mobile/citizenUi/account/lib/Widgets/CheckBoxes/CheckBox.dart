@@ -1,7 +1,7 @@
-// ignore_for_file: file_names
-
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
+// ignore_for_file: file_names
+
 
 class CheckBoxNew extends StatelessWidget {
   final String text;
@@ -26,7 +26,7 @@ class CheckBoxNew extends StatelessWidget {
             text,
             style: TextStyle(
                 color: isChecked ? AppColor.main : Colors.grey,
-                fontSize: 12,
+                fontSize: 11,
                 fontFamily: 'DroidArabicKufi'),
           ),
           Checkbox(

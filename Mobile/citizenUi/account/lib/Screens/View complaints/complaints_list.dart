@@ -40,7 +40,7 @@ class _XDComplaintsListState extends State<XDComplaintsList> {
         floatingActionButton: const CustomActionButton(),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: BottomNavBar1(2),
-        appBar: myAppBar(context, 'بلاغاتي', true, screenWidth * 0.40),
+        appBar: myAppBar(context, 'بلاغاتي', false, screenWidth * 0.65),
         body: Column(
           children: [
             Expanded(

@@ -86,13 +86,14 @@ class _XDPublicFeed1State extends State<XDPublicFeed1> {
  
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
       floatingActionButton: const CustomActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavBar1(3),
-      appBar: myAppBar(context, 'البلاغات المعلنة', true, 60),
+      appBar: myAppBar(context, 'البلاغات المعلنة', true, screenSize.width*0.32),
       body: Column(
         children: [
           Expanded(

@@ -125,14 +125,39 @@ class _ComplaintCard2sState extends State<ComplaintCard2> {
                   text(widget.type, AppColor.textTitle),
                 ],
               ),
-              Padding(
-                padding: EdgeInsets.only(left: screenWidth * 0.7),
-                child: Text(formatTimeDifference(widget.date),
-                    style: const TextStyle(
-                      color: Color(0xff92a5c6),
-                      fontSize: 10,
-                      fontFamily: 'DroidArabicKufi',
-                    )),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: Visibility(
+                      visible: widget.status == 2 || widget.status == 7,
+                      child: Container(
+                          height: screenWidth * 0.065,
+                          width: screenWidth * 0.15,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(40),
+                              border:
+                                  Border.all(color: AppColor.main, width: 2)),
+                          child: Center(
+                            child: Text(
+                              status1[widget.status - 1].name,
+                              style: const TextStyle(
+                                fontSize: 10,
+                                fontFamily: 'DroidArabicKufi',
+                                color: AppColor.main,
+                              ),
+                            ),
+                          )),
+                    ),
+                  ),
+                  Text(formatTimeDifference(widget.date),
+                      style: const TextStyle(
+                        color: Color(0xff92a5c6),
+                        fontSize: 10,
+                        fontFamily: 'DroidArabicKufi',
+                      )),
+                ],
               ),
               SizedBox(
                 height: screenHeight * 0.015,

@@ -24,8 +24,12 @@ class XDLogin extends StatefulWidget {
 }
 
 class _XDLoginState extends State<XDLogin> {
+
+  
+
   @override
   Widget build(BuildContext context) {
+      final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Center(
@@ -90,7 +94,7 @@ class _XDLoginState extends State<XDLogin> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 SizedBox(
-                  width: MediaQuery.of(context).padding.left + 120,
+                  width: MediaQuery.of(context).padding.left + screenSize.width*0.5 ,
                 ),
                 const SizedBox(
                   width: 2.5,
