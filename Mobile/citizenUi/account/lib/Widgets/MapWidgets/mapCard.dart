@@ -1,9 +1,10 @@
-// ignore_for_file: file_names
-
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
+import 'package:account/Widgets/HelperWidegts/RowInfo.dart';
 import 'package:account/Widgets/MapWidgets/mapPageView.dart';
 import 'package:account/Screens/View%20complaints/complaints_details.dart';
+// ignore_for_file: file_names
+
 
 
 mapCard(context) {

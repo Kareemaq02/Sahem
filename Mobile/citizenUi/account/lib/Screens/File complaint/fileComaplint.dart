@@ -181,7 +181,7 @@ class ComaplintState extends State<FileCompalint> {
               Padding(
                 padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
                 child: SizedBox(
-                  height: 210,
+                  height: screenSize.height * 0.45,
                   child: PageIndicatorContainer(
                     align: IndicatorAlign.bottom,
                     length: selectedMediaFiles.length,
@@ -230,8 +230,9 @@ class ComaplintState extends State<FileCompalint> {
                   ),
                 ),
               ),
-
+          //----------------DropDown-----------------------------------
               const MyDropDown(),
+          // -------------Comment Box-------------------- 
               Container(
                 width: screenSize.width * 0.95,
                 padding: const EdgeInsets.all(8.0),
@@ -258,7 +259,7 @@ class ComaplintState extends State<FileCompalint> {
                 ),
               ),
               const SizedBox(height: 16.0), // Add spacing
-
+          // botton------------------------------------
               BottonContainer(
                 "استمرار",
                 Colors.white,
