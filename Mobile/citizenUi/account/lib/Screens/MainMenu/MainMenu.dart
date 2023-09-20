@@ -14,7 +14,6 @@ import 'package:account/Screens/View%20complaints/complaints_list.dart';
 
 // ignore_for_file: file_names
 
-
 class MainMenu extends StatefulWidget {
   const MainMenu({super.key});
 
@@ -49,7 +48,7 @@ class _MainMenuState extends State<MainMenu> {
       floatingActionButton: const CustomActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavBar1(0),
-      appBar: myAppBar(context, "الصفحة الرئيسية", false, screenWidth * 0.35),
+      appBar: myAppBar(context, "الصفحة الرئيسية", false, screenWidth * 0.45),
       body: Padding(
         padding: EdgeInsets.only(top: halfMarginY, bottom: halfMarginY),
         child: Column(
@@ -73,33 +72,23 @@ class _MainMenuState extends State<MainMenu> {
                             width: buttonWidth,
                             icon: Icons.settings_rounded,
                             text: "الإعدادات",
-                            onPressed: () => {
-                                  Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const Profile()))
-                                }),
+                            onPressed: () =>
+                                {naviTransition(context, const Profile())}),
                         SquareButtonWithStroke(
                           height: buttonHeight,
                           width: buttonWidth,
                           icon: Icons.timelapse_rounded,
                           text: "أداء الربع السنوي",
-                          onPressed: () => {
-                            Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: (context) => const Quarter()))
-                          },
+                          onPressed: () =>
+                              {naviTransition(context, const Quarter())},
                         ),
                         SquareButtonWithStroke(
                           height: buttonHeight,
                           width: buttonWidth,
                           icon: Icons.bar_chart_rounded,
                           text: "الإحصائيات",
-                          onPressed: () => {
-                            Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: (context) => const Analytics()))
-                          },
+                          onPressed: () =>
+                              {naviTransition(context, const Analytics())},
                         )
                       ],
                     ),
@@ -117,10 +106,7 @@ class _MainMenuState extends State<MainMenu> {
                             icon: Icons.forum_rounded,
                             text: "المنتدى العام",
                             onPressed: () => {
-                                  Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const XDPublicFeed1()))
+                                  naviTransition(context, const XDPublicFeed1())
                                 }),
                         SquareButtonWithStroke(
                             height: buttonHeight,
@@ -128,10 +114,8 @@ class _MainMenuState extends State<MainMenu> {
                             icon: Icons.card_membership_rounded,
                             text: "بلاغاتي",
                             onPressed: () => {
-                                  Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const XDComplaintsList()))
+                                  naviTransition(
+                                      context, const XDComplaintsList())
                                 }),
                       ],
                     )
@@ -194,4 +178,24 @@ class _MainMenuState extends State<MainMenu> {
       ),
     );
   }
+}
+
+naviTransition(BuildContext context, Widget page) {
+  Navigator.push(
+    context,
+    PageRouteBuilder(
+      pageBuilder: (_, __, ___) => page,
+      transitionDuration: const Duration(milliseconds: 400),
+      transitionsBuilder: (_, a, __, c) {
+        var fadeAnimation = Tween<double>(
+          begin: 0.0,
+          end: 1.0,
+        ).animate(a);
+        return FadeTransition(
+          opacity: fadeAnimation,
+          child: c,
+        );
+      },
+    ),
+  );
 }

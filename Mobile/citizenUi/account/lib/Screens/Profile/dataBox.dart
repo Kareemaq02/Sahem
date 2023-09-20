@@ -3,13 +3,7 @@ import 'package:account/Repository/color.dart';
 import 'package:account/Screens/Profile/textButton.dart';
 // ignore_for_file: file_names, non_constant_identifier_names
 
-
-
-
-Widget DataBox(
-  String label,
-  data,
-) {
+Widget DataBox(String label, [data, bool isEditable = true]) {
   return Padding(
     padding: const EdgeInsets.only(top: 5.0),
     child: Container(
@@ -37,12 +31,23 @@ Widget DataBox(
           child: Row(
             children: [
               Visibility(
-                // visible: isVisible,
-
-                child: EditButton(
-                    label: label, // Pass the label of the field
-                    currentData: data),
-              ),
+                  //visible: isEditable,
+                  child: !isEditable
+                      ? Transform.scale(
+                          scale: 0.7,
+                          child: Switch(
+                            activeColor: Colors.white,
+                            activeTrackColor: AppColor.main,
+                            value: false,
+                            onChanged: (value) {
+                              // setState(() {
+                              //   status = value;
+                              // });
+                            },
+                            splashRadius: 20,
+                          ),
+                        )
+                      : EditButton(label: label, currentData: data)),
               const Spacer(),
               Padding(
                 padding: const EdgeInsets.only(right: 12.0),
@@ -88,29 +93,27 @@ Widget InfoBox(name, nationalID) {
               ),
             ),
           ),
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             Text(
               name,
-                  textAlign: TextAlign.center,
+              textAlign: TextAlign.center,
               style: const TextStyle(
-                    color: AppColor.main,
-                    fontSize: 20,
-                    fontFamily: 'DroidArabicKufi',
-                  ),
-                ),
-                Text(
+                color: AppColor.main,
+                fontSize: 20,
+                fontFamily: 'DroidArabicKufi',
+              ),
+            ),
+            Text(
               'الرقم الوطني:$nationalID',
-                  textDirection: TextDirection.rtl,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: AppColor.secondary,
-                    fontSize: 11,
-                    fontFamily: 'DroidArabicKufi',
-                  ),
-                ),
-              ]),
+              textDirection: TextDirection.rtl,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: AppColor.secondary,
+                fontSize: 11,
+                fontFamily: 'DroidArabicKufi',
+              ),
+            ),
+          ]),
         ),
       ));
 }

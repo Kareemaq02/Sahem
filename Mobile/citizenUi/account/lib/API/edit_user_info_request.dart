@@ -21,15 +21,17 @@ class EditInfo {
       // 'Content-Type': 'application/json',
     };
 
-    Map<String, dynamic> body = {};
+    final Map<String, dynamic> body = {
+      'strNewUserName': strNewUserName,
+      'strNewEmail': strNewEmail,
+      'strNewPhoneNumber': strNewPhoneNumber,
+      'strNewPassword': strNewPassword,
+      'strNewLocation': strNewLocation,
+    };
 
-    body['strNewUserName'] = strNewUserName;
-    body['strNewEmail'] = strNewEmail;
-    body['strNewPhoneNumber'] = strNewPhoneNumber;
-    body['strNewPassword'] = strNewPassword;
-    body['strNewLocation'] = strNewLocation;
+    final String requestBody = json.encode(body);
 
-    String requestBody = json.encode(body);
+
 
     try {
       final response =

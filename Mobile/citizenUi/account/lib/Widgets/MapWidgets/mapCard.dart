@@ -3,6 +3,8 @@ import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/HelperWidegts/RowInfo.dart';
 import 'package:account/Widgets/MapWidgets/mapPageView.dart';
 import 'package:account/Screens/View%20complaints/complaints_details.dart';
+// ignore_for_file: unused_import
+
 // ignore_for_file: file_names
 
 
@@ -47,7 +49,7 @@ mapCard(context) {
                   ),
                   SizedBox(height: screenHeight * 0.02),
                   RowInfo("رقم البلاغ", "2526"),
-                  RowInfo("نوع البلاغ", "حفر بناء"),
+                  RowInfo("نوع البلاغ", "تراكم نفايات"),
                   RowInfo("تاربخ الانتهاء", "قبل 5 ساعات"),
                   RowInfo("موقع البلاغ", "ش.وصفي التل"),
                 ],

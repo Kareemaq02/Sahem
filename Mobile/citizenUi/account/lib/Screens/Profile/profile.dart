@@ -5,6 +5,9 @@ import 'package:account/API/user_info_request.dart';
 import 'package:account/Screens/Profile/logout.dart';
 import 'package:account/Screens/Profile/dataBox.dart';
 import 'package:account/Widgets/Bars/bottomNavBar.dart';
+import 'package:account/Screens/Profile/switchWidget.dart';
+// ignore_for_file: unused_import
+
 // ignore_for_file: avoid_print, library_private_types_in_public_api
 
 
@@ -87,7 +90,9 @@ class _ProfileState extends State<Profile> {
                 "كلمة المرور",
                 "********",
               ),
-              // DataBox("استلام الاشعارات", switchV, "غير مفعل",),
+              DataBox("استلام الاشعارات", "غير مفعل", false),
+              SizedBox(height: screenSize.height * 0.02),
+              
               logoutBox(context),
             ],
           ),

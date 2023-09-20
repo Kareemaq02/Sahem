@@ -13,8 +13,6 @@ import 'package:account/Screens/File%20complaint/dropdown.dart';
 import 'package:account/Widgets/HelperWidegts/complaintCard.dart';
 import 'package:account/Screens/File%20complaint/confirmPopup.dart';
 // ignore_for_file: file_names, empty_catches
-
-
 // ignore_for_file: use_build_context_synchronously
 final picker = ImagePicker();
 List<MediaFile> selectedMediaFiles = [];

@@ -1,9 +1,9 @@
-// ignore_for_file: file_names
-
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:page_indicator/page_indicator.dart';
 import 'package:account/Widgets/HelperWidegts/text.dart';
+// ignore_for_file: file_names
+
 
 final List<String> imageList12 = [
   'https://www.khaberni.com/uploads/news_model/2019/08/main_image5d59279aef218.jpg',
@@ -41,7 +41,7 @@ Widget mapPageView(context) {
                 ),
                 Positioned(
                   top: 5,
-                  left: 90,
+                  left: screenWidth * 0.25,
                   child: Container(
                     height: screenHeight * 0.03,
                     width: screenWidth * 0.2,

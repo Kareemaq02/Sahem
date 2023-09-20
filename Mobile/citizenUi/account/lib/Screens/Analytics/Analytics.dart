@@ -131,7 +131,7 @@ class _AnalyticsState extends State<Analytics> {
       floatingActionButton: const CustomActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavBar1(0),
-      appBar: myAppBar(context, "الصفحه الرئيسية", false, screenWidth * 0.35),
+      appBar: myAppBar(context, "الإحصائيات ", false, screenWidth * 0.6),
       body: Padding(
         padding: EdgeInsets.only(top: halfMarginY, bottom: halfMarginY),
         child: Column(
