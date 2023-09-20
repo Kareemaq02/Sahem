@@ -16,6 +16,17 @@ class TeamMemberDisplay extends StatelessWidget {
     required this.color,
   });
 
+  bool isArabic() {
+    int charCode = name.codeUnitAt(0);
+
+    if ((charCode >= 0x0600 && charCode <= 0x06FF) ||
+        (charCode >= 0x0750 && charCode <= 0x077F)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -36,10 +47,14 @@ class TeamMemberDisplay extends StatelessWidget {
                 padding: EdgeInsets.only(bottom: height * 0.1),
                 child: Text(
                   name,
-                  textDirection: TextDirection.rtl,
+                  textDirection:
+                      isArabic() ? TextDirection.rtl : TextDirection.ltr,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: color,
                     fontSize: 16,
+                    fontWeight: FontWeight.bold,
                     fontFamily: 'DroidArabicKufi',
                   ),
                   textAlign: TextAlign.center,

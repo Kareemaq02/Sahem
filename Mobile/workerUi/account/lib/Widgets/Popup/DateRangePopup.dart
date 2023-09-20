@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 void showDateRangeDialog(
+    String Title,
     BuildContext context,
     double height,
     Function(DateRangePickerSelectionChangedArgs) onSelectionChanged,
@@ -26,9 +27,9 @@ void showDateRangeDialog(
                 child: Padding(
                   padding: EdgeInsets.only(
                       top: height * 0.02, bottom: height * 0.04),
-                  child: const Text(
-                    "اختر المواعيد",
-                    style: TextStyle(
+                  child: Text(
+                    Title,
+                    style: const TextStyle(
                       fontSize: 16,
                       color: AppColor.textTitle,
                       fontFamily: 'DroidArabicKufi',

@@ -32,6 +32,7 @@ class DateRangeField extends StatelessWidget {
       ),
       child: InkWell(
         onTap: () => showDateRangeDialog(
+          "أختر المواعيد",
           context,
           screenHeight * 0.5,
           onSelectionChanged,

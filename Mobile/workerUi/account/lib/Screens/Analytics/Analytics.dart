@@ -1,5 +1,6 @@
 import 'package:account/API/ComplaintsAPI/Get_Complaints_Types.dart';
 import 'package:account/Widgets/CheckBoxes/StyledCheckBox.dart';
+import 'package:account/Widgets/Popup/DateRangePopup.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
@@ -10,6 +11,7 @@ import 'package:account/Widgets/Charts/AverageTimeChart.dart';
 import 'package:account/Widgets/Buttons/IconToggleButton.dart';
 import 'package:account/Widgets/Buttons/StyledFilterChip.dart';
 import 'package:account/Widgets/Charts/ComplaintTaskChart.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class Analytics extends StatefulWidget {
   const Analytics({super.key});
@@ -28,7 +30,8 @@ class _AnalyticsState extends State<Analytics> {
   int timeframe = 1;
   int chart = 0;
   Widget renderedChart = renderChart(0);
-  DateTime selectedDate = DateTime.now().subtract(const Duration(days: 7));
+  DateTime startDate = DateTime.now().subtract(const Duration(days: 7));
+  DateTime endDate = DateTime.now();
   List<int> selectedTypes = [];
   late Future<List<Map<String, dynamic>>> _futureTypesObjs;
 
@@ -46,25 +49,21 @@ class _AnalyticsState extends State<Analytics> {
     return typesObjs;
   }
 
+  void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
+    PickerDateRange dateRange = args.value;
+    if (dateRange.endDate != null) {
+      setState(() {
+        startDate = dateRange.startDate!;
+        endDate = dateRange.endDate!;
+      });
+    }
+  }
+
   void selectChart(int index) {
     setState(() {
       chart == index ? chart = 0 : chart = index;
       renderedChart = renderChart(chart);
     });
-  }
-
-  Future<void> selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-      });
-    }
   }
 
   @override
@@ -85,38 +84,45 @@ class _AnalyticsState extends State<Analytics> {
           text: "اسبوع",
           onPressed: () => setState(() {
                 timeframe = 1;
-                selectedDate = DateTime.now().subtract(const Duration(days: 7));
+                startDate = DateTime.now().subtract(const Duration(days: 7));
+                endDate = DateTime.now();
               })),
       StyledFilterChip(
           selected: timeframe == 2,
           text: "شهر",
           onPressed: () => setState(() {
                 timeframe = 2;
-                selectedDate =
-                    DateTime.now().subtract(const Duration(days: 30));
+                startDate = DateTime.now().subtract(const Duration(days: 30));
+                endDate = DateTime.now();
               })),
       StyledFilterChip(
           selected: timeframe == 3,
           text: "3 اشهر",
           onPressed: () => setState(() {
                 timeframe = 3;
-                selectedDate =
-                    DateTime.now().subtract(const Duration(days: 91));
+                startDate = DateTime.now().subtract(const Duration(days: 91));
+                endDate = DateTime.now();
               })),
       StyledFilterChip(
           selected: timeframe == 4,
           text: "سنه",
           onPressed: () => setState(() {
                 timeframe = 4;
-                selectedDate =
-                    DateTime.now().subtract(const Duration(days: 365));
+                startDate = DateTime.now().subtract(const Duration(days: 365));
+                endDate = DateTime.now();
               })),
       StyledFilterChip(
           selected: timeframe == 5,
           text: "أخر",
           onPressed: () => setState(() {
                 timeframe = 5;
-                selectDate(context);
+                showDateRangeDialog(
+                  "أختر الفترة",
+                  context,
+                  screenHeight * 0.5,
+                  _onSelectionChanged,
+                  PickerDateRange(startDate, endDate),
+                );
               })),
     ];
 

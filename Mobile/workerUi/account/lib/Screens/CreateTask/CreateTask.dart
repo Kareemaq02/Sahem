@@ -1,6 +1,7 @@
 import 'package:account/API/ComplaintsAPI/View_Complaints_Request.dart';
 import 'package:account/Screens/CreateTask/CreateTaskDetails.dart';
 import 'package:account/Utils/NaviTranstion.dart';
+import 'package:account/Widgets/Buttons/StyledButton.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
@@ -107,76 +108,77 @@ class _CreateTaskState extends State<CreateTask> {
                       padding: EdgeInsets.symmetric(
                           vertical: screenHeight * 0.01,
                           horizontal: screenWidth * 0.02),
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: screenHeight * 0.5,
-                            child: PageIndicatorContainer(
-                              align: IndicatorAlign.bottom,
-                              length: imageList.length,
-                              indicatorSpace: 10.0,
-                              padding: const EdgeInsets.all(15),
-                              indicatorColor: Colors.grey,
-                              indicatorSelectorColor: Colors.blue,
-                              shape: IndicatorShape.circle(size: 7),
-                              child: PageView.builder(
-                                itemCount: imageList.length,
-                                itemBuilder: (context, position) {
-                                  return Container(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(5, 5, 5, 10),
-                                    child: Container(
-                                      //height: ,
-                                      color: AppColor.background,
-                                      child: Image.network(
-                                        imageList[
-                                            position], // Use the correct image path here
-                                        scale: 0.1,
-                                        fit: BoxFit.cover,
-                                      ),
+                      child: myContainer(
+                        screenHeight * 0.69,
+                        Padding(
+                          padding: EdgeInsets.all(screenWidth * 0.01),
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: screenHeight * 0.5,
+                                child: PageIndicatorContainer(
+                                  align: IndicatorAlign.bottom,
+                                  length: imageList.length,
+                                  indicatorSpace: 10.0,
+                                  padding: const EdgeInsets.all(15),
+                                  indicatorColor: Colors.grey,
+                                  indicatorSelectorColor: Colors.blue,
+                                  shape: IndicatorShape.circle(size: 7),
+                                  child: PageView.builder(
+                                    itemCount: imageList.length,
+                                    itemBuilder: (context, position) {
+                                      return Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: screenHeight * 0.01,
+                                            horizontal: screenWidth * 0.02),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              color: AppColor.background,
+                                            ),
+                                            child: Image.network(
+                                              imageList[position],
+                                              scale: 0.1,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                              RowInfo(complaint.intComplaintId.toString(),
+                                  ":رقم البلاغ", screenWidth * 0.02),
+                              RowInfo(
+                                  complaint.dtmDateCreated
+                                      .toString()
+                                      .substring(0, 10),
+                                  ":تاريخ الاضافة ",
+                                  screenWidth * 0.02),
+                              RowInfo(complaint.strComplaintTypeAr.toString(),
+                                  ":نوع البلاغ", screenWidth * 0.02),
+                              RowInfo("ش.وصفي التل ,عمان", ":موقع البلاغ",
+                                  screenWidth * 0.02),
+                              StyledButton(
+                                text: "اضافه",
+                                fontSize: 14,
+                                onPressed: () => {
+                                  naviTransition(
+                                    context,
+                                    CreateTaskDetails(
+                                      intComplaintId: complaint.intComplaintId,
                                     ),
-                                  );
+                                  )
                                 },
-                              ),
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () => {
-                              naviTransition(
-                                context,
-                                CreateTaskDetails(
-                                  intComplaintId: complaint.intComplaintId,
-                                ),
                               )
-                            },
-                            child: myContainer(
-                              screenHeight * 0.2,
-                              Padding(
-                                padding: EdgeInsets.all(screenWidth * 0.01),
-                                child: Column(
-                                  children: [
-                                    RowInfo("رقم البلاغ",
-                                        complaint.intComplaintId.toString()),
-                                    RowInfo(
-                                      "تاريخ الاضافة ",
-                                      complaint.dtmDateCreated
-                                          .toString()
-                                          .substring(0, 10),
-                                    ),
-                                    RowInfo(
-                                        "نوع البلاغ",
-                                        complaint.strComplaintTypeAr
-                                            .toString()),
-                                    RowInfo(
-                                      "موقع البلاغ",
-                                      "ش.وصفي التل ,عمان",
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     );
                   },
@@ -201,9 +203,9 @@ class _CreateTaskState extends State<CreateTask> {
   }
 }
 
-Widget RowInfo(title, value) {
+Widget RowInfo(title, value, padding) {
   return Padding(
-    padding: const EdgeInsets.all(2.0),
+    padding: EdgeInsets.symmetric(horizontal: padding),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

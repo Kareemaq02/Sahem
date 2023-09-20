@@ -26,10 +26,10 @@ Widget myContainer(double height, Widget childWidget) {
           bottomRight: Radius.circular(10),
         ),
         child: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             border: Border(
               bottom: BorderSide(
-                width: 3.5,
+                width: height * 0.007,
                 color: AppColor.main,
               ),
             ),
