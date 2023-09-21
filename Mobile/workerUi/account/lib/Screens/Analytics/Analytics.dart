@@ -10,10 +10,8 @@ import 'package:account/Widgets/Charts/PercentChart.dart';
 import 'package:account/Widgets/Charts/AverageTimeChart.dart';
 import 'package:account/Widgets/Buttons/IconToggleButton.dart';
 import 'package:account/Widgets/Buttons/StyledFilterChip.dart';
-import 'package:account/Widgets/CheckBoxes/StyledCheckBox.dart';
 import 'package:account/Widgets/Charts/ComplaintTaskChart.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
-import 'package:account/API/ComplaintsAPI/Get_Complaints_Types.dart';
 
 class Analytics extends StatefulWidget {
   const Analytics({super.key});
@@ -346,10 +344,12 @@ Widget renderChart(int chart) {
     builder: (context, snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) {
         return const Center(
-            child: SizedBox(
-                child: CircularProgressIndicator(
-          color: AppColor.main,
-        )));
+          child: SizedBox(
+            child: CircularProgressIndicator(
+              color: AppColor.main,
+            ),
+          ),
+        );
       } else {
         return sentChart;
       }

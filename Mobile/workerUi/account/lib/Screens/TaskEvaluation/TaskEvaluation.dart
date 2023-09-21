@@ -1,10 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:account/Widgets/HelperWidgets/myContainer.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
-import 'package:page_indicator/page_indicator.dart';
-import '../../Widgets/HelperWidgets/myContainer.dart';
 import 'package:account/Widgets/Bars/bottomNavBar.dart';
-import 'package:account/Widgets/HelperWidgets/info.dart';
+import 'package:account/Widgets/HelperWidgets/rowInfo.dart';
 import 'package:account/Screens/Results/FailurePage.dart';
 import 'package:account/Screens/Results/SuccessPage.dart';
 import 'package:account/Widgets/Buttons/StyledButton.dart';
@@ -13,12 +11,10 @@ import 'package:account/API/TaskAPI/Get_A_Task_Request.dart';
 import 'package:account/Widgets/HelperWidgets/TitleText.dart';
 import 'package:account/Widgets/Interactive/FormTextField.dart';
 import 'package:account/Widgets/Interactive/RatingWidget.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:account/Widgets/CheckBoxes/StyledCheckBox.dart';
-import 'package:account/Widgets/Interactive/FormTextField.dart';
-import 'package:account/Widgets/Interactive/DateRangeField.dart';
-import '../../Widgets/HelperWidgets/myContainer.dart';
-import '../CreateTask/CreateTask.dart';
+import 'package:page_indicator/page_indicator.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:flutter/material.dart';
 
 class TaskEvaluation extends StatefulWidget {
   final int taskId;
@@ -104,6 +100,7 @@ class _TaskEvaluationState extends State<TaskEvaluation> {
       'strComment': commentController.text,
       'taskId': widget.taskId,
     };
+    print(data);
     // final response = await request(data)
     // if (response.statusCode == 200) {
 
@@ -212,24 +209,30 @@ class _TaskEvaluationState extends State<TaskEvaluation> {
                             ),
                           ),
                         ),
-                        RowInfo(taskDetails.intTaskID.toString(), ":رقم المهمه",
-                            screenWidth * 0.02),
-                        RowInfo(taskDetails.strTypeNameAr.toString(),
-                            ":نوع المهمه", screenWidth * 0.02),
                         RowInfo(
-                            taskDetails.dtmCreatedDate
-                                .toString()
-                                .substring(0, 10),
-                            ":تاريخ الاضافة ",
-                            screenWidth * 0.02),
+                          taskDetails.intTaskID.toString(),
+                          "رقم المهمه",
+                        ),
                         RowInfo(
-                            taskDetails.dtmFinishedDate
-                                .toString()
-                                .substring(0, 10),
-                            ":تاريخ الانتهاء ",
-                            screenWidth * 0.02),
-                        RowInfo("موقع المهمه", "ش.وصفي التل ,عمان",
-                            screenWidth * 0.02),
+                          taskDetails.strTypeNameAr.toString(),
+                          "نوع المهمه",
+                        ),
+                        RowInfo(
+                          taskDetails.dtmCreatedDate
+                              .toString()
+                              .substring(0, 10),
+                          "تاريخ الاضافة ",
+                        ),
+                        RowInfo(
+                          taskDetails.dtmFinishedDate
+                              .toString()
+                              .substring(0, 10),
+                          "تاريخ الانتهاء ",
+                        ),
+                        RowInfo(
+                          "موقع المهمه",
+                          "ش.وصفي التل ,عمان",
+                        ),
                       ],
                     ),
                   ),

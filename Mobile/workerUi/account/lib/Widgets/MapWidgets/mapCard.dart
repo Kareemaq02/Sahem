@@ -1,15 +1,7 @@
-import '../HelperWidgets/rowInfo.dart';
+import 'package:account/Widgets/HelperWidgets/rowInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
-import 'package:account/Screens/CreateTask/CreateTask.dart';
 import 'package:account/Widgets/MapWidgets/mapPageView.dart';
-// ignore_for_file: unused_import
-
-
-// ignore_for_file: file_names
-
-
-
 
 mapCard(context) {
   final screenHeight = MediaQuery.of(context).size.height;

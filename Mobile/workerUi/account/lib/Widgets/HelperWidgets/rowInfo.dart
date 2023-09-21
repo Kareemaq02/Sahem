@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
-// ignore_for_file: file_names
-
-// ignore_for_file: prefer_interpolation_to_compose_strings
-
-// ignore_for_file: non_constant_identifier_names
 
 Widget RowInfo(title, value) {
   return Row(
@@ -27,7 +22,6 @@ Widget RowInfo(title, value) {
           ],
         ),
       ),
-
       Expanded(
         flex: 2,
         child: Column(
@@ -44,9 +38,6 @@ Widget RowInfo(title, value) {
           ],
         ),
       ),
-      // Spacer
-
-      // Value
     ],
   );
 }

@@ -2,18 +2,13 @@ import 'package:account/API/ComplaintsAPI/View_Complaints_Request.dart';
 import 'package:account/Screens/CreateTask/CreateTaskDetails.dart';
 import 'package:account/Utils/NaviTranstion.dart';
 import 'package:account/Widgets/Buttons/StyledButton.dart';
+import 'package:account/Widgets/HelperWidgets/rowInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
-import '../../Widgets/HelperWidgets/rowInfo.dart';
-import 'package:account/Utils/NaviTranstion.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
 import 'package:page_indicator/page_indicator.dart';
 import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/Widgets/HelperWidgets/myContainer.dart';
-import 'package:account/Screens/CreateTask/CreateTaskDetails.dart';
-import 'package:account/API/ComplaintsAPI/View_Complaints_Request.dart';
-
-
 
 class CreateTask extends StatefulWidget {
   const CreateTask({super.key});
@@ -158,18 +153,24 @@ class _CreateTaskState extends State<CreateTask> {
                                   ),
                                 ),
                               ),
-                              RowInfo(complaint.intComplaintId.toString(),
-                                  ":رقم البلاغ", screenWidth * 0.02),
                               RowInfo(
-                                  complaint.dtmDateCreated
-                                      .toString()
-                                      .substring(0, 10),
-                                  ":تاريخ الاضافة ",
-                                  screenWidth * 0.02),
-                              RowInfo(complaint.strComplaintTypeAr.toString(),
-                                  ":نوع البلاغ", screenWidth * 0.02),
-                              RowInfo("ش.وصفي التل ,عمان", ":موقع البلاغ",
-                                  screenWidth * 0.02),
+                                complaint.intComplaintId.toString(),
+                                ":رقم البلاغ",
+                              ),
+                              RowInfo(
+                                complaint.dtmDateCreated
+                                    .toString()
+                                    .substring(0, 10),
+                                ":تاريخ الاضافة ",
+                              ),
+                              RowInfo(
+                                complaint.strComplaintTypeAr.toString(),
+                                ":نوع البلاغ",
+                              ),
+                              RowInfo(
+                                "ش.وصفي التل ,عمان",
+                                ":موقع البلاغ",
+                              ),
                               StyledButton(
                                 text: "اضافه",
                                 fontSize: 14,
@@ -208,30 +209,3 @@ class _CreateTaskState extends State<CreateTask> {
     );
   }
 }
-Widget RowInfo(title, value, padding) {
-  return Padding(
-    padding: EdgeInsets.symmetric(horizontal: padding),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          title,
-          style: const TextStyle(
-            color: AppColor.main,
-            fontFamily: 'DroidArabicKufi',
-            fontSize: 13,
-          ),
-        ),
-        Text(
-          value,
-          style: const TextStyle(
-            color: AppColor.secondary,
-            fontFamily: 'DroidArabicKufi',
-            fontSize: 10,
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
