@@ -1,6 +1,7 @@
 ﻿using Application.Core;
 using Application.Queries.Teams;
 using Domain.ClientDTOs.Team;
+using Domain.ClientDTOs.User;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -37,6 +38,20 @@ namespace Application.Handlers.Teams
                                    strTeamLeaderFirstNameEn = team.Leader.UserInfo.strFirstName,
                                    strTeamLeaderLastNameAr = team.Leader.UserInfo.strLastNameAr,
                                    strTeamLeaderLastNameEn = team.Leader.UserInfo.strLastName,
+                                   lstWorkers = team.Workers
+                                .Select(
+                                    ca =>
+                                        new TaskWorkerDTO
+                                        {
+                                            intId = ca.intWorkerId,
+                                            strFirstName = ca.Worker.UserInfo.strFirstName,
+                                            strLastName = ca.Worker.UserInfo.strLastName,
+                                            strFirstNameAr = ca.Worker.UserInfo.strFirstNameAr,
+                                            strLastNameAr = ca.Worker.UserInfo.strLastNameAr,
+                                            isLeader = team.intLeaderId == ca.intWorkerId
+                                        }
+                                )
+                                .ToList(),
 
                                };
             var result = await query.FirstOrDefaultAsync();

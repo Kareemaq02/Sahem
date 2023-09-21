@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
+import '../../Widgets/HelperWidgets/rowInfo.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
 import 'package:page_indicator/page_indicator.dart';
 import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/API/TaskAPI/view_tasks_request.dart';
 import 'package:account/Widgets/TaskCard/timeLineVertical.dart';
 import 'package:account/Widgets/HelperWidgets/myContainer.dart';
+
 // ignore_for_file: library_private_types_in_public_api
 
 class ComplaintDetailsScreen extends StatefulWidget {
@@ -124,33 +126,33 @@ class _ComplaintViewState extends State<ComplaintDetailsScreen> {
   }
 }
 
-Widget RowInfo(title, value) {
-  return Padding(
-    padding: const EdgeInsets.all(2.0),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        //title
+// Widget RowInfo(title, value) {
+//   return Padding(
+//     padding: const EdgeInsets.all(2.0),
+//     child: Row(
+//       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//       children: [
+//         //title
 
-        Text(
-          title,
-          style: const TextStyle(
-            color: AppColor.main,
-            fontFamily: 'DroidArabicKufi',
-            fontSize: 13,
-          ),
-          // textDirection: TextDirection.rtl,
-        ),
-        Text(
-          value,
-          //textDirection: TextDirection,
-          style: const TextStyle(
-            color: AppColor.secondary,
-            fontFamily: 'DroidArabicKufi',
-            fontSize: 10,
-          ),
-        ),
-      ],
-    ),
-  );
-}
+//         Text(
+//           title,
+//           style: const TextStyle(
+//             color: AppColor.main,
+//             fontFamily: 'DroidArabicKufi',
+//             fontSize: 13,
+//           ),
+//           // textDirection: TextDirection.rtl,
+//         ),
+//         Text(
+//           value,
+//           //textDirection: TextDirection,
+//           style: const TextStyle(
+//             color: AppColor.secondary,
+//             fontFamily: 'DroidArabicKufi',
+//             fontSize: 10,
+//           ),
+//         ),
+//       ],
+//     ),
+//   );
+// }

@@ -5,5 +5,5 @@ using MediatR;
 namespace Application.Queries.Teams
 {
     public record GetTeamsListQuery()
-        : IRequest<Result<List<TeamDTO>>>;
+        : IRequest<Result<List<TeamListDTO>>>;
 }

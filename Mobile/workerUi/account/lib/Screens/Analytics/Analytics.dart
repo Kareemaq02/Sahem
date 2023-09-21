@@ -10,8 +10,10 @@ import 'package:account/Widgets/Charts/PercentChart.dart';
 import 'package:account/Widgets/Charts/AverageTimeChart.dart';
 import 'package:account/Widgets/Buttons/IconToggleButton.dart';
 import 'package:account/Widgets/Buttons/StyledFilterChip.dart';
+import 'package:account/Widgets/CheckBoxes/StyledCheckBox.dart';
 import 'package:account/Widgets/Charts/ComplaintTaskChart.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:account/API/ComplaintsAPI/Get_Complaints_Types.dart';
 
 class Analytics extends StatefulWidget {
   const Analytics({super.key});
@@ -131,7 +133,7 @@ class _AnalyticsState extends State<Analytics> {
       resizeToAvoidBottomInset: false,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavBar1(0),
-      appBar: myAppBar(context, "الصفحه الرئيسية", false, screenWidth * 0.35),
+      appBar: myAppBar(context, "الإحصائيات ", false, screenWidth * 0.55),
       body: Padding(
         padding: EdgeInsets.only(top: halfMarginY, bottom: halfMarginY),
         child: Column(

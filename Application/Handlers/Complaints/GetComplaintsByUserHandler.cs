@@ -49,7 +49,8 @@ namespace Application.Handlers.Complaints
                         .Count(cv => cv.intComplaintId == c.intId && !cv.blnIsDownVote),
                     DownVotes = _context.ComplaintVoters
                         .AsNoTracking()
-                        .Count(cv => cv.intComplaintId == c.intId && cv.blnIsDownVote)
+                        .Count(cv => cv.intComplaintId == c.intId && cv.blnIsDownVote),
+                    intTaskId = c.Tasks.Where(q => q.intComplaintId == c.intId).Select(q => q.intTaskId).FirstOrDefault()
                 };
 
     
@@ -109,7 +110,8 @@ namespace Application.Handlers.Complaints
                                 )
                                 .ToList(),
                             blnIsCompleted = c.Complaint.intStatusId
-                            == (int)ComplaintsConstant.complaintStatus.completed
+                            == (int)ComplaintsConstant.complaintStatus.completed,
+                            blnIsRated =  _context.TaskRatings.Where(q => q.intTaskId == c.intTaskId && q.intUserId == userId).Any()
                         }
                 )
                 .ToListAsync(cancellationToken);

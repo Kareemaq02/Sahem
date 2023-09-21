@@ -7,11 +7,13 @@ import 'package:account/Widgets/TaskCard/timeLineWidget.dart';
 import 'package:account/Widgets/HelperWidgets/myContainer.dart';
 import 'package:account/API/TaskAPI/activate_task_request.dart';
 import 'package:account/Screens/View%20tasks/task_details.dart';
+// ignore_for_file: file_names
+
 
 class TaskCard extends StatelessWidget {
   final String comment;
   final String type;
-  final String status;
+  final int status;
   final String date;
   final String id;
   final String deadline;
@@ -46,12 +48,16 @@ class TaskCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  CardButtons(context, 'تفعيل', Colors.grey,
-                      isLeader ? Colors.grey : AppColor.main, 0, () {
-                    b.activateTask(id);
+                  CardButtons(
+                      context,
+                      'تفعيل',
+                      !isLeader ? Colors.grey : AppColor.main,
+                      !isLeader ? Colors.grey : AppColor.main,
+                      0, () {
+                    isLeader == true ? b.activateTask(id) : null;
                   }),
                   SizedBox(width: screenWidth * 0.02),
-                  CardButtons(context, 'معاينة', Colors.grey, AppColor.main,
+                  CardButtons(context, 'معاينة', AppColor.main, AppColor.main,
                       screenWidth * 0.12, () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
@@ -64,7 +70,7 @@ class TaskCard extends StatelessWidget {
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
-                                return CircularProgressIndicator();
+                                return const CircularProgressIndicator();
                               } else if (snapshot.hasError) {
                                 return text(
                                     'Error: ${snapshot.error}', AppColor.main);
@@ -84,17 +90,37 @@ class TaskCard extends StatelessWidget {
                     );
                   }),
                   const Spacer(),
+                 
                   text(type, AppColor.textTitle),
                 ],
               ),
-              Padding(
-                  padding: EdgeInsets.only(left: screenWidth * 0.7),
-                  child: text("قبل 5 ساعات ", AppColor.textBlue)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Visibility(
+                    visible: status == 4 || status == 5,
+                    child: Container(
+                        height: screenWidth * 0.055,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(40),
+                            border: Border.all(color: AppColor.main, width: 2)),
+                        child: Text(
+                          statusList[status - 1].name,
+                          style: const TextStyle(
+                            fontSize: 7,
+                            fontFamily: 'DroidArabicKufi',
+                            color: AppColor.main,
+                          ),
+                        )),
+                  ),
+                  text("قبل 5 ساعات ", AppColor.textBlue),
+                ],
+              ),
               SizedBox(
                 height: screenHeight * 0.015,
               ),
               Flexible(
-                child: timeLineWidget(),
+                child: timeLineWidget(status),
               ),
               Padding(
                 padding: EdgeInsets.only(right: screenWidth * 0.6),

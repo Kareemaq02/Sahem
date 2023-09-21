@@ -1,11 +1,10 @@
-// ignore_for_file: file_names, empty_catches
-
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:account/Repository/color.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
+import 'package:page_indicator/page_indicator.dart';
 import 'package:account/Screens/Home/publicFeed.dart';
 import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/API/file_complaint_request.dart';
@@ -13,8 +12,7 @@ import 'package:account/Widgets/Buttons/bottonContainer.dart';
 import 'package:account/Screens/File%20complaint/dropdown.dart';
 import 'package:account/Widgets/HelperWidegts/complaintCard.dart';
 import 'package:account/Screens/File%20complaint/confirmPopup.dart';
-import 'package:page_indicator/page_indicator.dart';
-
+// ignore_for_file: file_names, empty_catches
 // ignore_for_file: use_build_context_synchronously
 final picker = ImagePicker();
 List<MediaFile> selectedMediaFiles = [];
@@ -181,7 +179,7 @@ class ComaplintState extends State<FileCompalint> {
               Padding(
                 padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
                 child: SizedBox(
-                  height: 210,
+                  height: screenSize.height * 0.45,
                   child: PageIndicatorContainer(
                     align: IndicatorAlign.bottom,
                     length: selectedMediaFiles.length,
@@ -230,8 +228,9 @@ class ComaplintState extends State<FileCompalint> {
                   ),
                 ),
               ),
-
+          //----------------DropDown-----------------------------------
               const MyDropDown(),
+          // -------------Comment Box-------------------- 
               Container(
                 width: screenSize.width * 0.95,
                 padding: const EdgeInsets.all(8.0),
@@ -258,7 +257,7 @@ class ComaplintState extends State<FileCompalint> {
                 ),
               ),
               const SizedBox(height: 16.0), // Add spacing
-
+          // botton------------------------------------
               BottonContainer(
                 "استمرار",
                 Colors.white,
@@ -311,7 +310,7 @@ class ComaplintState extends State<FileCompalint> {
   }
 
   void addImage(BuildContext context) {
-    if (selectedMediaFiles.length <= 3) {
+    if (selectedMediaFiles.length <= 2) {
       getImages(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

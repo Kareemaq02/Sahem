@@ -8,6 +8,10 @@ import 'package:account/Widgets/CheckBoxes/CheckBox.dart';
 import 'package:account/Widgets/Charts/PerformanceChart.dart';
 import 'package:account/Widgets/Displays/InfoDisplayBox.dart';
 import 'package:account/Widgets/Buttons/StyledFilterChip.dart';
+// ignore_for_file: library_private_types_in_public_api
+
+// ignore_for_file: file_names
+
 
 
 class Quarter extends StatefulWidget {
@@ -118,7 +122,7 @@ class _QuarterState extends State<Quarter> {
       floatingActionButton: const CustomActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavBar1(0),
-      appBar: myAppBar(context, "الصفحه الرئيسية", false, screenWidth * 0.35),
+      appBar: myAppBar(context, "أداء الربع السنوي", false, screenWidth * 0.45),
       body: Padding(
         padding: EdgeInsets.only(top: halfMarginY, bottom: halfMarginY),
         child: Column(

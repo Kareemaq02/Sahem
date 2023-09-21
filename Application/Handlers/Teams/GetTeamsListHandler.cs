@@ -8,7 +8,7 @@ using Persistence;
 namespace Application.Handlers.Teams
 {
     public class GetTeamsListHandler
-        : IRequestHandler<GetTeamsListQuery, Result<List<TeamDTO>>>
+        : IRequestHandler<GetTeamsListQuery, Result<List<TeamListDTO>>>
     {
         private readonly DataContext _context;
 
@@ -17,7 +17,7 @@ namespace Application.Handlers.Teams
             _context = context;
         }
 
-        public async Task<Result<List<TeamDTO>>> Handle(
+        public async Task<Result<List<TeamListDTO>>> Handle(
             GetTeamsListQuery request,
             CancellationToken cancellationToken
         )
@@ -25,7 +25,7 @@ namespace Application.Handlers.Teams
             var query = from team in _context.Teams
                         join d in _context.Departments on team.intDepartmentId equals d.intId
                         select
-                               new TeamDTO
+                               new TeamListDTO
                                {
                                    intTeamId = team.intId,
                                    intDepartmentId = d.intId,
@@ -40,7 +40,7 @@ namespace Application.Handlers.Teams
                                };
                var result = await query.ToListAsync();
 
-            return Result<List<TeamDTO>>.Success(result);
+            return Result<List<TeamListDTO>>.Success(result);
         }
     }
 }

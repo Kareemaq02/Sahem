@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+// ignore_for_file: unused_element
+
+// ignore_for_file: use_build_context_synchronously
+
+// ignore_for_file: file_names
+
+// ignore_for_file: unused_field
+
 
 class LocationPage extends StatefulWidget {
   const LocationPage({Key? key}) : super(key: key);

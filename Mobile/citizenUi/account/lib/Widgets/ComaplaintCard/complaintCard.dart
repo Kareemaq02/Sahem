@@ -1,5 +1,3 @@
-// ignore_for_file: file_names, library_private_types_in_public_api, avoid_print
-
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/API/complaint_requests.dart';
@@ -10,6 +8,7 @@ import 'package:account/Widgets/HelperWidegts/myContainer.dart';
 import 'package:account/Widgets/HelperWidegts/complaintCard.dart';
 import 'package:account/Widgets/ComaplaintCard/timeLineWidget.dart';
 import 'package:account/Screens/View%20complaints/complaints_details.dart';
+// ignore_for_file: file_names, library_private_types_in_public_api, avoid_print
 
 class ComplaintCard2 extends StatefulWidget {
   final String type;
@@ -57,7 +56,6 @@ class _ComplaintCard2sState extends State<ComplaintCard2> {
     }
   }
 
-
   String address = "";
 
   Future<void> fetchAddress() async {
@@ -73,7 +71,6 @@ class _ComplaintCard2sState extends State<ComplaintCard2> {
     final screenHeight = MediaQuery.of(context).size.height;
     ComapalintReminder a = ComapalintReminder();
     getUserComplaint b = getUserComplaint();
-
     return Padding(
       padding: EdgeInsets.all(screenWidth * 0.02),
       child: myContainer(
@@ -86,15 +83,14 @@ class _ComplaintCard2sState extends State<ComplaintCard2> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  CardButtons(context, 'تذكير', Colors.grey, AppColor.main, 0,
-                      () {
+                  CardButtons(context, 'تذكير', Colors.grey, Colors.white, 0,
+                      Colors.grey, () {
                     a.comaplintReminder(widget.id, context);
                   }),
                   SizedBox(width: screenWidth * 0.02),
-                  CardButtons(context, 'معاينة', Colors.grey, AppColor.main,
-                      screenWidth * 0.12, () {
-                    print(widget.id);
-                    print(widget.type);
+                  CardButtons(context, 'معاينة', Colors.white, AppColor.main, 0,
+                      Colors.grey.shade300, () {
+                    print(widget.status);
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) {
@@ -114,12 +110,9 @@ class _ComplaintCard2sState extends State<ComplaintCard2> {
                               } else if (snapshot.hasData) {
                                 List<ComplaintModel> tasks = snapshot.data!;
                                 return ComplaintDetailsScreen(
-                                  complaints: tasks,
-                                  address: address
-                                );
+                                    complaints: tasks, address: address);
                               } else {
-                                return text(
-                                    'ا يتوفر شريط زمني لهذا البلاغ',
+                                return text('ا يتوفر شريط زمني لهذا البلاغ',
                                     AppColor.main);
                               }
                             },
@@ -132,14 +125,39 @@ class _ComplaintCard2sState extends State<ComplaintCard2> {
                   text(widget.type, AppColor.textTitle),
                 ],
               ),
-              Padding(
-                  padding: EdgeInsets.only(left: screenWidth * 0.7),
-                child: Text(formatTimeDifference(widget.date),
-                    style: const TextStyle(
-                      color: Color(0xff92a5c6),
-                      fontSize: 10,
-                      fontFamily: 'DroidArabicKufi',
-                    )),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: Visibility(
+                      visible: widget.status == 2 || widget.status == 7,
+                      child: Container(
+                          height: screenWidth * 0.065,
+                          width: screenWidth * 0.15,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(40),
+                              border:
+                                  Border.all(color: AppColor.main, width: 2)),
+                          child: Center(
+                            child: Text(
+                              status1[widget.status - 1].name,
+                              style: const TextStyle(
+                                fontSize: 10,
+                                fontFamily: 'DroidArabicKufi',
+                                color: AppColor.main,
+                              ),
+                            ),
+                          )),
+                    ),
+                  ),
+                  Text(formatTimeDifference(widget.date),
+                      style: const TextStyle(
+                        color: Color(0xff92a5c6),
+                        fontSize: 10,
+                        fontFamily: 'DroidArabicKufi',
+                      )),
+                ],
               ),
               SizedBox(
                 height: screenHeight * 0.015,
@@ -167,7 +185,6 @@ class _ComplaintCard2sState extends State<ComplaintCard2> {
                   ),
                 ),
               )
-              
             ],
           ),
         ),

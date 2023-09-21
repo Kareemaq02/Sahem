@@ -1,16 +1,16 @@
-// ignore_for_file: avoid_print
-
 import 'dart:io';
-import 'login_request.dart';
+import 'package:account/main.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:account/Repository/urls.dart';
 import 'package:account/Screens/File%20complaint/confirmPage.dart';
+// ignore_for_file: avoid_print
+
 
 
 
 class Complaint {
-
+final token2 = prefs!.getString('token');
 
 
   Future<void> fileComplaint(
@@ -91,6 +91,7 @@ class MediaFile {
 
 
 Future<dynamic> fileAsSimilar(var complaintId, context) async {
+  final token2 = prefs!.getString('token');
   try {
     http.Response response = await http.post(
       Uri.parse(

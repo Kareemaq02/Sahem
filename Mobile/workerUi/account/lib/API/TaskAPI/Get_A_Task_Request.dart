@@ -1,8 +1,10 @@
-import 'package:account/API/login_request.dart';
+import 'dart:convert';
+import 'package:account/main.dart';
+import 'package:http/http.dart' as http;
 import 'package:account/Repository/urls.dart';
 import 'package:account/Utils/TeamMembers.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+// ignore_for_file: file_names
+
 
 class TaskDetails {
   int intTaskID;
@@ -72,6 +74,7 @@ class TaskDetails {
 }
 
 class TaskDetailsRequest {
+    final userToken = prefs!.getString('token');
   Future<TaskDetails> getTaskDetails(int taskId) async {
     var baseUrl = "${AppUrl.baseURL}tasks/details/$taskId";
     http.Response response = await http.get(

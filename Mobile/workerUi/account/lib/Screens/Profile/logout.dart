@@ -1,3 +1,4 @@
+import 'package:account/main.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Screens/Login/login.dart';
@@ -21,6 +22,7 @@ Widget logoutBox(context) {
             const SizedBox(width: 8), 
             TextButton(
               onPressed: () => {
+                prefs!.setString('token', ""),
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const XDLogin()),

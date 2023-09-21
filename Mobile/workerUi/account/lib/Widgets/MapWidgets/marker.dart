@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 
-Widget markerWidegt() {
+Widget markerWidegt(int i) {
   return Stack(
     alignment: Alignment.center,
     children: [
@@ -22,10 +22,10 @@ Widget markerWidegt() {
             ),
           ],
         ),
-        child: const CircleAvatar(
+        child: CircleAvatar(
           radius: 15,
           backgroundImage: AssetImage(
-            'assets/icons/pothole.jpg',
+            'assets/imges2/pic${i % 25}.jpg',
           ),
         ),
       ),
@@ -37,11 +37,11 @@ Widget clusterWidget(clusterSize) {
   return Container(
     width: 70,
     height: 70,
-    padding: EdgeInsets.all(2),
+    padding: const EdgeInsets.all(2),
     decoration: BoxDecoration(
       //color: Colors.white,
       borderRadius: BorderRadius.circular(100),
-      boxShadow: [
+      boxShadow: const [
         BoxShadow(
           color: AppColor.main,
           offset: Offset(0, 3),
@@ -53,7 +53,7 @@ Widget clusterWidget(clusterSize) {
     child: Center(
       child: Text(
         clusterSize.toString(),
-        style: TextStyle(fontSize: 16, color: Colors.white),
+        style: const TextStyle(fontSize: 16, color: Colors.white),
       ),
     ),
   );

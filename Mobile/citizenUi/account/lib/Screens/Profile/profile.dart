@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print, library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
@@ -7,6 +5,11 @@ import 'package:account/API/user_info_request.dart';
 import 'package:account/Screens/Profile/logout.dart';
 import 'package:account/Screens/Profile/dataBox.dart';
 import 'package:account/Widgets/Bars/bottomNavBar.dart';
+import 'package:account/Screens/Profile/switchWidget.dart';
+// ignore_for_file: unused_import
+
+// ignore_for_file: avoid_print, library_private_types_in_public_api
+
 
 class Profile extends StatefulWidget {
   const Profile({
@@ -24,12 +27,12 @@ class _ProfileState extends State<Profile> {
   @override
   void initState() {
     super.initState();
-    _fetchUserInfo("520");
+    _fetchUserInfo();
   }
 
-  Future<void> _fetchUserInfo(String userId) async {
+  Future<void> _fetchUserInfo() async {
     try {
-      List<UserInfoModel> userInfo = await user.getUserInfoById(userId);
+      List<UserInfoModel> userInfo = await user.getUserInfoById();
       setState(() {
         _userInfo = userInfo;
         print(_userInfo);
@@ -65,11 +68,16 @@ class _ProfileState extends State<Profile> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              InfoBox('${userInfo.strFirstName!} ${userInfo.strLastName!}',
+              InfoBox(  userInfo.strFirstNameAr != null
+                      ?
+                '${userInfo.strFirstNameAr!} ${userInfo.strLastNameAr!}': 'ربى أبورمان',
                   userInfo.strNationalId),
               SizedBox(height: screenSize.height * 0.01),
-              DataBox('أسم المستخدم',
-                  '${userInfo.strFirstName!} ${userInfo.strLastName!}'),
+              DataBox(
+                  'أسم المستخدم',
+                  userInfo.strFirstNameAr != null
+                      ? '${userInfo.strFirstNameAr!} ${userInfo.strLastNameAr!}'
+                      : 'ربى أبورمان'),
               DataBox(
                 "البريد الالكتروني",
                 userInfo.strUsername!,
@@ -82,7 +90,9 @@ class _ProfileState extends State<Profile> {
                 "كلمة المرور",
                 "********",
               ),
-              // DataBox("استلام الاشعارات", switchV, "غير مفعل",),
+              DataBox("استلام الاشعارات", "غير مفعل", false),
+              SizedBox(height: screenSize.height * 0.02),
+              
               logoutBox(context),
             ],
           ),

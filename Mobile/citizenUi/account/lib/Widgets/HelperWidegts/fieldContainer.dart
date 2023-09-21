@@ -1,9 +1,9 @@
-// ignore_for_file: file_names, non_constant_identifier_names
-
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
+// ignore_for_file: file_names, non_constant_identifier_names
 
-typedef String? FieldValidator(String? value);
+
+typedef FieldValidator = String? Function(String? value);
 Widget FieldContainer(
   BuildContext context,
   String fieldName,

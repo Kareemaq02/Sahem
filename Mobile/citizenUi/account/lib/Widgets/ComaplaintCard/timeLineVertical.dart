@@ -1,12 +1,12 @@
-// ignore_for_file: file_names
-
 import 'package:flutter/material.dart';
 import 'package:timelines/timelines.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/API/complaint_requests.dart';
+// ignore_for_file: file_names
 
-List<Status> status2 = [
-  Status(1, ' قيد الانتظار', "14:32:58 202-3-12مارس "),
+
+List<Status> status22 = [
+  Status(1, ' قيد الانتظار', ""),
   Status(2, ' مرفوض', "--:--:--"),
   Status(3, 'موافق عليه', "--:--:--"),
   Status(4, 'مجدول', "--:--:--"),
@@ -55,8 +55,8 @@ Widget timeLineVertical(int complaintId) {
                     : ConnectorStyle.dashedLine;
               },
               contentsBuilder: (context, index) {
-                if (index < status2.length) {
-                  Status status = status2[index];
+                if (index < status22.length) {
+                  Status status = status22[index];
                   TextStyle textStyle = const TextStyle(
                     fontSize: 11.9,
                     fontFamily: 'DroidArabicKufi',
@@ -94,7 +94,7 @@ Widget timeLineVertical(int complaintId) {
                     : IndicatorStyle.outlined;
               },
               itemExtent: 73.0,
-              itemCount: status2.length, // Render based on status2's length
+              itemCount: status22.length, // Render based on status2's length
             ),
           ),
         );

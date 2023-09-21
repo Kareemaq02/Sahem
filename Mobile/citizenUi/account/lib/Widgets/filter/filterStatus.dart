@@ -1,5 +1,3 @@
-// ignore_for_file: file_names, library_private_types_in_public_api, avoid_print, use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/API/complaint_requests.dart';
@@ -8,7 +6,12 @@ import 'package:account/API/get_complaints_types.dart';
 import 'package:account/Widgets/Filter/filterType.dart';
 import 'package:account/Widgets/CheckBoxes/CheckBox.dart';
 import 'package:account/API/get_complaints_with_filter.dart';
+import 'package:account/Widgets/ComaplaintCard/timeLineWidget.dart';
 import 'package:account/Widgets/ComaplaintCard/timeLineVertical.dart';
+// ignore_for_file: unused_import
+
+// ignore_for_file: file_names, library_private_types_in_public_api, avoid_print, use_build_context_synchronously
+
 
 List<int> selectedStatus = [];
 
@@ -70,7 +73,7 @@ class _FilterPopup2State extends State<FilterPopup2> {
                               padding: const EdgeInsets.all(8.0),
                               child: CheckBoxNew(
                                 key: widget.key,
-                                text: status2[intTypeId].name,
+                                text: status1[intTypeId - 1].name,
                                 isChecked: selectedStatus.contains(intTypeId),
                                 onChanged: () {
                                   setState(() {

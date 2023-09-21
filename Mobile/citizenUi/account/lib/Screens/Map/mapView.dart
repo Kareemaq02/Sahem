@@ -1,5 +1,3 @@
-// ignore_for_file: file_names, depend_on_referenced_packages, use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart' as b;
@@ -12,6 +10,8 @@ import 'package:account/Widgets/MapWidgets/marker.dart';
 import 'package:account/Widgets/MapWidgets/mapCard.dart';
 import 'package:account/Widgets/MapWidgets/myLocationWidget.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
+// ignore_for_file: file_names, depend_on_referenced_packages, use_build_context_synchronously
+
 
 class FullMap extends StatefulWidget {
   const FullMap({super.key});
@@ -24,7 +24,6 @@ class FullMapState extends State<FullMap> with TickerProviderStateMixin {
   //MapboxMap? mapboxMap;
   final pageController = PageController();
   int selectedIndex = 0;
-  var currentLocation = MapConstants.myLocation;
   late final MapController mapController;
   late double _markerSize;
 
@@ -158,13 +157,13 @@ class FullMapState extends State<FullMap> with TickerProviderStateMixin {
                 center: _currentPosition != null
                     ? b.LatLng(
                         _currentPosition!.latitude, _currentPosition!.longitude)
-                    : b.LatLng(31.967502987682014, 35.92497148182004),
+                        
+                    : b.LatLng(31.961030, 35.881216),
               ),
               layers: [
                 TileLayerOptions(
                   //urlTemplate: MapConstants.templeteURL,
-                  urlTemplate:
-                      "https://api.mapbox.com/styles/v1/rubaaburumman/cljqu0bkj010101o44i2a5nhm/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoicnViYWFidXJ1bW1hbiIsImEiOiJjbGdwbDMyaXkwNnVvM2ZtcjYxNTJoaHNyIn0.rG3Gztp7P5YwoY5NHtYAHA",
+                  urlTemplate: MapConstants.templeteURL,
                   additionalOptions: {
                     'mapStyleId': MapConstants.style_URL,
                     'accessToken': MapConstants.access_token,
@@ -218,7 +217,7 @@ class FullMapState extends State<FullMap> with TickerProviderStateMixin {
                 _animatedMapMove(
                   b.LatLng(
                       _currentPosition!.latitude, _currentPosition!.longitude),
-                  15.0,
+                  16.0,
                 );
               } else {}
             }),

@@ -1,7 +1,6 @@
-import 'package:account/Screens/CurrentTask/currentTask.dart';
-import 'package:account/Utils/NaviTranstion.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
+import 'package:account/Utils/NaviTranstion.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
 import 'package:account/Screens/Profile/profile.dart';
 import 'package:account/Screens/Analytics/Quarter.dart';
@@ -9,8 +8,11 @@ import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/Widgets/Charts/RatingChart.dart';
 import 'package:account/Screens/Analytics/Analytics.dart';
 import 'package:account/Screens/View%20tasks/task_list.dart';
+import 'package:account/Screens/CurrentTask/currentTask.dart';
 import 'package:account/Widgets/Displays/InfoDisplayBox.dart';
 import 'package:account/Widgets/Buttons/squareButtonWithStroke.dart';
+// ignore_for_file: file_names
+
 
 class MainMenuWorker extends StatefulWidget {
   const MainMenuWorker({super.key});
@@ -43,7 +45,7 @@ class _MainMenuWorkerState extends State<MainMenuWorker> {
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
       bottomNavigationBar: BottomNavBar1(0),
-      appBar: myAppBar(context, "الصفحه الرئيسية", false, screenWidth * 0.35),
+      appBar: myAppBar(context, "الصفحة الرئيسية", false, screenWidth * 0.45),
       body: Padding(
         padding: EdgeInsets.only(top: halfMarginY, bottom: halfMarginY),
         child: Column(

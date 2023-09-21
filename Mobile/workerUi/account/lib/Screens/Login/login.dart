@@ -5,6 +5,8 @@ import 'package:account/Widgets/HelperWidgets/text.dart';
 import 'package:account/Widgets/HelperWidgets/checkBox.dart';
 import 'package:account/Widgets/Buttons/bottonContainer.dart';
 import 'package:account/Widgets/HelperWidgets/fieldContainer.dart';
+// ignore_for_file: non_constant_identifier_names
+
 
 TextEditingController usernameController = TextEditingController();
 TextEditingController passwordController = TextEditingController();
@@ -17,14 +19,11 @@ class XDLogin extends StatefulWidget {
 }
 
 class _XDLoginState extends State<XDLogin> {
-  //  login(){
-
-  //  UserLogin user=UserLogin();
-  //  user.login(usernameController.text,passwordController.text,context);
-  // }
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: Center(
@@ -76,7 +75,7 @@ class _XDLoginState extends State<XDLogin> {
                       ),
                     ),
                     SizedBox(
-                      width: MediaQuery.of(context).padding.left + 35,
+                      width: MediaQuery.of(context).padding.left + screenWidth*0.2
                     ),
 
                     text(
@@ -115,6 +114,9 @@ class _XDLoginState extends State<XDLogin> {
                     user.login(usernameController.text, passwordController.text,
                         context);
                   },
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).viewInsets.bottom + 10,
                 ),
                 //const SizedBox(height: 10,),
               ]),

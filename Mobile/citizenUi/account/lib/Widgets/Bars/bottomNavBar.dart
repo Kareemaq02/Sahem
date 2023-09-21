@@ -18,20 +18,16 @@ class BottomNavBar1 extends StatefulWidget {
 
 class _BottomNavBarState extends State<BottomNavBar1> {
   int _selectedIndex = 0;
-
-  // getClip(Size size) {
-  //   var path = Path();
-  //   path.lineTo(0, size.height);
-
-  //   path.lineTo(size.width, size.height);
-  //   path.lineTo(size.width,0.0);
-  //   path.lineTo(2*size.width/3, 0.0);
-  //   var firstEnd = Offset(size.width / 2, size.height/2);
-  //   path.arcToPoint(Offset(size.width/3, 0),radius:const Radius.circular(1));
-
-  // path.close();
-  //   return path;
-  // }
+  naviWithTransition(pgaeName) {
+    Navigator.push(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (_, __, ___) => pgaeName,
+          transitionDuration: const Duration(milliseconds: 600),
+          transitionsBuilder: (_, a, __, c) =>
+              FadeTransition(opacity: a, child: c),
+        ));
+  }
 
   _changeSelectedTab(int index) {
     setState(() {
@@ -39,20 +35,16 @@ class _BottomNavBarState extends State<BottomNavBar1> {
     });
     switch (_selectedIndex) {
       case 0:
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const MainMenu()));
+        naviWithTransition(const MainMenu());
         break;
       case 1:
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const FullMap()));
+        naviWithTransition(const FullMap());
         break;
       case 2:
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const XDComplaintsList()));
+        naviWithTransition(const XDComplaintsList()); 
         break;
       case 3:
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const XDPublicFeed1()));
+        naviWithTransition(const XDPublicFeed1());
         break;
     }
   }

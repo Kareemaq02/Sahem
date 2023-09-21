@@ -1,13 +1,14 @@
-// ignore_for_file: avoid_print, unused_local_variablimport 'dart:convert';
 import 'dart:io';
-import 'package:account/API/login_request.dart';
-import 'package:account/Widgets/Popup/confirmPage.dart';
+import 'package:account/main.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:account/Widgets/Popup/confirmPage.dart';
+// ignore_for_file: avoid_print, unused_local_variablimport 'dart:convert';
 
 class SubmitTask {
+    final userToken =prefs!.getString('token');
   Future<void> submitTask(context, String intTaskId, List<MediaFile> lstMedia,
-      String strComment) async {
+      String strComment,) async {
     try {
       final request = http.MultipartRequest(
         'POST',
@@ -33,6 +34,8 @@ class SubmitTask {
           filename: mediaFile.file.path.split('/').last,
         );
         request.files.add(multipartFile);
+        request.fields['lstMedia[$index].decLat'] = mediaFile.decLat.toString();
+        request.fields['lstMedia[$index].decLng'] = mediaFile.decLng.toString();
 
         request.fields['lstMedia[$index].blnIsVideo'] =
             mediaFile.blnIsVideo.toString();
@@ -49,7 +52,7 @@ class SubmitTask {
       if (response.statusCode == 200) {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => confirm()),
+          MaterialPageRoute(builder: (context) => const confirm()),
         );
         print(responseJson);
         print('Task submited successfully.');
@@ -63,8 +66,11 @@ class SubmitTask {
 }
 
 class MediaFile {
-  final File file;
-  final bool blnIsVideo = false;
+  File file;
+  double? decLat;
+  double? decLng;
+  bool blnIsVideo;
 
-  MediaFile(this.file, blnIsVideo);
+  MediaFile(this.file, this.decLat, this.decLng, this.blnIsVideo);
 }
+

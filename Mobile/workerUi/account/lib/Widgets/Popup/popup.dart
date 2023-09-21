@@ -1,10 +1,9 @@
+import '../HelperWidgets/rowInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Popup/popupBotton.dart';
+import 'package:account/Screens/SubmitTask/submitTask.dart';
 import 'package:account/API/TaskAPI/submit_task_request.dart';
-import 'package:account/Screens/View%20tasks/task_details.dart';
-
-
 
 
 SubmitTask taskObj=SubmitTask();
@@ -14,7 +13,7 @@ Widget buildConfirmDialog(BuildContext context,title,title2,value,taskID,comment
   final screenHeight = MediaQuery.of(context).size.height;
 
   return  AlertDialog(
-    title: Text(title,textAlign: TextAlign.center,style: TextStyle(fontFamily:'DroidArabicKufi'),),
+    title: Text(title,textAlign: TextAlign.center,style: const TextStyle(fontFamily:'DroidArabicKufi'),),
     content:  Container( width: screenWidth * 0.1,
     decoration: BoxDecoration(borderRadius: BorderRadius.circular(screenWidth * 0.06)),
     height: screenHeight * 0.17,
@@ -30,7 +29,7 @@ Widget buildConfirmDialog(BuildContext context,title,title2,value,taskID,comment
               
                   BottonContainerPopup("الغاء", AppColor.main, Colors.white,context,true,null,(){Navigator.of(context).pop();}),
                    const SizedBox(width: 3,),
-                   BottonContainerPopup("استمرار", Colors.white, AppColor.main,context,true,null,(){print(taskID);taskObj.submitTask(context,taskID, selectedMediaFiles,comment);}),
+                   BottonContainerPopup("استمرار", Colors.white, AppColor.main,context,true,null,(){taskObj.submitTask(context,taskID, selectedMediaFiles,comment);}),
                 ],
               ),
             ),

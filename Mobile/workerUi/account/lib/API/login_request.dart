@@ -1,10 +1,14 @@
-import 'dart:convert';
 import 'dart:io';
+import 'dart:convert';
+import 'package:http/http.dart';
+import 'package:flutter/material.dart';
 import 'package:account/Screens/Home/MainMenuAdmin.dart';
 import 'package:account/Screens/Home/MainMenuWorker.dart';
-import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+// ignore_for_file: use_build_context_synchronously
+
+// ignore_for_file: avoid_print
+
 
 var userToken = "";
 
@@ -92,7 +96,7 @@ class UserLogin {
           builder: (ctx) => AlertDialog(
             title: Text(
               response.body == "\"User doesn't exist.\""
-                  ? "User does\'t exist "
+                  ? "User does't exist "
                   : "Password is not correct",
               style: const TextStyle(color: Colors.blue),
             ),
@@ -148,3 +152,4 @@ class MyHttpOverrides extends HttpOverrides {
           (X509Certificate cert, String host, int port) => true;
   }
 }
+

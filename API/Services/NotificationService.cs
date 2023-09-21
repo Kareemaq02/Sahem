@@ -38,14 +38,12 @@ namespace API.Services
             fcmUrl = _configuration["NotificationsAPI"];
         }
 
-        public async Task<HttpResponseMessage> SendNotification(int userId, int notificationTypeId)
+        public async Task<HttpResponseMessage> SendNotification(int userId, string strHeaderAr, string strBodyAr)
         {
             string registrationToken = await _context.NotificationTokens
                 .Where(nt => nt.intUserId == userId)
                 .Select(nt => nt.strToken)
                 .FirstOrDefaultAsync();
-
-            var notificationType = await _context.NotificationTypes.FindAsync(notificationTypeId);
 
             var payload = new
             {
@@ -54,8 +52,8 @@ namespace API.Services
                     token = registrationToken,
                     notification = new
                     {
-                        title = notificationType.strHeaderAr,
-                        body = notificationType.strBodyAr
+                        title = strHeaderAr,
+                        body = strBodyAr
                     }
                 }
             };

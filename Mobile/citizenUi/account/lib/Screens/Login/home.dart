@@ -7,52 +7,54 @@ import 'package:account/Widgets/Buttons/bottonContainer.dart';
 // import '../../Repository/language.dart';
 // import '../../Repository/language_constants.dart';
 
-
 class XDHome extends StatefulWidget {
- const XDHome({Key? key}) : super(key: key);
+  const XDHome({Key? key}) : super(key: key);
   @override
   _XDHomeState createState() => _XDHomeState();
 }
 
 class _XDHomeState extends State<XDHome> {
-  
-  var languagea='en';
-  var arr='اَلْعَرَبِيَّةُ';
+  var languagea = 'en';
+  var arr = 'اَلْعَرَبِيَّةُ';
 
- @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
-      backgroundColor: AppColor.background,
-      body:   
-        Center(
-       
-        child: Column(
-         
-         
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Row(
+        backgroundColor: AppColor.background,
+        body: Center(
+          child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(width: 40,height: 100,decoration: const BoxDecoration(color: Colors.grey,shape: BoxShape.circle),),
-                const SizedBox(width: 10,),
-                const Text('Logobrand',style: TextStyle(fontWeight: FontWeight.w100,fontSize: 20),),
-              ],
-            ),
-            const SizedBox(height: 50,),
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 40,
+                      height: 100,
+                      decoration: const BoxDecoration(
+                          color: Colors.grey, shape: BoxShape.circle),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    const Text(
+                      'Logobrand',
+                      style:
+                          TextStyle(fontWeight: FontWeight.w100, fontSize: 20),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 50,
+                ),
                 BottonContainer('الدخول | مستخدم جديد', Colors.white,
                     AppColor.main, 210, context, false, const XDLogin(), () {}),
-       
-           const SizedBox(height: 20,),
-         BottonContainer( 'الدخول كزائر' ,AppColor.main,Colors.white,210,context,false,const XDLogin(),(){}),
-         
-      ]
-      ), 
-    ));
+                const SizedBox(
+                  height: 20,
+                ),
+                BottonContainer('الدخول كزائر', AppColor.main, Colors.white,
+                    210, context, false, const XDLogin(), () {}),
+              ]),
+        ));
   }
- 
 }
-
-
-

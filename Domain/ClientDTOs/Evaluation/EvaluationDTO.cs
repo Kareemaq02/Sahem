@@ -6,7 +6,6 @@ namespace Domain.ClientDTOs.Evaluation
     {
         [JsonIgnore]
         public string strUserName { get; set; }
-        public string strComment { get; set; }
         public decimal decRating { get; set; }
     }
 }

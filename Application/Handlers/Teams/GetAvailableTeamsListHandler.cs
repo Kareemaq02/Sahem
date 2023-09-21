@@ -8,7 +8,7 @@ using Domain.ClientDTOs.Team;
 namespace Application.Handlers.Teams
 {
     public class GetAvailableTeamsListHandler
-        : IRequestHandler<GetAvailableTeamsListQuery, Result<List<TeamDTO>>>
+        : IRequestHandler<GetAvailableTeamsListQuery, Result<List<TeamListDTO>>>
     {
         private readonly DataContext _context;
 
@@ -17,30 +17,43 @@ namespace Application.Handlers.Teams
             _context = context;
         }
 
-        public async Task<Result<List<TeamDTO>>> Handle(
+        public async Task<Result<List<TeamListDTO>>> Handle(
             GetAvailableTeamsListQuery request,
             CancellationToken cancellationToken
         )
         {
             DateTime startDate = request.startDate;
             DateTime endDate = request.endDate;
+
             var busyTeamIdsQuery =
                 from teams in _context.Teams
-                join t in _context.Tasks on teams.intId equals t.intTeamId
+                join t in _context.Tasks on teams.intId equals t.intTeamId into joinedTeamTask
+                from joinedResult in joinedTeamTask.DefaultIfEmpty()
                 where !(
-                        t.dtmDateDeadline > endDate && t.dtmDateScheduled > endDate
-                        || t.dtmDateDeadline < startDate && t.dtmDateScheduled < startDate
+                        joinedResult.dtmDateDeadline > endDate && joinedResult.dtmDateScheduled > endDate
+                        || joinedResult.dtmDateDeadline < startDate && joinedResult.dtmDateScheduled < startDate
                     )
                 select teams.intId;
+
+            busyTeamIdsQuery = busyTeamIdsQuery.Distinct();
+
+
+            var vacTeamIdsQuery =
+                from teams in _context.Teams
+                join w in _context.WorkerVacations on teams.intLeaderId equals w.intWorkerId
+                where !(w.dtmEndDate > endDate && w.dtmStartDate > endDate
+                        || w.dtmEndDate < startDate && w.dtmStartDate < startDate)
+                select teams.intId;
+
 
 
             var availableTeamsQuery =
                 from t in _context.Teams
                 join d in _context.Departments on t.intDepartmentId equals d.intId
                 join ui in _context.UserInfos on t.intLeaderId equals ui.intId
-                where !busyTeamIdsQuery.Contains(t.intId)
+                where !busyTeamIdsQuery.Contains(t.intId) && !vacTeamIdsQuery.Contains(t.intId)
                 orderby t.intId
-                select new TeamDTO
+                select new TeamListDTO
                 {
                     intTeamId = t.intId,
                     intTeamLeaderId = t.intLeaderId,
@@ -55,7 +68,7 @@ namespace Application.Handlers.Teams
 
             var result = await availableTeamsQuery.Distinct().ToListAsync();
 
-            return Result<List<TeamDTO>>.Success(result);
+            return Result<List<TeamListDTO>>.Success(result);
         }
     }
 }

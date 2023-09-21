@@ -14,9 +14,14 @@ namespace API.Controllers
     public class TasksController : BaseApiController
     {
         [HttpGet] // .../api/tasks
-        public async Task<IActionResult> GetTasksList([FromQuery] TasksFilter filter)
+        public async Task<IActionResult> GetTasksList([FromQuery] TasksFilter filter, string strUsername)
         {
-            return HandleResult(await Mediator.Send(new GetTasksListQuery(filter)));
+            string authHeader = Request.Headers["Authorization"];
+            JwtSecurityTokenHandler tokenHandler = new();
+            JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
+
+            strUsername = jwtToken.Claims.First(c => c.Type == "username").Value;
+            return HandleResult(await Mediator.Send(new GetTasksListQuery(filter, strUsername)));
         }
 
         [HttpGet("users")] // .../api/tasks/users
@@ -152,6 +157,19 @@ namespace API.Controllers
             username = jwtToken.Claims.First(c => c.Type == "username").Value;
 
             return HandleResult(await Mediator.Send(new GetMyCurrentActiveTasksQuery(username)));
+        }
+
+        
+        [HttpPost("rate/{id}")] // .../api/tasks/rate/id
+        public async Task<IActionResult> RateTask(int id, decimal decRating, string strUsername)
+        {
+            string authHeader = Request.Headers["Authorization"];
+            JwtSecurityTokenHandler tokenHandler = new();
+            JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
+
+            strUsername = jwtToken.Claims.First(c => c.Type == "username").Value;
+
+            return HandleResult(await Mediator.Send(new RateTaskCommand(id, decRating, strUsername)));
         }
     }
 }

@@ -43,7 +43,9 @@ namespace Application.Handlers.Tasks
                     strTypeNameEn = tT.strNameEn,
                     taskId = t.intId,
                     blnIsTaskLeader = t.Team.intLeaderId == request.id,
-                    blnIsActive = t.blnIsActivated
+                    blnIsActive = t.blnIsActivated,
+                    intTaskStatusId = t.intStatusId,
+                    
                 };
 
             var result = await query.ToListAsync();

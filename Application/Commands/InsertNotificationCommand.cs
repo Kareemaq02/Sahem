@@ -4,6 +4,6 @@ using MediatR;
 
 namespace Application.Commands
 {
-    public record InsertNotificationCommand(string strUsername, int intTypeId)
+    public record InsertNotificationCommand(Notification Notification)
         : IRequest<Result<Notification>>;
 }

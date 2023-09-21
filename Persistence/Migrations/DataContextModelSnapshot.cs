@@ -436,6 +436,48 @@ namespace Persistence.Migrations
                     b.ToTable("tasks_complaints");
                 });
 
+            modelBuilder.Entity("Domain.DataModels.Intersections.WorkTaskMemberRating", b =>
+                {
+                    b.Property<int>("intUserId")
+                        .HasColumnType("int")
+                        .HasColumnName("MEMBER_ID");
+
+                    b.Property<int>("intTaskId")
+                        .HasColumnType("int")
+                        .HasColumnName("TASK_ID");
+
+                    b.Property<decimal>("decRating")
+                        .HasColumnType("decimal(18, 2)")
+                        .HasColumnName("RATING");
+
+                    b.HasKey("intUserId", "intTaskId");
+
+                    b.HasIndex("intTaskId");
+
+                    b.ToTable("tasks_members_ratings");
+                });
+
+            modelBuilder.Entity("Domain.DataModels.Intersections.WorkTaskRating", b =>
+                {
+                    b.Property<int>("intUserId")
+                        .HasColumnType("int")
+                        .HasColumnName("USER_ID");
+
+                    b.Property<int>("intTaskId")
+                        .HasColumnType("int")
+                        .HasColumnName("TASK_ID");
+
+                    b.Property<decimal>("decRating")
+                        .HasColumnType("decimal(18, 2)")
+                        .HasColumnName("RATING");
+
+                    b.HasKey("intUserId", "intTaskId");
+
+                    b.HasIndex("intTaskId");
+
+                    b.ToTable("tasks_ratings");
+                });
+
             modelBuilder.Entity("Domain.DataModels.LookUps.Department", b =>
                 {
                     b.Property<int>("intId")
@@ -580,6 +622,26 @@ namespace Persistence.Migrations
                     b.Property<int>("intUserId")
                         .HasColumnType("int")
                         .HasColumnName("USER_ID");
+
+                    b.Property<string>("strBodyAr")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("BODY_AR");
+
+                    b.Property<string>("strBodyEn")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("BODY_EN");
+
+                    b.Property<string>("strHeaderAr")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("HEADER_AR");
+
+                    b.Property<string>("strHeaderEn")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("HEADER_EN");
 
                     b.HasKey("intId");
 
@@ -1326,6 +1388,44 @@ namespace Persistence.Migrations
                     b.Navigation("Complaint");
 
                     b.Navigation("Task");
+                });
+
+            modelBuilder.Entity("Domain.DataModels.Intersections.WorkTaskMemberRating", b =>
+                {
+                    b.HasOne("Domain.DataModels.Tasks.WorkTask", "Task")
+                        .WithMany()
+                        .HasForeignKey("intTaskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.DataModels.User.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("intUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Task");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.DataModels.Intersections.WorkTaskRating", b =>
+                {
+                    b.HasOne("Domain.DataModels.Tasks.WorkTask", "Task")
+                        .WithMany()
+                        .HasForeignKey("intTaskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.DataModels.User.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("intUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Task");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Domain.DataModels.Notifications.Notification", b =>

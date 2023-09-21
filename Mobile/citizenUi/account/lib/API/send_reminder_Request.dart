@@ -1,12 +1,14 @@
-// ignore_for_file: file_names, avoid_print
-
 import 'dart:convert';
+import 'package:account/main.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:account/Repository/urls.dart';
-import 'package:account/API/login_request.dart';
+
+// ignore_for_file: file_names, avoid_print
+
 
 class ComapalintReminder {
+   final token2 = prefs!.getString('token');
   Future<dynamic> comaplintReminder(int id, context1) async {
     final url = Uri.parse("${AppUrl.baseURL}/complaints/remind/$id");
 

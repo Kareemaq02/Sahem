@@ -1,9 +1,9 @@
-import 'package:account/API/login_request.dart';
-import 'package:account/Screens/Home/MainMenuWorker.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
+import 'package:account/API/login_request.dart';
 import 'package:account/Screens/Map/mapView.dart';
 import 'package:account/Screens/Home/MainMenuAdmin.dart';
+import 'package:account/Screens/Home/MainMenuWorker.dart';
 import 'package:account/Screens/View%20tasks/task_list.dart';
 import 'package:account/Screens/CurrentTask/currentTask.dart';
 // ignore_for_file: must_be_immutable, unused_local_variable, file_names
@@ -24,7 +24,7 @@ class _BottomNavBarState extends State<BottomNavBar1> {
         context,
         PageRouteBuilder(
           pageBuilder: (_, __, ___) => pgaeName,
-          transitionDuration: Duration(milliseconds: 600),
+          transitionDuration: const Duration(milliseconds: 600),
           transitionsBuilder: (_, a, __, c) =>
               FadeTransition(opacity: a, child: c),
         ));
@@ -89,8 +89,8 @@ class _BottomNavBarState extends State<BottomNavBar1> {
     return IntrinsicHeight(
       child: BottomAppBar(
         //clipBehavior: Clip.antiAliasWithSaveLayer,
-        padding: EdgeInsets.only(top: 10, left: 5, right: 5, bottom: 0),
-        shape: CircularNotchedRectangle(), //shape of notch
+        padding: const EdgeInsets.only(top: 10, left: 5, right: 5, bottom: 0),
+        shape: const CircularNotchedRectangle(), //shape of notch
         notchMargin:
             5, //notche margin between floating button and bottom appbar
 
@@ -110,7 +110,7 @@ class _BottomNavBarState extends State<BottomNavBar1> {
                         color: Colors.grey,
                         size: 23,
                       ),
-                text: "العمل الحالي"),
+                text: "المهمة المفعلة"),
             const SizedBox(
               width: 15,
             ),

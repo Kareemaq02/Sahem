@@ -2,6 +2,7 @@
 
 public class TaskMediaDTO
 {
+    public int intComplaintId { get; set; }
     public string Data { get; set; }
     public bool blnIsVideo { get; set; }
     public LatLng decLatLng { get; set; }

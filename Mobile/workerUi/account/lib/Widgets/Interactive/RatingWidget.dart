@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+// ignore_for_file: library_private_types_in_public_api
+
+// ignore_for_file: file_names
+
 
 class RatingWidget extends StatefulWidget {
   final double rating;

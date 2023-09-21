@@ -1,5 +1,3 @@
-// ignore_for_file: file_names, empty_catches
-
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:account/Repository/color.dart';
@@ -10,6 +8,8 @@ import 'package:account/Widgets/HelperWidegts/text.dart';
 import 'package:account/Widgets/Filter/filterStatus.dart';
 import 'package:account/API/get_complaints_with_filter.dart';
 import 'package:account/Widgets/HelperWidegts/complaintCard.dart';
+// ignore_for_file: file_names, empty_catches
+
 
 Position? currentPosition;
 // ignore_for_file: depend_on_referenced_packages, constant_identifier_names, unused_element, library_private_types_in_public_api, prefer_typing_uninitialized_variables, use_build_context_synchronously, duplicate_ignore
@@ -86,13 +86,14 @@ class _XDPublicFeed1State extends State<XDPublicFeed1> {
  
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
       floatingActionButton: const CustomActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavBar1(3),
-      appBar: myAppBar(context, 'البلاغات المعلنة', true, 60),
+      appBar: myAppBar(context, 'البلاغات المعلنة', true, screenSize.width*0.32),
       body: Column(
         children: [
           Expanded(
@@ -129,13 +130,13 @@ class _XDPublicFeed1State extends State<XDPublicFeed1> {
                         itemBuilder: (BuildContext context, int index) {
                           lat = data[index]['latLng']["decLat"];
                           lng = data[index]['latLng']["decLng"];
-                          return ComplaintCard(
+                          return ComplaintCardPublicForm(
                               intComplaintId: data[index]['intComplaintId'],
                             statusID: data[index]['intStatusId'],
                               strUserName1:
-                                  data[index]['strFirstName'].toString(),
+                                data[index]['strFirstNameAr'].toString(),
                               strUserName2:
-                                  data[index]['strLastName'].toString(),
+                                data[index]['strLastNameAr'].toString(),
                               dtmDateCreated:
                                   data[index]['dtmDateCreated'].toString(),
                               intVotersCount: data[index]['intVotersCount'],
