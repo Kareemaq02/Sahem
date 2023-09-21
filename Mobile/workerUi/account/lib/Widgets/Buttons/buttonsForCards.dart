@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:account/Repository/color.dart';
-// ignore_for_file: non_constant_identifier_names
-// ignore_for_file: file_names
 
 Widget CardButtons(context, text, textColor, boxColor, width, whatToDo) {
   final screenWidth = MediaQuery.of(context).size.width;

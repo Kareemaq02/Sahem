@@ -5,8 +5,6 @@ import 'package:account/Widgets/HelperWidgets/text.dart';
 import 'package:account/Widgets/HelperWidgets/checkBox.dart';
 import 'package:account/Widgets/Buttons/bottonContainer.dart';
 import 'package:account/Widgets/HelperWidgets/fieldContainer.dart';
-// ignore_for_file: non_constant_identifier_names
-
 
 TextEditingController usernameController = TextEditingController();
 TextEditingController passwordController = TextEditingController();
@@ -19,10 +17,8 @@ class XDLogin extends StatefulWidget {
 }
 
 class _XDLoginState extends State<XDLogin> {
-
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -75,8 +71,8 @@ class _XDLoginState extends State<XDLogin> {
                       ),
                     ),
                     SizedBox(
-                      width: MediaQuery.of(context).padding.left + screenWidth*0.2
-                    ),
+                        width: MediaQuery.of(context).padding.left +
+                            screenWidth * 0.2),
 
                     text(
                       "تذكر تسجيل الدخول",
