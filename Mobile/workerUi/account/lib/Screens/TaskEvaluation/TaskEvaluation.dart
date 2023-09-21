@@ -11,18 +11,14 @@ import 'package:account/Widgets/Buttons/StyledButton.dart';
 import 'package:account/Widgets/Displays/TeamViewBox.dart';
 import 'package:account/API/TaskAPI/Get_A_Task_Request.dart';
 import 'package:account/Widgets/HelperWidgets/TitleText.dart';
+import 'package:account/Widgets/Interactive/FormTextField.dart';
 import 'package:account/Widgets/Interactive/RatingWidget.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:account/Widgets/CheckBoxes/StyledCheckBox.dart';
 import 'package:account/Widgets/Interactive/FormTextField.dart';
 import 'package:account/Widgets/Interactive/DateRangeField.dart';
-// ignore_for_file: unused_local_variable
-
-// ignore_for_file: file_names
-
-// ignore_for_file: library_private_types_in_public_api
-
-
+import '../../Widgets/HelperWidgets/myContainer.dart';
+import '../CreateTask/CreateTask.dart';
 
 class TaskEvaluation extends StatefulWidget {
   final int taskId;
@@ -174,88 +170,88 @@ class _TaskEvaluationState extends State<TaskEvaluation> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               mainAxisSize: MainAxisSize.max,
               children: [
-                Column(
-                  children: [
-                    SizedBox(
-                      height: screenHeight * 0.33,
-                      child: PageIndicatorContainer(
-                        align: IndicatorAlign.bottom,
-                        length: imageList.length,
-                        indicatorSpace: 10.0,
-                        padding: const EdgeInsets.all(15),
-                        indicatorColor: Colors.grey,
-                        indicatorSelectorColor: Colors.blue,
-                        shape: IndicatorShape.circle(size: 7),
-                        child: PageView.builder(
-                          itemCount: imageList.length,
-                          itemBuilder: (context, position) {
-                            return Container(
-                              padding: const EdgeInsets.fromLTRB(5, 5, 5, 10),
-                              child: Container(
-                                //height: ,
-                                color: AppColor.background,
-                                child: Image.network(
-                                  imageList[
-                                      position], // Use the correct image path here
-                                  scale: 0.1,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            );
-                          },
+                myContainer(
+                  screenHeight * 0.5,
+                  Padding(
+                    padding: EdgeInsets.all(screenWidth * 0.01),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: screenHeight * 0.33,
+                          child: PageIndicatorContainer(
+                            align: IndicatorAlign.bottom,
+                            length: imageList.length,
+                            indicatorSpace: 10.0,
+                            padding: const EdgeInsets.all(15),
+                            indicatorColor: Colors.grey,
+                            indicatorSelectorColor: Colors.blue,
+                            shape: IndicatorShape.circle(size: 7),
+                            child: PageView.builder(
+                              itemCount: imageList.length,
+                              itemBuilder: (context, position) {
+                                return Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: screenHeight * 0.01,
+                                      horizontal: screenWidth * 0.02),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: AppColor.background,
+                                      ),
+                                      child: Image.network(
+                                        imageList[position],
+                                        scale: 0.1,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
                         ),
-                      ),
+                        RowInfo(taskDetails.intTaskID.toString(), ":رقم المهمه",
+                            screenWidth * 0.02),
+                        RowInfo(taskDetails.strTypeNameAr.toString(),
+                            ":نوع المهمه", screenWidth * 0.02),
+                        RowInfo(
+                            taskDetails.dtmCreatedDate
+                                .toString()
+                                .substring(0, 10),
+                            ":تاريخ الاضافة ",
+                            screenWidth * 0.02),
+                        RowInfo(
+                            taskDetails.dtmFinishedDate
+                                .toString()
+                                .substring(0, 10),
+                            ":تاريخ الانتهاء ",
+                            screenWidth * 0.02),
+                        RowInfo("موقع المهمه", "ش.وصفي التل ,عمان",
+                            screenWidth * 0.02),
+                      ],
                     ),
-                    myContainer(
-                      screenHeight * 0.2,
-                      Padding(
-                        padding: EdgeInsets.all(screenWidth * 0.01),
-                        child: Column(
-                          children: [
-                            RowInfo(
-                                "رقم المهمه", taskDetails.intTaskID.toString()),
-                            RowInfo("نوع المهمه",
-                                taskDetails.strTypeNameAr.toString()),
-                            RowInfo(
-                              "تاريخ الاضافة ",
-                              taskDetails.dtmCreatedDate
-                                  .toString()
-                                  .substring(0, 10),
-                            ),
-                            RowInfo(
-                              "تاريخ الانتهاء ",
-                              taskDetails.dtmFinishedDate
-                                  .toString()
-                                  .substring(0, 10),
-                            ),
-                            RowInfo(
-                              "موقع المهمه",
-                              "ش.وصفي التل ,عمان",
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
                 Column(
                   children: [
                     TeamViewBox(
                       height: fieldHeight,
-                      width: fieldWidth,
+                      width: double.infinity,
                       boxHeight: fieldHeight * 0.65,
-                      boxWidth: fieldWidth * 0.29,
+                      boxWidth: fieldWidth * 0.3,
                       teamMembers: taskDetails.workersList,
                     ),
                     SizedBox(
                       height: screenHeight * 0.02,
                     ),
                     SizedBox(
-                      height: fieldHeight / 3,
-                      width: fieldWidth / 2,
+                      height: fieldHeight / 4,
+                      width: fieldWidth / 3,
                       child: StyledButton(
                         text: "تقييم",
-                        fontSize: fieldHeight / 3 * 0.4,
+                        fontSize: fieldHeight / 3 * 0.3,
                         onPressed: () => {
                           showDialog(
                             context: context,
@@ -264,193 +260,129 @@ class _TaskEvaluationState extends State<TaskEvaluation> {
                               dialogHeight = screenHeight * 0.47;
                               statusChoice = 1;
                               rating = 2.5;
-                              return StatefulBuilder(
-                                  builder: (context, setStateDialog) {
-                                return Dialog(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                  child: Container(
-                                    height: dialogHeight,
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(30)),
-                                    child: Center(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          // Title
-                                          SizedBox(
-                                            height: screenHeight * 0.08,
-                                            child: Padding(
-                                              padding: EdgeInsets.only(
-                                                top: screenHeight * 0.01,
-                                              ),
-                                              child: const TitleText(
-                                                text: "التقييم",
-                                                fontSize: 18,
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
+                              return Dialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                child: Container(
+                                  height: dialogHeight,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30)),
+                                  child: Center(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        // Title
+                                        SizedBox(
+                                          height: screenHeight * 0.08,
+                                          child: Padding(
                                             padding: EdgeInsets.only(
-                                              bottom: screenHeight * 0.02,
+                                              top: screenHeight * 0.01,
                                             ),
-                                            child: Column(
-                                              children: [
-                                                // Stars
-                                                RatingWidget(
-                                                  rating: rating,
-                                                  iconSize: fieldWidth / 10,
-                                                  onChanged: (newRating) {
-                                                    setState(() {
-                                                      rating = newRating;
-                                                    });
-                                                  },
-                                                ),
-                                                SizedBox(
-                                                  height: screenHeight * 0.01,
-                                                ),
-                                                // CheckBoxes
-                                                StatefulBuilder(builder:
-                                                    (context,
-                                                        setStateCheckBoxes) {
-                                                  return Column(
-                                                    children: [
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          StyledCheckBox(
-                                                              text: "غير مكتمل",
-                                                              fontSize: 14,
-                                                              isChecked:
-                                                                  statusChoice ==
-                                                                      2,
-                                                              onChanged: () {
-                                                                setStateCheckBoxes(
-                                                                    () =>
-                                                                        statusChoice =
-                                                                            2);
-                                                                setStateDialog(() =>
-                                                                    dialogHeight =
-                                                                        screenHeight *
-                                                                            0.555);
-                                                              }),
-                                                          SizedBox(
-                                                            width: screenWidth *
-                                                                0.05,
-                                                          ),
-                                                          StyledCheckBox(
-                                                              text: "مكتمل",
-                                                              fontSize: 14,
-                                                              isChecked:
-                                                                  statusChoice ==
-                                                                      1,
-                                                              onChanged: () {
-                                                                setStateCheckBoxes(
-                                                                    () =>
-                                                                        statusChoice =
-                                                                            1);
-                                                                setStateDialog(() =>
-                                                                    dialogHeight =
-                                                                        screenHeight *
-                                                                            0.47);
-                                                              }),
-                                                        ],
-                                                      ),
-                                                      statusChoice == 2
-                                                          ? Column(
-                                                              children: [
-                                                                const Text(
-                                                                  "**سيتم اعادة ارسال المهمه ",
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .right,
-                                                                  textDirection:
-                                                                      TextDirection
-                                                                          .rtl,
-                                                                  style:
-                                                                      TextStyle(
-                                                                    color: Color
-                                                                        .fromARGB(
-                                                                            255,
-                                                                            219,
-                                                                            60,
-                                                                            68),
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    fontSize:
-                                                                        12,
-                                                                    fontFamily:
-                                                                        'DroidArabicKufi',
-                                                                  ),
-                                                                ),
-                                                                Padding(
-                                                                  padding: EdgeInsets.only(
-                                                                      top: screenHeight *
-                                                                          0.01),
-                                                                  child:
-                                                                      DateRangeField(
-                                                                    height:
-                                                                        fieldHeight /
-                                                                            4,
-                                                                    width:
-                                                                        fieldWidth *
-                                                                            0.75,
-                                                                    onSelectionChanged:
-                                                                        _onSelectionChanged,
-                                                                    initialRange:
-                                                                        PickerDateRange(
-                                                                            startDate,
-                                                                            endDate),
-                                                                  ),
-                                                                )
-                                                              ],
-                                                            )
-                                                          : const SizedBox(),
-                                                    ],
-                                                  );
-                                                }),
-                                                SizedBox(
-                                                  height: screenHeight * 0.01,
-                                                ),
-                                                // Comment Box
-                                                FormTextField(
-                                                  height: fieldHeight,
-                                                  width: fieldWidth * 0.75,
-                                                  controller: commentController,
-                                                  hintText: "اضف تعليق",
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsets.only(
-                                                      top: screenHeight * 0.01),
-                                                  child: SizedBox(
-                                                    height: fieldHeight / 4,
-                                                    width:
-                                                        fieldWidth * 0.75 * 0.5,
-                                                    child: StyledButton(
-                                                      text: "موافق",
-                                                      fontSize: fieldWidth *
-                                                          0.75 *
-                                                          0.5 *
-                                                          0.12,
-                                                      onPressed: _sendRequest,
-                                                    ),
-                                                  ),
-                                                )
-                                              ],
+                                            child: const TitleText(
+                                              text: "التقييم",
+                                              fontSize: 18,
                                             ),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                            bottom: screenHeight * 0.02,
+                                          ),
+                                          child: Column(
+                                            children: [
+                                              // Stars
+                                              RatingWidget(
+                                                rating: rating,
+                                                iconSize: fieldWidth / 10,
+                                                onChanged: (newRating) {
+                                                  setState(() {
+                                                    rating = newRating;
+                                                  });
+                                                },
+                                              ),
+                                              SizedBox(
+                                                height: screenHeight * 0.01,
+                                              ),
+                                              // CheckBoxes
+                                              StatefulBuilder(builder: (context,
+                                                  setStateCheckBoxes) {
+                                                return Column(
+                                                  children: [
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        StyledCheckBox(
+                                                            text: "غير مكتمل",
+                                                            fontSize: 14,
+                                                            isChecked:
+                                                                statusChoice ==
+                                                                    2,
+                                                            onChanged: () {
+                                                              setStateCheckBoxes(
+                                                                  () =>
+                                                                      statusChoice =
+                                                                          2);
+                                                            }),
+                                                        SizedBox(
+                                                          width: screenWidth *
+                                                              0.05,
+                                                        ),
+                                                        StyledCheckBox(
+                                                            text: "مكتمل",
+                                                            fontSize: 14,
+                                                            isChecked:
+                                                                statusChoice ==
+                                                                    1,
+                                                            onChanged: () {
+                                                              setStateCheckBoxes(
+                                                                  () =>
+                                                                      statusChoice =
+                                                                          1);
+                                                            }),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                );
+                                              }),
+                                              SizedBox(
+                                                height: screenHeight * 0.01,
+                                              ),
+                                              // Comment Box
+                                              FormTextField(
+                                                height: fieldHeight,
+                                                width: fieldWidth * 0.75,
+                                                controller: commentController,
+                                                hintText: "اضف تعليق",
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    top: screenHeight * 0.01),
+                                                child: SizedBox(
+                                                  height: fieldHeight / 4,
+                                                  width:
+                                                      fieldWidth * 0.75 * 0.5,
+                                                  child: StyledButton(
+                                                    text: "موافق",
+                                                    fontSize: fieldWidth *
+                                                        0.75 *
+                                                        0.5 *
+                                                        0.12,
+                                                    onPressed: _sendRequest,
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                );
-                              });
+                                ),
+                              );
                             },
                           )
                         },
@@ -466,4 +398,3 @@ class _TaskEvaluationState extends State<TaskEvaluation> {
     );
   }
 }
-

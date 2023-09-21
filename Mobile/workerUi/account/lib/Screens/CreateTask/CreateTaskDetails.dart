@@ -267,15 +267,19 @@ class _CreateTaskDetailsState extends State<CreateTaskDetails> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    selectedType.strName,
-                                    textAlign: TextAlign.right,
-                                    overflow: TextOverflow.ellipsis,
-                                    textDirection: TextDirection.rtl,
-                                    style: const TextStyle(
-                                      color: AppColor.main,
-                                      fontSize: 14,
-                                      fontFamily: 'DroidArabicKufi',
+                                  SizedBox(
+                                    width: screenWidth * 0.3,
+                                    child: Text(
+                                      selectedType.strName,
+                                      textAlign: TextAlign.right,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      textDirection: TextDirection.rtl,
+                                      style: const TextStyle(
+                                        color: AppColor.main,
+                                        fontSize: 14,
+                                        fontFamily: 'DroidArabicKufi',
+                                      ),
                                     ),
                                   ),
                                   const TitleText(text: "نوع المهمه:")
@@ -293,15 +297,20 @@ class _CreateTaskDetailsState extends State<CreateTaskDetails> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    formatDate(startDate),
-                                    textAlign: TextAlign.right,
-                                    textDirection: TextDirection.rtl,
-                                    style: const TextStyle(
-                                      color: AppColor.main,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                      fontFamily: 'DroidArabicKufi',
+                                  SizedBox(
+                                    width: screenWidth * 0.3,
+                                    child: Text(
+                                      formatDate(startDate),
+                                      textAlign: TextAlign.right,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      textDirection: TextDirection.rtl,
+                                      style: const TextStyle(
+                                        color: AppColor.main,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                        fontFamily: 'DroidArabicKufi',
+                                      ),
                                     ),
                                   ),
                                   const TitleText(text: "تاريخ البدء:")
@@ -319,15 +328,20 @@ class _CreateTaskDetailsState extends State<CreateTaskDetails> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    formatDate(endDate),
-                                    textAlign: TextAlign.right,
-                                    textDirection: TextDirection.rtl,
-                                    style: const TextStyle(
-                                      color: AppColor.main,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                      fontFamily: 'DroidArabicKufi',
+                                  SizedBox(
+                                    width: screenWidth * 0.3,
+                                    child: Text(
+                                      formatDate(endDate),
+                                      textAlign: TextAlign.right,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      textDirection: TextDirection.rtl,
+                                      style: const TextStyle(
+                                        color: AppColor.main,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                        fontFamily: 'DroidArabicKufi',
+                                      ),
                                     ),
                                   ),
                                   const TitleText(text: "تاريخ الانتهاء:")
@@ -345,16 +359,21 @@ class _CreateTaskDetailsState extends State<CreateTaskDetails> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    costController.text.isNotEmpty
-                                        ? costController.text
-                                        : "غير محدد",
-                                    textAlign: TextAlign.right,
-                                    textDirection: TextDirection.rtl,
-                                    style: const TextStyle(
-                                      color: AppColor.main,
-                                      fontSize: 14,
-                                      fontFamily: 'DroidArabicKufi',
+                                  SizedBox(
+                                    width: screenWidth * 0.3,
+                                    child: Text(
+                                      costController.text.isNotEmpty
+                                          ? costController.text
+                                          : "غير محدد",
+                                      textAlign: TextAlign.right,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      textDirection: TextDirection.rtl,
+                                      style: const TextStyle(
+                                        color: AppColor.main,
+                                        fontSize: 14,
+                                        fontFamily: 'DroidArabicKufi',
+                                      ),
                                     ),
                                   ),
                                   const TitleText(text: "التكلفة:")
@@ -372,14 +391,19 @@ class _CreateTaskDetailsState extends State<CreateTaskDetails> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    selectedTeam.strLeaderName,
-                                    textAlign: TextAlign.right,
-                                    textDirection: TextDirection.rtl,
-                                    style: const TextStyle(
-                                      color: AppColor.main,
-                                      fontSize: 14,
-                                      fontFamily: 'DroidArabicKufi',
+                                  SizedBox(
+                                    width: screenWidth * 0.3,
+                                    child: Text(
+                                      selectedTeam.strLeaderName,
+                                      textAlign: TextAlign.right,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      textDirection: TextDirection.rtl,
+                                      style: const TextStyle(
+                                        color: AppColor.main,
+                                        fontSize: 14,
+                                        fontFamily: 'DroidArabicKufi',
+                                      ),
                                     ),
                                   ),
                                   const TitleText(text: "رئيس الشعبة:")

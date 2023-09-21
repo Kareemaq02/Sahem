@@ -1,4 +1,10 @@
 import 'dart:math';
+import 'package:account/API/ComplaintsAPI/Get_Complaints_Types.dart';
+import 'package:account/Utils/Team.dart';
+import 'package:account/Widgets/Charts/TeamChart.dart';
+import 'package:account/Widgets/CheckBoxes/StyledCheckBox.dart';
+import 'package:account/Widgets/Interactive/TeamSelectionBox.dart';
+import 'package:account/Widgets/Popup/DateRangePopup.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Utils/Team.dart';
 import 'package:account/Repository/color.dart';
@@ -8,11 +14,10 @@ import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/Widgets/Charts/PerformanceChart.dart';
 import 'package:account/Widgets/Displays/InfoDisplayBox.dart';
 import 'package:account/Widgets/Buttons/StyledFilterChip.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:account/Widgets/CheckBoxes/StyledCheckBox.dart';
 import 'package:account/Widgets/Interactive/TeamSelectionBox.dart';
 import 'package:account/API/ComplaintsAPI/Get_Complaints_Types.dart';
-// ignore_for_file: file_names
-
 
 class TeamAnalytics extends StatefulWidget {
   const TeamAnalytics({super.key});
@@ -27,20 +32,6 @@ class _TeamAnalyticsState extends State<TeamAnalytics> {
   DateTime selectedDate = DateTime.now().subtract(const Duration(days: 7));
   int timeframe = 1;
 
-  Future<void> selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-      });
-    }
-  }
-
   // Chart Data
   DateTime startDate = DateTime(DateTime.now().year, 1, 1);
   DateTime endDate = DateTime(DateTime.now().year, 3, 31);
@@ -49,7 +40,7 @@ class _TeamAnalyticsState extends State<TeamAnalytics> {
 
   // Displays Data
   int complaintCount = 0;
-  String avgResolve = "يومين";
+  String teamRating = "4.7";
   String successRate = "66.7%";
 
   // Render Vars
@@ -82,6 +73,16 @@ class _TeamAnalyticsState extends State<TeamAnalytics> {
     return typesObjs;
   }
 
+  void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
+    PickerDateRange dateRange = args.value;
+    if (dateRange.endDate != null) {
+      setState(() {
+        startDate = dateRange.startDate!;
+        endDate = dateRange.endDate!;
+      });
+    }
+  }
+
   void returnChartData() {
     // Vars Reset
     complaintData.clear();
@@ -100,22 +101,7 @@ class _TeamAnalyticsState extends State<TeamAnalytics> {
       complaintCount += randomValue;
       tempTasks += randomValue2;
     }
-    int timeToSolveHours = random.nextInt(74) + 24;
-    var timeToSolveDays = timeToSolveHours / 24;
-    switch (timeToSolveDays.floor()) {
-      case 0:
-        avgResolve = "أقل من يوم";
-        break;
-      case 1:
-        avgResolve = "يوم";
-        break;
-      case 2:
-        avgResolve = "يومين";
-        break;
-      default:
-        avgResolve = "${timeToSolveDays.toStringAsFixed(1)} أيام";
-        break;
-    }
+    teamRating = (2.0 + Random().nextDouble() * (4.9 - 2.0)).toStringAsFixed(1);
     double tempAvg = tempTasks / complaintCount * 100;
     successRate = "${tempAvg.toStringAsFixed(1)}%";
   }
@@ -134,7 +120,7 @@ class _TeamAnalyticsState extends State<TeamAnalytics> {
     double boxHeight = 0.15 * screenHeight;
     double boxWidth = 0.31 * screenWidth;
 
-    double teamWidth = screenWidth * 0.92;
+    double teamWidth = screenWidth * 0.95;
     double teamHeight = screenHeight * 0.24;
 
     final timechips = [
@@ -174,8 +160,13 @@ class _TeamAnalyticsState extends State<TeamAnalytics> {
         text: "أخر",
         onPressed: () => setState(
           () {
-            timeframe = 5;
-            selectDate(context);
+            showDateRangeDialog(
+              "أختر الفترة",
+              context,
+              screenHeight * 0.5,
+              _onSelectionChanged,
+              PickerDateRange(startDate, endDate),
+            );
           },
         ),
       ),
@@ -190,6 +181,7 @@ class _TeamAnalyticsState extends State<TeamAnalytics> {
       body: Padding(
         padding: EdgeInsets.only(top: halfMarginY, bottom: halfMarginY),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Center(
               child: Container(
@@ -235,6 +227,9 @@ class _TeamAnalyticsState extends State<TeamAnalytics> {
                 ),
               ),
             ),
+            SizedBox(
+              height: screenHeight * 0.01,
+            ),
             // Team Box
             TeamSelectionBox(
               height: teamHeight,
@@ -263,7 +258,7 @@ class _TeamAnalyticsState extends State<TeamAnalytics> {
                         height: boxHeight,
                         width: boxWidth,
                         title: "التقييم",
-                        content: avgResolve),
+                        content: teamRating),
                     InfoDisplayBox(
                         height: boxHeight,
                         width: boxWidth,
