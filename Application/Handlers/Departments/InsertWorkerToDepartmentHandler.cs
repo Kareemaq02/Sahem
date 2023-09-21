@@ -55,8 +55,6 @@ namespace Application.Handlers.LookUps
             )
                 return Result<string>.Failure("Worker is already in specified department");
 
-
-
             var departmentUser = new DepartmentUsers
             {
                 intUserId = request.intWorkerId,
@@ -68,51 +66,81 @@ namespace Application.Handlers.LookUps
             //Insert into Notifications Table
             try
             {
-                var username = await _context.Users.
-                    Where(q => q.Id == request.intWorkerId).Select(c => c.UserName).SingleOrDefaultAsync();
+                var username = await _context.Users
+                    .Where(q => q.Id == request.intWorkerId)
+                    .Select(c => c.UserName)
+                    .SingleOrDefaultAsync();
 
                 var notificationLayout = await _context.NotificationTypes
-                    .Where(q => q.intId == (int)NotificationConstant.NotificationType.workerAddedToDepartmentNotification)
-                    .Select(q => new NotificationLayout
-                    {
-                        strHeaderAr = q.strHeaderAr,
-                        strBodyAr = q.strBodyAr,
-                        strBodyEn = q.strBodyEn,
-                        strHeaderEn = q.strHeaderEn
-                    }).SingleOrDefaultAsync();
+                    .Where(
+                        q =>
+                            q.intId
+                            == (int)
+                                NotificationConstant
+                                    .NotificationType
+                                    .workerAddedToDepartmentNotification
+                    )
+                    .Select(
+                        q =>
+                            new NotificationLayout
+                            {
+                                strHeaderAr = q.strHeaderAr,
+                                strBodyAr = q.strBodyAr,
+                                strBodyEn = q.strBodyEn,
+                                strHeaderEn = q.strHeaderEn
+                            }
+                    )
+                    .SingleOrDefaultAsync();
 
-                if(notificationLayout == null)
+                if (notificationLayout == null)
                     throw new Exception("Notification Type table is empty");
 
                 //Get Department name in arabic and in english
                 var departmentNames = await _context.Departments
                     .Where(q => q.intId == request.intDepartmentId)
-                    .Select(q => new Department { strNameAr = q.strNameAr, strNameEn = q.strNameEn }).SingleOrDefaultAsync();
+                    .Select(
+                        q => new Department { strNameAr = q.strNameAr, strNameEn = q.strNameEn }
+                    )
+                    .SingleOrDefaultAsync();
 
-                await _mediator.
-                    Send(new InsertNotificationCommand(new Notification
-                    {
-                        intTypeId = (int)NotificationConstant.NotificationType.workerAddedToDepartmentNotification,
-                        intUserId = request.intWorkerId,
-                        strBodyAr = "قسم " + departmentNames.strNameAr + " " + notificationLayout.strBodyAr,
-                        strHeaderAr = notificationLayout.strHeaderAr + " " + departmentNames.strNameAr,
-                        strBodyEn = departmentNames.strNameEn + " " + notificationLayout.strBodyEn,
-                        strHeaderEn = notificationLayout.strHeaderEn + " " + departmentNames.strNameEn + " department.",
-                    }));
-
+                await _mediator.Send(
+                    new InsertNotificationCommand(
+                        new Notification
+                        {
+                            intTypeId = (int)
+                                NotificationConstant
+                                    .NotificationType
+                                    .workerAddedToDepartmentNotification,
+                            intUserId = request.intWorkerId,
+                            strBodyAr =
+                                "قسم "
+                                + departmentNames.strNameAr
+                                + " "
+                                + notificationLayout.strBodyAr,
+                            strHeaderAr =
+                                notificationLayout.strHeaderAr + " " + departmentNames.strNameAr,
+                            strBodyEn =
+                                departmentNames.strNameEn + " " + notificationLayout.strBodyEn,
+                            strHeaderEn =
+                                notificationLayout.strHeaderEn
+                                + " "
+                                + departmentNames.strNameEn
+                                + " department.",
+                        }
+                    )
+                );
 
                 // Get Notification body and header
 
-                await _notificationService
-                    .SendNotification(request.intWorkerId, notificationLayout.strHeaderAr + departmentNames.strNameAr,
-                    notificationLayout.strBodyAr + departmentNames.strNameAr);
+                //await _notificationService
+                //.SendNotification(request.intWorkerId, notificationLayout.strHeaderAr + departmentNames.strNameAr,
+                //notificationLayout.strBodyAr + departmentNames.strNameAr);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString()); 
+                Console.WriteLine(ex.ToString());
             }
 
-           
             await transaction.CommitAsync(cancellationToken);
             return Result<string>.Success("Worker added successfully");
         }
