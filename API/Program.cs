@@ -21,7 +21,7 @@ builder.Services.AddControllers(opt =>
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddCorsService(builder.Configuration, builder.Environment);
 builder.Services.AddIdentityService(builder.Configuration);
-//builder.Services.AddTransient<InsertTaskHandler>();
+builder.Services.AddTransient<InsertTaskHandler>();
 builder.Services.AddTransient<AddComplaintStatusChangeTransactionHandler>();
 builder.Services.AddTransient<GetComplaintByIdHandler>();
 builder.Services.AddScoped<NotificationService>(); //Added a service for notifications
