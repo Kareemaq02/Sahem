@@ -62,11 +62,13 @@ namespace Application.Services
 
                     // Fire-and-forget task to send the notification
                     _ = SendNotificationAsync(jsonPayload);
+
+
                 }
             }
         }
 
-        private async Task SendNotificationAsync(string jsonPayload)
+        public async Task SendNotificationAsync(string jsonPayload)
         {
             using (var client = new HttpClient(new HttpClientHandler()))
             {
@@ -84,7 +86,7 @@ namespace Application.Services
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
                 // Send the notification asynchronously without awaiting the response
-                var _ = client.PostAsync(fcmUrl, content);
+                var _ = await client.PostAsync(fcmUrl, content);
             }
         }
     }

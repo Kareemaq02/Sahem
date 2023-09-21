@@ -9,6 +9,7 @@ using Domain.Resources;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using System.Transactions;
 
 namespace Application.Handlers.Teams
 {
@@ -70,7 +71,7 @@ namespace Application.Handlers.Teams
                         intLeaderId = intLeaderId,
                     };
 
-                    var newTeamEntity = await _context.AddAsync( newTeam );
+                    var newTeamEntity = await _context.AddAsync(newTeam);
                     await _context.SaveChangesAsync(cancellationToken);
 
                     request.createTeamDTO.intTeamId = newTeamEntity.Entity.intId;
@@ -78,51 +79,46 @@ namespace Application.Handlers.Teams
                     //Team Members Table
 
                     List<TeamMembers> lstTeamMembers = new List<TeamMembers> { };
+                    List<int> lstIntWorkerIds = new List<int>();
 
-                    foreach( var member in request.createTeamDTO.lstTeamMembers) 
+                    // Get Notification body and header
+                    var notificationLayout = await _context.NotificationTypes
+                       .Where(q => q.intId == (int)NotificationConstant.NotificationType.workerAddedToTeamNotification)
+                       .Select(q => new NotificationLayout
+                       {
+                           strHeaderAr = q.strHeaderAr,
+                           strBodyAr = q.strBodyAr,
+                           strBodyEn = q.strBodyEn,
+                           strHeaderEn = q.strHeaderEn
+                       }).SingleOrDefaultAsync();
+
+                    if (notificationLayout == null)
+                        throw new Exception("Notification Type table is empty");
+
+                    string headerAr = notificationLayout.strHeaderAr;
+                    string bodyAr = "فريق رقم #" + request.createTeamDTO.intTeamId + " " + notificationLayout.strBodyAr;
+                    string headerEn = notificationLayout.strHeaderEn;
+                    string strBodyEn = "Team #" + request.createTeamDTO.intTeamId + " " + notificationLayout.strBodyEn;
+
+                    foreach (var member in request.createTeamDTO.lstTeamMembers)
                     {
                         lstTeamMembers.Add(new TeamMembers
                         {
                             intTeamId = newTeamEntity.Entity.intId,
                             intWorkerId = member.intWorkerId
                         });
+                        lstIntWorkerIds.Add(member.intWorkerId);
 
 
 
                         try
                         {
-                            //Insert into Notifications Table
-
-                            var workerId = await _context.Complaints
-                                .Where(q => q.intId == member.intWorkerId).Select(c => c.intUserID).SingleOrDefaultAsync();
-
-                            var username = await _context.Users.
-                                Where(q => q.Id == workerId).Select(c => c.UserName).SingleOrDefaultAsync();
-
-                            // Get Notification body and header
-                            var notificationLayout = await _context.NotificationTypes
-                               .Where(q => q.intId == (int)NotificationConstant.NotificationType.workerAddedToTeamNotification)
-                               .Select(q => new NotificationLayout
-                               {
-                                   strHeaderAr = q.strHeaderAr,
-                                   strBodyAr = q.strBodyAr,
-                                   strBodyEn = q.strBodyEn,
-                                   strHeaderEn = q.strHeaderEn
-                               }).SingleOrDefaultAsync();
-
-                            if (notificationLayout == null)
-                                throw new Exception("Notification Type table is empty");
-
-                            string headerAr = notificationLayout.strHeaderAr;
-                            string bodyAr = "فريق رقم #" + request.createTeamDTO.intTeamId + " " + notificationLayout.strBodyAr;
-                            string headerEn = notificationLayout.strHeaderEn;
-                            string strBodyEn = "Team #" + request.createTeamDTO.intTeamId + " " + notificationLayout.strBodyEn;
 
                             await _mediator.
                                 Send(new InsertNotificationCommand(new Notification
                                 {
                                     intTypeId = (int)NotificationConstant.NotificationType.workerAddedToTeamNotification,
-                                    intUserId = workerId,
+                                    intUserId = member.intWorkerId,
 
                                     strHeaderAr = headerAr,
                                     strBodyAr = bodyAr,
@@ -130,23 +126,24 @@ namespace Application.Handlers.Teams
                                     strHeaderEn = headerEn,
                                     strBodyEn = strBodyEn,
                                 }));
-
-
-                            await _notificationService.SendNotification(workerId, headerAr, bodyAr);
+                            
                         }
                         catch (Exception e)
                         {
+                            await transaction.RollbackAsync();
                             Console.WriteLine(e.ToString());
+                            return Result<CreateTeamDTO>.Failure("Failed to Create team");
                         }
                     }
+                     _notificationService.SendNotifications(lstIntWorkerIds, headerAr, bodyAr);
                     await _context.TeamMembers.AddRangeAsync(lstTeamMembers);
                     await _context.SaveChangesAsync(cancellationToken);
                 }
-                catch 
+                catch
                 {
                     await transaction.RollbackAsync();
                     return Result<CreateTeamDTO>.Failure("Only one Leader must be selected");
-                }  
+                }
             }
             await transaction.CommitAsync();
 

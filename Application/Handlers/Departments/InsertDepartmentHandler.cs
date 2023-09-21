@@ -4,7 +4,6 @@ using Domain.DataModels.LookUps;
 using Domain.DataModels.User;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,17 +13,14 @@ namespace Application.Handlers.LookUps
         : IRequestHandler<InsertDepartmentCommand, Result<DepartmentDTO>>
     {
         private readonly DataContext _context;
-        private readonly IConfiguration _configuration;
         public readonly UserManager<ApplicationUser> _userManager;
 
         public InsertDepartmentHandler(
             DataContext context,
-            IConfiguration configuration,
             UserManager<ApplicationUser> userManager
         )
         {
             _context = context;
-            _configuration = configuration;
             _userManager = userManager;
         }
 
