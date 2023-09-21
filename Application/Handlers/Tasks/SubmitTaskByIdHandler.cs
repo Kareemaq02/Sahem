@@ -167,13 +167,27 @@ namespace Application.Handlers.Complaints
                         await _context.ComplaintAttachments.AddRangeAsync(taskAttatchments);
                         await _context.SaveChangesAsync(cancellationToken);
 
+                        List<int> userIds = new List<int>();
 
+                        var complaintIds = await _context.TasksComplaints
+                        .Where(q => q.intTaskId == request.id)
+                         .Select(q => q.intComplaintId)
+                        .ToListAsync();
 
-                        foreach (var media in lstMedia)
+                        foreach (var complaintId in complaintIds)
                         {
                             try
                             {
-                                var complaint = new Complaint { intId = media.intComplaintId };
+                                var complaint = await _context.Complaints
+                                .Where(q => q.intId == complaintId)
+                                .Select(q => new Complaint
+                                {
+                                    intId = q.intId,
+                                    intUserID = q.intUserID,
+                                    intStatusId = q.intStatusId
+                                }).SingleOrDefaultAsync();
+
+
                                 _context.Complaints.Attach(complaint);
                                 complaint.intStatusId = (int)
                                     ComplaintsConstant.complaintStatus.waitingEvaluation;
@@ -181,11 +195,12 @@ namespace Application.Handlers.Complaints
 
                                 await _changeTransactionHandler.Handle(
                                     new AddComplaintStatusChangeTransactionCommand(
-                                        media.intComplaintId,
+                                        complaintId,
                                         (int)ComplaintsConstant.complaintStatus.waitingEvaluation
                                     ),
                                     cancellationToken
                                 );
+                                userIds.Add(complaint.intUserID);
                                 await _context.SaveChangesAsync(cancellationToken);
                             }
                             catch 
@@ -195,45 +210,44 @@ namespace Application.Handlers.Complaints
 
                             }
 
+                        }
 
 
-                            try
+                        try
+                        {
+                            //Insert into Notifications Table
+
+
+
+                            // Get Notification body and header
+                            var notificationLayout = await _context.NotificationTypes
+                               .Where(q => q.intId == (int)NotificationConstant.NotificationType.waitingEvaluationComplaintNotification)
+                               .Select(q => new NotificationLayout
+                               {
+                                   strHeaderAr = q.strHeaderAr,
+                                   strBodyAr = q.strBodyAr,
+                                   strBodyEn = q.strBodyEn,
+                                   strHeaderEn = q.strHeaderEn
+                               }).SingleOrDefaultAsync();
+
+                            if (notificationLayout == null)
                             {
-                                //Insert into Notifications Table
+                                await transaction.RollbackAsync();
+                                throw new Exception("Notification Type table is empty");
+                            }
 
-                                var inProgressComplaintUserId = await _context.Complaints
-                                    .Where(q => q.intId == media.intComplaintId).Select(c => c.intUserID).SingleOrDefaultAsync();
+                            string headerAr = notificationLayout.strHeaderAr;
+                            string bodyAr = notificationLayout.strBodyAr;
+                            string headerEn = notificationLayout.strHeaderEn;
+                            string strBodyEn = notificationLayout.strBodyEn;
 
-                                var username = await _context.Users.
-                                    Where(q => q.Id == inProgressComplaintUserId).Select(c => c.UserName).SingleOrDefaultAsync();
-
-                                // Get Notification body and header
-                                /*var notificationLayout = await _context.NotificationTypes
-                                   .Where(q => q.intId == (int)NotificationConstant.NotificationType.complaintStatusChangeNotification)
-                                   .Select(q => new NotificationLayout
-                                   {
-                                       strHeaderAr = q.strHeaderAr,
-                                       strBodyAr = q.strBodyAr,
-                                       strBodyEn = q.strBodyEn,
-                                       strHeaderEn = q.strHeaderEn
-                                   }).SingleOrDefaultAsync();
-
-                                if (notificationLayout == null)
-                                {
-                                    await transaction.RollbackAsync();
-                                    throw new Exception("Notification Type table is empty");
-                                }
-
-                                string headerAr = notificationLayout.strHeaderAr;
-                                string bodyAr = notificationLayout.strBodyAr + " #" + media.intComplaintId + " إلى 'انتظار التقييم'. سيتم مراجعة شكوتك من قبل فريقنا وسنقوم بإعلامك بأي تحديثات جديدة. نشكرك على صبرك.";
-                                string headerEn = notificationLayout.strHeaderEn;
-                                string strBodyEn = notificationLayout.strBodyEn + " #" + media.intComplaintId + " has been updated to 'Waiting Evaluation' status. Your complaint is under review by our team, and we will notify you of any new updates. Thank you for your patience.";
-
+                            foreach (int userID in userIds)
+                            {
                                 await _mediator.
                                     Send(new InsertNotificationCommand(new Notification
                                     {
-                                        intTypeId = (int)NotificationConstant.NotificationType.complaintStatusChangeNotification,
-                                        intUserId = inProgressComplaintUserId,
+                                        intTypeId = (int)NotificationConstant.NotificationType.waitingEvaluationComplaintNotification,
+                                        intUserId = userID,
 
                                         strHeaderAr = headerAr,
                                         strBodyAr = bodyAr,
@@ -241,17 +255,19 @@ namespace Application.Handlers.Complaints
                                         strHeaderEn = headerEn,
                                         strBodyEn = strBodyEn,
                                     }));
-
-
-                                await _notificationService.SendNotification(inProgressComplaintUserId, headerAr, bodyAr);*/
                             }
-                            catch (Exception e)
-                            {
-                                await transaction.RollbackAsync();
-                                return Result<SubmitTaskDTO>.Failure("Failed to Submit Task" + e);
 
-                            }
+
+                             _notificationService.SendNotifications(userIds, headerAr, bodyAr);
                         }
+                        catch (Exception e)
+                        {
+                            await transaction.RollbackAsync();
+                            return Result<SubmitTaskDTO>.Failure("Failed to Submit Task" + e);
+
+                        }
+
+
                         // Alter it to link the attachment with the complaint, not the task
                         //await _context.TaskAttachments.AddRangeAsync(taskAttatchments);
                         await transaction.CommitAsync();
