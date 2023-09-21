@@ -5,6 +5,7 @@ import 'package:account/API/send_reminder_Request.dart';
 import 'package:account/Widgets/HelperWidegts/text.dart';
 import 'package:account/Widgets/Buttons/buttonsForCards.dart';
 import 'package:account/Widgets/HelperWidegts/myContainer.dart';
+import 'package:account/Widgets/HelperWidegts/ratingWidget.dart';
 import 'package:account/Widgets/HelperWidegts/complaintCard.dart';
 import 'package:account/Widgets/ComaplaintCard/timeLineWidget.dart';
 import 'package:account/Screens/View%20complaints/complaints_details.dart';
@@ -18,6 +19,7 @@ class ComplaintCard2 extends StatefulWidget {
   final double lat;
   final double lng;
   final int i;
+  final bool isRated;
   //final String pic;
 
   const ComplaintCard2({
@@ -29,6 +31,7 @@ class ComplaintCard2 extends StatefulWidget {
     required this.lat,
     required this.lng,
     required this.i,
+    required this.isRated,
     // required this.pic
   }) : super(key: key);
 
@@ -65,6 +68,8 @@ class _ComplaintCard2sState extends State<ComplaintCard2> {
     }
   }
 
+  double rating = 2.5;
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -83,10 +88,26 @@ class _ComplaintCard2sState extends State<ComplaintCard2> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  CardButtons(context, 'تذكير', Colors.grey, Colors.white, 0,
-                      Colors.grey, () {
-                    a.comaplintReminder(widget.id, context);
-                  }),
+                  CardButtons(
+                      context,
+                      widget.status == 6 ? 'تقييم' : 'تذكير',
+                      widget.status == 6 ? AppColor.main : Colors.green,
+                      Colors.white,
+                      0,
+                      widget.status == 6 ? AppColor.main : Colors.green,
+                      widget.status == 6
+                          ? () {
+                              !widget.isRated
+                                  ? showDialog(
+                                      context: context,
+                                      builder: (BuildContext builder) {
+                                        return  RatingWidget1(complaintId: widget.id,);
+                                      })
+                                  : null;
+                            }
+                          : () {
+                              a.comaplintReminder(widget.id, context);
+                            }),
                   SizedBox(width: screenWidth * 0.02),
                   CardButtons(context, 'معاينة', Colors.white, AppColor.main, 0,
                       Colors.grey.shade300, () {

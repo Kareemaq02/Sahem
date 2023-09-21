@@ -57,6 +57,7 @@ dependencies:
   page_indicator: ^0.4.1
   syncfusion_flutter_charts: ^22.2.11
   flutter_map_marker_cluster: ^0.5.0
+  flutter_rating_bar: ^4.0.1
   
   
 
