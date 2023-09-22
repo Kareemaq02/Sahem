@@ -23,13 +23,17 @@ Widget logoutBox(context) {
         width: double.infinity,
         child: Center(
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center, 
             children: [
               const Icon(Icons.logout_outlined, color: AppColor.secondary),
-              const SizedBox(width: 8),
+              const SizedBox(width: 8), 
               TextButton(
                 onPressed: () => {
-                
+                  prefs!.setString('token', ""),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const XDLogin()),
+                  )
                 },
                 child: const Text(
                   "تسجيل الخروج",
