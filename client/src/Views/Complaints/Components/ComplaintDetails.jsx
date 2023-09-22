@@ -12,15 +12,14 @@ const ComplaintDetails = ({ theme, complaint }) => {
   return (
     <Box>
       <Stack spacing={2}>
-        <Box width="25rem">
-          <Typography variant="h2">{complaint.strComplaintTypeEn}</Typography>
-          <Typography variant="h6" color={theme.palette.grey[500]}>
-            Address Here
+        <Box width="100%">
+          <Typography variant="h2" sx={{direction: 'rtl', fontFamily: 'Droid Arabic Naskh, sans-serif'}}>{complaint.strComplaintTypeAr}</Typography>
+          <Typography variant="h6" color={theme.palette.grey[500]} sx={{direction: 'rtl', fontFamily: 'Droid Arabic Naskh, sans-serif'}}>
+            عنوان المشكلة
           </Typography>
         </Box>
         <Divider variant="middle" />
         <FlexBetween>
-          <Typography variant="h4">Details</Typography>
           <Typography
             variant="h5"
             color={theme.palette.grey[500]}
@@ -31,17 +30,15 @@ const ComplaintDetails = ({ theme, complaint }) => {
             <Storage />
             {complaint.intComplaintId}
           </Typography>
+          <Typography variant="h4">Details</Typography>
         </FlexBetween>
         <FlexBetween>
-          <Typography variant="h5" color={theme.palette.grey[500]}>
-            Status
-          </Typography>
           <Chip label={complaint.strStatus} color="primary" variant="outlined" />
+          <Typography variant="h5" color={theme.palette.grey[500]} sx={{fontFamily: 'Droid Arabic Naskh, sans-serif' }} >
+            الحالة
+          </Typography>
         </FlexBetween>
         <FlexBetween>
-          <Typography variant="h5" color={theme.palette.grey[500]}>
-            User
-          </Typography>
           <Chip
             variant="outlined"
             avatar={
@@ -52,19 +49,24 @@ const ComplaintDetails = ({ theme, complaint }) => {
             label={complaint.strUserName}
             sx={{
               "& .MuiChip-label": { color: theme.palette.grey[500] },
+              direction: 'rtl',
+              p: 1,
             }}
           />
+          <Typography variant="h5" color={theme.palette.grey[500]} sx={{fontFamily: 'Droid Arabic Naskh, sans-serif' }}>
+            المستخدم
+          </Typography>
         </FlexBetween>
         <FlexBetween>
-          <Typography variant="h5" color={theme.palette.grey[500]}>
-            Date Submitted
-          </Typography>
           <Chip
             variant="outlined"
             icon={<CalendarMonth color="primary" />}
             label={DateFormatterEn(complaint.dtmDateCreated)}
             color="primary"
           />
+          <Typography variant="h5" color={theme.palette.grey[500]} sx={{fontFamily: 'Droid Arabic Naskh, sans-serif' }}>
+            تاريخ الانشاء
+          </Typography>
         </FlexBetween>
       </Stack>
     </Box>
