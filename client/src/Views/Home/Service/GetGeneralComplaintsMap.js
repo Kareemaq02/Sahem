@@ -1,6 +1,6 @@
 import axios from "../../../Common/Utils/AxiosAgent";
 
-export default async function GetGeneralComplaintMarker() {
+export default async function GetPublicComplaintMarker() {
   try {
     console.log("function is working...")
     return await axios.get("/api/complaints/general/mapView");

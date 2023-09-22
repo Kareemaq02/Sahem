@@ -4,22 +4,15 @@ import { Box } from '@mui/system';
 
 const StatusTracker = ({ currentStage }) => {
     const stages = [
-        'قيد الانتظار',
-        'موافق عليه',
-        'مجدول',
         'قيد العمل',
-        'انتظار التقييم',
+        'مجدول',
+        'موافق عليه',
+        'قيد الانتظار',
         'معاد',
-        'مرفوض',
-        'منجز',
     ];
 
     const getColorClass = (stage) => {
         switch (currentStage) {
-            case 'completed':
-                return stage === 'منجز' ? 'completed-stage' : '';
-            case 'waiting evaluation':
-                return stage === 'انتظار التقييم' ? 'waiting-evaluation-stage' : '';
             case 'in progress':
                 return stage === 'قيد العمل' ? 'in-progress-stage' : '';
             case 'scheduled':
@@ -28,8 +21,6 @@ const StatusTracker = ({ currentStage }) => {
                 return stage === 'موافق عليه' ? 'approved-stage' : '';
             case 'pending':
                 return stage === 'قيد الانتظار' ? 'pending-stage' : '';
-            case 'rejected':
-                return stage === 'مرفوض' ? 'rejected-stage' : '';
             case 're-filed':
                 return stage === 'معاد' ? 'refiled-stage' : '';
             default:
