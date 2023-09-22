@@ -26,8 +26,21 @@ function AdminViewAccountDetails() {
   };
 
   return (
-    <div>
-      <Typography variant="h1" component="h1">
+    <div style={{
+      backgroundColor: '#ffffff',
+      padding: '1.5rem ',
+      width: '73.125rem',
+      marginRight: 'Auto',
+      marginLeft: 'Auto',
+      borderRadius: '5px',
+      border: '1px solid #c5c5c5',
+    }}>
+      <Typography vavariant="h1" component="h1" sx={{
+        padding: '0.5rem',
+        margin: '0.5rem',
+        textAlign: 'center',
+        width: '100%',
+      }}>
         Admin View Account Details
       </Typography>
 
@@ -73,9 +86,17 @@ function AdminViewAccountDetails() {
         margin="normal"
       />
 
-      <Button variant="contained" color="primary" onClick={handleUpdate}>
-        Update
-      </Button>
+      <div style={{ 
+      padding: '0.5rem 30rem',
+      width: '100%',}}>
+        <Button variant="contained" color="primary" onClick={handleUpdate} sx={{
+          width: "100%", padding: '15px 30px', marginRight: 'Auto',
+          marginLeft: 'Auto',
+        }}>
+          Update
+        </Button>
+      </div>
+
     </div>
   );
 }
