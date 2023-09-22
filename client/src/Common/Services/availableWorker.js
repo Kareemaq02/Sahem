@@ -7,7 +7,8 @@ export const availableWorker = async (startDate, dueDate) => {
     );
     return response.data.map((employee) => ({
       intId: employee.intId,
-      strName: employee.strFirstName + " " + employee.strLastName,
+      strName: employee.strFirstNameAr + " " + employee.strLastNameAr,
+      profession: employee.strProfessionAr,
     }));
   } catch (error) {
     console.error(error);
