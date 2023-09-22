@@ -94,20 +94,22 @@ namespace Application.Handlers.Complaints
                                     + (c.UpVotes - c.DownVotes)
                                     + (DateTime.UtcNow.Ticks - c.Complaint.dtmDateCreated.Ticks)
                                 ),
-                            lstMedia = request.blnIncludePictures ? c.Complaint.Attachments
-                                .Select(
-                                    ca =>
-                                        new Media
-                                        {
-                                            Data = File.Exists(ca.strMediaRef)
-                                                ? Convert.ToBase64String(
-                                                    File.ReadAllBytes(ca.strMediaRef)
-                                                )
-                                                : string.Empty,
-                                            IsVideo = ca.blnIsVideo
-                                        }
-                                )
-                                .ToList():null,
+                            lstMedia = request.blnIncludePictures
+                                ? c.Complaint.Attachments
+                                    .Select(
+                                        ca =>
+                                            new Media
+                                            {
+                                                Data = File.Exists(ca.strMediaRef)
+                                                    ? Convert.ToBase64String(
+                                                        File.ReadAllBytes(ca.strMediaRef)
+                                                    )
+                                                    : string.Empty,
+                                                IsVideo = ca.blnIsVideo
+                                            }
+                                    )
+                                    .ToList()
+                                : null,
                         }
                 )
                 .ToListAsync();
@@ -162,13 +164,12 @@ namespace Application.Handlers.Complaints
                 {
                     var tempFilter = filter;
                     predicate = predicate.Or(q => q.intPrivacyId == tempFilter);
-
                 }
                 queryObject = queryObject.Where(predicate).ToList();
-
             }
 
             // NOT OPTIMIZED USE OTHER REFERENCES FOR HELP
+            queryObject = queryObject.OrderByDescending(q => q.decPriority).ToList();
             var result = await PagedList<ComplaintsListDTO>.CreateAsync(
                 queryObject,
                 request.filter.PageNumber,
