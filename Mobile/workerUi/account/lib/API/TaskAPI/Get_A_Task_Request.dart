@@ -3,8 +3,6 @@ import 'package:account/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:account/Repository/urls.dart';
 import 'package:account/Utils/TeamMembers.dart';
-// ignore_for_file: file_names
-
 
 class TaskDetails {
   int intTaskID;
@@ -67,14 +65,15 @@ class TaskDetails {
         (index) => TeamMember.fromJson(json['workersList'][index]),
       ),
       lstMedia: json['lstMedia'] != null
-          ? List<String>.from(json['lstMedia'])
+          ? List<String>.from(
+              json['lstMedia'].map((map) => map['Data'].toString()))
           : List.empty(),
     );
   }
 }
 
 class TaskDetailsRequest {
-    final userToken = prefs!.getString('token');
+  final userToken = prefs!.getString('token');
   Future<TaskDetails> getTaskDetails(int taskId) async {
     var baseUrl = "${AppUrl.baseURL}tasks/details/$taskId";
     http.Response response = await http.get(

@@ -1,43 +1,39 @@
-import 'package:account/API/TeamsAPI/GetAvailableTeams.dart';
-import 'package:account/API/TeamsAPI/GetTeamMembers.dart';
+import 'package:account/API/TeamsAPI/GetAdminTeams.dart';
+import 'package:account/API/TeamsAPI/GetTeamAnalytics.dart';
+import 'package:account/Widgets/Displays/TeamMemberAnalyticsDisplay.dart';
 import 'package:account/Widgets/HelperWidgets/Loader.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Utils/Team.dart';
 import 'package:account/Repository/color.dart';
-import 'package:account/Utils/TeamMembers.dart';
 import 'package:account/Widgets/Popup/CheckBoxPopup.dart';
 import 'package:account/Widgets/Buttons/StyledButton.dart';
 import 'package:account/Widgets/HelperWidgets/TitleText.dart';
 import 'package:account/Widgets/CheckBoxes/StyledCheckBox.dart';
 import 'package:account/Widgets/Displays/TeamMemberDisplay.dart';
 
-class TeamSelectionBox extends StatefulWidget {
+class TeamAnalyticsBox extends StatefulWidget {
   final double height;
   final double width;
   final double boxHeight;
   final double boxWidth;
-  final DateTime startDate;
-  final DateTime endDate;
   final void Function(Team) onChecked;
 
-  const TeamSelectionBox({
+  const TeamAnalyticsBox({
     Key? key,
     required this.height,
     required this.width,
     required this.boxHeight,
     required this.boxWidth,
     required this.onChecked,
-    required this.startDate,
-    required this.endDate,
   }) : super(key: key);
 
   @override
-  _TeamSelectionBoxState createState() => _TeamSelectionBoxState();
+  _TeamAnalyticsBoxState createState() => _TeamAnalyticsBoxState();
 }
 
-class _TeamSelectionBoxState extends State<TeamSelectionBox> {
-  late Future<List<TeamMember>> teamMembersRequest;
-  List<TeamMember> teamMembersList = [];
+class _TeamAnalyticsBoxState extends State<TeamAnalyticsBox> {
+  late Future<TeamAnalyticsModel> teamMembersRequest;
+  List<TeamMembersRating> teamMembersList = [];
 
   late Future<List<Team>> teamsRequest;
   List<Team> teamsList = [];
@@ -52,18 +48,32 @@ class _TeamSelectionBoxState extends State<TeamSelectionBox> {
   }
 
   void setIntialTeam() async {
-    teamMembersRequest = Future.delayed(const Duration(milliseconds: 300))
-        .then((value) => <TeamMember>[]);
+    teamMembersRequest = Future.delayed(const Duration(milliseconds: 300)).then(
+      (value) => TeamAnalyticsModel(
+          intTeamId: 0,
+          intTasksCount: 0,
+          intTasksCompletedCount: 0,
+          intTasksScheduledCount: 0,
+          intTasksIncompleteCount: 0,
+          intTasksWaitingEvaluationCount: 0,
+          decTeamRatingAvg: 0.0,
+          lstMembersAvgRating: <TeamMembersRating>[]),
+    );
+    await getTeams();
+    selectedTeamId = teamsList[0].intId;
+    widget.onChecked(teamsList[0]);
+    getTeamMembers();
   }
 
   void getTeamMembers() async {
-    teamMembersRequest = GetTeamMembersRequest().getTeamMembers(selectedTeamId);
-    teamMembersList = await teamMembersRequest;
+    teamMembersRequest =
+        TeamsAnalyticsRequest().getTeamsAnalytics(selectedTeamId);
+    var _ = await teamMembersRequest;
+    teamMembersList = _.lstMembersAvgRating;
   }
 
-  void getTeams() async {
-    teamsRequest = AvailableTeamsRequest()
-        .getAvailableTeams(widget.startDate, widget.endDate);
+  Future<void> getTeams() async {
+    teamsRequest = AdminTeamsRequest().getAdminTeams();
     teamsList = await teamsRequest;
     filteredTeams.clear();
     filteredTeams.addAll(teamsList);
@@ -111,7 +121,7 @@ class _TeamSelectionBoxState extends State<TeamSelectionBox> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   StyledButton(
-                    text: "اختر فريق",
+                    text: "إختر",
                     fontSize: 14,
                     onPressed: () {
                       getTeams();
@@ -142,7 +152,7 @@ class _TeamSelectionBoxState extends State<TeamSelectionBox> {
                                 }
                                 return CheckBoxPopup(
                                   height: screenHeight * 0.5,
-                                  title: "الفرق",
+                                  title: "الشعب",
                                   search: (String query) =>
                                       filterTeams(query, setStateInsideDialog),
                                   checkBoxes: List.generate(
@@ -176,7 +186,7 @@ class _TeamSelectionBoxState extends State<TeamSelectionBox> {
                     },
                   ),
                   const TitleText(
-                    text: "فريق العمل",
+                    text: "الشعبة",
                   ),
                 ],
               ),
@@ -185,20 +195,19 @@ class _TeamSelectionBoxState extends State<TeamSelectionBox> {
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             reverse: true,
-            child: FutureBuilder<List<TeamMember>>(
+            child: FutureBuilder<TeamAnalyticsModel>(
               future: teamMembersRequest,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting ||
                     teamMembersList.isEmpty) {
                   return SizedBox(
                     height: widget.boxHeight,
-                    child: const Center(
-                        child: TitleText(text: "لم يتم اختيار شعبة")),
+                    child: const Loader(),
                   );
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 }
-                List<TeamMember> team = teamMembersList;
+                List<TeamMembersRating> team = teamMembersList;
 
                 return Row(
                   children: List.generate(
@@ -207,17 +216,22 @@ class _TeamSelectionBoxState extends State<TeamSelectionBox> {
                       return Padding(
                         padding: EdgeInsets.symmetric(
                             horizontal: screenWidth * 0.02),
-                        child: TeamMemberDisplay(
-                          height: widget.boxHeight,
-                          width: widget.boxWidth,
-                          name: team[index].strName,
-                          icon: team[index].blnIsLeader
-                              ? Icons.flag_circle_rounded
-                              : Icons.emoji_emotions,
-                          color: team[index].blnIsLeader
-                              ? AppColor.main
-                              : AppColor.textTitle,
-                        ),
+                        child: team[index].blnIsLeader
+                            ? TeamMemberDisplay(
+                                height: widget.boxHeight,
+                                width: widget.boxWidth,
+                                name: team[index].strName,
+                                icon: Icons.flag_circle_rounded,
+                                color: AppColor.main,
+                              )
+                            : TeamMemberAnalyticsDisplay(
+                                height: widget.boxHeight,
+                                width: widget.boxWidth,
+                                name: team[index].strName,
+                                icon: Icons.emoji_emotions,
+                                color: AppColor.textTitle,
+                                rating: team[index].decRating,
+                              ),
                       );
                     },
                   ),

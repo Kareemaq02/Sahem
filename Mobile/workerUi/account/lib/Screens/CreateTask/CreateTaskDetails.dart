@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:account/API/TaskAPI/CreateTaskRequest.dart';
+import 'package:account/Widgets/HelperWidgets/Loader.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Utils/Team.dart';
 import 'package:account/Repository/color.dart';
@@ -17,12 +19,7 @@ import 'package:account/Widgets/Interactive/DateRangeField.dart';
 import 'package:account/API/TaskAPI/Get_Tasks_Types_Request.dart';
 import 'package:account/Widgets/Buttons/OutlinedStyledButton.dart';
 import 'package:account/Widgets/Interactive/TeamSelectionBox.dart';
-// ignore_for_file: unused_local_variable
 
-// ignore_for_file: file_names
-
-
-// ignore_for_file: library_private_types_in_public_api
 class CreateTaskDetails extends StatefulWidget {
   final int intComplaintId;
   const CreateTaskDetails({super.key, required this.intComplaintId});
@@ -33,6 +30,7 @@ class CreateTaskDetails extends StatefulWidget {
 
 class _CreateTaskDetailsState extends State<CreateTaskDetails> {
   // Render Vars
+  bool isSending = false;
 
   // API Vars
   late Future<List<TaskType>> taskTypesRequest;
@@ -46,11 +44,13 @@ class _CreateTaskDetailsState extends State<CreateTaskDetails> {
   Team selectedTeam = Team(0, "0");
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now().add(const Duration(days: 7));
+  List<int> lstComplaintIds = [];
 
   @override
   void initState() {
     super.initState();
     getTaskTypes();
+    lstComplaintIds.add(widget.intComplaintId);
   }
 
   // API Functions
@@ -80,21 +80,16 @@ class _CreateTaskDetailsState extends State<CreateTaskDetails> {
   }
 
   void _sendRequest() async {
-    //use dio if http doesn't work
-    Map<String, dynamic> data = {
-      'scheduledDate': startDate,
-      'deadlineDate': endDate,
-      'strComment': commentController.text,
-      'intTaskType': selectedType.intID,
-      'intTeamId': selectedTeam.intId,
-      'lstComplaintIds': [widget.intComplaintId],
-    };
-    // final response = await request(data)
-    // if (response.statusCode == 200) {
+    final response = await CreateTaskRequest().insertTask(
+        costController.text,
+        startDate,
+        endDate,
+        selectedTeam.intId,
+        selectedType.intID,
+        commentController.text,
+        lstComplaintIds);
 
-    var statusCode = 200;
-    // var statusCode = 400;
-    if (statusCode == 200) {
+    if (response == 200) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => WillPopScope(
@@ -212,6 +207,8 @@ class _CreateTaskDetailsState extends State<CreateTaskDetails> {
             boxHeight: boxHeight,
             boxWidth: boxWidth,
             onChecked: setTeam,
+            startDate: startDate,
+            endDate: endDate,
           ),
           // Comment Box
           FormTextField(
@@ -234,214 +231,226 @@ class _CreateTaskDetailsState extends State<CreateTaskDetails> {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return Dialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: Container(
-                      height: screenHeight * 0.5,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30)),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          SizedBox(
-                            height: screenHeight * 0.08,
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                top: screenHeight * 0.01,
-                              ),
-                              child: const TitleText(
-                                text: "تأكيد المهمه",
-                                fontSize: 18,
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: fieldHeight,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: fieldHeight * 0.2,
-                                  horizontal: fieldWidth * 0.1),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  SizedBox(
-                                    width: screenWidth * 0.3,
-                                    child: Text(
-                                      selectedType.strName,
-                                      textAlign: TextAlign.right,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      textDirection: TextDirection.rtl,
-                                      style: const TextStyle(
-                                        color: AppColor.main,
-                                        fontSize: 14,
-                                        fontFamily: 'DroidArabicKufi',
-                                      ),
-                                    ),
-                                  ),
-                                  const TitleText(text: "نوع المهمه:")
-                                ],
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: fieldHeight,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: fieldHeight * 0.2,
-                                  horizontal: fieldWidth * 0.1),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  SizedBox(
-                                    width: screenWidth * 0.3,
-                                    child: Text(
-                                      formatDate(startDate),
-                                      textAlign: TextAlign.right,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      textDirection: TextDirection.rtl,
-                                      style: const TextStyle(
-                                        color: AppColor.main,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
-                                        fontFamily: 'DroidArabicKufi',
-                                      ),
-                                    ),
-                                  ),
-                                  const TitleText(text: "تاريخ البدء:")
-                                ],
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: fieldHeight,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: fieldHeight * 0.2,
-                                  horizontal: fieldWidth * 0.1),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  SizedBox(
-                                    width: screenWidth * 0.3,
-                                    child: Text(
-                                      formatDate(endDate),
-                                      textAlign: TextAlign.right,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      textDirection: TextDirection.rtl,
-                                      style: const TextStyle(
-                                        color: AppColor.main,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
-                                        fontFamily: 'DroidArabicKufi',
-                                      ),
-                                    ),
-                                  ),
-                                  const TitleText(text: "تاريخ الانتهاء:")
-                                ],
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: fieldHeight,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: fieldHeight * 0.2,
-                                  horizontal: fieldWidth * 0.1),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  SizedBox(
-                                    width: screenWidth * 0.3,
-                                    child: Text(
-                                      costController.text.isNotEmpty
-                                          ? costController.text
-                                          : "غير محدد",
-                                      textAlign: TextAlign.right,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      textDirection: TextDirection.rtl,
-                                      style: const TextStyle(
-                                        color: AppColor.main,
-                                        fontSize: 14,
-                                        fontFamily: 'DroidArabicKufi',
-                                      ),
-                                    ),
-                                  ),
-                                  const TitleText(text: "التكلفة:")
-                                ],
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: fieldHeight,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: fieldHeight * 0.2,
-                                  horizontal: fieldWidth * 0.1),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  SizedBox(
-                                    width: screenWidth * 0.3,
-                                    child: Text(
-                                      selectedTeam.strLeaderName,
-                                      textAlign: TextAlign.right,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      textDirection: TextDirection.rtl,
-                                      style: const TextStyle(
-                                        color: AppColor.main,
-                                        fontSize: 14,
-                                        fontFamily: 'DroidArabicKufi',
-                                      ),
-                                    ),
-                                  ),
-                                  const TitleText(text: "رئيس الشعبة:")
-                                ],
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: fieldHeight,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: fieldHeight * 0.2,
-                                  horizontal: fieldWidth * 0.1),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  OutlinedStyledButton(
-                                    text: "الغاء",
-                                    fontSize: 14,
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(),
-                                  ),
-                                  SizedBox(
-                                    width: screenWidth * 0.02,
-                                  ),
-                                  StyledButton(
-                                    text: "موافق",
-                                    fontSize: 14,
-                                    onPressed: _sendRequest,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
+                  return StatefulBuilder(builder: (context, setStateDialog) {
+                    return Dialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
                       ),
-                    ),
-                  );
+                      child: Container(
+                        height: screenHeight * 0.5,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30)),
+                        child: isSending
+                            ? const Loader()
+                            : Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  SizedBox(
+                                    height: screenHeight * 0.08,
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                        top: screenHeight * 0.01,
+                                      ),
+                                      child: const TitleText(
+                                        text: "تأكيد المهمه",
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: fieldHeight,
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: fieldHeight * 0.2,
+                                          horizontal: fieldWidth * 0.1),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          SizedBox(
+                                            width: screenWidth * 0.3,
+                                            child: Text(
+                                              selectedType.strName,
+                                              textAlign: TextAlign.right,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              textDirection: TextDirection.rtl,
+                                              style: const TextStyle(
+                                                color: AppColor.main,
+                                                fontSize: 14,
+                                                fontFamily: 'DroidArabicKufi',
+                                              ),
+                                            ),
+                                          ),
+                                          const TitleText(text: "نوع المهمه:")
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: fieldHeight,
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: fieldHeight * 0.2,
+                                          horizontal: fieldWidth * 0.1),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          SizedBox(
+                                            width: screenWidth * 0.3,
+                                            child: Text(
+                                              formatDate(startDate),
+                                              textAlign: TextAlign.right,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              textDirection: TextDirection.rtl,
+                                              style: const TextStyle(
+                                                color: AppColor.main,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14,
+                                                fontFamily: 'DroidArabicKufi',
+                                              ),
+                                            ),
+                                          ),
+                                          const TitleText(text: "تاريخ البدء:")
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: fieldHeight,
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: fieldHeight * 0.2,
+                                          horizontal: fieldWidth * 0.1),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          SizedBox(
+                                            width: screenWidth * 0.3,
+                                            child: Text(
+                                              formatDate(endDate),
+                                              textAlign: TextAlign.right,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              textDirection: TextDirection.rtl,
+                                              style: const TextStyle(
+                                                color: AppColor.main,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14,
+                                                fontFamily: 'DroidArabicKufi',
+                                              ),
+                                            ),
+                                          ),
+                                          const TitleText(
+                                              text: "تاريخ الانتهاء:")
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: fieldHeight,
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: fieldHeight * 0.2,
+                                          horizontal: fieldWidth * 0.1),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          SizedBox(
+                                            width: screenWidth * 0.3,
+                                            child: Text(
+                                              costController.text.isNotEmpty
+                                                  ? costController.text
+                                                  : "غير محدد",
+                                              textAlign: TextAlign.right,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              textDirection: TextDirection.rtl,
+                                              style: const TextStyle(
+                                                color: AppColor.main,
+                                                fontSize: 14,
+                                                fontFamily: 'DroidArabicKufi',
+                                              ),
+                                            ),
+                                          ),
+                                          const TitleText(text: "التكلفة:")
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: fieldHeight,
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: fieldHeight * 0.2,
+                                          horizontal: fieldWidth * 0.1),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          SizedBox(
+                                            width: screenWidth * 0.3,
+                                            child: Text(
+                                              selectedTeam.strLeaderName,
+                                              textAlign: TextAlign.right,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              textDirection: TextDirection.rtl,
+                                              style: const TextStyle(
+                                                color: AppColor.main,
+                                                fontSize: 14,
+                                                fontFamily: 'DroidArabicKufi',
+                                              ),
+                                            ),
+                                          ),
+                                          const TitleText(text: "رئيس الشعبة:")
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: fieldHeight,
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: fieldHeight * 0.2,
+                                          horizontal: fieldWidth * 0.1),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          OutlinedStyledButton(
+                                            text: "الغاء",
+                                            fontSize: 14,
+                                            onPressed: () =>
+                                                Navigator.of(context).pop(),
+                                          ),
+                                          SizedBox(
+                                            width: screenWidth * 0.02,
+                                          ),
+                                          StyledButton(
+                                            text: "موافق",
+                                            fontSize: 14,
+                                            onPressed: () => setStateDialog(
+                                              () {
+                                                isSending = true;
+                                                _sendRequest();
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                      ),
+                    );
+                  });
                 },
               );
             },

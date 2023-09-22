@@ -1,15 +1,12 @@
-import 'dart:math';
-import 'package:account/API/ComplaintsAPI/Get_Complaints_Types.dart';
+import 'package:account/API/TeamsAPI/GetTeamAnalytics.dart';
 import 'package:account/Utils/Team.dart';
 import 'package:account/Widgets/Charts/TeamChart.dart';
-import 'package:account/Widgets/CheckBoxes/StyledCheckBox.dart';
-import 'package:account/Widgets/Interactive/TeamSelectionBox.dart';
+import 'package:account/Widgets/Interactive/TeamAnalyticsBox.dart';
 import 'package:account/Widgets/Popup/DateRangePopup.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
 import 'package:account/Widgets/Bars/bottomNavBar.dart';
-import 'package:account/Widgets/Charts/PerformanceChart.dart';
 import 'package:account/Widgets/Displays/InfoDisplayBox.dart';
 import 'package:account/Widgets/Buttons/StyledFilterChip.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -22,50 +19,57 @@ class TeamAnalytics extends StatefulWidget {
 }
 
 class _TeamAnalyticsState extends State<TeamAnalytics> {
-  final ScrollController _scrollController = ScrollController();
-  Team selectedTeam = Team(0, "0");
-  DateTime selectedDate = DateTime.now().subtract(const Duration(days: 7));
+  // Render Vars
   int timeframe = 1;
 
-  // Chart Data
-  DateTime startDate = DateTime(DateTime.now().year, 1, 1);
-  DateTime endDate = DateTime(DateTime.now().year, 3, 31);
-  List<ChartData> complaintData = [];
-  List<ChartData> taskData = [];
-
-  // Displays Data
-  int complaintCount = 0;
-  String teamRating = "4.7";
-  String successRate = "66.7%";
-
-  // Render Vars
-  int region = 0;
-  int chart = 0;
-  List<int> selectedTypes = [];
+  // Request Vars
+  DateTime startDate = DateTime.now().subtract(const Duration(days: 7));
+  DateTime endDate = DateTime.now();
+  TeamAnalyticsModel selectedTeam = TeamAnalyticsModel(
+    intTeamId: 0,
+    intTasksCount: 0,
+    intTasksCompletedCount: 0,
+    intTasksScheduledCount: 0,
+    intTasksIncompleteCount: 0,
+    intTasksWaitingEvaluationCount: 0,
+    decTeamRatingAvg: 0.0,
+    lstMembersAvgRating: <TeamMembersRating>[],
+  );
 
   // API Vars
-  void setTeam(Team team) {
-    selectedTeam = team;
+  TeamData complete = TeamData(0, "مكتمل");
+  TeamData incomplete = TeamData(0, "غير مكتمل");
+  TeamData scheduled = TeamData(0, "مجدول");
+  TeamData waitingEvaluation = TeamData(0, "قيد التقييم");
+
+  int tasksCount = 0;
+  String teamRating = "0";
+  String successRate = "0.0%";
+
+  ///
+
+  void setTeam(Team team) async {
+    var teamMembersRequest =
+        TeamsAnalyticsRequest().getTeamsAnalytics(team.intId);
+    selectedTeam = await teamMembersRequest;
+    setState(() {
+      complete = TeamData(selectedTeam.intTasksCompletedCount, "مكتمل");
+      incomplete = TeamData(selectedTeam.intTasksIncompleteCount, "غير مكتمل");
+      scheduled = TeamData(selectedTeam.intTasksScheduledCount, "مجدول");
+      waitingEvaluation =
+          TeamData(selectedTeam.intTasksWaitingEvaluationCount, "قيد التقييم");
+      tasksCount = selectedTeam.intTasksCount;
+      teamRating = selectedTeam.decTeamRatingAvg.toString();
+      successRate =
+          "${(selectedTeam.intTasksCompletedCount / selectedTeam.intTasksCount).toDouble().toStringAsFixed(1)}%";
+    });
   }
+
+  // API Functions
 
   @override
   void initState() {
     super.initState();
-    returnChartData();
-  }
-
-  Future<List<Map<String, dynamic>>> fetchTypesData() async {
-    var typesRequest = ComplaintTypeRequest();
-    var typesData = await typesRequest.getAllCategory();
-    List<Map<String, dynamic>> typesObjs = [];
-    for (var type in typesData) {
-      var typeObj = {
-        "intId": type.intTypeId,
-        "strName": type.strNameAr,
-      };
-      typesObjs.add(typeObj);
-    }
-    return typesObjs;
   }
 
   void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
@@ -76,29 +80,6 @@ class _TeamAnalyticsState extends State<TeamAnalytics> {
         endDate = dateRange.endDate!;
       });
     }
-  }
-
-  void returnChartData() {
-    // Vars Reset
-    complaintData.clear();
-    taskData.clear();
-    complaintCount = 0;
-    int tempTasks = 0;
-    // Mock API
-    final Random random = Random();
-    DateTime currentDate = startDate;
-    while (currentDate.isBefore(endDate)) {
-      final int randomValue = random.nextInt(67) + 71;
-      final int randomValue2 = random.nextInt(67) + 24;
-      complaintData.add(ChartData(currentDate, randomValue));
-      taskData.add(ChartData(currentDate, randomValue2));
-      currentDate = currentDate.add(const Duration(days: 7));
-      complaintCount += randomValue;
-      tempTasks += randomValue2;
-    }
-    teamRating = (2.0 + Random().nextDouble() * (4.9 - 2.0)).toStringAsFixed(1);
-    double tempAvg = tempTasks / complaintCount * 100;
-    successRate = "${tempAvg.toStringAsFixed(1)}%";
   }
 
   @override
@@ -124,37 +105,39 @@ class _TeamAnalyticsState extends State<TeamAnalytics> {
           text: "اسبوع",
           onPressed: () => setState(() {
                 timeframe = 1;
-                selectedDate = DateTime.now().subtract(const Duration(days: 7));
+                startDate = DateTime.now().subtract(const Duration(days: 7));
+                endDate = DateTime.now();
               })),
       StyledFilterChip(
           selected: timeframe == 2,
           text: "شهر",
           onPressed: () => setState(() {
                 timeframe = 2;
-                selectedDate =
-                    DateTime.now().subtract(const Duration(days: 30));
+                startDate = DateTime.now().subtract(const Duration(days: 30));
+                endDate = DateTime.now();
               })),
       StyledFilterChip(
           selected: timeframe == 3,
           text: "3 اشهر",
           onPressed: () => setState(() {
                 timeframe = 3;
-                selectedDate =
-                    DateTime.now().subtract(const Duration(days: 91));
+                startDate = DateTime.now().subtract(const Duration(days: 91));
+                endDate = DateTime.now();
               })),
       StyledFilterChip(
           selected: timeframe == 4,
           text: "سنه",
           onPressed: () => setState(() {
                 timeframe = 4;
-                selectedDate =
-                    DateTime.now().subtract(const Duration(days: 365));
+                startDate = DateTime.now().subtract(const Duration(days: 365));
+                endDate = DateTime.now();
               })),
       StyledFilterChip(
         selected: timeframe == 5,
         text: "أخر",
         onPressed: () => setState(
           () {
+            timeframe = 5;
             showDateRangeDialog(
               "أختر الفترة",
               context,
@@ -195,27 +178,13 @@ class _TeamAnalyticsState extends State<TeamAnalytics> {
                       children: timechips,
                     ),
                     Expanded(
-                      child: GestureDetector(
-                        onHorizontalDragEnd: (DragEndDetails details) {
-                          double velocity = details.velocity.pixelsPerSecond.dx;
-                          if (velocity > 0) {
-                            setState(() {
-                              startDate =
-                                  startDate.subtract(const Duration(days: 91));
-                              endDate =
-                                  endDate.subtract(const Duration(days: 91));
-                              returnChartData();
-                            });
-                          } else {
-                            setState(() {
-                              startDate =
-                                  startDate.add(const Duration(days: 91));
-                              endDate = endDate.add(const Duration(days: 91));
-                              returnChartData();
-                            });
-                          }
-                        },
-                        child: const TeamChart(),
+                      child: TeamChart(
+                        data: <TeamData>[
+                          complete,
+                          scheduled,
+                          incomplete,
+                          waitingEvaluation
+                        ],
                       ),
                     ),
                   ],
@@ -226,7 +195,7 @@ class _TeamAnalyticsState extends State<TeamAnalytics> {
               height: screenHeight * 0.01,
             ),
             // Team Box
-            TeamSelectionBox(
+            TeamAnalyticsBox(
               height: teamHeight,
               width: teamWidth,
               boxHeight: boxHeight,
@@ -255,10 +224,11 @@ class _TeamAnalyticsState extends State<TeamAnalytics> {
                         title: "التقييم",
                         content: teamRating),
                     InfoDisplayBox(
-                        height: boxHeight,
-                        width: boxWidth,
-                        title: "عدد البلاغات",
-                        content: complaintCount.toString()),
+                      height: boxHeight,
+                      width: boxWidth,
+                      title: "عدد البلاغات",
+                      content: tasksCount.toString(),
+                    ),
                   ],
                 ),
               ),
@@ -266,80 +236,6 @@ class _TeamAnalyticsState extends State<TeamAnalytics> {
           ],
         ),
       ),
-    );
-  }
-
-  Padding renderCheckBox(
-    MapEntry<int, Map<String, dynamic>> entry,
-    List<dynamic> typesObjs,
-    double fullMarginX,
-  ) {
-    final int index = entry.key;
-    final Map<String, dynamic> map = entry.value;
-    int halfLength = (typesObjs.length / 2).ceil();
-    var isLastElement = index == typesObjs.length - 1;
-    var isMiddleElement = index == halfLength - 1;
-    var padding = isLastElement || isMiddleElement
-        ? EdgeInsets.only(right: fullMarginX)
-        : EdgeInsets.only(left: fullMarginX / 2, right: fullMarginX / 2);
-    return Padding(
-      padding: padding,
-      child: StyledCheckBox(
-        text: map["strName"],
-        isChecked: selectedTypes.contains(map["intId"]),
-        onChanged: () {
-          setState(() {
-            if (!selectedTypes.contains(map["intId"])) {
-              selectedTypes.add(map["intId"]);
-            } else {
-              selectedTypes.remove(map["intId"]);
-            }
-          });
-        },
-        fontSize: 14,
-      ),
-    );
-  }
-
-  List<Widget> returnRegionsMockApi(double screenWidth, double fullMarginX) {
-    List<String> regionNames = [
-      "راس العين",
-      "جبل النزهة",
-      "شفا بدران",
-      "المقابلين",
-      "الياسمين",
-      "ماركا",
-      "جبل الحسين",
-      "ابو نصير"
-    ];
-    List<Widget> regionChips = [];
-    for (int i = 0; i < regionNames.length; i++) {
-      regionChips.add(
-        StyledFilterChip(
-          selected: region == i,
-          text: regionNames[i],
-          onPressed: () {
-            setState(() {
-              returnChartData();
-              region = i;
-              scrollRegions(i, screenWidth);
-            });
-          },
-        ),
-      );
-    }
-    regionChips.insert(0, SizedBox(width: fullMarginX * 3));
-    regionChips.add(SizedBox(width: fullMarginX * 3));
-
-    return regionChips;
-  }
-
-  void scrollRegions(int index, double screenWidth) {
-    double offset = 0.12 * screenWidth * index;
-    _scrollController.animateTo(
-      offset,
-      duration: const Duration(milliseconds: 600),
-      curve: Curves.ease,
     );
   }
 }

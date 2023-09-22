@@ -112,18 +112,21 @@ class _AnalyticsState extends State<Analytics> {
                 endDate = DateTime.now();
               })),
       StyledFilterChip(
-          selected: timeframe == 5,
-          text: "أخر",
-          onPressed: () => setState(() {
-                timeframe = 5;
-                showDateRangeDialog(
-                  "أختر الفترة",
-                  context,
-                  screenHeight * 0.5,
-                  _onSelectionChanged,
-                  PickerDateRange(startDate, endDate),
-                );
-              })),
+        selected: timeframe == 5,
+        text: "أخر",
+        onPressed: () => setState(
+          () {
+            timeframe = 5;
+            showDateRangeDialog(
+              "أختر الفترة",
+              context,
+              screenHeight * 0.5,
+              _onSelectionChanged,
+              PickerDateRange(startDate, endDate),
+            );
+          },
+        ),
+      ),
     ];
 
     return Scaffold(

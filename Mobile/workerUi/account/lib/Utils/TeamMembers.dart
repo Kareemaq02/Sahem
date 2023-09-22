@@ -7,7 +7,7 @@ class TeamMember {
   factory TeamMember.fromJson(Map<String, dynamic> json) {
     return TeamMember(
       json['intId'] as int,
-      '${json['strFirstName']} ${json['strLastName']}',
+      '${json['strFirstNameAr']} ${json['strLastNameAr']}',
       json['isLeader'] as bool,
     );
   }
