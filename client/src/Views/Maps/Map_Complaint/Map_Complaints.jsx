@@ -3,6 +3,7 @@ import mapboxgl, { Marker, Popup } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { Box } from "@mui/material";
 import "./Map_Complaints.css";
+import { GetComplaintsApi } from "../../Complaints/Service/GetComplaintsApi";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiYWdyaWRiIiwiYSI6ImNsbDN5dXgxNTAxOTAza2xhdnVmcnRzbGEifQ.3cM2WO5ubiAjuWbpXi9woQ";
@@ -13,89 +14,65 @@ function App() {
   const [lat, setLat] = useState(31.952912);
   const [lng, setLng] = useState(35.910861);
   const [zoom, setZoom] = useState(11);
-  const geojson = {
-    'type': 'FeatureCollection',
-    'features': [
-      {
-        'type': 'Feature',
-        'properties': {
-          'message': 'Foo',
-          'iconSize': [60, 60]
-        },
-        'geometry': {
-          'type': 'Point',
-          'coordinates': [lng, lat]
-        }
-      },
-      {
-        'type': 'Feature',
-        'properties': {
-          'message': 'Bar',
-          'iconSize': [50, 50]
-        },
-        'geometry': {
-          'type': 'Point',
-          'coordinates': [35.875612, 31.957211]
-        }
-      },
-    ]
-  };
+  const [pageNumber, setPageNumber] = useState(0);
+  const pageSize = 50;
+  const [complaints, setComplaints] = useState([]);
 
   useEffect(() => {
-    if (map.current) return; // initialize map only once
+    const setComplaintsView = async () => {
+      const response = await GetComplaintsApi(pageSize, pageNumber);
+      setComplaints(response.data);
+    };
+    setComplaintsView();
+  }, [pageSize, pageNumber]);
+
+  useEffect(() => {
+    if (map.current) return; // Prevent map from being initialized multiple times
+
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: "mapbox://styles/mapbox/streets-v12",
       center: [lng, lat],
       zoom: zoom,
     });
+  }, []);
 
+  useEffect(() => {
+    if (!map.current || !complaints) return;
 
-    for (const marker of geojson.features) {
-      const el = document.createElement('div');
-      const width = marker.properties.iconSize[0];
-      const height = marker.properties.iconSize[1];
-      el.className = 'marker';
-      el.style.backgroundImage = `url(https://placekitten.com/g/${width}/${height}/)`;
-      el.style.width = `${width}px`;
-      el.style.height = `${height}px`;
-      el.style.backgroundSize = '100%';
+    // Dynamically create markers based on comDet
 
-      // Create a custom popup content
+    complaints.map((complaint) => {
+      const el = document.createElement("div");
+      el.className = "marker";
+      const imageData = complaint.imageData;
+      el.style.backgroundImage = `url(data:image/jpg;base64,${imageData})`;
+      el.style.width = "50px";
+      el.style.height = "50px";
+
       const popupContent = document.createElement("div");
       popupContent.className = "popup-container";
-
       popupContent.innerHTML = `
-    <div class="popup-image" style="border-color: ${(marker.properties.message)};">
-    <img src="URL_OF_YOUR_IMAGE" alt="Marker Image" />
-  </div>
-  <div class="popup-divider"></div>
-  <div class="popup-content">
-    <!-- ... rest of the content -->
-  </div>
-      <div class="popup-divider"></div>
-      <div class="popup-content">
-        <div class="popup-label">رقم البلاغ</div>
-        <div class="popup-value">Value 1</div>
-        <div class="popup-label">حالة البلاغ</div>
-        <div class="popup-value">Value 2</div>
-        <div class="popup-label">المستخدم</div>
-        <div class="popup-value">Value 3</div>
-        <div class="popup-label">تاريخ الأضافة</div>
-        <div class="popup-value">Value 4</div>
-      </div>
-    `;
+          <div class="popup-content">
+            <div class="popup-label">رقم البلاغ</div>
+            <div class="popup-value">${complaint.intComplaintId}</div>
+            <div class="popup-label">حالة البلاغ</div>
+            <div class="popup-value">${complaint.strStatus}</div>
+            <div class="popup-label">المستخدم</div>
+            <div class="popup-value">${complaint.strUserName}</div>
+            <div class="popup-label">تاريخ الأضافة</div>
+            <div class="popup-value">${complaint.dtmDateCreated}</div>
+          </div>
+        `;
 
-      // Create a popup
       const popup = new Popup({ offset: 25 }).setDOMContent(popupContent);
 
-      // Add the marker element to the map with popup
       new mapboxgl.Marker(el)
-        .setLngLat(marker.geometry.coordinates)
-        .setPopup(popup) // Set the popup
+        .setLngLat([complaint.latLng.decLng, complaint.latLng.decLat])
+        .setPopup(popup)
         .addTo(map.current);
-    }
-  }, [lng, lat, zoom, geojson]);
+    });
+  }, [complaints]);
 
   return (
     <Box
@@ -105,7 +82,10 @@ function App() {
       height="95%"
       width="100%"
     >
-      <div ref={mapContainer} style={{ height: "100%", width: "100%", borderRadius: "5px" }} />
+      <div
+        ref={mapContainer}
+        style={{ height: "100%", width: "100%", borderRadius: "5px" }}
+      />
     </Box>
   );
 }
