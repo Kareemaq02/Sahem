@@ -53,7 +53,7 @@ class _ProfileState extends State<Profile> {
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
       bottomNavigationBar: BottomNavBar1(3),
-      appBar: myAppBar(context, "الإعدادات", false, screenHeight * 0.1),
+      appBar: myAppBar(context, "الإعدادات", false, screenHeight * 0.32),
       body: Padding(
         padding: EdgeInsets.symmetric(
           vertical: screenHeight * 0.01,
