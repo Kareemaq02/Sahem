@@ -5,7 +5,7 @@ export const GetTasksTypesApi = async () => {
     const response = await axios.get(`/api/tasks/types`);
     return response.data.map((item) => ({
       intId: item.intId,
-      strName: item.strNameEn,
+      strName: item.strNameAr,
     }));
   } catch (error) {
     return false;
