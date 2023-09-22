@@ -76,7 +76,7 @@ class _RatingWidgetState extends State<RatingWidget1> {
                       Padding(
                         padding: EdgeInsets.only(left: screenWidth * 0.13),
                         child: BottonContainerPopup(
-                          "الغاء",
+                          "إلغاء ",
                           AppColor.main,
                           Colors.white,
                           context,
@@ -90,7 +90,7 @@ class _RatingWidgetState extends State<RatingWidget1> {
                       Padding(
                         padding: EdgeInsets.only(left: screenWidth * 0.1),
                         child: BottonContainerPopup(
-                          "ارسال",
+                          "إرسال",
                           AppColor.main,
                           Colors.white,
                           context,
