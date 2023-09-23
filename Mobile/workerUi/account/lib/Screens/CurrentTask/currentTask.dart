@@ -132,23 +132,14 @@ class _CurrentTaskState extends State<CurrentTask> {
       bottomNavigationBar: BottomNavBar1(3),
       appBar: myAppBar(context, ' المهمة الحالية', false, screenWidth * 0.5),
       body: activatedTask == null
-          ? activatedStatus == 400
+         
+          ? activatedStatus != 400
               ? const Center(
-                  child: Text(
-                    'لا يوجد مهمة مفعلة',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: AppColor.main,
-                      fontFamily: 'DroidArabicKufi',
-                    ),
-                  ),
-                )
-              : const Center(
                   child: CircularProgressIndicator(
                   color: AppColor.main,
                 ))
-          : activatedStatus == 400
-              ? const Center(
+              
+              : const Center(
                   child: Text(
                     'لا يوجد مهمة مفعلة',
                     style: TextStyle(
@@ -158,6 +149,7 @@ class _CurrentTaskState extends State<CurrentTask> {
                     ),
                   ),
                 )
+        
               : Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
@@ -210,7 +202,7 @@ class _CurrentTaskState extends State<CurrentTask> {
                               const SizedBox(width: 10),
                               CardButtons(
                                   context,
-                                  'معاينة',
+                                        'تسليم المهمة',
                                             activatedTask!.blnIsLeader
                                                 ? AppColor.main
                                                 : Colors.grey,
@@ -260,9 +252,10 @@ class _CurrentTaskState extends State<CurrentTask> {
 
                           Padding(
                             padding: EdgeInsets.only(
-                                          right: screenWidth * 0.4,
-                                top: screenHeight * 0.05),
-                                      child: text(address, AppColor.secondary),
+                                      right: screenWidth * 0.4,
+                                      top: screenHeight * 0.04),
+                                  child: Expanded(
+                                      child: text(address, AppColor.secondary)),
                           ),
                         ],
                       ),

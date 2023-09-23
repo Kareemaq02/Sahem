@@ -55,16 +55,17 @@ class _XDTasksListState extends State<XDTasksList> {
                       },
                     );
                   } else {
-                    return const Center(
-                      child: Text(
-                        'لا يوجد مهمات ',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: AppColor.main,
-                          fontFamily: 'DroidArabicKufi',
-                        ),
-                      ),
-                    );
+                    return Container();
+                    // const Center(
+                    //   child: Text(
+                    //     'لا يوجد مهمات ',
+                    //     style: TextStyle(
+                    //       fontSize: 18,
+                    //       color: AppColor.main,
+                    //       fontFamily: 'DroidArabicKufi',
+                    //     ),
+                    //   ),
+                    // );
                   }
                 },
               ),
