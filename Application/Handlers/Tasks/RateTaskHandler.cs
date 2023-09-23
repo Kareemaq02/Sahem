@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Application.Commands;
 using Domain.Resources;
 using Domain.DataModels.Intersections;
+using System.Linq;
 
 public class RateTaskHandler : IRequestHandler<RateTaskCommand, Result<Unit>>
 {
@@ -32,18 +33,23 @@ public class RateTaskHandler : IRequestHandler<RateTaskCommand, Result<Unit>>
             .Select(u => u.Id)
             .SingleOrDefaultAsync(cancellationToken: cancellationToken);
 
+        var taskId = await _context.TasksComplaints
+            .OrderByDescending(q => q.intTaskId)
+            .Where(q => q.intComplaintId == request.Id)
+            .Select(q => q.intTaskId).FirstOrDefaultAsync();
+
 
         //Start transaction
         using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
         try
         {
-                var blnIsRated = await _context.TaskRatings.Where(q => q.intTaskId == request.Id && q.intUserId == userId).AnyAsync();
+                var blnIsRated = await _context.TaskRatings.Where(q => q.intTaskId == taskId && q.intUserId == userId).AnyAsync();
 
                 if (blnIsRated)
                      return Result<Unit>.Failure("User has already rated that task");
 
             var updatedTask = await _context.Tasks
-                .Where(task => task.intId == request.Id)
+                .Where(task => task.intId == taskId)
                 .SingleOrDefaultAsync(cancellationToken);
 
 
@@ -52,12 +58,12 @@ public class RateTaskHandler : IRequestHandler<RateTaskCommand, Result<Unit>>
                 {
                 // Add to task rating table
 
-                await _context.TaskRatings.AddAsync(new WorkTaskRating { intTaskId = request.Id, intUserId = userId, decRating = request.decRating });
+                await _context.TaskRatings.AddAsync(new WorkTaskRating { intTaskId = taskId, intUserId = userId, decRating = request.decRating });
 
                 await _context.SaveChangesAsync(cancellationToken);
 
                 // Update Task Rating
-                var intRatersCount = await _context.TaskRatings.Where(q => q.intTaskId == request.Id).CountAsync();
+                var intRatersCount = await _context.TaskRatings.Where(q => q.intTaskId == taskId).CountAsync();
                 
 
                 updatedTask.decUserRating = ((updatedTask.decUserRating * (intRatersCount - 1)) + request.decRating) / (intRatersCount);
