@@ -1,11 +1,10 @@
 import 'dart:convert';
+import 'package:account/Repository/urls.dart';
 import 'package:account/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:account/Utils/LatLng.dart';
 
 // ignore_for_file: file_names
-
-
 
 class ComplaintModel {
   int intComplaintId;
@@ -73,20 +72,21 @@ class ComplaintModel {
       intVotersCount: json['intVotersCount'],
       latlng:
           LatLng(lat: json['latLng']['decLat'], lng: json['latLng']['decLng']),
-      decPriority: json['decPriority'],
+      decPriority: json['decPriority'].toDouble(),
       lstMedia: json['lstMedia'] != null
-          ? List<String>.from(json['lstMedia'])
+          ? List<String>.from(
+              json['lstMedia'].map((map) => map['data'].toString()))
           : List.empty(),
     );
   }
 }
 
 class PendingComplaints {
-    final userToken = prefs!.getString('token');
+  final userToken = prefs!.getString('token');
   Future<List<ComplaintModel>> fetchPendingComplaints(int pageNumber) async {
     final response = await http.get(
       Uri.parse(
-          "https://10.0.2.2:5000/api/complaints?pageSize=10&pageNumber=$pageNumber&lstComplaintStatusIds=1"),
+          "${AppUrl.baseURL}complaints?pageSize=10&pageNumber=$pageNumber&lstComplaintStatusIds=1&blnIncludePictures=true"),
       headers: {
         'Authorization': 'Bearer $userToken',
       },

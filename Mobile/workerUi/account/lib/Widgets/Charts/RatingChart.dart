@@ -3,7 +3,6 @@ import 'package:account/Repository/color.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 // ignore_for_file: file_names
 
-
 class RateData {
   RateData(this.region, this.rate);
   final String region;

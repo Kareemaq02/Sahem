@@ -5,7 +5,6 @@ import 'package:account/Widgets/Popup/DateRangePopup.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 // ignore_for_file: file_names
 
-
 class DateRangeField extends StatelessWidget {
   final double height;
   final double width;
@@ -25,7 +24,7 @@ class DateRangeField extends StatelessWidget {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
-    return Ink(
+    return Container(
       height: height,
       width: width,
       decoration: BoxDecoration(

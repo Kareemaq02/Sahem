@@ -1,3 +1,5 @@
+import 'package:account/API/login_request.dart';
+import 'package:account/Widgets/Bars/NavBarAdmin.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart' as b;
@@ -131,7 +133,7 @@ class FullMapState extends State<FullMap1> with TickerProviderStateMixin {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        bottomNavigationBar: BottomNavBar1(1),
+        bottomNavigationBar: userIsAdmin() ? NavBarAdmin(1) : BottomNavBar1(1),
         appBar: myAppBar(context, "الخريطة", false, screenWidth * 0.6),
         body: Stack(
           children: [

@@ -20,9 +20,12 @@ namespace Application.Handlers
         private readonly IMediator _mediator;
         private readonly NotificationService _notificationService;
 
-        public DeleteTaskByIdHandler(DataContext context,
+        public DeleteTaskByIdHandler(
+            DataContext context,
             AddComplaintStatusChangeTransactionHandler transactionHandler,
-            IMediator mediator, NotificationService notificationService)
+            IMediator mediator,
+            NotificationService notificationService
+        )
         {
             _context = context;
             _transactionHandler = transactionHandler;
@@ -41,6 +44,7 @@ namespace Application.Handlers
                 .Where(c => c.intId == request.Id)
                 .Select(c => c.intStatusId)
                 .FirstOrDefaultAsync(cancellationToken);
+
 
             if (TasksStatus != (int)TasksConstant.taskStatus.inactive)
                 return Result<Unit>.Failure("Failed to delete the task.");
@@ -80,10 +84,8 @@ namespace Application.Handlers
                     _context.ComplaintsStatuses.Remove(complaintTransaction);
 
                 userIds.Add(complaint.intUserID);
-
                 await _context.SaveChangesAsync(cancellationToken);
             }
-
 
             try
             {
@@ -188,7 +190,6 @@ namespace Application.Handlers
             {
                 await transaction.RollbackAsync();
                 return Result<Unit>.Failure("Failed to send notification");
-
             }
             try
             {

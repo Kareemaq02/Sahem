@@ -1,3 +1,4 @@
+import 'package:account/Repository/color.dart';
 import 'package:flutter/material.dart';
 
 class TeamMemberDisplay extends StatelessWidget {
@@ -35,7 +36,8 @@ class TeamMemberDisplay extends StatelessWidget {
         height: height,
         width: width,
         decoration: BoxDecoration(
-          border: Border.all(color: color, width: 1),
+          border: Border.all(
+              color: color == AppColor.main ? AppColor.line : color, width: 1),
           borderRadius: BorderRadius.circular(10.0),
           color: Colors.white,
         ),
@@ -44,7 +46,10 @@ class TeamMemberDisplay extends StatelessWidget {
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
-                padding: EdgeInsets.only(bottom: height * 0.1),
+                padding: EdgeInsets.only(
+                    bottom: height * 0.1,
+                    left: width * 0.05,
+                    right: width * 0.05),
                 child: Text(
                   name,
                   textDirection:
@@ -52,7 +57,7 @@ class TeamMemberDisplay extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    color: color,
+                    color: color == AppColor.main ? color : AppColor.textTitle,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'DroidArabicKufi',

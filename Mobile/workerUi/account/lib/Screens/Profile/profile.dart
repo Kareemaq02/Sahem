@@ -1,3 +1,5 @@
+import 'package:account/API/login_request.dart';
+import 'package:account/Widgets/Bars/NavBarAdmin.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
@@ -9,7 +11,6 @@ import 'package:account/Screens/Profile/switchWidget.dart';
 import 'package:account/API/ProfileAPI/user_info_request%20copy.dart';
 // ignore_for_file: avoid_print
 // ignore_for_file: library_private_types_in_public_api
-
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -52,8 +53,8 @@ class _ProfileState extends State<Profile> {
     return Scaffold(
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
-      bottomNavigationBar: BottomNavBar1(3),
-      appBar: myAppBar(context, "الإعدادات", false, screenHeight * 0.32),
+      bottomNavigationBar: userIsAdmin() ? NavBarAdmin(0) : BottomNavBar1(0),
+      appBar: myAppBar(context, "الإعدادات", false, screenHeight * 0.1),
       body: Padding(
         padding: EdgeInsets.symmetric(
           vertical: screenHeight * 0.01,
@@ -100,5 +101,3 @@ class _ProfileState extends State<Profile> {
     );
   }
 }
-
-

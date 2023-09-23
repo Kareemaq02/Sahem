@@ -1,28 +1,29 @@
 import 'dart:io';
+import 'package:account/Repository/urls.dart';
 import 'package:account/main.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:account/Widgets/Popup/confirmPage.dart';
-// ignore_for_file: avoid_print, unused_local_variablimport 'dart:convert';
 
 class SubmitTask {
-    final userToken =prefs!.getString('token');
-  Future<void> submitTask(context, String intTaskId, List<MediaFile> lstMedia,
-      String strComment,) async {
+  final userToken = prefs!.getString('token');
+  Future<void> submitTask(
+    context,
+    String intTaskId,
+    List<MediaFile> lstMedia,
+    String strComment,
+  ) async {
     try {
       final request = http.MultipartRequest(
         'POST',
-        Uri.parse("https://10.0.2.2:5000/api/tasks/submit/$intTaskId"),
+        Uri.parse("${AppUrl.baseURL}tasks/submit/$intTaskId"),
       );
 
-      // Add the request headers
       request.headers.addAll({"Authorization": "Bearer $userToken"});
       request.headers['Content-Type'] = 'multipart/form-data';
 
-      // Add the request fields
       request.fields['strComment'] = strComment;
 
-      // Add the files
       for (var index = 0; index < lstMedia.length; index++) {
         var mediaFile = lstMedia[index];
         var stream = http.ByteStream(mediaFile.file.openRead());
@@ -73,4 +74,3 @@ class MediaFile {
 
   MediaFile(this.file, this.decLat, this.decLng, this.blnIsVideo);
 }
-

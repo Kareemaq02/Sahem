@@ -54,14 +54,16 @@ public class ActivateTaskByIdHandler : IRequestHandler<ActivateTaskCommand, Resu
             {
                 var task = await _context.Tasks.FindAsync(request.Id);
 
+
                 var activeTasksCount = from t in _context.Tasks
                                        join team in _context.Teams on t.intTeamId equals team.intId
                                        where team.intLeaderId == userId && t.intStatusId == (int)TasksConstant.taskStatus.inProgress
                                        select t;
 
-
                 if (await activeTasksCount.CountAsync() >= 1)
-                    return Result<Unit>.Failure("Please submit previously activated tasks before activating this one");
+                    return Result<Unit>.Failure(
+                        "Please submit previously activated tasks before activating this one"
+                    );
 
                 if (task.blnIsActivated == false)
                 {
@@ -79,6 +81,7 @@ public class ActivateTaskByIdHandler : IRequestHandler<ActivateTaskCommand, Resu
                             .Where(q => q.intTaskId == request.Id)
                             .Select(q => q.intComplaintId)
                             .ToListAsync();
+
 
                         List<int> userIds = new List<int>();
                         foreach (int complaintId in complaintIds)
@@ -161,7 +164,6 @@ public class ActivateTaskByIdHandler : IRequestHandler<ActivateTaskCommand, Resu
 
                         try
                         {
-
                             // Get Notification body and header
                             var notificationLayout = await _context.NotificationTypes
                                .Where(q => q.intId == (int)NotificationConstant.NotificationType.activeTaskNotification)

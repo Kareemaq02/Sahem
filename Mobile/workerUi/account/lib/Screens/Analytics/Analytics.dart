@@ -1,4 +1,6 @@
 import 'package:account/API/ComplaintsAPI/Get_Complaints_Types.dart';
+import 'package:account/API/login_request.dart';
+import 'package:account/Widgets/Bars/NavBarAdmin.dart';
 import 'package:account/Widgets/CheckBoxes/StyledCheckBox.dart';
 import 'package:account/Widgets/Popup/DateRangePopup.dart';
 import 'package:flutter/material.dart';
@@ -112,25 +114,28 @@ class _AnalyticsState extends State<Analytics> {
                 endDate = DateTime.now();
               })),
       StyledFilterChip(
-          selected: timeframe == 5,
-          text: "أخر",
-          onPressed: () => setState(() {
-                timeframe = 5;
-                showDateRangeDialog(
-                  "أختر الفترة",
-                  context,
-                  screenHeight * 0.5,
-                  _onSelectionChanged,
-                  PickerDateRange(startDate, endDate),
-                );
-              })),
+        selected: timeframe == 5,
+        text: "أخر",
+        onPressed: () => setState(
+          () {
+            timeframe = 5;
+            showDateRangeDialog(
+              "أختر الفترة",
+              context,
+              screenHeight * 0.5,
+              _onSelectionChanged,
+              PickerDateRange(startDate, endDate),
+            );
+          },
+        ),
+      ),
     ];
 
     return Scaffold(
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomNavBar1(0),
+      bottomNavigationBar: userIsAdmin() ? NavBarAdmin(0) : BottomNavBar1(0),
       appBar: myAppBar(context, "الإحصائيات ", false, screenWidth * 0.55),
       body: Padding(
         padding: EdgeInsets.only(top: halfMarginY, bottom: halfMarginY),

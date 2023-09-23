@@ -64,10 +64,14 @@ namespace Application.Handlers.Tasks
                   .Select(q => q.intId).CountAsync() == request.TaskDTO.lstComplaintIds.Count();
 
             if (blnHasCorrectStatus == false)
-                return Result<TaskDTO>.Failure("Tasks could only be created for pending or refiled complaints.");
+                return Result<TaskDTO>.Failure(
+                    "Tasks could only be created for pending or refiled complaints."
+                );
 
             if (blnIsFromSameRegion == false)
-                return Result<TaskDTO>.Failure("Not all selected complaints are within the same region.");
+                return Result<TaskDTO>.Failure(
+                    "Not all selected complaints are within the same region."
+                );
 
             List<int> userIDs = new List<int>(); // A list to store user Ids for notifications
 
@@ -112,8 +116,6 @@ namespace Application.Handlers.Tasks
 
                 }
 
-                
-
                 //Complaints Table
                 foreach (int complaintId in request.TaskDTO.lstComplaintIds)
                 {
@@ -141,7 +143,6 @@ namespace Application.Handlers.Tasks
                     userIDs.Add( complaint.intUserID );
                     await _context.SaveChangesAsync(cancellationToken);
                 }
-
             }
             catch (Exception ex)
             {
@@ -209,25 +210,35 @@ namespace Application.Handlers.Tasks
                 try
                 {
                     //Insert into Notifications Table
-
-    
-
                     // Get Notification body and header
                     var notificationLayout = await _context.NotificationTypes
-                       .Where(q => q.intId == (int)NotificationConstant.NotificationType.taskCreationNotification)
-                       .Select(q => new NotificationLayout
-                       {
-                           strHeaderAr = q.strHeaderAr,
-                           strBodyAr = q.strBodyAr,
-                           strBodyEn = q.strBodyEn,
-                           strHeaderEn = q.strHeaderEn
-                       }).SingleOrDefaultAsync();
+                        .Where(
+                            q =>
+                                q.intId
+                                == (int)
+                                    NotificationConstant.NotificationType.taskCreationNotification
+                        )
+                        .Select(
+                            q =>
+                                new NotificationLayout
+                                {
+                                    strHeaderAr = q.strHeaderAr,
+                                    strBodyAr = q.strBodyAr,
+                                    strBodyEn = q.strBodyEn,
+                                    strHeaderEn = q.strHeaderEn
+                                }
+                        )
+                        .SingleOrDefaultAsync();
 
                     if (notificationLayout == null)
                         throw new Exception("Notification Type table is empty");
 
                     string headerAr = notificationLayout.strHeaderAr;
-                    string bodyAr = notificationLayout.strBodyAr + " " + request.TaskDTO.deadlineDate.ToString() + ". يرجى مراجعة تفاصيل المهمة وضمان الانتهاء في الوقت المحدد.";
+                    string bodyAr =
+                        notificationLayout.strBodyAr
+                        + " "
+                        + request.TaskDTO.deadlineDate.ToString()
+                        + ". يرجى مراجعة تفاصيل المهمة وضمان الانتهاء في الوقت المحدد.";
                     string headerEn = notificationLayout.strHeaderEn;
                     string strBodyEn = notificationLayout.strBodyEn + " " + request.TaskDTO.deadlineDate.ToString() + ". Please review the task details and ensure timely completion";
 

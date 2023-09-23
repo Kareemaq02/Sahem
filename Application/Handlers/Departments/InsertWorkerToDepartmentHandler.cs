@@ -55,8 +55,6 @@ namespace Application.Handlers.LookUps
             )
                 return Result<string>.Failure("Worker is already in specified department");
 
-
-
             var departmentUser = new DepartmentUsers
             {
                 intUserId = request.intWorkerId,
@@ -68,18 +66,32 @@ namespace Application.Handlers.LookUps
             //Insert into Notifications Table
             try
             {
-                var username = await _context.Users.
-                    Where(q => q.Id == request.intWorkerId).Select(c => c.UserName).SingleOrDefaultAsync();
+                var username = await _context.Users
+                    .Where(q => q.Id == request.intWorkerId)
+                    .Select(c => c.UserName)
+                    .SingleOrDefaultAsync();
 
                 var notificationLayout = await _context.NotificationTypes
-                    .Where(q => q.intId == (int)NotificationConstant.NotificationType.workerAddedToDepartmentNotification)
-                    .Select(q => new NotificationLayout
-                    {
-                        strHeaderAr = q.strHeaderAr,
-                        strBodyAr = q.strBodyAr,
-                        strBodyEn = q.strBodyEn,
-                        strHeaderEn = q.strHeaderEn
-                    }).SingleOrDefaultAsync();
+                    .Where(
+                        q =>
+                            q.intId
+                            == (int)
+                                NotificationConstant
+                                    .NotificationType
+                                    .workerAddedToDepartmentNotification
+                    )
+                    .Select(
+                        q =>
+                            new NotificationLayout
+                            {
+                                strHeaderAr = q.strHeaderAr,
+                                strBodyAr = q.strBodyAr,
+                                strBodyEn = q.strBodyEn,
+                                strHeaderEn = q.strHeaderEn
+                            }
+                    )
+                    .SingleOrDefaultAsync();
+
 
                 var notificationToken = await _context.NotificationTokens
                 .Where(q => q.intUserId == request.intWorkerId)
@@ -125,10 +137,9 @@ namespace Application.Handlers.LookUps
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString()); 
+                Console.WriteLine(ex.ToString());
             }
 
-           
             await transaction.CommitAsync(cancellationToken);
             return Result<string>.Success("Worker added successfully");
         }

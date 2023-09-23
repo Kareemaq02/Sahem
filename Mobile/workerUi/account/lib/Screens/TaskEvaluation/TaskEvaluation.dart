@@ -1,7 +1,10 @@
+import 'package:account/Screens/TaskEvaluation/TaskIncomplete.dart';
+import 'package:account/Utils/NaviTranstion.dart';
+import 'package:account/Widgets/Bars/NavBarAdmin.dart';
+import 'package:account/Widgets/HelperWidgets/Loader.dart';
 import 'package:account/Widgets/HelperWidgets/myContainer.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
-import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/Widgets/HelperWidgets/rowInfo.dart';
 import 'package:account/Screens/Results/FailurePage.dart';
 import 'package:account/Screens/Results/SuccessPage.dart';
@@ -9,11 +12,9 @@ import 'package:account/Widgets/Buttons/StyledButton.dart';
 import 'package:account/Widgets/Displays/TeamViewBox.dart';
 import 'package:account/API/TaskAPI/Get_A_Task_Request.dart';
 import 'package:account/Widgets/HelperWidgets/TitleText.dart';
-import 'package:account/Widgets/Interactive/FormTextField.dart';
 import 'package:account/Widgets/Interactive/RatingWidget.dart';
 import 'package:account/Widgets/CheckBoxes/StyledCheckBox.dart';
 import 'package:page_indicator/page_indicator.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:flutter/material.dart';
 
 class TaskEvaluation extends StatefulWidget {
@@ -28,11 +29,8 @@ class _TaskEvaluationState extends State<TaskEvaluation> {
   // API vars
   late Future<TaskDetails> taskDetailsRequest;
   late TaskDetails taskDetails;
-  DateTime startDate = DateTime.now();
-  DateTime endDate = DateTime.now().add(const Duration(days: 7));
 
   // Request Vars
-  TextEditingController commentController = TextEditingController();
   int statusChoice = 1;
   double rating = 2.5;
 
@@ -42,70 +40,29 @@ class _TaskEvaluationState extends State<TaskEvaluation> {
     getTaskDetails(widget.taskId);
   }
 
-  // API Functions
-
-  void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
-    PickerDateRange dateRange = args.value;
-    if (dateRange.endDate != null) {
-      setState(() {
-        startDate = dateRange.startDate!;
-        endDate = dateRange.endDate!;
-      });
-    }
-  }
-
   void getTaskDetails(int taskId) async {
     taskDetailsRequest = TaskDetailsRequest().getTaskDetails(taskId);
-    // taskDetailsRequest = Future.delayed(
-    //   const Duration(milliseconds: 300),
-    //   () => TaskDetails(
-    //     intTaskID: 1,
-    //     decCost: 2421.21,
-    //     decUserRating: 0,
-    //     dtmCreatedDate:
-    //         formatDate(DateTime.now().subtract(const Duration(days: 7))),
-    //     dtmScheduledDate:
-    //         formatDate(DateTime.now().subtract(const Duration(days: 5))),
-    //     dtmActivatedDate:
-    //         formatDate(DateTime.now().subtract(const Duration(days: 4))),
-    //     dtmFinishedDate:
-    //         formatDate(DateTime.now().subtract(const Duration(days: 2))),
-    //     dtmDeadlineDate:
-    //         formatDate(DateTime.now().subtract(const Duration(days: 1))),
-    //     dtmLastModifiedDate:
-    //         formatDate(DateTime.now().subtract(const Duration(days: 2))),
-    //     strAdminFirstName: "محمد",
-    //     strAdminLastName: "بسام",
-    //     strComment: "",
-    //     strTypeNameAr: "مبعثرات حول الحاوية",
-    //     strTypeNameEn: "Scatter waste",
-    //     strTaskStatus: "completed",
-    //     workersList: <TeamMember>[
-    //       TeamMember(1, "محمد بسام", false),
-    //       TeamMember(2, "عمر احمد", true),
-    //       TeamMember(3, "طلال بلال", false),
-    //       TeamMember(4, "سيف محمد", false),
-    //     ],
-    //     lstMedia: List.empty(),
-    //   ),
-    // );
     taskDetails = await taskDetailsRequest;
   }
 
   void _sendRequest() async {
     //use dio if http doesn't work
+    if (statusChoice == 2) {
+      naviTransition(
+          context,
+          TaskIncomplete(
+            taskId: widget.taskId,
+          ));
+      return;
+    }
     Map<String, dynamic> data = {
-      'scheduledDate': startDate,
-      'deadlineDate': endDate,
-      'strComment': commentController.text,
+      'decRating': rating,
       'taskId': widget.taskId,
     };
     print(data);
     // final response = await request(data)
-    // if (response.statusCode == 200) {
-
+    // var statusCode = response.statusCode;
     var statusCode = 200;
-    // var statusCode = 400;
     if (statusCode == 200) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
@@ -150,13 +107,13 @@ class _TaskEvaluationState extends State<TaskEvaluation> {
     return Scaffold(
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
-      bottomNavigationBar: BottomNavBar1(0),
+      bottomNavigationBar: NavBarAdmin(2),
       appBar: myAppBar(context, 'اضافة عمل', false, screenHeight * 0.28),
       body: FutureBuilder<TaskDetails>(
         future: taskDetailsRequest,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Loader();
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           }
@@ -210,24 +167,24 @@ class _TaskEvaluationState extends State<TaskEvaluation> {
                           ),
                         ),
                         RowInfo(
-                          taskDetails.intTaskID.toString(),
                           "رقم المهمه",
+                          taskDetails.intTaskID.toString(),
                         ),
                         RowInfo(
-                          taskDetails.strTypeNameAr.toString(),
                           "نوع المهمه",
+                          taskDetails.strTypeNameAr.toString(),
                         ),
                         RowInfo(
+                          "تاريخ الاضافة ",
                           taskDetails.dtmCreatedDate
                               .toString()
                               .substring(0, 10),
-                          "تاريخ الاضافة ",
                         ),
                         RowInfo(
+                          "تاريخ الانتهاء ",
                           taskDetails.dtmFinishedDate
                               .toString()
                               .substring(0, 10),
-                          "تاريخ الانتهاء ",
                         ),
                         RowInfo(
                           "موقع المهمه",
@@ -260,7 +217,7 @@ class _TaskEvaluationState extends State<TaskEvaluation> {
                             context: context,
                             builder: (BuildContext builder) {
                               // reset dialog
-                              dialogHeight = screenHeight * 0.47;
+                              dialogHeight = screenHeight * 0.28;
                               statusChoice = 1;
                               rating = 2.5;
                               return Dialog(
@@ -354,13 +311,6 @@ class _TaskEvaluationState extends State<TaskEvaluation> {
                                               SizedBox(
                                                 height: screenHeight * 0.01,
                                               ),
-                                              // Comment Box
-                                              FormTextField(
-                                                height: fieldHeight,
-                                                width: fieldWidth * 0.75,
-                                                controller: commentController,
-                                                hintText: "اضف تعليق",
-                                              ),
                                               Padding(
                                                 padding: EdgeInsets.only(
                                                     top: screenHeight * 0.01),
@@ -377,7 +327,20 @@ class _TaskEvaluationState extends State<TaskEvaluation> {
                                                     onPressed: _sendRequest,
                                                   ),
                                                 ),
-                                              )
+                                              ),
+                                              statusChoice == 2
+                                                  ? const Text(
+                                                      "سيتم اعادة ارسال المهمه**",
+                                                      textDirection:
+                                                          TextDirection.rtl,
+                                                      style: TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.white,
+                                                        fontFamily:
+                                                            'DroidArabicKufi',
+                                                      ),
+                                                    )
+                                                  : const SizedBox(),
                                             ],
                                           ),
                                         ),

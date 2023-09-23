@@ -13,14 +13,17 @@ using System.Transactions;
 
 namespace Application.Handlers.Teams
 {
-    public class CreateTeamHandler
-        : IRequestHandler<CreateTeamCommand, Result<CreateTeamDTO>>
+    public class CreateTeamHandler : IRequestHandler<CreateTeamCommand, Result<CreateTeamDTO>>
     {
         private readonly DataContext _context;
         private readonly IMediator _mediator;
         private readonly NotificationService _notificationService;
 
-        public CreateTeamHandler(DataContext context, IMediator mediator, NotificationService notificationService)
+        public CreateTeamHandler(
+            DataContext context,
+            IMediator mediator,
+            NotificationService notificationService
+        )
         {
             _context = context;
             _mediator = mediator;
@@ -33,32 +36,38 @@ namespace Application.Handlers.Teams
         )
         {
             var userId = await _context.Users
-            .Where(u => u.UserName == request.createTeamDTO.strUsername)
-            .Select(u => u.Id)
-            .SingleOrDefaultAsync(cancellationToken: cancellationToken);
+                .Where(u => u.UserName == request.createTeamDTO.strUsername)
+                .Select(u => u.Id)
+                .SingleOrDefaultAsync(cancellationToken: cancellationToken);
 
-            List<int> lstMembersIds = request.createTeamDTO.lstTeamMembers.Select(q => q.intWorkerId).ToList();
+            List<int> lstMembersIds = request.createTeamDTO.lstTeamMembers
+                .Select(q => q.intWorkerId)
+                .ToList();
 
-            var blnAtleastOneWorkerIsInAnotherTeam = await _context.TeamMembers
-                .AnyAsync(q => lstMembersIds.Contains(q.intWorkerId));
+            var blnAtleastOneWorkerIsInAnotherTeam = await _context.TeamMembers.AnyAsync(
+                q => lstMembersIds.Contains(q.intWorkerId)
+            );
 
             if (blnAtleastOneWorkerIsInAnotherTeam)
                 return Result<CreateTeamDTO>.Failure("One of the workers is already in a team");
 
-            int leaderCount = request.createTeamDTO.lstTeamMembers.Count(member => member.blnIsLeader);
+            int leaderCount = request.createTeamDTO.lstTeamMembers.Count(
+                member => member.blnIsLeader
+            );
             if (leaderCount == 0)
                 return Result<CreateTeamDTO>.Failure("Leader must be selected");
 
             if (leaderCount > 1)
                 return Result<CreateTeamDTO>.Failure("Only one Leader must be selected");
 
-
             //Transaction Begins
             using var transaction = await _context.Database.BeginTransactionAsync();
             if (leaderCount == 1)
             {
-                int intLeaderId = request.createTeamDTO.lstTeamMembers.
-                    Where(q => q.blnIsLeader == true).Select(q => q.intWorkerId).SingleOrDefault();
+                int intLeaderId = request.createTeamDTO.lstTeamMembers
+                    .Where(q => q.blnIsLeader == true)
+                    .Select(q => q.intWorkerId)
+                    .SingleOrDefault();
 
                 try
                 {
@@ -126,7 +135,6 @@ namespace Application.Handlers.Teams
                                     strHeaderEn = headerEn,
                                     strBodyEn = strBodyEn,
                                 }));
-                            
                         }
                         catch (Exception e)
                         {
@@ -148,7 +156,6 @@ namespace Application.Handlers.Teams
             await transaction.CommitAsync();
 
             var result = request.createTeamDTO;
-
 
             return Result<CreateTeamDTO>.Success(result);
         }

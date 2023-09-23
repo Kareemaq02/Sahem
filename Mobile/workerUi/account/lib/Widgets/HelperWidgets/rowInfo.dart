@@ -8,15 +8,19 @@ Widget RowInfo(title, value) {
       Expanded(
         flex: 2,
         child: Column(
+          mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
               value,
               textDirection: TextDirection.rtl,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                 color: AppColor.secondary,
+                fontWeight: FontWeight.bold,
                 fontFamily: 'DroidArabicKufi',
-                fontSize: 10,
+                fontSize: 14,
               ),
             ),
           ],
@@ -25,14 +29,18 @@ Widget RowInfo(title, value) {
       Expanded(
         flex: 2,
         child: Column(
+          mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
-              ": " + title,
+              "$title:",
+              textDirection: TextDirection.rtl,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                 color: AppColor.main,
                 fontFamily: 'DroidArabicKufi',
-                fontSize: 13,
+                fontSize: 14,
               ),
             ),
           ],
