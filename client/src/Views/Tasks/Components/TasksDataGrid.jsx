@@ -7,7 +7,7 @@ import { CheckCircleOutline } from "@mui/icons-material/";
 // Project Imports
 import { GetTasksApi } from "../Service/GetTasksApi";
 import { deleteTasks } from "../Service/DeleteTask";
-
+import DeleteConfirmationDialog from "./DeleteConfirmationDialog ";
 // icons
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
@@ -28,27 +28,38 @@ function StatusColor(status) {
   }
 }
 
-const TasksDataGrid = ({ EvaluateTask, pageSize, pageNumber, selectedStatus, selectedTaskType,refreshDataGrid }) => {
+const TasksDataGrid = ({ EvaluateTask, pageSize, pageNumber, selectedStatus, selectedTaskType, refreshDataGrid }) => {
   const theme = useTheme();
   const [tasks, setTasks] = useState([]);
+  const [taskToDelete, setTaskToDelete] = useState(null);
+  const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false); // State for dialog
+
+
+
   useEffect(() => {
-
-
     const setTasksView = async () => {
       const response = await GetTasksApi(pageSize, pageNumber, selectedStatus, selectedTaskType);
       setTasks(response);
     };
     setTasksView();
     // fetchData();
-  }, [pageSize, pageNumber, selectedStatus, selectedTaskType,refreshDataGrid]);
+  }, [pageSize, pageNumber, selectedStatus, selectedTaskType, refreshDataGrid]);
 
-  const [taskToDelete, setTaskToDelete] = useState(null);
 
-  const handleDeleteTask = async (taskIdToDelete) => {
+
+
+
+  const handleDeleteTask = (taskIdToDelete) => {
+    setTaskToDelete(taskIdToDelete);
+    setDeleteConfirmationOpen(true);
+  };
+
+  const confirmDelete = async () => {
     try {
-      await deleteTasks(taskIdToDelete); // Call your deleteTask API function
-      const updatedTasks = tasks.filter((task) => task.id !== taskIdToDelete);
+      await deleteTasks(taskToDelete); // Call your deleteTask API function
+      const updatedTasks = tasks.filter((task) => task.id !== taskToDelete);
       setTasks(updatedTasks);
+      setTaskToDelete(null);
     } catch (error) {
       console.error("Error deleting task:", error);
     }
@@ -60,7 +71,7 @@ const TasksDataGrid = ({ EvaluateTask, pageSize, pageNumber, selectedStatus, sel
   const columns = [
     {
       field: "button",
-      headerName: "Evaluate",
+      headerName: "تقييم العمل",
       renderCell: (params) => (
         <IconButton
           variant="contained"
@@ -71,10 +82,10 @@ const TasksDataGrid = ({ EvaluateTask, pageSize, pageNumber, selectedStatus, sel
         </IconButton>
       ),
     },
-    { field: "id", headerName: "ID", flex: 0.5 },
+    { field: "id", headerName: "رقم", flex: 0.5 },
     {
       field: "admin",
-      headerName: "Admin",
+      headerName: "المسؤول",
       flex: 1,
       renderCell: (params) => (
         <Chip
@@ -83,17 +94,18 @@ const TasksDataGrid = ({ EvaluateTask, pageSize, pageNumber, selectedStatus, sel
           label={params.row.admin}
           sx={{
             "& .MuiChip-label": { color: theme.palette.grey[500] },
+            p: 1
           }}
         />
       ),
     },
-    { field: "type", headerName: "Type", flex: 1 },
-    { field: "cost", headerName: "Cost", flex: 1 },
-    { field: "dateScheduled", headerName: "Date Scheduled", flex: 1 },
-    { field: "deadline", headerName: "Deadline", flex: 1 },
+    { field: "typeAr", headerName: "النوع", flex: 1 },
+    { field: "cost", headerName: "التكلفة", flex: 1 },
+    { field: "dateScheduled", headerName: "تاريخ العمل", flex: 1 },
+    { field: "deadline", headerName: "تاريخ الانتهاء", flex: 1 },
     {
       field: "status",
-      headerName: "Status",
+      headerName: "الحالة",
       flex: 1,
       renderCell: (params) => (
         <Chip
@@ -110,7 +122,7 @@ const TasksDataGrid = ({ EvaluateTask, pageSize, pageNumber, selectedStatus, sel
     },
     {
       field: "Action",
-      headerName: "Action",
+      headerName: "حذف",
       renderCell: (params) => (
         <IconButton
           variant="contained"
@@ -130,6 +142,12 @@ const TasksDataGrid = ({ EvaluateTask, pageSize, pageNumber, selectedStatus, sel
         columns={columns}
         components={{ Toolbar: GridToolbar }}
         density="compact"
+        sx={{ fontSize: 'medium', fontFamily: 'Droid Arabic Naskh, sans-serif', }}
+      />
+      <DeleteConfirmationDialog
+        open={deleteConfirmationOpen}
+        onClose={() => setDeleteConfirmationOpen(false)}
+        onDelete={confirmDelete}
       />
     </Box>
   );

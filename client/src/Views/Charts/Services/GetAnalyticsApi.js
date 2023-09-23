@@ -1,6 +1,6 @@
 import axios from "../../../Common/Utils/AxiosAgent";
 
-export const GetAnalyticsApi = async (lstComplaintTypeIds, selectedDate) => {
+export const GetAnalyticsApi = async (lstComplaintTypeIds, selectedDate, selectedDueDate) => {
   try {
     const urlParams = new URLSearchParams();
 
@@ -9,6 +9,9 @@ export const GetAnalyticsApi = async (lstComplaintTypeIds, selectedDate) => {
     });
 
     urlParams.append("dtmDateCreated", selectedDate);
+
+    urlParams.append("dtmDateTo", selectedDueDate);
+
 
     return await axios.get(`api/complaints/analytics?${urlParams}`);
   } catch (error) {

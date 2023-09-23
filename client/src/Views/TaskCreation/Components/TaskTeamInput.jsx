@@ -14,18 +14,25 @@ import { DataGrid } from "@mui/x-data-grid";
 
 // Project Imports
 import { GetWorkersApi } from "../../../Common/Services/GetWorkersApi";
+import { availableWorker } from "../../../Common/Services/availableWorker";
 
 // Context
 import TaskCreationContext from "../Context/TaskCreationContext";
 
-const TaskTeamInput = ({ NextStep }) => {
-  const { workers, setWorkers, leader, setLeader, members, setMembers } =
+const TaskTeamInput = ({ NextStep   }) => {
+  const { workers, setWorkers, leader, setLeader, members, setMembers, formattedStartDate, formattedDueDate } =
     useContext(TaskCreationContext);
   const [snackBar, setSnackBar] = useState(false);
 
+  /*
+  const startDate = '2023-09-12 00:00:00.000000'
+  const dueDate = '2023-09-17 00:00:00.000000'
+  */
+
+
   useEffect(() => {
     const GetWorkers = async () => {
-      const list = await GetWorkersApi();
+      const list = await availableWorker(formattedStartDate, formattedDueDate);
       if (members.length > 0) {
         const membersIds = members.map((member) => member.intId);
         setWorkers(list.filter((item) => !membersIds.includes(item.intId)));
@@ -34,7 +41,7 @@ const TaskTeamInput = ({ NextStep }) => {
       }
     };
     GetWorkers();
-  }, []);
+  }, [formattedStartDate, formattedDueDate]);
 
   useEffect(() => {
     if (!leader && members.length > 0) {
@@ -70,6 +77,7 @@ const TaskTeamInput = ({ NextStep }) => {
     },
   };
 
+  
   const WorkersTable = [
     {
       field: "button",
@@ -95,8 +103,9 @@ const TaskTeamInput = ({ NextStep }) => {
         </IconButton>
       ),
     },
-    { field: "intId", headerName: "ID", flex: 0.15 },
-    { field: "strName", headerName: "Full Name", flex: 0.65 },
+    { field: "intId", headerName: "رقم", flex: 0.15 },
+    { field: "strName", headerName: "الاسم الكامل", flex: 0.25 },
+    { field: "profession", headerName: "المهنة", flex: 0.15 },
   ];
 
   const MembersTable = [
@@ -151,7 +160,7 @@ const TaskTeamInput = ({ NextStep }) => {
   return (
     <Stack>
       <div style={{ height: "80vh" }}>
-        <div style={{ height: "65%", marginBottom: "1rem" }}>
+        <div style={{ height: "65%", marginBottom: "1rem", }}>
           <DataGrid
             hideFooterSelectedRowCount
             sx={gridStyle}
@@ -175,14 +184,14 @@ const TaskTeamInput = ({ NextStep }) => {
       <Button
         variant="contained"
         color="primary"
-        sx={{ borderRadius: "1rem" }}
+        sx={{ borderRadius: "1rem", fontFamily: 'Droid Arabic Naskh, sans-serif' }}
         onClick={Validate}
       >
-        Next
+        التالي
       </Button>
       <Snackbar open={snackBar} autoHideDuration={2000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="error" sx={{ width: "100%" }}>
-          Members table can NOT be empty!
+          لا يمكن انشاء عمل بدون عمال
         </Alert>
       </Snackbar>
     </Stack>

@@ -16,6 +16,7 @@ import { FlexBetween } from "../../../Common/Components/FlexBetween";
 import FormDateTimePicker from "../../../Common/Components/UI/FormFields/FormDateTimePicker";
 import MediaGallery from "../../../Common/Components/MediaGallery";
 import { GetTasksTypesApi } from "../Service/GetTasksTypesApi";
+import Slider from 'react-slick';
 
 // Context
 import TaskCreationContext from "../Context/TaskCreationContext";
@@ -23,9 +24,10 @@ import TaskCreationContext from "../Context/TaskCreationContext";
 // schemas
 import { TaskSchema } from "../Utils/Schemas";
 
+
 const TaskDetailsInput = ({ photos, complaint, NextStep }) => {
   const [taskTypes, setTaskTypes] = useState([]);
-  const { task, setTask } = useContext(TaskCreationContext);
+  const { task, setTask, setStartDate, setDueDate } = useContext(TaskCreationContext);
 
   useEffect(() => {
     const GetTaskTypes = async () => {
@@ -46,12 +48,25 @@ const TaskDetailsInput = ({ photos, complaint, NextStep }) => {
   const theme = useTheme();
   return (
     <Stack spacing={2}>
-      <MediaGallery
-        items={photos}
-        height="25rem"
-        width="auto"
-        borderRadius="1rem"
-      />
+      <Slider
+        dots={true}
+        infinite={true}
+        slidesToShow={1}
+        slidesToScroll={1}
+        autoplay={true}
+        autoplaySpeed={3000}
+      >
+        {photos.map((media, index) => (
+          <div key={index}>
+            <img
+              src={`data:image/jpg;base64,${media.data}`}
+              alt={`Image ${index}`}
+              style={{ borderRadius: '25px', width: '100%', height: '450px' }}
+            />
+          </div>
+        ))}
+      </Slider>
+      <br />
       <Divider variant="middle" />
       <FormProvider {...methods}>
         <form
@@ -63,6 +78,9 @@ const TaskDetailsInput = ({ photos, complaint, NextStep }) => {
               taskType: data.taskType,
               comment: data.comment,
             });
+            setStartDate(dayjs(data.startDate)); // Update startDate in context
+
+            setDueDate(dayjs(data.dueDate)); // Update dueDate in context
             NextStep();
           })}
         >
@@ -81,8 +99,8 @@ const TaskDetailsInput = ({ photos, complaint, NextStep }) => {
               </Typography>
             </FlexBetween>
             <FlexBetween>
-              <Typography variant="h5" color={theme.palette.grey[500]}>
-                Start Date:
+              <Typography variant="h5" color={theme.palette.grey[500]} sx={{ fontFamily: 'Droid Arabic Naskh, sans-serif' }}>
+                تاريخ الانشاء:
               </Typography>
               <FormDateTimePicker
                 name="startDate"
@@ -91,12 +109,13 @@ const TaskDetailsInput = ({ photos, complaint, NextStep }) => {
               />
             </FlexBetween>
             <FlexBetween>
-              <Typography variant="h5" color={theme.palette.grey[500]}>
-                Due Date:
+              <Typography variant="h5" color={theme.palette.grey[500]} sx={{ fontFamily: 'Droid Arabic Naskh, sans-serif' }}>
+                تاريخ الانتهاء:
               </Typography>
               <FormDateTimePicker
                 name="dueDate"
                 minDateTime={methods.watch("startDate") || dayjs()}
+                onChange={(newDate) => setDueDate(newDate)}
               />
             </FlexBetween>
             <FormAutocompleteBox
@@ -108,9 +127,11 @@ const TaskDetailsInput = ({ photos, complaint, NextStep }) => {
             <Button
               type="submit"
               variant="contained"
-              sx={{ borderRadius: "1rem" }}
+              sx={{ borderRadius: "1rem", fontFamily: 'Droid Arabic Naskh, sans-serif' }}
+              onChange={(newDate) => setDueDate(newDate)}
+
             >
-              Next
+              التالي
             </Button>
           </Stack>
         </form>

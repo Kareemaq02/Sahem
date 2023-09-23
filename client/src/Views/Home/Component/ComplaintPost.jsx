@@ -6,6 +6,7 @@ import "../Style/style.css"
 import { PostComplaintWatch } from "../Service/PostComplaintWatch";
 // Import the SetVote function
 import { SetVote, getVoteStatus, setDownvote, removeVote } from "../Service/SetVoteApi";
+import VerifiedOutlinedIcon from '@mui/icons-material/VerifiedOutlined';
 
 // css style
 import "../Style/style.css"
@@ -21,6 +22,8 @@ import WatchLaterIcon from '@mui/icons-material/WatchLater';
 const ComplaintPost = ({ data }) => {
     const [complaintData, setComplaintData] = useState([]);
     const [loggedInUser, setLoggedInUser] = useState(null);
+
+
     useEffect(() => {
         setComplaintData(data);
 
@@ -35,7 +38,7 @@ const ComplaintPost = ({ data }) => {
             const singleComplaint = complaintData.find(c => c.intComplaintId === complaintId);
 
             if (singleComplaint.intVoted != 0) {
-                
+
                 await removeVote(complaintId);
 
 
@@ -75,10 +78,21 @@ const ComplaintPost = ({ data }) => {
         }
     };
 
-
-    const setWatch = async (complaintId) => {
-        await PostComplaintWatch(complaintId)
-    }
+    const toggleWatch = async (complaintId) => {
+        try {
+            await PostComplaintWatch(complaintId);
+            // Update the blnIsOnWatchList property in the complaintData state
+            const updatedData = complaintData.map((complaint) => {
+                if (complaint.intComplaintId === complaintId) {
+                    complaint.blnIsOnWatchList = !complaint.blnIsOnWatchList;
+                }
+                return complaint;
+            });
+            setComplaintData(updatedData);
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     return (
 
@@ -89,20 +103,30 @@ const ComplaintPost = ({ data }) => {
                         <Typography variant="h3" component="div" className="app">
                             <FlexBetween>
                                 <div style={{ display: 'flex', alignItems: 'center', }}>
-                                    <div className="avatar">A</div>
-                                    <span style={{ marginLeft: '10px' }}>{complaint.strFirstName} {complaint.strLastName}</span>
+                                    <div className="avatar">{complaint.strFirstNameAr[0]}</div>
+                                    <span style={{ marginLeft: '10px' }}>{complaint.strFirstNameAr} {complaint.strLastNameAr}</span>
+                                    <FlexBetween>
+                                        {
+                                            complaint.blnIsVerified === true ? (
+                                                <VerifiedOutlinedIcon />
+                                            ) : (
+                                                <span> </span>
+                                            )
+                                        }
+                                    </FlexBetween>
                                 </div>
+
 
                                 <Chip
                                     className="status-chip"
                                     icon={<RadioButtonCheckedIcon />}
                                     color="primary"
-                                    label={complaint.strStatus}
+                                    label={complaint.strStatusAr}
                                     variant="outlined"
                                     sx={{ p: 1 }}
                                 />
                                 <div className="status-box">
-                                    <Typography variant="body2" >الحالة العامة: <StatusTracker currentStage={complaint.strStatus} /> </Typography>
+                                    <Typography variant="body2" >الحالة العامة: <StatusTracker currentStage={complaint.strStatusEn} /> </Typography>
                                 </div>
                             </FlexBetween>
                         </Typography>
@@ -123,13 +147,14 @@ const ComplaintPost = ({ data }) => {
                             <img
                                 src={complaint.imageData ? `data:image/jpg;base64,${complaint.imageData}` : "https://via.placeholder.com/900x400"}
                                 alt={`Image for complaint ${complaint.intComplaintId}`}
-                                style={{ flex: 1, objectFit: 'cover', borderRadius: '25px', width: "90%", display: 'grid', marginLeft: 'auto', marginRight: 'auto' }}
+                                className="fixed-size-image"
                             />
+
 
                             <FlexBetween>
                                 <div style={{ paddingRight: '36px', marginTop: '13px' }}>
                                     <IconButton
-                                        aria-label="Upvote" 
+                                        aria-label="Upvote"
                                         // className={complaint.intVoted == 1 ? 'upvote_green' : '' }
 
                                         className={`${complaint.intVoted === 1 ? 'upvote_green' : ''} ${complaint.intVoted === -1 ? 'disabled' : ''}`}
@@ -145,15 +170,14 @@ const ComplaintPost = ({ data }) => {
                                     <span>{complaint.intVotersCount}</span>
                                     <IconButton
                                         aria-label="Downvote" className={`${complaint.intVoted == -1 ? 'downvote_red' : ''} ${complaint.intVoted === 1 ? 'disabled' : ''}`}
-                                        
                                         onClick={() => handleVote(complaint.intComplaintId, true)}
-                                        // disabled={clickedVote === 1}
+                                    // disabled={clickedVote === 1}
                                     >
                                         {complaint.isDownVote === true ? <ThumbDown /> : <ThumbDownOutlined />}
                                         {/* {complaint.isDownVote === true ? <ThumbDown /> : <ThumbDown />} */}
                                     </IconButton>
-                                    <IconButton onClick={() => setWatch(complaint.intComplaintId)}>
-                                        <RemoveRedEyeIcon />
+                                    <IconButton onClick={() => toggleWatch(complaint.intComplaintId)}>
+                                        <RemoveRedEyeIcon sx={{ color: complaint.blnIsOnWatchList ? '#e74c3c' : 'inherit' }} />
                                     </IconButton>
                                 </div>
 
@@ -161,10 +185,10 @@ const ComplaintPost = ({ data }) => {
                             </FlexBetween>
                         </div>
                     </CardContent>
-                </Card >
+                </Card>
             ))}
 
-        </Box >
+        </Box>
 
     );
 };
