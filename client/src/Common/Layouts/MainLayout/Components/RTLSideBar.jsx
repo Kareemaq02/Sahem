@@ -108,7 +108,7 @@ const RTLSideBar = ({ isOpen, onClose, user }) => {
             to={menu.path}
             className='menuItemStyle'
             sx={{
-              pl: 16,
+              pl: 8,
               ...(menu.path === window.location.pathname && activeListItemStyle),
             }}
             isActive={menu.path === window.location.pathname}
@@ -132,7 +132,7 @@ const RTLSideBar = ({ isOpen, onClose, user }) => {
               return (
                 <React.Fragment key={index}>
                   {index > 0 && <ColoredDivider />}
-                  <ListItem sx={{ fontSize: '5rem', pl: 10, }} button onClick={() => handleListItemClick(index, menu.path, false)}>
+                  <ListItem sx={{ fontSize: '5rem', pl: 8, }} button onClick={() => handleListItemClick(index, menu.path, false)}>
                     <ListItemIcon>{menu.icon}</ListItemIcon>
                     <Typography variant='h4' sx={{ color: "#181818" }}>{menu.text}</Typography>
                   </ListItem>

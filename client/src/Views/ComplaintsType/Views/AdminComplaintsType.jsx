@@ -21,13 +21,13 @@ function AdminComplaintsType() {
 
   return (
     <div>
-      <Typography variant="h1">View Complaints Type</Typography>
+      <Typography variant="h1">انواع المشاكل</Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} md={8}>
           <ComplaintsTypeDataGrid data={complaintType} />
         </Grid>
         <Grid item xs={12} md={4}>
-          <ComplaintsTypeForm />
+          <ComplaintsTypeForm refreshData={setComplaintType}/>
         </Grid>
       </Grid>
     </div>

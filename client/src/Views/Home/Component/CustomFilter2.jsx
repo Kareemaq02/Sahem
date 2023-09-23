@@ -1,13 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import {
-  Box,
-  Divider,
-  Select,
-  Stack,
-  Paper,
-  MenuItem,
-  Chip,
-} from "@mui/material";
+import {Box, Divider,Select, Stack, Paper, MenuItem,Chip,} from "@mui/material";
 import FormSelect from "../../../Common/Components/UI/FormFields/FormSelect";
 import FormChip from "../../../Common/Components/UI/FormFields/FormChip";
 import FormSlider from "../../../Common/Components/UI/FormFields/FormSlider";
@@ -18,16 +10,13 @@ import "../Style/style.css";
 import "./ComplaintMap.css";
 
 import mapboxgl, { Marker, Popup } from "mapbox-gl";
-// import GetGeneralComplaintMarker from "../Service/GetGeneralComplaintsMap";
 import GetPublicComplaintMarker from "../Service/GetPublicComplaintsMap";
 
-// import { GetPublicComplaintMarker } from "../Service/GetPublicComplaintsMap";
 
-const CustomFilter = ({
-  onComplaintTypesChange,
-  onComplaintStatusChange,
-  data,
-}) => {
+const CustomFilter = ({  onComplaintTypesChange,  onComplaintStatusChange,  data,}) => {
+
+console.log(data);
+
   mapboxgl.accessToken =
     "pk.eyJ1IjoiYWdyaWRiIiwiYSI6ImNsbDN5dXgxNTAxOTAza2xhdnVmcnRzbGEifQ.3cM2WO5ubiAjuWbpXi9woQ";
 
@@ -36,8 +25,7 @@ const CustomFilter = ({
   const [lng, setLng] = useState(35.919952);
   const [lat, setLat] = useState(31.941391);
   const [zoom, setZoom] = useState(8);
-  const [markerDetails, setMarkerDetails] = useState([]);
-  const [markers, setMarkers] = useState([]);
+  const [markerDetail, setMarkerDetails] = useState([]);
 
   useEffect(() => {
     if (map.current) return; // Prevent map from being initialized multiple times
@@ -53,17 +41,13 @@ const CustomFilter = ({
   useEffect(() => {
     if (!map.current || !data) return;
 
-    // Remove existing markers from the map
-    markers.forEach((marker) => {
-      marker.remove();
-    });
-
     // Dynamically create markers based on comDet
-    const newMarkers = data.map((complaint) => {
+
+    data.map((complaint) => {
       const el = document.createElement("div");
       el.className = "marker";
       const imageData = complaint.imageData;
-      el.style.backgroundImage = `url(${imageData})`;
+
       el.style.width = "50px";
       el.style.height = "50px";
 
@@ -74,11 +58,9 @@ const CustomFilter = ({
             <div class="popup-label">رقم البلاغ</div>
             <div class="popup-value">${complaint.intComplaintId}</div>
             <div class="popup-label">حالة البلاغ</div>
-            <div class="popup-value">${complaint.strStatusAr}</div>
+            <div class="popup-value">${complaint.strStatus}</div>
             <div class="popup-label">المستخدم</div>
-            <div class="popup-value">${complaint.strFirstName}</div>
-            <div class="popup-label">نوع البلاغ</div>
-            <div class="popup-value">${complaint.strComplaintTypeAr}</div>
+            <div class="popup-value">${complaint.strUserName}</div>
             <div class="popup-label">تاريخ الأضافة</div>
             <div class="popup-value">${complaint.dtmDateCreated}</div>
           </div>
@@ -86,18 +68,12 @@ const CustomFilter = ({
 
       const popup = new Popup({ offset: 25 }).setDOMContent(popupContent);
 
-      const marker = new mapboxgl.Marker(el)
+      new mapboxgl.Marker(el)
         .setLngLat([complaint.latLng.decLng, complaint.latLng.decLat])
         .setPopup(popup)
         .addTo(map.current);
-
-      return marker;
     });
-
-    // Update the markers state with the new markers
-    setMarkers(newMarkers);
-  }, [data, markers]);
-
+  }, [data]);
 
 
   const [complaintTypes, setComplaintTypes] = useState([]);
@@ -136,10 +112,7 @@ const CustomFilter = ({
   };
 
   return (
-    <Paper
-      sx={{ width: "100%", backgroundColor: "transparent 85%" }}
-      className="filterStyle stay"
-    >
+    <Paper sx={{ width: "100%", backgroundColor: "transparent 85%" }}className="filterStyle stay">
       <Box sx={{ width: "100%" }} textAlign="center" className="filterStyle">
         <div
           ref={mapContainer}
@@ -160,15 +133,9 @@ const CustomFilter = ({
           renderValue={(selected) => (
             <Box sx={{ display: "flex", flexWrap: "wrap" }}>
               {selected.map((complaintTypeId) => {
-                const complaintType = complaintTypes.find(
-                  (type) => type.intTypeId === complaintTypeId
-                );
-                return (
-                  <Chip
-                    key={complaintTypeId}
-                    label={complaintType.strNameEn}
-                    style={{ margin: 2 }}
-                  />
+                const complaintType = complaintTypes.find((type) => type.intTypeId === complaintTypeId);
+                return (        
+                <Chip key={complaintTypeId} label={complaintType.strNameEn} style={{ margin: 2 }} />
                 );
               })}
             </Box>
@@ -188,15 +155,7 @@ const CustomFilter = ({
       <h4 dir="rtl">الحالة</h4>
       <Divider />
       <br />
-      <Box
-        sx={{
-          width: "100%",
-          textAlign: "center",
-          display: "flex",
-          flexWrap: "wrap",
-          p: 1,
-        }}
-      >
+      <Box sx={{width: "100%", textAlign: "center",display: "flex",flexWrap: "wrap",p: 1,}}>
         {/* Replace the Stack with MultipleSelectCheckmarks */}
         <FormChipSelect
           value={selectedStatus}

@@ -81,15 +81,12 @@ const TaskCreationDetails = ({ ResetStep, complaint, CloseDrawer }) => {
           </Typography>
         </FlexBetween>
         <FlexBetween>
-          <Typography variant="h5" color={theme.palette.grey[500]}>
-            Status
-          </Typography>
           <Chip label={task.status} color="primary" variant="outlined" />
+          <Typography variant="h5" color={theme.palette.grey[500]} sx={{fontFamily: 'Droid Arabic Naskh, sans-serif' }}>
+            الحالة
+          </Typography>
         </FlexBetween>
         <FlexBetween>
-          <Typography variant="h5" color={theme.palette.grey[500]}>
-            Members
-          </Typography>
           <Box>
             <MuiAvatarGroup max={4}>
               {members.map((member) => (
@@ -97,41 +94,46 @@ const TaskCreationDetails = ({ ResetStep, complaint, CloseDrawer }) => {
               ))}
             </MuiAvatarGroup>
           </Box>
+          <Typography variant="h5" color={theme.palette.grey[500]} sx={{fontFamily: 'Droid Arabic Naskh, sans-serif' }}>
+            الاعضاء
+          </Typography>
         </FlexBetween>
         <FlexBetween>
-          <Typography variant="h5" color={theme.palette.grey[500]}>
-            Team Leader
-          </Typography>
           <Chip
             variant="outlined"
             avatar={<Avatar>{leader.strName[0]}</Avatar>}
             label={leader.strName}
             sx={{
               "& .MuiChip-label": { color: theme.palette.grey[500] },
+              direction: 'rtl',
+              p: 1,
             }}
           />
+          <Typography variant="h5" color={theme.palette.grey[500]} sx={{fontFamily: 'Droid Arabic Naskh, sans-serif' }}>
+            مسؤول الفريق
+          </Typography>
         </FlexBetween>
         <FlexBetween>
-          <Typography variant="h5" color={theme.palette.grey[500]}>
-            Start Date
-          </Typography>
           <Chip
             variant="outlined"
             icon={<CalendarMonth color="primary" />}
             label={DateFormatterEn(task.startDate)}
             color="primary"
           />
+          <Typography variant="h5" color={theme.palette.grey[500]} sx={{fontFamily: 'Droid Arabic Naskh, sans-serif' }}>
+            من تاريخ
+          </Typography>
         </FlexBetween>
         <FlexBetween>
-          <Typography variant="h5" color={theme.palette.grey[500]}>
-            Due Date
-          </Typography>
           <Chip
             variant="outlined"
             icon={<CalendarMonth color="primary" />}
             label={DateFormatterEn(task.dueDate)}
             color="primary"
           />
+          <Typography variant="h5" color={theme.palette.grey[500]} sx={{fontFamily: 'Droid Arabic Naskh, sans-serif' }}>
+            الى تاريخ
+          </Typography>
         </FlexBetween>
         <TextField
           label="Comment"
@@ -144,13 +146,14 @@ const TaskCreationDetails = ({ ResetStep, complaint, CloseDrawer }) => {
           <Button
             onClick={ResetStep}
             variant="outlined"
-            color="warning"
+            color="primary"
             sx={{
               flex: "1 1 auto",
               borderRadius: "1rem",
+              fontFamily: 'Droid Arabic Naskh, sans-serif'
             }}
           >
-            Edit
+            تعديل
           </Button>
           <Button
             onClick={CreateTask}
@@ -159,9 +162,10 @@ const TaskCreationDetails = ({ ResetStep, complaint, CloseDrawer }) => {
             sx={{
               flex: "1 1 auto",
               borderRadius: "1rem",
+              fontFamily: 'Droid Arabic Naskh, sans-serif'
             }}
           >
-            Create Task
+            انشاء المهمة
           </Button>
         </Stack>
       </Stack>

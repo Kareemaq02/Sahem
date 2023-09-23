@@ -99,14 +99,14 @@ class _MainMenuWorkerState extends State<MainMenuWorker> {
                             height: buttonHeight,
                             width: buttonWidth,
                             icon: Icons.spatial_tracking_sharp,
-                            text: "المهمه المفعله",
+                            text: "المهمة المفعلة",
                             onPressed: () =>
                                 {naviTransition(context, const CurrentTask())}),
                         SquareButtonWithStroke(
                             height: buttonHeight,
                             width: buttonWidth,
                             icon: Icons.card_membership_rounded,
-                            text: "الاعمال",
+                            text: "المهام",
                             onPressed: () =>
                                 {naviTransition(context, const XDTasksList())}),
                       ],

@@ -31,7 +31,7 @@ Widget myContainer(double height, Widget childWidget) {
           decoration: BoxDecoration(
             border: Border(
               bottom: BorderSide(
-                width: height * 0.007,
+                width: height * 0.022,
                 color: AppColor.main,
               ),
             ),

@@ -9,7 +9,6 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 // project
 import GetComplaintDetails from "../Service/GetComplaintDetails";
 import GetComplaintImage from "../Service/GetComplaintImage";
-import ScrollLock from 'react-scroll-lock-component';
 
 function CitizenForum() {
   const [comDet, setCompDet] = useState([]);
@@ -17,7 +16,9 @@ function CitizenForum() {
   const [pageNumber, setPageNumber] = useState(1);
   const [selectedComplaintTypes, setSelectedComplaintTypes] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState([]);
-
+  const [sliderValue, setSliderValue] = useState(30);
+  const userLat = 38.850000;
+  const userLng = 35.010000;
 
   useEffect(() => {
     const fetchComplaints = async () => {
@@ -25,14 +26,16 @@ function CitizenForum() {
         const response = await GetComplaintDetails(
           pageNumber,
           pageSize,
+          userLat,
+          userLng,
           selectedComplaintTypes,
           selectedStatus,
-          null 
+          sliderValue,
         );
 
         const complaintsWithData = await Promise.all(response.data.map(async (complaint) => {
-          const imageDataResponse = await GetComplaintImage(complaint.intComplaintId); 
-          const imageData = imageDataResponse.data.lstMedia[0]?.data || "-1"; 
+          const imageDataResponse = await GetComplaintImage(complaint.intComplaintId);
+          const imageData = imageDataResponse.data.lstMedia[0]?.data || "";
 
           return { ...complaint, imageData };
         }));
@@ -44,9 +47,12 @@ function CitizenForum() {
     };
 
     fetchComplaints();
-  }, [pageNumber, pageSize, selectedComplaintTypes, selectedStatus]);
+  }, [pageNumber, pageSize, selectedComplaintTypes, selectedStatus, userLat, userLng, sliderValue]);
 
 
+  const handleSliderValueChange = (sliderValue) => {
+    console.log("Slider value:", sliderValue);
+  };
 
   const handlePageChange = (direction) => {
     if (direction === "prev" && pageNumber > 1) {
@@ -67,9 +73,7 @@ function CitizenForum() {
 
   return (
     <div>
-
       <Grid container spacing={2} className="app-container">
- 
         <Grid item xs={12} md={8} className="main-content">
           <FlexBetween>
             <ComplaintPost data={comDet} />
@@ -89,14 +93,16 @@ function CitizenForum() {
 
           </Box>
         </Grid>
-        {/* <ScrollLock> */}
-        <Grid item xs={12} md={4} className="custom-filter-container">
-          {/* Pass the handleComplaintTypesChange function as a prop */}
-          <CustomFilter onComplaintTypesChange={handleComplaintTypesChange} onComplaintStatusChange={handleComplaintStatusChange}  />
-        </Grid>
-        {/* </ScrollLock> */}
+          <Grid item xs={12} md={4} className="custom-filter-container">
+            {/* Pass the handleComplaintTypesChange function as a prop */}
+            <CustomFilter
+              data = {comDet}
+              onComplaintTypesChange={handleComplaintTypesChange}
+              onComplaintStatusChange={handleComplaintStatusChange}
+              onSliderValueChange={handleSliderValueChange} // Pass the new function here
+            />
+          </Grid>
       </Grid>
-
       <br />
       <br />
     </div>

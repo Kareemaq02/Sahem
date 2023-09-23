@@ -56,8 +56,8 @@ public class IncrementComplaintReminderHandler
         else
         {
             double remainingHours = 48 - timeSinceLastReminder.TotalHours;
-            return Result<Unit>.Failure($"You need to wait { (int)Math.Ceiling(remainingHours) } " +
-                $"hours before reminding us about your complaint again.");
+            return Result<Unit>.Failure($"يجب عليك الانتظار { (int)Math.Ceiling(remainingHours) } " +
+                $"ساعات قبل تذكيرنا بشكوتك مرة أخرى.");
         }
         return Result<Unit>.Success(Unit.Value);
     }

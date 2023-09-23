@@ -6,12 +6,15 @@
         {
             rejectedComplaintNotification = 1,
             workerAddedToDepartmentNotification = 2,
-            completedComplaintNotification = 3,
-            complaintStatusChangeNotification = 4,
-            taskStatusChangeNotification = 5,
-            taskDeletionNotification = 6,
-            taskCreationNotification = 7,
-            workerAddedToTeamNotification = 9
+            inProgressComplaintNotification = 3,
+            completedComplaintNotification = 4,
+            pendingComplaintNotification = 5,
+            activeTaskNotification = 6,
+            taskDeletionNotification = 7,
+            scheduledComplaintNotification = 8,
+            taskCreationNotification = 9,
+            waitingEvaluationComplaintNotification = 10,
+            workerAddedToTeamNotification = 11,
         }
 
     }

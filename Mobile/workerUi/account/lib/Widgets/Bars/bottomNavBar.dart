@@ -144,7 +144,7 @@ class _BottomNavBarState extends State<BottomNavBar1> {
                         color: Colors.grey,
                         size: 23,
                       ),
-                text: "الأعمال"),
+                text: "المهام"),
             const SizedBox(
               width: 20,
             ),

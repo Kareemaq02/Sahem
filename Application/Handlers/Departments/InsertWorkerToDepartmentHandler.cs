@@ -92,49 +92,48 @@ namespace Application.Handlers.LookUps
                     )
                     .SingleOrDefaultAsync();
 
+
+                var notificationToken = await _context.NotificationTokens
+                .Where(q => q.intUserId == request.intWorkerId)
+                .Select(q => q.strToken).FirstOrDefaultAsync();
+
                 if (notificationLayout == null)
                     throw new Exception("Notification Type table is empty");
 
                 //Get Department name in arabic and in english
                 var departmentNames = await _context.Departments
                     .Where(q => q.intId == request.intDepartmentId)
-                    .Select(
-                        q => new Department { strNameAr = q.strNameAr, strNameEn = q.strNameEn }
-                    )
-                    .SingleOrDefaultAsync();
+                    .Select(q => new Department { strNameAr = q.strNameAr, strNameEn = q.strNameEn }).SingleOrDefaultAsync();
 
-                await _mediator.Send(
-                    new InsertNotificationCommand(
-                        new Notification
-                        {
-                            intTypeId = (int)
-                                NotificationConstant
-                                    .NotificationType
-                                    .workerAddedToDepartmentNotification,
-                            intUserId = request.intWorkerId,
-                            strBodyAr =
-                                "قسم "
-                                + departmentNames.strNameAr
-                                + " "
-                                + notificationLayout.strBodyAr,
-                            strHeaderAr =
-                                notificationLayout.strHeaderAr + " " + departmentNames.strNameAr,
-                            strBodyEn =
-                                departmentNames.strNameEn + " " + notificationLayout.strBodyEn,
-                            strHeaderEn =
-                                notificationLayout.strHeaderEn
-                                + " "
-                                + departmentNames.strNameEn
-                                + " department.",
-                        }
-                    )
-                );
+
+                string headerAr = notificationLayout.strHeaderAr + departmentNames.strNameAr;
+                string bodyAr = "قسم ال" + departmentNames.strNameAr + " " + notificationLayout.strBodyAr;
+                string headerEn = notificationLayout.strHeaderEn + " " + departmentNames.strNameEn + " department.";
+                string strBodyEn = "Department " + departmentNames.strNameEn + " " + notificationLayout.strBodyEn;
+
+                await _mediator.
+                    Send(new InsertNotificationCommand(new Notification
+                    {
+                        intTypeId = (int)NotificationConstant.NotificationType.workerAddedToDepartmentNotification,
+                        intUserId = request.intWorkerId,
+                        strHeaderAr = headerAr,
+                        strBodyAr = bodyAr,
+                        strHeaderEn = headerEn,
+                        strBodyEn = strBodyEn,
+                    }));
+
+                string notificationJson = $"{{" +
+            $"\"to\": \"{notificationToken}\"," +
+            $"\"notification\": {{" +
+            $"\"title\": \"{headerAr}\"," +
+            $"\"body\": \"{bodyAr}\"" +
+            $"}}" +
+            $"}}";
 
                 // Get Notification body and header
 
-                //await _notificationService
-                //.SendNotification(request.intWorkerId, notificationLayout.strHeaderAr + departmentNames.strNameAr,
-                //notificationLayout.strBodyAr + departmentNames.strNameAr);
+                await _notificationService
+                    .SendNotificationAsync(notificationJson);
             }
             catch (Exception ex)
             {

@@ -1,7 +1,10 @@
-import { Typography, Button, Paper } from "@mui/material"
+import { Typography, Button, Paper, Box } from "@mui/material"
 import { FormProvider, useForm } from "react-hook-form"
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { Snackbar, Alert } from '@mui/material';
+import { useState } from 'react';
+
 
 // project
 import FormTextField from "../../../Common/Components/UI/FormFields/FormTextField"
@@ -36,48 +39,79 @@ const AdminWorkerReg = () => {
         try {
             await AddWorkerAPI(formData);
             console.log("Worker added successfully");
+            handleSnackbarOpen();
         } catch (error) {
             console.error("Failed to add worker", error);
         }
     };
 
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+
+
+    const handleSnackbarClose = () => {
+        setOpenSnackbar(false);
+      };
+      
+      const handleSnackbarOpen = () => {
+        setOpenSnackbar(true);
+      };
+
 
     return (
-        <Paper sx={{ p: 2, borderRadius: '25px' }}>
-            <FormProvider {...methods}>
-                <h1 style={{ textAlign: 'center' }}>Register a Worker</h1>
-                <form onSubmit={methods.handleSubmit(createWorker)}>
-                    <FormTextField name="strUsername" label="User Name" defaultValue="" />
-                    <br />
-                    <br />
-                    <FormTextField name="strPhonenumber" label="Phone Number" defaultValue="" />
-                    <br />
-                    <br />
-                    <FormTextField type="password" name="strPassword" label="Password" defaultValue="" />
-                    <br />
-                    <br />
-                    <FormTextField name="strFirstName" label="First Name" defaultValue="" />
-                    <br />
-                    <br />
-                    <FormTextField name="strLastName" label="Last Name" defaultValue="" />
-                    <br />
-                    <br />
-                    <FormTextField name="strNationalId" label="National Id" defaultValue="" />
-                    <br />
-                    <br />
-                    <FormTextField name="strPassportNumber" label="Passport Number" defaultValue="" />
-                    <br />
-                    <br />
-                    <FormTextField name="strNationalIdNumber" label="National Id Number" defaultValue="" />
-                    <br />
-                    <br />
-                    <Button type="submit" variant="contained" color="primary" sx={{ width: "100%" }}>
+        <Box>
+            <Paper sx={{ p: 2, borderRadius: '25px' }}>
+            <Snackbar
+                open={openSnackbar}
+                autoHideDuration={3000}
+                onClose={handleSnackbarClose}
+            >
+                <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
+                تم تسجيل العامل بنجاح!
+                </Alert>
+            </Snackbar>
+                <FormProvider {...methods}>
+                    <h1 style={{ textAlign: 'center' }}>تسجيل عامل جديد</h1>
+                    <form onSubmit={methods.handleSubmit(createWorker)}>
+                        <FormTextField name="strUsername" label="اسم المستخدم" defaultValue="" />
+                        <br />
+                        <br />
+                        <FormTextField name="strPhonenumber" label="رقم الهاتف" defaultValue="" />
+                        <br />
+                        <br />
+                        <FormTextField type="password" name="strPassword" label="كلمة المرور" defaultValue="" />
+                        <br />
+                        <br />
+                        <FormTextField name="strFirstName" label="الاسم الاول" defaultValue="" />
+                        <br />
+                        <br />
+                        <FormTextField name="strLastName" label="الاسم الاخير" defaultValue="" />
+                        <br />
+                        <br />
+                        <FormTextField name="strFirstNameAr" label="الاسم الاول بالعربي" defaultValue="" />
+                        <br />
+                        <br />
+                        <FormTextField name="strLastNameAr" label="الاسم الاحير بالعربي" defaultValue="" />
+                        <br />
+                        <br />
+                        <FormTextField name="strNationalId" label="رقم وطني" defaultValue="" />
+                        <br />
+                        <br />
+                        <FormTextField name="strPassportNumber" label="رقم الجواز" defaultValue="" />
+                        <br />
+                        <br />
+                        <FormTextField name="strNationalIdNumber" label="الرقم الوطني" defaultValue="" />
+                        <br />
+                        <br />
+                        <Button type="submit" variant="contained" color="primary" sx={{ width: "100%" }}>
 
-                        Add
-                    </Button>
-                </form>
-            </FormProvider>
-        </Paper>
+                        إضافة
+                        </Button>
+                    </form>
+                </FormProvider>
+            </Paper>
+            <br />
+            <br />
+        </Box>
     )
 }
 export default AdminWorkerReg;

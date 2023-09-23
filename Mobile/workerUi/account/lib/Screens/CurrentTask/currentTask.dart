@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
@@ -7,34 +8,51 @@ import 'package:account/Widgets/HelperWidgets/text.dart';
 import 'package:account/Screens/CurrentTask/mapView.dart';
 import 'package:account/Screens/CurrentTask/googleMap.dart';
 import 'package:account/Screens/SubmitTask/submitTask.dart';
+import 'package:account/API/TaskAPI/get_activated_task.dart';
 import 'package:account/Widgets/Buttons/buttonsForCards.dart';
 import 'package:account/Widgets/HelperWidgets/myContainer.dart';
 // ignore_for_file: file_names
 
 // ignore_for_file: library_private_types_in_public_api
 
-
 class CurrentTask extends StatefulWidget {
   const CurrentTask({Key? key}) : super(key: key);
 
   @override
-  _XDPublicFeed1State createState() => _XDPublicFeed1State();
+  _CurrentTaskState createState() => _CurrentTaskState();
 }
 
-class _XDPublicFeed1State extends State<CurrentTask> {
-  var reminder = false;
-  var type = "";
-  bool teamLeader = true;
-  double destinationLat = 32.00685936542326;
-  double destinationLng = 35.86430898176924;
+class _CurrentTaskState extends State<CurrentTask> {
+  // var reminder = false;
+  // var type = "";
+  // bool teamLeader = true;
+  // double destinationLat = 32.00685936542326;
+  // double destinationLng = 35.86430898176924;
+  ActivatedTaskModel? activatedTask;
+  String address = "";
 
   @override
   void initState() {
     super.initState();
     _getCurrentPosition();
+    _loadData();
   }
 
-  
+  // ... Existing code ...
+
+  Future<void> _loadData() async {
+    try {
+      final activatedTask = await ActivatedTask().getActivatedTask();
+      setState(() {
+        this.activatedTask = activatedTask;
+        fetchAddress(activatedTask.latLng.decLat, activatedTask.latLng.decLng);
+      });
+    } catch (e) {
+      // Handle any errors that occur during data loading
+      print("Error loading data: $e");
+    }
+  }
+
   Position? _currentPosition;
 
   Future<bool> _handleLocationPermission() async {
@@ -76,7 +94,32 @@ class _XDPublicFeed1State extends State<CurrentTask> {
     });
   }
 
+  Future<String?> getAddressFromCoordinates(double lat, double lng) async {
+    try {
+      final List<Placemark> placemarks = await placemarkFromCoordinates(
+        lat,
+        lng,
+        localeIdentifier: 'ar',
+      );
 
+      if (placemarks.isNotEmpty) {
+        final Placemark placemark = placemarks[0];
+        final String? address = placemark.street;
+        return address;
+      } else {
+        return '';
+      }
+    } catch (e) {
+      return '$e';
+    }
+  }
+
+  Future<void> fetchAddress(double lat, double lng) async {
+    address = (await getAddressFromCoordinates(lat, lng))!;
+    if (mounted) {
+      setState(() {});
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,8 +130,35 @@ class _XDPublicFeed1State extends State<CurrentTask> {
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
       bottomNavigationBar: BottomNavBar1(3),
-      appBar: myAppBar(context, ' العمل الحالي ', false, screenWidth * 0.5),
-      body: Padding(
+      appBar: myAppBar(context, ' المهمة الحالية', false, screenWidth * 0.5),
+      body: activatedTask == null
+          ? activatedStatus == 400
+              ? const Center(
+                  child: Text(
+                    'لا يوجد مهمة مفعلة',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: AppColor.main,
+                      fontFamily: 'DroidArabicKufi',
+                    ),
+                  ),
+                )
+              : const Center(
+                  child: CircularProgressIndicator(
+                  color: AppColor.main,
+                ))
+          : activatedStatus == 400
+              ? const Center(
+                  child: Text(
+                    'لا يوجد مهمة مفعلة',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: AppColor.textTitle,
+                      fontFamily: 'DroidArabicKufi',
+                    ),
+                  ),
+                )
+              : Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
@@ -103,19 +173,12 @@ class _XDPublicFeed1State extends State<CurrentTask> {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 height: screenHeight * 0.6,
-                child: const FullMap(),
+                          child: FullMap(
+                            lat: activatedTask!.latLng.decLat,
+                            lng: activatedTask!.latLng.decLng,
+                          ),
               ),
 
-              //container to view data
-              Padding(
-                padding: EdgeInsets.only(
-                    left: screenWidth * 0.15, right: screenWidth * 0.15),
-                child: const Divider(
-                  color: Colors.yellow,
-                  endIndent: 2,
-                  indent: 1,
-                ),
-              ),
               Padding(
                 padding: EdgeInsets.all(screenWidth * 0.02),
                 child: myContainer(
@@ -137,59 +200,69 @@ class _XDPublicFeed1State extends State<CurrentTask> {
                                 () async {
                                   await _getCurrentPosition();
                                   navigateToGoogleMaps(
-                                      _currentPosition!.altitude,
-                                      _currentPosition!.longitude,
-                                      destinationLat, destinationLng);
+                                              _currentPosition!.altitude,
+                                              _currentPosition!.longitude,
+                                              activatedTask!.latLng.decLat,
+                                              activatedTask!.latLng.decLng,
+                                            );
                                 },
                               ),
                               const SizedBox(width: 10),
                               CardButtons(
                                   context,
                                   'معاينة',
-                                  !teamLeader ? AppColor.main : Colors.grey,
-                                  !teamLeader ? AppColor.main : Colors.grey,
+                                            activatedTask!.blnIsLeader
+                                                ? AppColor.main
+                                                : Colors.grey,
+                                            activatedTask!.blnIsLeader
+                                                ? AppColor.main
+                                                : Colors.grey,
                                   screenWidth * 0.6, () {
+                                          activatedTask!.blnIsLeader
+                                              ?
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => const FinishTask(
                                               TaskID: '',
-                                            )));
+                                                          )))
+                                              : null;
                               }),
                               const Spacer(),
-                              Text(
-                                type,
-                                style: TextStyle(
-                                  color: AppColor.textTitle,
-                                  fontSize: screenWidth * 0.03,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
+                         
                               Padding(
                                 padding:
                                     EdgeInsets.only(left: screenWidth * 0.01),
-                                child: text(
-                                    " مخلفات اعمال بناء", AppColor.textBlue),
+                                          child: text(
+                                              activatedTask!.strTypeNameAr,
+                                              AppColor.textBlue),
                               ),
                             ],
                           ),
                           Padding(
-                            padding: EdgeInsets.only(left: screenWidth * 0.65),
-                            child: text("مارس-15-2023", AppColor.textBlue),
+                                      padding: EdgeInsets.only(
+                                          left: screenWidth * 0.70),
+                                      child: text(
+                                          activatedTask!.activatedDate
+                                              .substring(0, 10),
+                                          AppColor.textBlue),
                           ),
                           Padding(
                             padding: EdgeInsets.only(
-                                left: screenWidth * 0.45,
+                                          left: screenWidth * 0.55,
                                 top: screenHeight * 0.02),
-                            child: text("اعمال صيانة دورية فالمنطقة",
+                                      child: text(
+                                          activatedTask!.strComment.isEmpty
+                                              ? "اعمال صيانة دورية فالمنطقة"
+                                              : activatedTask!.strComment,
                                 AppColor.textBlue),
                           ),
 
                           Padding(
                             padding: EdgeInsets.only(
-                                right: screenWidth * 0.56,
+                                          right: screenWidth * 0.4,
                                 top: screenHeight * 0.05),
-                            child: text("ش.وصفي التل.عمان", AppColor.secondary),
+                                      child: text(address, AppColor.secondary),
                           ),
                         ],
                       ),

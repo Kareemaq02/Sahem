@@ -9,7 +9,9 @@ import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 
 
 class FullMap extends StatefulWidget {
-  const FullMap({super.key});
+  final double lat;
+  final double lng;
+  const FullMap({super.key, required this.lat, required this.lng});
 
   @override
   State createState() => FullMapState();
@@ -37,7 +39,7 @@ class FullMapState extends State<FullMap> with TickerProviderStateMixin {
         minZoom: 5,
         maxZoom: 25,
         zoom: 15,
-        center: b.LatLng(31.97843632996766, 35.841184352214725),
+        center: b.LatLng(widget.lat, widget.lng),
       ),
       layers: [
         TileLayerOptions(
@@ -52,7 +54,7 @@ class FullMapState extends State<FullMap> with TickerProviderStateMixin {
             Marker(
               height: 40,
               width: 40,
-              point: b.LatLng(31.97843632996766, 35.841184352214725),
+              point: b.LatLng(widget.lat, widget.lng),
               builder: (_) {
                 return GestureDetector(
                   onTap: () {
@@ -62,9 +64,7 @@ class FullMapState extends State<FullMap> with TickerProviderStateMixin {
                       curve: Curves.easeInOut,
                     );
                     selectedIndex = 1;
-                    currentLocation =
-                        b.LatLng(31.97843632996766, 35.841184352214725);
-
+                   
                     _animatedMapMove(currentLocation, 11.5);
                     setState(() {});
                   },

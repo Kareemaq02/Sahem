@@ -16,14 +16,7 @@ const CitizenViewGeneralComplaints = () => {
     useEffect(() => {
         const setComplaintsView = async () => {
             const response = await GetComplaintApi();
-
-            const complaintsWithData = await Promise.all(response.data.map(async (complaint) => {
-                const imageDataResponse = await GetComplaintImage(complaint.intComplaintId);
-                const imageData = imageDataResponse.data.lstMedia[0]?.data || "";
-
-                return { ...complaint, imageData };
-            }));
-            setComplaints(complaintsWithData);
+            setComplaints(response);
         };
         setComplaintsView();
     }, []);

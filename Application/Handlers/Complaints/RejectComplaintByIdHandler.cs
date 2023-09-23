@@ -97,6 +97,10 @@ public class RejectComplaintByIdHandler
                 .Select(c => c.UserName)
                 .SingleOrDefaultAsync();
 
+            var notificationToken = await _context.NotificationTokens
+                .Where(q => q.intUserId == rejectedComplaintUserId)
+                .Select(q => q.strToken).FirstOrDefaultAsync();
+
             // Get Notification body and header
             var notificationLayout = await _context.NotificationTypes
                 .Where(
@@ -121,26 +125,34 @@ public class RejectComplaintByIdHandler
 
             string headerAr = notificationLayout.strHeaderAr;
             string bodyAr = notificationLayout.strBodyAr + " " + request.Id;
+
             string headerEn = notificationLayout.strHeaderEn;
-            string strBodyEn =
-                notificationLayout.strBodyEn + " " + request.Id + " has been rejected.";
+            string strBodyEn = notificationLayout.strBodyEn + " " + request.Id + " has been rejected.";
 
-            await _mediator.Send(
-                new InsertNotificationCommand(
-                    new Notification
-                    {
-                        intTypeId = (int)
-                            NotificationConstant.NotificationType.rejectedComplaintNotification,
-                        intUserId = rejectedComplaintUserId,
-                        strHeaderAr = headerAr,
-                        strBodyAr = bodyAr,
-                        strHeaderEn = headerEn,
-                        strBodyEn = strBodyEn,
-                    }
-                )
-            );
 
-            //await _notificationService.SendNotification(rejectedComplaintUserId, headerAr, bodyAr);
+            string notificationJson = $"{{" +
+             $"\"to\": \"{notificationToken}\"," +
+             $"\"notification\": {{" +
+             $"\"title\": \"{headerAr}\"," +
+             $"\"body\": \"{bodyAr}\"" +
+             $"}}" +
+             $"}}";
+
+            await _mediator.
+                Send(new InsertNotificationCommand(new Notification
+                {
+                    intTypeId = (int)NotificationConstant.NotificationType.rejectedComplaintNotification,
+                    intUserId = rejectedComplaintUserId,
+
+                    strHeaderAr = headerAr,
+                    strBodyAr = bodyAr,
+
+                    strHeaderEn = headerEn,
+                    strBodyEn = strBodyEn,
+                }));
+
+
+            await _notificationService.SendNotificationAsync(notificationJson);
         }
         catch (Exception e)
         {

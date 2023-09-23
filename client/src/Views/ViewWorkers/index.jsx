@@ -5,7 +5,7 @@ function Home() {
 
     return (
         <div>
-            <h1>Show Workers</h1>
+            <h1 style={{fontFamily: 'Droid Arabic Naskh, sans-serif'}}>قائمة العمال</h1>
             <AdminShowWorkersView />
         </div>
     )

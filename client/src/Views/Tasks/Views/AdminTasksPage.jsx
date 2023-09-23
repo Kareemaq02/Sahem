@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { deleteTasks } from "../Service/DeleteTask";
-import {Button,Snackbar,Stack,Typography,useTheme,SwipeableDrawer,Grid,} from "@mui/material";
+import { Button, Snackbar, Stack, Typography, useTheme, SwipeableDrawer, Grid, } from "@mui/material";
 import { EvaluateTaskApi } from "../Service/EvaluateTaskApi";
 import { GetTaskDetailsApi } from "../Service/GetTaskDetailsApi";
 import TaskDetails from "../Components/TaskDetails";
@@ -31,7 +31,7 @@ const testPhotos = [
     title: "Test 3",
   },
 ];
-const radioOptions = ["Failed", "Incomplete", "Completed"];
+const radioOptions = ["خطا", "منجز"];
 
 const AdminTasksPage = () => {
   const methods = useForm();
@@ -50,6 +50,7 @@ const AdminTasksPage = () => {
     members: [],
     type: null,
     date: null,
+    photos: []
   });
 
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -62,7 +63,6 @@ const AdminTasksPage = () => {
   const [showAlertDialog, setShowAlertDialog] = useState(false);
 
   const onSubmit = async (data) => {
-    console.log(data, taskData.taskId);
     if (EvaluateTaskApi(data, taskData.taskId)) {
       setSnackbarMessage("Task evaluated successfully!");
       setSnackbarOpen(true);
@@ -97,9 +97,9 @@ const AdminTasksPage = () => {
 
   return (
     <div>
-      <Typography variant="h1">Evaluate task</Typography>
+      <Typography variant="h1" sx={{ fontFamily: 'Droid Arabic Naskh, sans-serif' }}>تقييم الاعمال</Typography>
       <Grid container spacing={2}>
-        <Grid item xs={12} md={8}>
+        <Grid item xs={12} md={10}>
           <TasksDataGrid
             refreshDataGrid={refreshDataGrid}
             EvaluateTask={async (id, admin) => {
@@ -137,26 +137,27 @@ const AdminTasksPage = () => {
                 <form onSubmit={methods.handleSubmit(onSubmit)}>
                   <Stack spacing={2} width="32.5vw">
                     <MediaGallery
-                      items={taskPhotos}
+                      items={testPhotos}
                       height="25rem"
                       width="auto"
                       borderRadius="1rem"
                     />
                     <TaskDetails theme={theme} taskData={taskData} />
                     <FormRatingGroup name="rating" />
-                    <FormTextFieldMulti label="Comment" name="comment" />
+                    <FormTextFieldMulti label="التعليق" name="comment" />
                     <FormRowRadioGroup
                       name="status"
                       radioLabel="Status"
                       labels={radioOptions}
+
                     />
                     <Button
                       type="submit"
                       color="primary"
                       variant="contained"
-                      sx={{ borderRadius: "1rem" }}
+                      sx={{ borderRadius: "1rem", fontFamily: 'Droid Arabic Naskh, sans-serif' }}
                     >
-                      Next
+                      التالي
                     </Button>
                   </Stack>
                 </form>
@@ -171,7 +172,7 @@ const AdminTasksPage = () => {
           />
         </Grid>
 
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={2}>
           <CustomFilter onComplaintStatusChange={handleComplaintStatusChange} onComplaintTypesChange={handleComplaintTypesChange} />
         </Grid>
       </Grid>
