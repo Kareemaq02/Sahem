@@ -95,13 +95,13 @@ namespace API.Controllers
 
         [Authorize]
         [HttpPut("activate/{id}")] //.../api/tasks/activate/id
-        public async Task<IActionResult> ActivateTask(int id, string username)
+        public async Task<IActionResult> ActivateTask(int id)
         {
             string authHeader = Request.Headers["Authorization"];
             JwtSecurityTokenHandler tokenHandler = new();
             JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
 
-            username = jwtToken.Claims.First(c => c.Type == "username").Value;
+            var username = jwtToken.Claims.First(c => c.Type == "username").Value;
 
             return HandleResult(await Mediator.Send(new ActivateTaskCommand(id, username)));
         }
