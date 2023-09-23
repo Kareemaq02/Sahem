@@ -80,6 +80,7 @@ class _XDComplaintsListState extends State<XDComplaintsList> {
                                 lat: revList[index]['latLng']["decLat"],
                                 lng: revList[index]['latLng']["decLng"],
                                 i: index,
+                                isRated: revList[index]['blnIsRated'],
                               ),
                             ],
                           );

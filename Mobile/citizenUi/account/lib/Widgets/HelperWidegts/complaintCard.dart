@@ -304,17 +304,32 @@ String formatTimeDifference(String apiDateString) {
 
   if (timeDifference.inDays >= 365) {
     final years = (timeDifference.inDays / 365).floor();
-    return 'قبل $years سنة';
+    return 'قبل $years سنة${years == 1 ? "" : "ات"}';
   } else if (timeDifference.inDays >= 30) {
     final months = (timeDifference.inDays / 30).floor();
-    return 'قبل $months شهر';
-  } else if (timeDifference.inDays > 0) {
+    return 'قبل ${months == 1 ? "شهر" : (months == 2 ? "شهرين" : "$months أشهر")}';
+  } else if (timeDifference.inDays == 1) {
+    return 'قبل يوم';
+  } else if (timeDifference.inDays >= 2 && timeDifference.inDays != 12) {
+    return 'قبل ${timeDifference.inDays} أيام';
+  } else if (timeDifference.inDays == 1) {
+    return 'قبل يوم';
+  } else if (timeDifference.inDays == 2) {
+    return 'قبل يومين';
+  } else if (timeDifference.inDays >= 11) {
     return 'قبل ${timeDifference.inDays} يوم';
   } else if (timeDifference.inHours >= 3) {
     return 'قبل ${timeDifference.inHours} ساعات';
-  } else if (timeDifference.inMinutes > 0) {
+  } else if (timeDifference.inHours == 1) {
+    return 'قبل ساعة';
+  } else if (timeDifference.inHours > 1) {
+    return 'قبل ${timeDifference.inHours} ساعات';
+  } else if (timeDifference.inMinutes > 1) {
     return 'قبل ${timeDifference.inMinutes} دقائق';
+  } else if (timeDifference.inMinutes == 1) {
+    return 'قبل دقيقة';
   } else {
     return 'قبل ${timeDifference.inSeconds} ثواني';
   }
 }
+
