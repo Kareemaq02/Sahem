@@ -1,10 +1,10 @@
 import 'package:account/Screens/TaskEvaluation/TaskIncomplete.dart';
 import 'package:account/Utils/NaviTranstion.dart';
+import 'package:account/Widgets/Bars/NavBarAdmin.dart';
 import 'package:account/Widgets/HelperWidgets/Loader.dart';
 import 'package:account/Widgets/HelperWidgets/myContainer.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
-import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/Widgets/HelperWidgets/rowInfo.dart';
 import 'package:account/Screens/Results/FailurePage.dart';
 import 'package:account/Screens/Results/SuccessPage.dart';
@@ -107,7 +107,7 @@ class _TaskEvaluationState extends State<TaskEvaluation> {
     return Scaffold(
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
-      bottomNavigationBar: BottomNavBar1(0),
+      bottomNavigationBar: NavBarAdmin(2),
       appBar: myAppBar(context, 'اضافة عمل', false, screenHeight * 0.28),
       body: FutureBuilder<TaskDetails>(
         future: taskDetailsRequest,

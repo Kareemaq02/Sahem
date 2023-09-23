@@ -1,4 +1,6 @@
 import 'package:account/API/ComplaintsAPI/Get_Complaints_Types.dart';
+import 'package:account/API/login_request.dart';
+import 'package:account/Widgets/Bars/NavBarAdmin.dart';
 import 'package:account/Widgets/CheckBoxes/StyledCheckBox.dart';
 import 'package:account/Widgets/Popup/DateRangePopup.dart';
 import 'package:flutter/material.dart';
@@ -133,7 +135,7 @@ class _AnalyticsState extends State<Analytics> {
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomNavBar1(0),
+      bottomNavigationBar: userIsAdmin() ? NavBarAdmin(0) : BottomNavBar1(0),
       appBar: myAppBar(context, "الإحصائيات ", false, screenWidth * 0.55),
       body: Padding(
         padding: EdgeInsets.only(top: halfMarginY, bottom: halfMarginY),

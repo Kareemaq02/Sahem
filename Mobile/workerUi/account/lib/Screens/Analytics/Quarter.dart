@@ -1,4 +1,6 @@
 import 'dart:math';
+import 'package:account/API/login_request.dart';
+import 'package:account/Widgets/Bars/NavBarAdmin.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
@@ -9,7 +11,6 @@ import 'package:account/Widgets/Buttons/StyledFilterChip.dart';
 import 'package:account/Widgets/CheckBoxes/StyledCheckBox.dart';
 import 'package:account/API/ComplaintsAPI/Get_Complaints_Types.dart';
 // ignore_for_file: file_names
-
 
 class Quarter extends StatefulWidget {
   const Quarter({super.key});
@@ -117,7 +118,7 @@ class _QuarterState extends State<Quarter> {
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomNavBar1(0),
+      bottomNavigationBar: userIsAdmin() ? NavBarAdmin(0) : BottomNavBar1(0),
       appBar: myAppBar(context, "أداء الربع السنوي", false, screenWidth * 0.45),
       body: Padding(
         padding: EdgeInsets.only(top: halfMarginY, bottom: halfMarginY),

@@ -111,7 +111,7 @@ class _TeamSelectionBoxState extends State<TeamSelectionBox> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   StyledButton(
-                    text: "اختر فريق",
+                    text: "إختر",
                     fontSize: 14,
                     onPressed: () {
                       getTeams();
@@ -142,7 +142,7 @@ class _TeamSelectionBoxState extends State<TeamSelectionBox> {
                                 }
                                 return CheckBoxPopup(
                                   height: screenHeight * 0.5,
-                                  title: "الفرق",
+                                  title: "الشعب",
                                   search: (String query) =>
                                       filterTeams(query, setStateInsideDialog),
                                   checkBoxes: List.generate(
@@ -176,7 +176,7 @@ class _TeamSelectionBoxState extends State<TeamSelectionBox> {
                     },
                   ),
                   const TitleText(
-                    text: "فريق العمل",
+                    text: "الشعبة",
                   ),
                 ],
               ),

@@ -12,13 +12,11 @@ import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/Widgets/HelperWidgets/myContainer.dart';
 
 class AddComplaintPage extends StatefulWidget {
-  final List<int> lstComplaintIds;
-  final Function(int) onAddComplaintId;
+  final List<ComplaintModel> lstComplaints;
+  final Function(ComplaintModel) onAddComplaint;
 
   const AddComplaintPage(
-      {super.key,
-      required this.onAddComplaintId,
-      required this.lstComplaintIds});
+      {super.key, required this.onAddComplaint, required this.lstComplaints});
 
   @override
   _AddComplaintPageState createState() => _AddComplaintPageState();
@@ -61,8 +59,8 @@ class _AddComplaintPageState extends State<AddComplaintPage> {
     complaints = await complaintsRequest;
 
     complaints = complaints
-        .where((element) =>
-            !widget.lstComplaintIds.contains(element.intComplaintId))
+        .where((element) => !widget.lstComplaints.any((existingComplaint) =>
+            existingComplaint.intComplaintId == element.intComplaintId))
         .toList();
   }
 
@@ -103,7 +101,8 @@ class _AddComplaintPageState extends State<AddComplaintPage> {
           List<ComplaintModel> complaintsList =
               complaints.length > 1 ? complaints : snapshot.data!;
           if (complaintsList.isEmpty) {
-            return const TitleText(text: "لا يوجد بلاغات فالوقت الحالي.");
+            return const Center(
+                child: TitleText(text: "لا يوجد بلاغات فالوقت الحالي."));
           }
           return SingleChildScrollView(
             controller: _scrollController,
@@ -196,8 +195,7 @@ class _AddComplaintPageState extends State<AddComplaintPage> {
                                 text: "اضافه",
                                 fontSize: 14,
                                 onPressed: () {
-                                  widget.onAddComplaintId(
-                                      complaint.intComplaintId);
+                                  widget.onAddComplaint(complaint);
                                   Navigator.of(context).pop();
                                 },
                               )
