@@ -1,5 +1,6 @@
 ﻿using Application;
 using Application.Core;
+using Application.Handlers.Teams;
 using Application.Queries.Teams;
 using Application.Queries.Users;
 using Domain.ClientDTOs.Team;
@@ -22,6 +23,12 @@ namespace API.Controllers
         public async Task<IActionResult> GetTeamById(int id)
         {
             return HandleResult(await Mediator.Send(new GetTeamByIdQuery(id)));
+        }
+
+        [HttpGet("leader/{id}")] //.../api/teams/leader/id
+        public async Task<IActionResult> GetTeamByLeaderId(int id)
+        {
+            return HandleResult(await Mediator.Send(new GetTeamByLeaderIdQuery(id)));
         }
 
         [HttpPost("Create")] // .../api/teams/Create
