@@ -70,7 +70,11 @@ class TaskCard extends StatelessWidget {
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
-                                return const CircularProgressIndicator();
+                                return Container(
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                  color: AppColor.background,
+                                );
                               } else if (snapshot.hasError) {
                                 return text(
                                     'Error: ${snapshot.error}', AppColor.main);
@@ -100,16 +104,19 @@ class TaskCard extends StatelessWidget {
                   Visibility(
                     visible: status == 4 || status == 5,
                     child: Container(
+                        width: screenWidth * 0.13,
                         height: screenWidth * 0.055,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(40),
                             border: Border.all(color: AppColor.main, width: 2)),
-                        child: Text(
-                          statusList[status - 1].name,
-                          style: const TextStyle(
-                            fontSize: 7,
-                            fontFamily: 'DroidArabicKufi',
-                            color: AppColor.main,
+                        child: Center(
+                          child: Text(
+                            statusList[status - 1].name,
+                            style: const TextStyle(
+                              fontSize: 8,
+                              fontFamily: 'DroidArabicKufi',
+                              color: AppColor.main,
+                            ),
                           ),
                         )),
                   ),

@@ -49,7 +49,7 @@ class _ComplaintViewState extends State<ComplaintDetailsScreen> {
     return Scaffold(
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
-      bottomNavigationBar: BottomNavBar1(0),
+      bottomNavigationBar: BottomNavBar1(2),
       appBar: myAppBar(context, 'الأعمال', false, screenHeight * 0.3),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -112,7 +112,7 @@ class _ComplaintViewState extends State<ComplaintDetailsScreen> {
             Padding(
               padding: EdgeInsets.all(screenWidth * 0.02),
               child: myContainer(
-                screenHeight * 0.68,
+                screenHeight * 0.6,
                 Padding(
                   padding: EdgeInsets.only(right: screenWidth * 0.10),
                   child: timeLineVertical(),

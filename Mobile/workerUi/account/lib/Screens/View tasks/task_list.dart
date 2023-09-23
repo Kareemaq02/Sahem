@@ -27,7 +27,7 @@ class _XDTasksListState extends State<XDTasksList> {
         backgroundColor: AppColor.background,
         resizeToAvoidBottomInset: false,
         bottomNavigationBar: BottomNavBar1(2),
-        appBar: myAppBar(context, 'الاعمال', false, screenWidth * 0.65),
+        appBar: myAppBar(context, 'المهام', false, screenWidth * 0.65),
         body: Column(
           children: [
             Expanded(
@@ -55,7 +55,16 @@ class _XDTasksListState extends State<XDTasksList> {
                       },
                     );
                   } else {
-                    return Container();
+                    return const Center(
+                      child: Text(
+                        'لا يوجد مهمات ',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: AppColor.main,
+                          fontFamily: 'DroidArabicKufi',
+                        ),
+                      ),
+                    );
                   }
                 },
               ),
