@@ -43,7 +43,7 @@ class _TeamAnalyticsState extends State<TeamAnalytics> {
   TeamData waitingEvaluation = TeamData(0, "قيد التقييم");
 
   int tasksCount = 0;
-  String teamRating = "0";
+  String teamRating = "0.0";
   String successRate = "0.0%";
 
   ///
@@ -219,10 +219,13 @@ class _TeamAnalyticsState extends State<TeamAnalytics> {
                         title: "نسبة النجاح",
                         content: successRate),
                     InfoDisplayBox(
-                        height: boxHeight,
-                        width: boxWidth,
-                        title: "التقييم",
-                        content: teamRating),
+                      height: boxHeight,
+                      width: boxWidth,
+                      title: "التقييم",
+                      content: teamRating,
+                      icon: Icons.star_rate_rounded,
+                      iconColor: AppColor.line,
+                    ),
                     InfoDisplayBox(
                       height: boxHeight,
                       width: boxWidth,

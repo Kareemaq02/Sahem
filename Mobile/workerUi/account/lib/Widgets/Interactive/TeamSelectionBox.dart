@@ -213,10 +213,10 @@ class _TeamSelectionBoxState extends State<TeamSelectionBox> {
                           name: team[index].strName,
                           icon: team[index].blnIsLeader
                               ? Icons.flag_circle_rounded
-                              : Icons.emoji_emotions,
+                              : Icons.emoji_emotions_outlined,
                           color: team[index].blnIsLeader
                               ? AppColor.main
-                              : AppColor.textTitle,
+                              : AppColor.secondary,
                         ),
                       );
                     },

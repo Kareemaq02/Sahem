@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
-// ignore_for_file: file_names
-
 
 class InfoDisplayBox extends StatelessWidget {
   final double height;
   final double width;
   final String title;
   final String content;
+  final IconData? icon;
+  final Color? iconColor;
 
   const InfoDisplayBox({
     super.key,
@@ -15,6 +15,8 @@ class InfoDisplayBox extends StatelessWidget {
     required this.width,
     required this.title,
     required this.content,
+    this.icon,
+    this.iconColor,
   });
 
   @override
@@ -57,20 +59,52 @@ class InfoDisplayBox extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 16.0),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        content,
-                        textDirection: TextDirection.rtl,
-                        style: const TextStyle(
-                          color: AppColor.secondary,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          fontFamily: 'DroidArabicKufi',
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
+                    child: icon == null
+                        ? Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              content,
+                              textDirection: TextDirection.rtl,
+                              style: const TextStyle(
+                                color: AppColor.secondary,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                                fontFamily: 'DroidArabicKufi',
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          )
+                        : Padding(
+                            padding: EdgeInsets.only(right: width * 0.05),
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.only(bottom: height * 0.05),
+                                    child: Icon(
+                                      icon,
+                                      color: iconColor,
+                                      size: height * 0.225,
+                                    ),
+                                  ),
+                                  Text(
+                                    content,
+                                    textDirection: TextDirection.rtl,
+                                    style: const TextStyle(
+                                      color: AppColor.secondary,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                      fontFamily: 'DroidArabicKufi',
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                   ),
                 ],
               ),

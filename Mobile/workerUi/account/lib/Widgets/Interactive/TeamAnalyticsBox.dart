@@ -228,8 +228,8 @@ class _TeamAnalyticsBoxState extends State<TeamAnalyticsBox> {
                                 height: widget.boxHeight,
                                 width: widget.boxWidth,
                                 name: team[index].strName,
-                                icon: Icons.emoji_emotions,
-                                color: AppColor.textTitle,
+                                icon: Icons.emoji_emotions_outlined,
+                                color: AppColor.secondary,
                                 rating: team[index].decRating,
                               ),
                       );

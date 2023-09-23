@@ -1,3 +1,4 @@
+import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/HelperWidgets/TitleText.dart';
 import 'package:flutter/material.dart';
 
@@ -57,8 +58,8 @@ class TeamMemberAnalyticsDisplay extends StatelessWidget {
                           isArabic() ? TextDirection.rtl : TextDirection.ltr,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: color,
+                      style: const TextStyle(
+                        color: AppColor.textTitle,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'DroidArabicKufi',
@@ -70,8 +71,11 @@ class TeamMemberAnalyticsDisplay extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(bottom: height * 0.04),
-                          child: const Icon(Icons.star_border),
+                          padding: EdgeInsets.only(bottom: height * 0.05),
+                          child: const Icon(
+                            Icons.star_rate_rounded,
+                            color: AppColor.line,
+                          ),
                         ),
                         TitleText(text: rating.toString())
                       ],

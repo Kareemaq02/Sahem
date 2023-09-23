@@ -9,18 +9,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore_for_file: avoid_print
 
-
 var userToken = "";
 
 class UserData {
-  UserData(
-    this.userName,
-    this.firstName,
-    this.lastName,
-    this.phoneNumber,
-    this.userType,
-  );
+  UserData({
+    required this.intId,
+    required this.userName,
+    required this.firstName,
+    required this.lastName,
+    required this.phoneNumber,
+    required this.userType,
+  });
 
+  int intId;
   String userName;
   String firstName;
   String lastName;
@@ -37,11 +38,13 @@ UserData getUserData() {
   Map<String, dynamic> payloadData = json.decode(decodedPayload);
 
   var user = UserData(
-      payloadData['username'],
-      payloadData['firstName'],
-      payloadData['lastName'],
-      payloadData['phoneNumber'],
-      payloadData['userType']);
+    intId: int.tryParse(payloadData['id'])!,
+    userName: payloadData['username'],
+    firstName: payloadData['firstName'],
+    lastName: payloadData['lastName'],
+    phoneNumber: payloadData['phoneNumber'],
+    userType: payloadData['userType'],
+  );
 
   return user;
 }
@@ -152,4 +155,3 @@ class MyHttpOverrides extends HttpOverrides {
           (X509Certificate cert, String host, int port) => true;
   }
 }
-

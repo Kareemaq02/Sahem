@@ -1,5 +1,6 @@
 import 'package:account/Screens/TaskEvaluation/TaskIncomplete.dart';
 import 'package:account/Utils/NaviTranstion.dart';
+import 'package:account/Widgets/HelperWidgets/Loader.dart';
 import 'package:account/Widgets/HelperWidgets/myContainer.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
@@ -112,7 +113,7 @@ class _TaskEvaluationState extends State<TaskEvaluation> {
         future: taskDetailsRequest,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Loader();
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           }
