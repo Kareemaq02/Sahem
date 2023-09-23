@@ -1,8 +1,8 @@
-// ignore_for_file: file_names
-
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Filter/filterType.dart';
+// ignore_for_file: file_names
+
 
 
 
@@ -50,15 +50,17 @@ import 'package:account/Widgets/Filter/filterType.dart';
                 ),
               ),
             ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Text(title,
-                  //textDirection: TextDirection.rtl,
-                  style: const TextStyle(
-                    color: AppColor.textTitle,
-                    fontSize: 19,
-                    fontFamily: 'DroidArabicKufi',
-                  )),
+            Expanded(
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Text(title,
+                    //textDirection: TextDirection.rtl,
+                    style: const TextStyle(
+                      color: AppColor.textTitle,
+                      fontSize: 19,
+                      fontFamily: 'DroidArabicKufi',
+                    )),
+              ),
             ),
           ],
         ),

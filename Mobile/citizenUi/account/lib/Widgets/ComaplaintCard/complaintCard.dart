@@ -91,10 +91,18 @@ class _ComplaintCard2sState extends State<ComplaintCard2> {
                   CardButtons(
                       context,
                       widget.status == 6 ? 'تقييم' : 'تذكير',
-                      widget.status == 6 ? AppColor.main : Colors.green,
+                      widget.status == 6
+                          ? AppColor.main
+                          : widget.status != 2 && widget.status != 5
+                              ? Colors.green
+                              : Colors.grey,
                       Colors.white,
                       0,
-                      widget.status == 6 ? AppColor.main : Colors.green,
+                      widget.status == 6
+                          ? AppColor.main
+                          : widget.status != 2 && widget.status != 5
+                              ? Colors.green
+                              : Colors.grey,
                       widget.status == 6
                           ? () {
                               !widget.isRated
@@ -106,7 +114,9 @@ class _ComplaintCard2sState extends State<ComplaintCard2> {
                                   : null;
                             }
                           : () {
-                              a.comaplintReminder(widget.id, context);
+                              widget.status != 2 && widget.status != 5
+                                  ? a.comaplintReminder(widget.id, context)
+                                  : null;
                             }),
                   SizedBox(width: screenWidth * 0.02),
                   CardButtons(context, 'معاينة', Colors.white, AppColor.main, 0,

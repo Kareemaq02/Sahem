@@ -12,6 +12,7 @@ import 'package:account/Widgets/Buttons/bottonContainer.dart';
 import 'package:account/Screens/File%20complaint/dropdown.dart';
 import 'package:account/Widgets/HelperWidegts/complaintCard.dart';
 import 'package:account/Screens/File%20complaint/confirmPopup.dart';
+
 // ignore_for_file: file_names, empty_catches
 // ignore_for_file: use_build_context_synchronously
 final picker = ImagePicker();
@@ -228,9 +229,9 @@ class ComaplintState extends State<FileCompalint> {
                   ),
                 ),
               ),
-          //----------------DropDown-----------------------------------
+              //----------------DropDown-----------------------------------
               const MyDropDown(),
-          // -------------Comment Box-------------------- 
+              // -------------Comment Box--------------------
               Container(
                 width: screenSize.width * 0.95,
                 padding: const EdgeInsets.all(8.0),
@@ -257,7 +258,7 @@ class ComaplintState extends State<FileCompalint> {
                 ),
               ),
               const SizedBox(height: 16.0), // Add spacing
-          // botton------------------------------------
+              // botton------------------------------------
               BottonContainer(
                 "استمرار",
                 Colors.white,
@@ -297,14 +298,18 @@ class ComaplintState extends State<FileCompalint> {
     if (index < selectedMediaFiles.length) {
       controller.animateToPage(
         index,
-        duration: const Duration(milliseconds: 500),
+        duration: const Duration(milliseconds: 100),
         curve: Curves.easeInOut,
       );
     }
     if (selectedMediaFiles.length == 1) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text('يجب ان يحتوي البلاغ على صورة واحدة عالاقل')),
+            content: Stack(
+          children: [
+            Text('يجب ان يحتوي البلاغ على صورة واحدة عالاقل'),
+          ],
+        )),
       );
     }
   }
@@ -314,7 +319,13 @@ class ComaplintState extends State<FileCompalint> {
       getImages(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('تجاوزت الحد الأقصى لالتقاط الصور')),
+        const SnackBar(
+            padding: EdgeInsets.only(bottom: 10.0),
+            content: Stack(
+              children: [
+                Text('تجاوزت الحد الأقصى لالتقاط الصور'),
+              ],
+            )),
       );
     }
   }
