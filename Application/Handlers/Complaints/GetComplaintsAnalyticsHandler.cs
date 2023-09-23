@@ -7,6 +7,8 @@ using LinqKit;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using Persistence.Migrations;
+using System.Linq;
 
 namespace Application.Handlers.Complaints
 {
@@ -82,18 +84,26 @@ namespace Application.Handlers.Complaints
                 query = query.Where(c => c.dtmDateCreated <= request.filter.dtmDateTo);
             }
             // NOT OPTIMIZED USE OTHER REFERENCES FOR HELP
-
+            if (request.filter.lstComplaintTypeIds.Count > 0)
+            {
+                query = query.Where(dto =>
+                    request.filter.lstComplaintTypeIds.Contains(dto.intTypeId));
+            }
 
             var queryObject = await query
                 .AsNoTracking()
-                .GroupBy(c => new { c.intTypeId, c.strNameAr, c.strNameEn })
-                .Select(groupedComplaints =>
+                .GroupBy(c => new {c.Complaint.intRegionId })
+                .Select( groupedComplaints =>
                     new ComplaintsAnalyticsDTO
                     {
+                        intRegionId = groupedComplaints.Key.intRegionId,
+                        strRegionNameAr = _context.Regions
+                        .Where( q => q.intId == groupedComplaints.Key.intRegionId)
+                        .Select(q => q.strNameAr).SingleOrDefault(),
+                        strRegionNameEn = _context.Regions
+                        .Where(q => q.intId == groupedComplaints.Key.intRegionId)
+                        .Select(q => q.strNameEn).SingleOrDefault(),
                         intCount = groupedComplaints.Count(),
-                        intTypeId = groupedComplaints.Key.intTypeId,
-                        strNameAr = groupedComplaints.Key.strNameAr,
-                        strNameEn = groupedComplaints.Key.strNameEn,
                         pendingComplaints = groupedComplaints.Count(q => q.intStatusId == (int)ComplaintsConstant.complaintStatus.pending),
                         completedComplaints  =groupedComplaints.Count(q => q.intStatusId == (int)ComplaintsConstant.complaintStatus.completed),
                         refiledComplaints  = groupedComplaints.Count(q => q.intStatusId == (int)ComplaintsConstant.complaintStatus.refiled),
@@ -110,20 +120,10 @@ namespace Application.Handlers.Complaints
             // Filter in-memory ONLY FOR GENERAL PRIORITY
 
 
-            if (request.filter.lstComplaintTypeIds.Count > 0)
-            {
-                var predicate = PredicateBuilder.New<ComplaintsAnalyticsDTO>();
-                foreach (var filter in request.filter.lstComplaintTypeIds)
-                {
-                    var tempFilter = filter;
-                    predicate = predicate.Or(q => q.intTypeId == tempFilter);
-                }
-                queryObject = queryObject.Where(predicate).ToList();
-            }
-
-            
-
            
+
+
+
 
 
             return Result<List<ComplaintsAnalyticsDTO>>.Success(queryObject);

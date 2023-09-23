@@ -4,7 +4,7 @@ namespace Domain.ClientDTOs.Complaint
 {
     public class ComplaintsAnalyticsDTO
     {
-        public int intTypeId { get; set; }
+        public int intRegionId { get; set; }
         public int intCount { get; set; }
         public int completedComplaints { get; set; }
         public int rejectedComplaints { get; set; }
@@ -13,8 +13,9 @@ namespace Domain.ClientDTOs.Complaint
         public int scheduledComplaints { get; set; }
         public int waitingEvaluationComplaints { get; set; }
         public int inProgressComplaints { get; set ; }
-        public string strNameAr { get; set; }
-        public string strNameEn { get; set; }
-        
+        public string strRegionNameAr { get; set; }
+        public string strRegionNameEn { get; set; }
+
+
     }
 }
