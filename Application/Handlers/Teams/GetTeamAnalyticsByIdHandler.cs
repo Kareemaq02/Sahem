@@ -30,10 +30,25 @@ namespace Application.Handlers.Teams
                                new 
                                {
                                    intTaskId = tasks.intId,
-                                   intTaskStatusId = tasks.intStatusId
-
+                                   intTaskStatusId = tasks.intStatusId,
+                                   dtmDateScheduled = tasks.dtmDateScheduled,
+                                   dtmDateDeadline = tasks.dtmDateDeadline
                                };
 
+            if (request.filter.dtmDatefrom > DateTime.MinValue && request.filter.dtmDateTo == DateTime.MinValue)
+            {
+                query = query.Where(c => c.dtmDateScheduled >= request.filter.dtmDatefrom);
+            }
+
+            if (request.filter.dtmDateTo > DateTime.MinValue && request.filter.dtmDatefrom == DateTime.MinValue)
+            {
+                query = query.Where(c => c.dtmDateDeadline <= request.filter.dtmDateTo);
+            }
+
+            if (request.filter.dtmDatefrom > DateTime.MinValue && request.filter.dtmDateTo > DateTime.MinValue)
+            {
+                query = query.Where(c => c.dtmDateDeadline <= request.filter.dtmDateTo && c.dtmDateScheduled >= request.filter.dtmDatefrom);
+            }
 
             var AnalyticsDTO = new TeamAnalyticsDTO {
                 intTasksCompletedCount = await query

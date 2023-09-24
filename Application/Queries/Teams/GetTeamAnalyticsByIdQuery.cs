@@ -4,6 +4,7 @@ using MediatR;
 
 namespace Application.Queries.Teams
 {
-    public record GetTeamAnalyticsByIdQuery(int intTeamId)
+    public record GetTeamAnalyticsByIdQuery(FromTo_DateFilter filter
+        ,int intTeamId)
         : IRequest<Result<TeamAnalyticsDTO>>;
 }

@@ -85,9 +85,9 @@ namespace API.Controllers
         }
 
         [HttpGet("analytics/{id}")] //api/teams/analytics/id
-        public async Task<IActionResult> GetTeamAnalyticsById(int id)
+        public async Task<IActionResult> GetTeamAnalyticsById(int id, [FromQuery] FromTo_DateFilter filter)
         {
-            return HandleResult(await Mediator.Send(new GetTeamAnalyticsByIdQuery(id)));
+            return HandleResult(await Mediator.Send(new GetTeamAnalyticsByIdQuery(filter, id)));
         }
     }
 }
