@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:account/Repository/color.dart';
+import 'package:account/Utils/TeamMembers.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
-import 'package:account/Widgets/Popup/popup.dart';
 import 'package:page_indicator/page_indicator.dart';
 import 'package:account/Widgets/Bars/bottomNavBar.dart';
+import 'package:account/Widgets/Displays/TeamViewBox.dart';
 import 'package:account/API/TaskAPI/submit_task_request.dart';
 import 'package:account/Widgets/Buttons/bottonContainer.dart';
+import 'package:account/Widgets/Interactive/ratingBottomSheet.dart';
 // ignore_for_file: file_names
 
 // ignore_for_file: use_build_context_synchronously
@@ -22,6 +24,13 @@ final List<String> imageList = [
   'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7zjk6aWDXjWiB_mMUpuxQdzMxtXbyd8M5ag&usqp=CAU',
   'img2.png',
   'img3.png',
+];
+
+List<TeamMember> teamMembersListFake = [
+  TeamMember(1, 'مجحم علي', false),
+  TeamMember(2, 'صقر محمد', false),
+  TeamMember(3, 'عمر علي', false),
+  TeamMember(4, 'مفلح ياسين', false),
 ];
 
 class FinishTask extends StatefulWidget {
@@ -42,6 +51,7 @@ class _ComaplintState extends State<FinishTask> {
   GlobalKey<PageContainerState> key = GlobalKey();
   TextEditingController commentController = TextEditingController();
   bool _isDisposed = false;
+
   @override
   void dispose() {
     _isDisposed = true;
@@ -57,6 +67,7 @@ class _ComaplintState extends State<FinishTask> {
     controller = PageController();
     WidgetsBinding.instance.addPostFrameCallback((_) {});
   }
+
 
   Future<bool> _handleLocationPermission() async {
     bool serviceEnabled;
@@ -218,9 +229,12 @@ class _ComaplintState extends State<FinishTask> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
 
+    double fieldWidth = screenWidth * 0.92;
+    double fieldHeight = screenHeight * 0.2;
+    double dialogHeight = screenHeight * 0.47;
     return Scaffold(
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
@@ -228,12 +242,12 @@ class _ComaplintState extends State<FinishTask> {
       appBar: myAppBar(context, "تسليم العمل ", false, 135),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
-              child: SizedBox(
-                height: 210,
+        child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(children: [
+              //--------pageView
+              SizedBox(
+                height: screenHeight * 0.4,
                 child: PageIndicatorContainer(
                   align: IndicatorAlign.bottom,
                   length: selectedMediaFiles.length,
@@ -280,52 +294,74 @@ class _ComaplintState extends State<FinishTask> {
                   ),
                 ),
               ),
-            ),
-            //const SizedBox(height: 0,),
-            Padding(
-              padding: EdgeInsets.all(screenWidth * 0.02),
-              child: Container(
-                  height: screenHeight * 0.25,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: AppColor.main, width: 0.5),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.all(5.0),
-                    child: TextField(
+              //--------------Teams
+              InkWell(
+                onTap: () {
+                  showModalBottomSheet(
+                    backgroundColor: AppColor.background,
+                    useRootNavigator: true,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(25.0),
+                      ),
+                    ),
+                    context: context,
+                    builder: (BuildContext context) {
+                      return ratingSheet(context);
+                    },
+                  );
+                },
+                child: TeamViewBox(
+                  height: fieldHeight,
+                  width: double.infinity,
+                  boxHeight: fieldHeight * 0.55,
+                  boxWidth: fieldWidth * 0.35,
+                  teamMembers: teamMembersListFake,
+                ),
+              ),
+              //const SizedBox(height: 0,),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                    height: screenHeight * 0.25,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColor.main, width: 0.5),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const TextField(
                       maxLines: null,
                       decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(9),
                         hintText: 'أضف تعليق ..',
                         border: InputBorder.none,
                         hintTextDirection: TextDirection.rtl,
                         hintStyle: TextStyle(color: AppColor.main),
                       ),
-                    ),
-                  )),
-            ),
-            SizedBox(
-              height: screenHeight * 0.02,
-            ),
-            BottonContainer("استمرار", Colors.white, AppColor.main,
-                screenWidth * 0.7, context, true, null, () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) => buildConfirmDialog(
-                    context,
-                    "تأكيد العمل",
-                    "موقع العمل",
-                    "ش.صوفي التل.عمان",
-                    widget.TaskID,
-                    commentController.text,
-                    selectedMediaFiles),
-              );
-            }),
+                    )),
+              ),
+              SizedBox(
+                height: screenHeight * 0.02,
+              ),
+              BottonContainer("استمرار", Colors.white, AppColor.main,
+                  screenWidth * 0.7, context, true, null, () {
+                
+                // showDialog(
+                //   context: context,
+                //   builder: (BuildContext context) => buildConfirmDialog(
+                //       context,
+                //       "تأكيد العمل",
+                //       "موقع العمل",
+                //       "ش.صوفي التل.عمان",
+                //       widget.TaskID,
+                //       commentController.text,
+                //       selectedMediaFiles),
+                // );
+              }),
 
-            SizedBox(
-              height: screenHeight * 0.05,
-            ),
-          ],
-        ),
+              SizedBox(
+                height: screenHeight * 0.05,
+              ),
+            ])),
       ),
     );
   }

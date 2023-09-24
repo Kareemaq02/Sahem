@@ -210,15 +210,15 @@ class _CurrentTaskState extends State<CurrentTask> {
                                                 ? AppColor.main
                                                 : Colors.grey,
                                   screenWidth * 0.6, () {
-                                          activatedTask!.blnIsLeader
-                                              ?
+                                      // activatedTask!.blnIsLeader
+                                      //     ?
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => const FinishTask(
                                               TaskID: '',
-                                                          )))
-                                              : null;
+                                                  )));
+                                      // : null;
                               }),
                               const Spacer(),
                          
