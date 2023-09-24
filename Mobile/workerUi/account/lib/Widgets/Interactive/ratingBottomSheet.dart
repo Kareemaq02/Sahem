@@ -2,6 +2,10 @@ import '../../Repository/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:account/Screens/SubmitTask/submitTask.dart';
+// ignore_for_file: avoid_print
+
+// ignore_for_file: file_names
+
 
 ratingSheet(context) {
   return Container(

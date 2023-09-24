@@ -132,13 +132,11 @@ class _CurrentTaskState extends State<CurrentTask> {
       bottomNavigationBar: BottomNavBar1(3),
       appBar: myAppBar(context, ' المهمة الحالية', false, screenWidth * 0.5),
       body: activatedTask == null
-         
           ? activatedStatus != 400
               ? const Center(
                   child: CircularProgressIndicator(
                   color: AppColor.main,
                 ))
-              
               : const Center(
                   child: Text(
                     'لا يوجد مهمة مفعلة',
@@ -149,122 +147,119 @@ class _CurrentTaskState extends State<CurrentTask> {
                     ),
                   ),
                 )
-        
-              : Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Container(
-            color: Colors.white,
-            height: screenHeight * 0.90,
-            child: Column(children: [
-              //mapview
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                height: screenHeight * 0.6,
-                          child: FullMap(
-                            lat: activatedTask!.latLng.decLat,
-                            lng: activatedTask!.latLng.decLng,
-                          ),
-              ),
+          : Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Container(
+                  color: Colors.white,
+                  height: screenHeight * 0.90,
+                  child: Column(children: [
+                    //mapview
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      height: screenHeight * 0.6,
+                      child: FullMap(
+                        lat: activatedTask!.latLng.decLat,
+                        lng: activatedTask!.latLng.decLng,
+                      ),
+                    ),
 
-              Padding(
-                padding: EdgeInsets.all(screenWidth * 0.02),
-                child: myContainer(
-                    screenHeight * 0.22,
                     Padding(
                       padding: EdgeInsets.all(screenWidth * 0.02),
-                      child: Column(
-                        children: [
-                          // const SizedBox(height: 10),
-                          Row(
-                            //mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              CardButtons(
-                                context,
-                                'اتجاهات',
-                                AppColor.main,
-                                AppColor.main,
-                                screenWidth * 0.6,
-                                () async {
-                                  await _getCurrentPosition();
-                                  navigateToGoogleMaps(
-                                              _currentPosition!.altitude,
-                                              _currentPosition!.longitude,
-                                              activatedTask!.latLng.decLat,
-                                              activatedTask!.latLng.decLng,
-                                            );
-                                },
-                              ),
-                              const SizedBox(width: 10),
-                              CardButtons(
-                                  context,
+                      child: myContainer(
+                          screenHeight * 0.22,
+                          Padding(
+                            padding: EdgeInsets.all(screenWidth * 0.02),
+                            child: Column(
+                              children: [
+                                // const SizedBox(height: 10),
+                                Row(
+                                  //mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    CardButtons(
+                                      context,
+                                      'اتجاهات',
+                                      AppColor.main,
+                                      AppColor.main,
+                                      screenWidth * 0.6,
+                                      () async {
+                                        await _getCurrentPosition();
+                                        navigateToGoogleMaps(
+                                          _currentPosition!.altitude,
+                                          _currentPosition!.longitude,
+                                          activatedTask!.latLng.decLat,
+                                          activatedTask!.latLng.decLng,
+                                        );
+                                      },
+                                    ),
+                                    const SizedBox(width: 10),
+                                    CardButtons(
+                                        context,
                                         'تسليم المهمة',
-                                            activatedTask!.blnIsLeader
-                                                ? AppColor.main
-                                                : Colors.grey,
-                                            activatedTask!.blnIsLeader
-                                                ? AppColor.main
-                                                : Colors.grey,
-                                  screenWidth * 0.6, () {
+                                        activatedTask!.blnIsLeader
+                                            ? AppColor.main
+                                            : Colors.grey,
+                                        activatedTask!.blnIsLeader
+                                            ? AppColor.main
+                                            : Colors.grey,
+                                        screenWidth * 0.6, () {
                                       // activatedTask!.blnIsLeader
                                       //     ?
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => const FinishTask(
-                                              TaskID: '',
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const FinishTask(
+                                                    TaskID: '',
                                                   )));
                                       // : null;
-                              }),
-                              const Spacer(),
-                         
-                              Padding(
-                                padding:
-                                    EdgeInsets.only(left: screenWidth * 0.01),
-                                          child: text(
-                                              activatedTask!.strTypeNameAr,
-                                              AppColor.textBlue),
-                              ),
-                            ],
-                          ),
-                          Padding(
+                                    }),
+                                    const Spacer(),
+                                    Padding(
                                       padding: EdgeInsets.only(
-                                          left: screenWidth * 0.70),
-                                      child: text(
-                                          activatedTask!.activatedDate
-                                              .substring(0, 10),
+                                          left: screenWidth * 0.01),
+                                      child: text(activatedTask!.strTypeNameAr,
                                           AppColor.textBlue),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                                          left: screenWidth * 0.55,
-                                top: screenHeight * 0.02),
-                                      child: text(
-                                          activatedTask!.strComment.isEmpty
-                                              ? "اعمال صيانة دورية فالمنطقة"
-                                              : activatedTask!.strComment,
-                                AppColor.textBlue),
-                          ),
+                                    ),
+                                  ],
+                                ),
+                                Padding(
+                                  padding:
+                                      EdgeInsets.only(left: screenWidth * 0.70),
+                                  child: text(
+                                      activatedTask!.activatedDate
+                                          .substring(0, 10),
+                                      AppColor.textBlue),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: screenWidth * 0.55,
+                                      top: screenHeight * 0.02),
+                                  child: text(
+                                      activatedTask!.strComment.isEmpty
+                                          ? "اعمال صيانة دورية فالمنطقة"
+                                          : activatedTask!.strComment,
+                                      AppColor.textBlue),
+                                ),
 
-                          Padding(
-                            padding: EdgeInsets.only(
+                                Padding(
+                                  padding: EdgeInsets.only(
                                       right: screenWidth * 0.4,
                                       top: screenHeight * 0.04),
-                                  child: Expanded(
-                                      child: text(address, AppColor.secondary)),
-                          ),
-                        ],
-                      ),
-                    )),
+                                  child: text(address, AppColor.secondary),
+                                ),
+                              ],
+                            ),
+                          )),
+                    ),
+                  ]),
+                ),
               ),
-            ]),
-          ),
-        ),
-      ),
+            ),
     );
   }
 }

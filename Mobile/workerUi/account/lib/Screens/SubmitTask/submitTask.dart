@@ -27,10 +27,10 @@ final List<String> imageList = [
 ];
 
 List<TeamMember> teamMembersListFake = [
-  TeamMember(1, 'مجحم علي', false),
-  TeamMember(2, 'صقر محمد', false),
+  TeamMember(1, 'محمد علي', false),
+  TeamMember(2, 'ياسر محمد', false),
   TeamMember(3, 'عمر علي', false),
-  TeamMember(4, 'مفلح ياسين', false),
+  TeamMember(4, 'أحمد ياسين', false),
 ];
 
 class FinishTask extends StatefulWidget {
@@ -50,6 +50,7 @@ class _ComaplintState extends State<FinishTask> {
   PageController? controller;
   GlobalKey<PageContainerState> key = GlobalKey();
   TextEditingController commentController = TextEditingController();
+  final FocusNode textFieldFocusNode = FocusNode();
   bool _isDisposed = false;
 
   @override
@@ -234,134 +235,144 @@ class _ComaplintState extends State<FinishTask> {
 
     double fieldWidth = screenWidth * 0.92;
     double fieldHeight = screenHeight * 0.2;
-    double dialogHeight = screenHeight * 0.47;
-    return Scaffold(
-      backgroundColor: AppColor.background,
-      resizeToAvoidBottomInset: false,
-      bottomNavigationBar: BottomNavBar1(3),
-      appBar: myAppBar(context, "تسليم العمل ", false, 135),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Column(children: [
-              //--------pageView
-              SizedBox(
-                height: screenHeight * 0.4,
-                child: PageIndicatorContainer(
-                  align: IndicatorAlign.bottom,
-                  length: selectedMediaFiles.length,
-                  indicatorSpace: 10.0,
-                  padding: const EdgeInsets.all(10),
-                  indicatorColor: Colors.grey,
-                  indicatorSelectorColor: Colors.blue,
-                  shape: IndicatorShape.circle(size: 7),
-                  child: PageView.builder(
-                    controller: controller,
-                    itemCount: selectedMediaFiles.length,
-                    itemBuilder: (context, position) {
-                      return Stack(
-                        children: [
-                          Center(
-                            child: selectedMediaFiles[position].decLat ==
-                                        null &&
-                                    selectedMediaFiles[position].decLng == null
-                                ? const CircularProgressIndicator.adaptive()
-                                : SizedBox(
-                                    width: double.infinity,
-                                    child: Image.file(
-                                      selectedMediaFiles[position].file,
-                                      fit: BoxFit.cover,
-                                      scale: 0.1,
+    //double dialogHeight = screenHeight * 0.47;
+    return GestureDetector(
+      onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: Scaffold(
+        backgroundColor: AppColor.background,
+        resizeToAvoidBottomInset: false,
+        bottomNavigationBar: BottomNavBar1(3),
+        appBar: myAppBar(context, "تسليم العمل ", false, 135),
+        body: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(children: [
+                //--------pageView
+                SizedBox(
+                  height: screenHeight * 0.4,
+                  child: PageIndicatorContainer(
+                    align: IndicatorAlign.bottom,
+                    length: selectedMediaFiles.length,
+                    indicatorSpace: 10.0,
+                    padding: const EdgeInsets.all(10),
+                    indicatorColor: Colors.grey,
+                    indicatorSelectorColor: Colors.blue,
+                    shape: IndicatorShape.circle(size: 7),
+                    child: PageView.builder(
+                      controller: controller,
+                      itemCount: selectedMediaFiles.length,
+                      itemBuilder: (context, position) {
+                        return Stack(
+                          children: [
+                            Center(
+                              child: selectedMediaFiles[position].decLat ==
+                                          null &&
+                                      selectedMediaFiles[position].decLng ==
+                                          null
+                                  ? const CircularProgressIndicator.adaptive()
+                                  : SizedBox(
+                                      width: double.infinity,
+                                      child: Image.file(
+                                        selectedMediaFiles[position].file,
+                                        fit: BoxFit.cover,
+                                        scale: 0.1,
+                                      ),
                                     ),
-                                  ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              stackButton(Icons.add, () {
-                                addImage(context);
-                                setState(() {});
-                              }),
-                              stackButton(Icons.delete, () {
-                                removeImage(position, context);
-                              }),
-                            ],
-                          ),
-                        ],
-                      );
-                    },
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                stackButton(Icons.add, () {
+                                  addImage(context);
+                                  setState(() {});
+                                }),
+                                stackButton(Icons.delete, () {
+                                  removeImage(position, context);
+                                }),
+                              ],
+                            ),
+                          ],
+                        );
+                      },
+                    ),
                   ),
                 ),
-              ),
-              //--------------Teams
-              InkWell(
-                onTap: () {
-                  showModalBottomSheet(
-                    backgroundColor: AppColor.background,
-                    useRootNavigator: true,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(25.0),
+                //--------------Teams
+                InkWell(
+                  onTap: () {
+                    showModalBottomSheet(
+                      backgroundColor: AppColor.background,
+                      useRootNavigator: true,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(25.0),
+                        ),
                       ),
-                    ),
-                    context: context,
-                    builder: (BuildContext context) {
-                      return ratingSheet(context);
-                    },
-                  );
-                },
-                child: TeamViewBox(
-                  height: fieldHeight,
-                  width: double.infinity,
-                  boxHeight: fieldHeight * 0.55,
-                  boxWidth: fieldWidth * 0.35,
-                  teamMembers: teamMembersListFake,
+                      context: context,
+                      builder: (BuildContext context) {
+                        return ratingSheet(context);
+                      },
+                    );
+                  },
+                  child: TeamViewBox(
+                    height: fieldHeight,
+                    width: double.infinity,
+                    boxHeight: fieldHeight * 0.55,
+                    boxWidth: fieldWidth * 0.35,
+                    teamMembers: teamMembersListFake,
+                  ),
                 ),
-              ),
-              //const SizedBox(height: 0,),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
+                //const SizedBox(height: 0,),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Container(
                     height: screenHeight * 0.25,
                     decoration: BoxDecoration(
                       border: Border.all(color: AppColor.main, width: 0.5),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const TextField(
+                    child: TextField(
+                      controller: commentController,
+                      focusNode: textFieldFocusNode,
+                      autofocus: true,
                       maxLines: null,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.all(9),
+                      textDirection: TextDirection.rtl,
+                      decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.only(left: 20.0, right: 10),
                         hintText: 'أضف تعليق ..',
                         border: InputBorder.none,
                         hintTextDirection: TextDirection.rtl,
                         hintStyle: TextStyle(color: AppColor.main),
                       ),
-                    )),
-              ),
-              SizedBox(
-                height: screenHeight * 0.02,
-              ),
-              BottonContainer("استمرار", Colors.white, AppColor.main,
-                  screenWidth * 0.7, context, true, null, () {
-                
-                // showDialog(
-                //   context: context,
-                //   builder: (BuildContext context) => buildConfirmDialog(
-                //       context,
-                //       "تأكيد العمل",
-                //       "موقع العمل",
-                //       "ش.صوفي التل.عمان",
-                //       widget.TaskID,
-                //       commentController.text,
-                //       selectedMediaFiles),
-                // );
-              }),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: screenHeight * 0.02,
+                ),
+                BottonContainer("استمرار", Colors.white, AppColor.main,
+                    screenWidth * 0.7, context, true, null, () {
+                  // showDialog(
+                  //   context: context,
+                  //   builder: (BuildContext context) => buildConfirmDialog(
+                  //       context,
+                  //       "تأكيد العمل",
+                  //       "موقع العمل",
+                  //       "ش.صوفي التل.عمان",
+                  //       widget.TaskID,
+                  //       commentController.text,
+                  //       selectedMediaFiles),
+                  // );
+                }),
 
-              SizedBox(
-                height: screenHeight * 0.05,
-              ),
-            ])),
+                SizedBox(
+                  height: screenHeight * 0.05,
+                ),
+              ])),
+        ),
       ),
     );
   }
