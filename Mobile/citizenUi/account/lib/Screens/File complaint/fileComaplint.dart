@@ -169,7 +169,7 @@ class ComaplintState extends State<FileCompalint> {
       child: Scaffold(
         backgroundColor: AppColor.background,
         resizeToAvoidBottomInset: true,
-        bottomNavigationBar: BottomNavBar1(0),
+        bottomNavigationBar: BottomNavBar1(4),
         appBar: myAppBar(context, "ارسال بلاغ", false, screenSize.width * 0.5),
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,

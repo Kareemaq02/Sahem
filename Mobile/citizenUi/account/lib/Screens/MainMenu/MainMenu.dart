@@ -45,7 +45,7 @@ class _MainMenuState extends State<MainMenu> {
     return Scaffold(
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
-      floatingActionButton: const CustomActionButton(),
+     // floatingActionButton: const CustomActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavBar1(0),
       appBar: myAppBar(context, "الصفحة الرئيسية", false, screenWidth * 0.45),
