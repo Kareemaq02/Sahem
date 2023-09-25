@@ -1,8 +1,12 @@
 import 'dart:convert';
+import 'package:account/API/TaskAPI/view_tasks_request.dart';
+import 'package:account/API/login_request.dart';
+import 'package:account/Repository/urls.dart';
+import 'package:account/Utils/LatLng.dart';
 import 'package:account/main.dart';
 import 'package:http/http.dart' as http;
 
-class TaskModel {
+class TaskEvaluationModel {
   int taskId;
   String? createdDate;
   String finishedDate;
@@ -18,10 +22,11 @@ class TaskModel {
   String strTaskStatus;
   String strAdminFirstName;
   String strAdminLastName;
+  LatLng latLng;
   List<WorkersList> workersList;
-  List<dynamic> lstMedia;
+  List<ComplaintImage> lstMedia;
 
-  TaskModel({
+  TaskEvaluationModel({
     required this.taskId,
     required this.createdDate,
     required this.finishedDate,
@@ -37,13 +42,14 @@ class TaskModel {
     required this.strTaskStatus,
     required this.strAdminFirstName,
     required this.strAdminLastName,
+    required this.latLng,
     required this.workersList,
     required this.lstMedia,
   });
 
-  factory TaskModel.fromJson(Map<String, dynamic> json) {
-    // Parse the JSON and create a TaskModel instance
-    return TaskModel(
+  factory TaskEvaluationModel.fromJson(Map<String, dynamic> json) {
+    var requestLstMedia = json['lstMedia'] as List;
+    return TaskEvaluationModel(
       taskId: json['taskID'],
       createdDate: json['createdDate'],
       finishedDate: json['finishedDate'],
@@ -59,79 +65,50 @@ class TaskModel {
       strTaskStatus: json['strTaskStatus'],
       strAdminFirstName: json['strAdminFirstName'] ?? "",
       strAdminLastName: json['strAdminLastName'] ?? "",
+      latLng: LatLng(
+        lat: requestLstMedia.isNotEmpty
+            ? requestLstMedia.first['decLatLng']['decLat']
+            : 0.0,
+        lng: requestLstMedia.isNotEmpty
+            ? requestLstMedia.first['decLatLng']['decLng']
+            : 0.0,
+      ),
       workersList: List<WorkersList>.from(
         json['workersList'].map((x) => WorkersList.fromJson(x)),
       ),
-      lstMedia: List<dynamic>.from(json['lstMedia']),
+      lstMedia: List<dynamic>.from(requestLstMedia)
+          .map((e) => ComplaintImage(
+              intComplaintId: e["intComplaintId"], base64Data: e["data"] ?? ""))
+          .toList(),
     );
   }
 }
 
-class WorkersList {
-  int intId;
-  String strFirstName;
-  String strLastName;
-  bool isLeader;
-
-  WorkersList({
-    required this.intId,
-    required this.strFirstName,
-    required this.strLastName,
-    required this.isLeader,
-  });
-  factory WorkersList.fromJson(Map<String, dynamic> json) {
-    return WorkersList(
-      intId: json['intId'],
-      strFirstName: json['strFirstName'],
-      strLastName: json['strLastName'],
-      isLeader: json['isLeader'],
-    );
-  }
+class ComplaintImage {
+  ComplaintImage({required this.intComplaintId, required this.base64Data});
+  int intComplaintId;
+  String base64Data;
 }
 
-class WorkerTask {
+class AdminTasksRequest {
   final userToken = prefs!.getString('token');
-  Future<List<dynamic>> fetchUserTasks() async {
+  Future<List<TaskEvaluationModel>> getAdminTasks(int pageNumber) async {
     final response = await http.get(
-        Uri.parse("https://10.0.2.2:5000/api/tasks/loggedInWorker"),
+        Uri.parse(
+            "${AppUrl.baseURL}tasks?pageSize=10&pageNumber=$pageNumber&lstTaskStatusIds=3&strAdmin=${getUserData().userName}"),
         headers: {
           'Authorization': 'Bearer $userToken',
         });
 
     if (response.statusCode == 200) {
-      return jsonDecode(response.body.toString());
+      final List<dynamic> jsonData = jsonDecode(response.body);
+      final List<TaskEvaluationModel> tasksList = jsonData.map((json) {
+        return TaskEvaluationModel.fromJson(json);
+      }).toList();
+
+      return tasksList;
     } else {
       throw Exception('Failed to fetch Tasks');
-    }
-  }
-
-  Future<List<TaskModel>> getWorkerTasksDetails(var id) async {
-    var baseUrl = "https://10.0.2.2:5000/api/tasks/details/$id";
-
-    http.Response response = await http.get(Uri.parse(baseUrl),
-        headers: {'Authorization': 'Bearer $userToken'});
-
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var jsonData = json.decode(response.body) as Map<String, dynamic>;
-      TaskModel task = TaskModel.fromJson(jsonData);
-      return [task];
-    } else {
-      throw Exception('JSON data is not in the expected format.');
-    }
-  }
-
-  Future<List<dynamic>> fetchStatus() async {
-    final response = await http.get(
-        Uri.parse("https://10.0.2.2:5000/api/tasks/status/list"),
-        headers: {
-          'Authorization': 'Bearer $userToken',
-        });
-
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body.toString());
-    } else {
-      throw Exception('Failed to fetch complaints');
     }
   }
 }

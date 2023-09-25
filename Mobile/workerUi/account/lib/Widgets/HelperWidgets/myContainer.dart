@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 // ignore_for_file: file_names
 
-
 Widget myContainer(double height, Widget childWidget) {
   return Container(
     decoration: BoxDecoration(
@@ -31,7 +30,7 @@ Widget myContainer(double height, Widget childWidget) {
           decoration: BoxDecoration(
             border: Border(
               bottom: BorderSide(
-                width: height * 0.022,
+                width: height * 0.01,
                 color: AppColor.main,
               ),
             ),

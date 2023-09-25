@@ -1,3 +1,4 @@
+import 'package:account/Screens/TaskEvaluation/TaskEvaluation.dart';
 import 'package:account/Widgets/Bars/NavBarAdmin.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
@@ -10,7 +11,6 @@ import 'package:account/Screens/Analytics/Analytics.dart';
 import 'package:account/Screens/CreateTask/CreateTask.dart';
 import 'package:account/Screens/Analytics/TeamAnalytics.dart';
 import 'package:account/Widgets/Displays/InfoDisplayBox.dart';
-import 'package:account/Screens/TaskEvaluation/TaskEvaluation.dart';
 import 'package:account/Widgets/Buttons/squareButtonWithStroke.dart';
 
 class MainMenuAdmin extends StatefulWidget {
@@ -103,13 +103,8 @@ class _MainMenuAdminState extends State<MainMenuAdmin> {
                           width: buttonWidth,
                           icon: Icons.task_alt_rounded,
                           text: "تقييم المهام",
-                          onPressed: () => {
-                            naviTransition(
-                                context,
-                                const TaskEvaluation(
-                                  taskId: 2,
-                                ))
-                          },
+                          onPressed: () =>
+                              {naviTransition(context, const TaskEvaluation())},
                         ),
                         SquareButtonWithStroke(
                           height: buttonHeight,
