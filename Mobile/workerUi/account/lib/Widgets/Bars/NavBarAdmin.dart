@@ -1,5 +1,5 @@
 import 'package:account/Screens/CreateTask/CreateTask.dart';
-import 'package:account/Screens/TaskEvaluation/TaskEvaluation.dart';
+import 'package:account/Screens/TaskEvaluation/TaskRating.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Screens/Map/mapView.dart';
@@ -40,7 +40,7 @@ class _NavBarAdminState extends State<NavBarAdmin> {
         break;
       case 2:
         // Change
-        naviWithTransition(const TaskEvaluation(
+        naviWithTransition(const TaskRating(
           taskId: 1,
         ));
         break;

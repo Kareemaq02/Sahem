@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:account/API/TaskAPI/GetAdminTasks.dart';
+import 'package:account/Utils/LatLng.dart';
 import 'package:account/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:account/Repository/urls.dart';
@@ -20,8 +22,10 @@ class TaskDetails {
   String strTaskStatus;
   String strAdminFirstName;
   String strAdminLastName;
+  LatLng latLng;
+  int intTeamId;
   List<TeamMember> workersList;
-  List<String> lstMedia;
+  List<dynamic> lstMedia;
 
   TaskDetails({
     required this.intTaskID,
@@ -39,11 +43,14 @@ class TaskDetails {
     required this.strTaskStatus,
     required this.strAdminFirstName,
     required this.strAdminLastName,
+    required this.latLng,
+    required this.intTeamId,
     required this.workersList,
     required this.lstMedia,
   });
 
   factory TaskDetails.fromJson(Map<String, dynamic> json) {
+    var requestLstMedia = json['lstMedia'] as List;
     return TaskDetails(
       intTaskID: json['taskID'],
       dtmCreatedDate: json['createdDate'],
@@ -60,14 +67,23 @@ class TaskDetails {
       strTaskStatus: json['strTaskStatus'],
       strAdminFirstName: json['strAdminFirstName'],
       strAdminLastName: json['strAdminLastName'],
+      latLng: LatLng(
+        lat: requestLstMedia.isNotEmpty
+            ? requestLstMedia.first['decLatLng']['decLat']
+            : 0.0,
+        lng: requestLstMedia.isNotEmpty
+            ? requestLstMedia.first['decLatLng']['decLng']
+            : 0.0,
+      ),
+      intTeamId: json['intTeamId'],
       workersList: List<TeamMember>.generate(
         json['workersList'].length,
         (index) => TeamMember.fromJson(json['workersList'][index]),
       ),
-      lstMedia: json['lstMedia'] != null
-          ? List<String>.from(
-              json['lstMedia'].map((map) => map['Data'].toString()))
-          : List.empty(),
+      lstMedia: List<dynamic>.from(requestLstMedia)
+          .map((e) => ComplaintImage(
+              intComplaintId: e["intComplaintId"], base64Data: e["data"] ?? ""))
+          .toList(),
     );
   }
 }
