@@ -119,8 +119,8 @@ class _QuarterState extends State<Quarter> {
     return Scaffold(
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
-      floatingActionButton: const CustomActionButton(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      // floatingActionButton: const CustomActionButton(),
+      //floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavBar1(0),
       appBar: myAppBar(context, "أداء الربع السنوي", false, screenWidth * 0.45),
       body: Padding(

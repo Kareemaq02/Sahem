@@ -132,7 +132,7 @@ class FullMapState extends State<FullMap> with TickerProviderStateMixin {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        floatingActionButton: const CustomActionButton(),
+        // floatingActionButton: const CustomActionButton(),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: BottomNavBar1(1),
         appBar: myAppBar(context, "الخريطة", false, screenWidth * 0.6),

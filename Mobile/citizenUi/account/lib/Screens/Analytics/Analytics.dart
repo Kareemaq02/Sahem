@@ -128,8 +128,8 @@ class _AnalyticsState extends State<Analytics> {
     return Scaffold(
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
-      floatingActionButton: const CustomActionButton(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      // floatingActionButton: const CustomActionButton(),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavBar1(0),
       appBar: myAppBar(context, "الإحصائيات ", false, screenWidth * 0.6),
       body: Padding(

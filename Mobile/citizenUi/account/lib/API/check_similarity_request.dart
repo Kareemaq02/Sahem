@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:account/Repository/urls.dart';
 import 'package:account/API/file_complaint_request.dart';
-import 'package:account/Screens/File%20complaint/confirmPage.dart';
+import 'package:account/Screens/Results/SuccessPage.dart';
 import 'package:account/Widgets/ComaplaintCard/similarityCard.dart';
 
 // ignore_for_file: avoid_print, use_build_context_synchronously
@@ -95,7 +95,10 @@ Future<dynamic> checkSimilar(
       } else {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context1) => const confirm()),
+          MaterialPageRoute(
+              builder: (context1) => const SuccessPage(
+                    text: "تم إرسال البلاغ بنجاح",
+                  )),
         );
       }
 
