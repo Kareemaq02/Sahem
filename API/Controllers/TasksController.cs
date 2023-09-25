@@ -14,13 +14,13 @@ namespace API.Controllers
     public class TasksController : BaseApiController
     {
         [HttpGet] // .../api/tasks
-        public async Task<IActionResult> GetTasksList([FromQuery] TasksFilter filter, string strUsername)
+        public async Task<IActionResult> GetTasksList([FromQuery] TasksFilter filter)
         {
             string authHeader = Request.Headers["Authorization"];
             JwtSecurityTokenHandler tokenHandler = new();
             JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(authHeader[7..]);
 
-            strUsername = jwtToken.Claims.First(c => c.Type == "username").Value;
+            var strUsername = jwtToken.Claims.First(c => c.Type == "username").Value;
             return HandleResult(await Mediator.Send(new GetTasksListQuery(filter, strUsername)));
         }
 
@@ -136,15 +136,14 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new GetTaskStatusTypesListQuery()));
         }
 
-
         [HttpPost("AddComplaintToExistingTask")] // .../api/tasks/AddComplaintToExistingTask
-        public async Task<IActionResult> AddComplaintToExistingTask(AddComplaintToExistingTaskDTO
-            addComplaintToTaskDTO)
+        public async Task<IActionResult> AddComplaintToExistingTask(
+            AddComplaintToExistingTaskDTO addComplaintToTaskDTO
+        )
         {
-
-            return HandleResult(await Mediator.
-                Send(new AddComplaintToExistingTaskCommand(addComplaintToTaskDTO)));
-
+            return HandleResult(
+                await Mediator.Send(new AddComplaintToExistingTaskCommand(addComplaintToTaskDTO))
+            );
         }
 
         [HttpGet("active")] //api/tasks/active
@@ -159,7 +158,6 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new GetMyCurrentActiveTasksQuery(username)));
         }
 
-        
         [HttpPost("rate/{id}")] // .../api/tasks/rate/id
         public async Task<IActionResult> RateTask(int id, decimal decRating, string strUsername)
         {
@@ -169,7 +167,9 @@ namespace API.Controllers
 
             strUsername = jwtToken.Claims.First(c => c.Type == "username").Value;
 
-            return HandleResult(await Mediator.Send(new RateTaskCommand(id, decRating, strUsername)));
+            return HandleResult(
+                await Mediator.Send(new RateTaskCommand(id, decRating, strUsername))
+            );
         }
     }
 }
