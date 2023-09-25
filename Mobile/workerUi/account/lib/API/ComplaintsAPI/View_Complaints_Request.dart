@@ -55,15 +55,15 @@ class ComplaintModel {
     return ComplaintModel(
       intComplaintId: json['intComplaintId'],
       strUserName: json['strUserName'],
-      strFirstName: json['strFirstName'],
-      strLastName: json['strLastName'],
+      strFirstName: json['strFirstName'] ?? "",
+      strLastName: json['strLastName'] ?? "",
       dtmDateCreated: json['dtmDateCreated'],
       dtmDateFinished: json['dtmDateFinished'],
-      intTypeId: json['intTypeId'],
+      intTypeId: json['intTypeId'] ?? 0,
       strComplaintTypeEn: json['strComplaintTypeEn'],
       strComplaintTypeAr: json['strComplaintTypeAr'],
       strComment: json['strComment'],
-      intStatusId: json['intStatusId'],
+      intStatusId: json['intStatusId'] ?? 0,
       strStatus: json['strStatus'],
       intPrivacyId: json['intPrivacyId'],
       strPrivacyAr: json['strPrivacyAr'],
@@ -72,7 +72,7 @@ class ComplaintModel {
       intVotersCount: json['intVotersCount'],
       latlng:
           LatLng(lat: json['latLng']['decLat'], lng: json['latLng']['decLng']),
-      decPriority: json['decPriority'].toDouble(),
+      decPriority: json['decPriority']?.toDouble() ?? 0.0,
       lstMedia: json['lstMedia'] != null
           ? List<String>.from(
               json['lstMedia'].map((map) => map['data'].toString()))

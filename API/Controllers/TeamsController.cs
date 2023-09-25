@@ -83,6 +83,12 @@ namespace API.Controllers
             );
         }
 
+        [HttpGet("busydates/{id}")] //api/teams/busydates/id
+        public async Task<IActionResult> GetTeamBusyDates(int id)
+        {
+            return HandleResult(await Mediator.Send(new GetTeamBusyDatesQuery(id)));
+        }
+
         [HttpPost("worker/vacation/{id}")] //api/teams/worker/vacation/id
         public async Task<IActionResult> GiveWorkeraVacation(
             int id,

@@ -3,13 +3,13 @@ import 'package:account/Repository/color.dart';
 import 'package:account/Utils/DateFormatter.dart';
 import 'package:account/Widgets/Popup/DateRangePopup.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
-// ignore_for_file: file_names
 
 class DateRangeField extends StatelessWidget {
   final double height;
   final double width;
   final Function(DateRangePickerSelectionChangedArgs) onSelectionChanged;
   final PickerDateRange initialRange;
+  final List<DateTime>? blackedOutdates;
 
   const DateRangeField({
     super.key,
@@ -17,6 +17,7 @@ class DateRangeField extends StatelessWidget {
     required this.width,
     required this.onSelectionChanged,
     required this.initialRange,
+    this.blackedOutdates,
   });
 
   @override
@@ -38,6 +39,7 @@ class DateRangeField extends StatelessWidget {
           screenHeight * 0.5,
           onSelectionChanged,
           initialRange,
+          blackedOutdates: blackedOutdates,
         ),
         child: Stack(
           children: [

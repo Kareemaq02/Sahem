@@ -47,7 +47,6 @@ namespace Application.Handlers.Evaluations
         {
             var incompleteDTO = new IncompleteDTO
             {
-
                 strComment = request.IncompleteDTO?.strComment,
                 decRating = request.IncompleteDTO.decRating,
                 lstCompletedIds = request.IncompleteDTO.lstCompletedIds,
@@ -56,7 +55,6 @@ namespace Application.Handlers.Evaluations
                 dtmNewDeadline = request.IncompleteDTO.dtmNewDeadline,
                 dtmNewScheduled = request.IncompleteDTO.dtmNewScheduled,
                 intNewTaskTypeId = request.IncompleteDTO.intNewTaskTypeId
-
             };
 
             using var transaction = await _context.Database.BeginTransactionAsync();
@@ -64,27 +62,24 @@ namespace Application.Handlers.Evaluations
             var task = await _context.Tasks.Where(q => q.intId == request.Id).FirstOrDefaultAsync();
 
             var userId = await _context.Users
-                    .Where(u => u.UserName == request.IncompleteDTO.strUserName)
-                    .Select(u => u.Id)
-                    .SingleOrDefaultAsync(cancellationToken: cancellationToken);
-
+                .Where(u => u.UserName == request.IncompleteDTO.strUserName)
+                .Select(u => u.Id)
+                .SingleOrDefaultAsync(cancellationToken: cancellationToken);
 
             //Check if team is available in new dates
-            var teamAvailabilityResult = await _mediator.Send(new CheckIfTeamIsAvailableByIdQuery(
-                        startDate: request.IncompleteDTO.dtmNewScheduled,
-                          endDate: request.IncompleteDTO.dtmNewDeadline,
-                           intTeamId: task.intTeamId
-                        ));
-
+            var teamAvailabilityResult = await _mediator.Send(
+                new CheckIfTeamIsAvailableByIdQuery(
+                    startDate: request.IncompleteDTO.dtmNewScheduled,
+                    endDate: request.IncompleteDTO.dtmNewDeadline,
+                    intTeamId: task.intTeamId
+                )
+            );
 
             if (teamAvailabilityResult.Value == false)
             {
                 await transaction.RollbackAsync();
                 return Result<IncompleteDTO>.Failure("Team is not avaialable in those dates");
             }
-
-
-
 
             try
             {
@@ -102,7 +97,6 @@ namespace Application.Handlers.Evaluations
 
             try
             {
-
                 foreach (int complaintId in request.IncompleteDTO.lstCompletedIds)
                 {
                     //completed
@@ -112,65 +106,63 @@ namespace Application.Handlers.Evaluations
                     await _context.SaveChangesAsync(cancellationToken);
 
                     await _changeTransactionHandler.Handle(
-                         new AddComplaintStatusChangeTransactionCommand(
-                                 complaintId,
-                                 (int)ComplaintsConstant.complaintStatus.completed
-                             ),
-                                 cancellationToken
-                             );
-                    
+                        new AddComplaintStatusChangeTransactionCommand(
+                            complaintId,
+                            (int)ComplaintsConstant.complaintStatus.completed
+                        ),
+                        cancellationToken
+                    );
 
-                   /* try
-                    {
-                        //Insert into Notifications Table
-
-                        var completedComplaintUserId = await _context.Complaints
-                            .Where(q => q.intId == complaintId).Select(c => c.intUserID).SingleOrDefaultAsync();
-
-                        var username = await _context.Users.
-                            Where(q => q.Id == completedComplaintUserId).Select(c => c.UserName).SingleOrDefaultAsync();
-
-                        // Get Notification body and header
-                        var notificationLayout = await _context.NotificationTypes
-                           .Where(q => q.intId == (int)NotificationConstant.NotificationType.completedComplaintNotification)
-                           .Select(q => new NotificationLayout
-                           {
-                               strHeaderAr = q.strHeaderAr,
-                               strBodyAr = q.strBodyAr,
-                               strBodyEn = q.strBodyEn,
-                               strHeaderEn = q.strHeaderEn
-                           }).SingleOrDefaultAsync();
-
-                        if (notificationLayout == null)
-                            throw new Exception("Notification Type table is empty");
-
-                        string headerAr = notificationLayout.strHeaderAr;
-                        string bodyAr = notificationLayout.strBodyAr + " " + complaintId;
-                        string headerEn = notificationLayout.strHeaderEn;
-                        string strBodyEn = notificationLayout.strBodyEn + " " + complaintId + " has been completed.";
-
-                        await _mediator.
-                            Send(new InsertNotificationCommand(new Notification
+                    /* try
+                     {
+                         //Insert into Notifications Table
+ 
+                         var completedComplaintUserId = await _context.Complaints
+                             .Where(q => q.intId == complaintId).Select(c => c.intUserID).SingleOrDefaultAsync();
+ 
+                         var username = await _context.Users.
+                             Where(q => q.Id == completedComplaintUserId).Select(c => c.UserName).SingleOrDefaultAsync();
+ 
+                         // Get Notification body and header
+                         var notificationLayout = await _context.NotificationTypes
+                            .Where(q => q.intId == (int)NotificationConstant.NotificationType.completedComplaintNotification)
+                            .Select(q => new NotificationLayout
                             {
-                                intTypeId = (int)NotificationConstant.NotificationType.completedComplaintNotification,
-                                intUserId = completedComplaintUserId,
-
-                                strHeaderAr = headerAr,
-                                strBodyAr = bodyAr,
-
-                                strHeaderEn = headerEn,
-                                strBodyEn = strBodyEn,
-                            }));
-
-
-                        await _notificationService.SendNotification(completedComplaintUserId, headerAr, bodyAr);
-                    }
-                    catch (Exception e)
-                    {
-                        await transaction.RollbackAsync();
-                        Console.WriteLine(e.ToString());
-                    }*/
-
+                                strHeaderAr = q.strHeaderAr,
+                                strBodyAr = q.strBodyAr,
+                                strBodyEn = q.strBodyEn,
+                                strHeaderEn = q.strHeaderEn
+                            }).SingleOrDefaultAsync();
+ 
+                         if (notificationLayout == null)
+                             throw new Exception("Notification Type table is empty");
+ 
+                         string headerAr = notificationLayout.strHeaderAr;
+                         string bodyAr = notificationLayout.strBodyAr + " " + complaintId;
+                         string headerEn = notificationLayout.strHeaderEn;
+                         string strBodyEn = notificationLayout.strBodyEn + " " + complaintId + " has been completed.";
+ 
+                         await _mediator.
+                             Send(new InsertNotificationCommand(new Notification
+                             {
+                                 intTypeId = (int)NotificationConstant.NotificationType.completedComplaintNotification,
+                                 intUserId = completedComplaintUserId,
+ 
+                                 strHeaderAr = headerAr,
+                                 strBodyAr = bodyAr,
+ 
+                                 strHeaderEn = headerEn,
+                                 strBodyEn = strBodyEn,
+                             }));
+ 
+ 
+                         await _notificationService.SendNotification(completedComplaintUserId, headerAr, bodyAr);
+                     }
+                     catch (Exception e)
+                     {
+                         await transaction.RollbackAsync();
+                         Console.WriteLine(e.ToString());
+                     }*/
                 }
                 await _context.SaveChangesAsync(cancellationToken);
             }
@@ -181,29 +173,24 @@ namespace Application.Handlers.Evaluations
             }
             try
             {
-
-
-                var newTask = await _context.Tasks.AddAsync(new WorkTask
-                {
-
-                    intAdminId = userId,
-                    strComment = request.IncompleteDTO?.strComment,
-                    dtmDateScheduled = request.IncompleteDTO.dtmNewScheduled,
-                    dtmDateDeadline = request.IncompleteDTO.dtmNewDeadline,
-                    blnIsActivated = false,
-                    intStatusId = (int)TasksConstant.taskStatus.inactive,
-                    intTeamId = task.intTeamId,
-                    intTypeId = request.IncompleteDTO.intNewTaskTypeId,
-                    blnIsDeleted = false,
-                    intLastModifiedBy = userId,
-                    dtmDateCreated = DateTime.UtcNow,
-
-                });
+                var newTask = await _context.Tasks.AddAsync(
+                    new WorkTask
+                    {
+                        intAdminId = userId,
+                        strComment = request.IncompleteDTO?.strComment,
+                        dtmDateScheduled = request.IncompleteDTO.dtmNewScheduled,
+                        dtmDateDeadline = request.IncompleteDTO.dtmNewDeadline,
+                        blnIsActivated = false,
+                        intStatusId = (int)TasksConstant.taskStatus.inactive,
+                        intTeamId = task.intTeamId,
+                        intTypeId = request.IncompleteDTO.intNewTaskTypeId,
+                        blnIsDeleted = false,
+                        intLastModifiedBy = userId,
+                        dtmDateCreated = DateTime.UtcNow,
+                    }
+                );
 
                 await _context.SaveChangesAsync(cancellationToken);
-
-
-
 
                 foreach (int complaintId in request.IncompleteDTO.lstFailedIds)
                 {
@@ -214,33 +201,39 @@ namespace Application.Handlers.Evaluations
                     await _context.SaveChangesAsync(cancellationToken);
 
                     var complaintTransaction = await _context.ComplaintsStatuses
-                                      .Where(c => c.intComplaintId == complaintId && c.intStatusId
-                                      != (int)ComplaintsConstant.complaintStatus.Scheduled)
-                                      .OrderBy(q => q.dtmTransDate)
-                                      .FirstOrDefaultAsync(cancellationToken);
+                        .Where(
+                            c =>
+                                c.intComplaintId == complaintId
+                                && c.intStatusId
+                                    != (int)ComplaintsConstant.complaintStatus.Scheduled
+                        )
+                        .OrderBy(q => q.dtmTransDate)
+                        .FirstOrDefaultAsync(cancellationToken);
 
-                    if(complaintTransaction!=null)
-                    _context.ComplaintsStatuses.Remove(complaintTransaction);
+                    if (complaintTransaction != null)
+                        _context.ComplaintsStatuses.Remove(complaintTransaction);
 
                     await _context.SaveChangesAsync(cancellationToken);
 
                     await _changeTransactionHandler.Handle(
                         new AddComplaintStatusChangeTransactionCommand(
-                                complaintId,
-                                (int)ComplaintsConstant.complaintStatus.Scheduled
-                            ),
-                                cancellationToken
-                            );
+                            complaintId,
+                            (int)ComplaintsConstant.complaintStatus.Scheduled
+                        ),
+                        cancellationToken
+                    );
                     await _context.SaveChangesAsync(cancellationToken);
 
                     try
                     {
                         // Insert into TaskComplaints Table
-                        await _context.TasksComplaints.AddAsync(new Domain.DataModels.Intersections.WorkTaskComplaints
-                        {
-                            intTaskId = newTask.Entity.intId,
-                            intComplaintId = complaintId,
-                        });
+                        await _context.TasksComplaints.AddAsync(
+                            new Domain.DataModels.Intersections.WorkTaskComplaints
+                            {
+                                intTaskId = newTask.Entity.intId,
+                                intComplaintId = complaintId,
+                            }
+                        );
 
                         await _context.SaveChangesAsync();
 
@@ -285,23 +278,24 @@ namespace Application.Handlers.Evaluations
                             }));
 
 
-                        await _notificationService.SendNotification(completedComplaintUserId, headerAr, bodyAr);*//**/
+                        await _notificationService.SendNotification(completedComplaintUserId, headerAr, bodyAr);*/
+                        /**/
                     }
                     catch (Exception e)
                     {
                         await transaction.RollbackAsync();
-                        return Result<IncompleteDTO>.Failure("Failed to update complaint status." + e);
+                        return Result<IncompleteDTO>.Failure(
+                            "Failed to update complaint status." + e
+                        );
                     }
                 }
-
             }
-            catch (DbUpdateException e )
+            catch (DbUpdateException e)
             {
                 await transaction.RollbackAsync();
                 return Result<IncompleteDTO>.Failure("Failed to update complaint status." + e);
             }
 
-          
             await transaction.CommitAsync();
             return Result<IncompleteDTO>.Success(incompleteDTO);
         }
