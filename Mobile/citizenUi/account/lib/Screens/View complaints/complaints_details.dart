@@ -66,7 +66,7 @@ class _ComplaintViewState extends State<ComplaintDetailsScreen> {
     return Scaffold(
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
-      floatingActionButton: const CustomActionButton(),
+      //floatingActionButton: const CustomActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavBar1(2),
       appBar: myAppBar(context, 'بلاغاتي', false, screenHeight * 0.35),

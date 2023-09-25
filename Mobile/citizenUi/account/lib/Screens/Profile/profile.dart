@@ -54,7 +54,7 @@ class _ProfileState extends State<Profile> {
     return Scaffold(
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
-      floatingActionButton: const CustomActionButton(),
+      // floatingActionButton: const CustomActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavBar1(3),
       appBar: myAppBar(context, "الإعدادات", false, screenSize.width * 0.55),
@@ -70,14 +70,15 @@ class _ProfileState extends State<Profile> {
             children: [
               InfoBox(  userInfo.strFirstNameAr != null
                       ?
-                '${userInfo.strFirstNameAr!} ${userInfo.strLastNameAr!}': 'ربى أبورمان',
+                '${userInfo.strFirstNameAr!} ${userInfo.strLastNameAr!}'
+                      : 'أحمد محمد',
                   userInfo.strNationalId),
               SizedBox(height: screenSize.height * 0.01),
               DataBox(
                   'أسم المستخدم',
                   userInfo.strFirstNameAr != null
                       ? '${userInfo.strFirstNameAr!} ${userInfo.strLastNameAr!}'
-                      : 'ربى أبورمان'),
+                      : 'أحمد محمد'),
               DataBox(
                 "البريد الالكتروني",
                 userInfo.strUsername!,

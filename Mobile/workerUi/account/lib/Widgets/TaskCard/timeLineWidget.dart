@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:timelines/timelines.dart';
 import 'package:account/Repository/color.dart';
-import 'package:account/API/TaskAPI/view_tasks_request.dart';
+// ignore_for_file: file_names
+
 
 List<Status> statusList = [
   Status(1, 'غير مفعل'),
@@ -38,7 +39,7 @@ Widget timeLineWidget(statusID) {
         },
         contentsBuilder: (context, index) {
           // Use the stored data if available
-          if (statusList != null && index < statusList!.length) {
+          if (index < statusList.length) {
             TextStyle textStyle = const TextStyle(
               fontSize: 8.9,
               fontFamily: 'DroidArabicKufi',
@@ -53,7 +54,7 @@ Widget timeLineWidget(statusID) {
 
             return Text(
               index != 3
-                  ? statusList![index].name.toString()
+                  ? statusList[index].name.toString()
                   : statusList[5].name.toString(),
               style: textStyle,
             );

@@ -65,7 +65,7 @@ namespace Application.Handlers.Tasks
                     intTeamId = t.intTeamId,
                     workersList = t.Team.Workers
                                 .Select(
-                                    ca =>
+                                     ca =>
                                         new TaskWorkerDTO
                                         {
                                             intId = ca.intWorkerId,
@@ -73,11 +73,34 @@ namespace Application.Handlers.Tasks
                                             strLastName = ca.Worker.UserInfo.strLastName,
                                             strFirstNameAr = ca.Worker.UserInfo.strFirstNameAr,
                                             strLastNameAr = ca.Worker.UserInfo.strLastNameAr,
-                                            isLeader = t.Team.intLeaderId == ca.intWorkerId
+                                            isLeader = t.Team.intLeaderId == ca.intWorkerId,
+                                            decRating =  _context.TasksMembersRatings
+                                            .Where(q => q.intUserId == ca.intWorkerId && q.intTaskId == request.Id)
+                                            .Select(q => q.decRating).SingleOrDefault()
+
                                         }
                                 )
                                 .ToList(),
-                    lstMedia = t.Complaints.SelectMany(q => q.Complaint.Attachments
+                    lstMediaAfter = t.Complaints.SelectMany(q => q.Complaint.Attachments
+                    .Where( q => q.blnIsFromWorker == true)
+                           .Select(q =>
+                           new TaskMediaDTO
+                           {
+                               intComplaintId = q.intComplaintId,
+                               blnIsVideo = false,
+                               decLatLng = new LatLng { decLat = q.decLat, decLng = q.decLng },
+                               Data = File.Exists(q.strMediaRef) ?
+                               Convert.ToBase64String(File.ReadAllBytes(q.strMediaRef))
+                               : null,
+                               region = new RegionNames
+                               {
+                                   strRegionAr = q.Complaint.Region.strNameAr,
+                                   strRegionEn = q.Complaint.Region.strNameEn
+                               }
+
+                           })).ToList(),
+                    lstMediaBefore = t.Complaints.SelectMany(q => q.Complaint.Attachments
+                    .Where(q => q.blnIsFromWorker == false)
                            .Select(q =>
                            new TaskMediaDTO
                            {

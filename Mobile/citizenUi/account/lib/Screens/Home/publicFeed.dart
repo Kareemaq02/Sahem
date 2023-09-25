@@ -90,7 +90,7 @@ class _XDPublicFeed1State extends State<XDPublicFeed1> {
     return Scaffold(
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
-      floatingActionButton: const CustomActionButton(),
+    //  floatingActionButton: const CustomActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavBar1(3),
       appBar: myAppBar(context, 'البلاغات المعلنة', true, screenSize.width*0.32),

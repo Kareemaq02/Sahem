@@ -46,6 +46,9 @@ class _BottomNavBarState extends State<BottomNavBar1> {
       case 3:
         naviWithTransition(const XDPublicFeed1());
         break;
+      case 4:
+        naviWithTransition(const FileCompalint());
+        break;
     }
   }
 
@@ -87,110 +90,123 @@ class _BottomNavBarState extends State<BottomNavBar1> {
         clipBehavior: Clip.antiAliasWithSaveLayer,
         padding: const EdgeInsets.only(top: 10, left: 5, right: 5, bottom: 0),
         notchMargin: -15,
-        //shape:CircularNotchedRectangle() ,
-        // decoration: BoxDecoration(
-        //   color:Colors.white,
-        //   borderRadius: const BorderRadius.only(
-        //       topRight: Radius.circular(15), topLeft: Radius.circular(30)),
-        //   boxShadow: [
-        //     BoxShadow(color: Colors.black38.withOpacity(0.25), blurRadius: 1),
-        //   ],
-        // ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _bottomNavBarItem(
-                onTap: () => _changeSelectedTab(3),
-                icona: widget.selectedIcon == 3
+        child: Padding(
+          padding: const EdgeInsets.only(right: 6.0, left: 6, bottom: 5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _bottomNavBarItem(
+                  onTap: () => _changeSelectedTab(3),
+                  icona: widget.selectedIcon == 3
+                      ? const Icon(
+                          Icons.person,
+                          color: AppColor.main,
+                          size: 23,
+                        )
+                      : const Icon(
+                          Icons.person,
+                          color: Colors.grey,
+                          size: 23,
+                        ),
+                  text: "المنتدى العام"),
+              const SizedBox(
+                width: 15,
+              ),
+              _bottomNavBarItem(
+                  onTap: () => _changeSelectedTab(1),
+                  icona: widget.selectedIcon == 1
+                      ? const Icon(
+                          Icons.map,
+                          color: AppColor.main,
+                          size: 23,
+                        )
+                      : const Icon(
+                          Icons.map,
+                          color: Colors.grey,
+                          size: 23,
+                        ),
+                  text: "الخريطة"),
+              const SizedBox(
+                width: 15,
+              ),
+              _bottomNavBarItem(
+                  onTap: () => _changeSelectedTab(4),
+                  icona: widget.selectedIcon == 4
+                      ? const Icon(
+                          Icons.add_a_photo,
+                          color: AppColor.main,
+                          size: 23,
+                        )
+                      : const Icon(
+                          Icons.add_a_photo,
+                          color: Colors.grey,
+                          size: 23,
+                        ),
+                  text: "ارسال بلاغ"),
+              const SizedBox(
+                width: 15,
+              ),
+              _bottomNavBarItem(
+                  onTap: () => _changeSelectedTab(2),
+                  icona: widget.selectedIcon == 2
+                      ? const Icon(
+                          Icons.integration_instructions_outlined,
+                          color: AppColor.main,
+                          size: 23,
+                        )
+                      : const Icon(
+                          Icons.integration_instructions_outlined,
+                          color: Colors.grey,
+                          size: 23,
+                        ),
+                  text: "بلاغاتي"),
+              const SizedBox(
+                width: 15,
+              ),
+              _bottomNavBarItem(
+                onTap: () => _changeSelectedTab(0),
+                icona: widget.selectedIcon == 0
                     ? const Icon(
-                        Icons.person,
+                        Icons.home,
                         color: AppColor.main,
                         size: 23,
                       )
                     : const Icon(
-                        Icons.person,
+                        Icons.home,
                         color: Colors.grey,
                         size: 23,
                       ),
-                text: "المنتدى العام"),
-            const SizedBox(
-              width: 15,
-            ),
-            _bottomNavBarItem(
-                onTap: () => _changeSelectedTab(1),
-                icona: widget.selectedIcon == 1
-                    ? const Icon(
-                        Icons.map,
-                        color: AppColor.main,
-                        size: 23,
-                      )
-                    : const Icon(
-                        Icons.map,
-                        color: Colors.grey,
-                        size: 23,
-                      ),
-                text: "الخريطة"),
-            const Spacer(),
-            _bottomNavBarItem(
-                onTap: () => _changeSelectedTab(2),
-                icona: widget.selectedIcon == 2
-                    ? const Icon(
-                        Icons.integration_instructions_outlined,
-                        color: AppColor.main,
-                        size: 23,
-                      )
-                    : const Icon(
-                        Icons.integration_instructions_outlined,
-                        color: Colors.grey,
-                        size: 23,
-                      ),
-                text: "بلاغاتي"),
-            const SizedBox(
-              width: 15,
-            ),
-            _bottomNavBarItem(
-              onTap: () => _changeSelectedTab(0),
-              icona: widget.selectedIcon == 0
-                  ? const Icon(
-                      Icons.home,
-                      color: AppColor.main,
-                      size: 23,
-                    )
-                  : const Icon(
-                      Icons.home,
-                      color: Colors.grey,
-                      size: 23,
-                    ),
-              text: " الصفحة الرئيسية",
-            ),
-          ],
+                text: " الصفحة الرئيسية",
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-class CustomActionButton extends StatelessWidget {
-  const CustomActionButton({Key? key}) : super(key: key);
+// class CustomActionButton extends StatelessWidget {
+//   const CustomActionButton({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    final deviceSize = MediaQuery.of(context).size;
-    return Stack(
-      alignment: Alignment.bottomCenter,
-      children: [
-        InkWell(
-          onTap: () {
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => const FileCompalint()));
-          },
-          child: const Image(
-            image: AssetImage('assets/icons/FillComplaintIcon.png'),
-            fit: BoxFit.cover,
-            height: 52,
-          ),
-        ),
-      ],
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     final deviceSize = MediaQuery.of(context).size;
+//     return Stack(
+//       alignment: Alignment.bottomCenter,
+//       children: [
+//         InkWell(
+//           onTap: () {
+//             Navigator.of(context).pushReplacement(
+//                 MaterialPageRoute(builder: (context) => const FileCompalint()));
+//           },
+//           child: const Image(
+//             image: AssetImage('assets/icons/FillComplaintIcon.png'),
+//             fit: BoxFit.cover,
+//             height: 52,
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+// }

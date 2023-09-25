@@ -129,7 +129,6 @@ class WorkerTask {
         });
 
     if (response.statusCode == 200) {
-      print("aaaaaaaaaaaaaaaa");
       return jsonDecode(response.body.toString());
     } else {
       throw Exception('Failed to fetch complaints');

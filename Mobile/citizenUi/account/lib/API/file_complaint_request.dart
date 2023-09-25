@@ -3,7 +3,8 @@ import 'package:account/main.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:account/Repository/urls.dart';
-import 'package:account/Screens/File%20complaint/confirmPage.dart';
+import 'package:account/Screens/Results/SuccessPage.dart';
+
 // ignore_for_file: avoid_print
 
 
@@ -65,7 +66,7 @@ final token2 = prefs!.getString('token');
         print("file as new");
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const confirm()),
+          MaterialPageRoute(builder: (context) =>  const SuccessPage(text: "تم إرسال البلاغ بنجاح",)),
         );
         //print(responseJson);
         print('Complaint assigned successfully.');
@@ -107,7 +108,7 @@ Future<dynamic> fileAsSimilar(var complaintId, context) async {
       print("file as similar");
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const confirm()),
+        MaterialPageRoute(builder: (context) => const SuccessPage(text: 'تم إرسال البلاغ بنجاح',)),
       );
 
       print('successful');
