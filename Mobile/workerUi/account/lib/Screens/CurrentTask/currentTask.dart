@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:account/Repository/color.dart';
+import 'package:account/API/login_request.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
 import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/Widgets/HelperWidgets/text.dart';
@@ -14,7 +15,7 @@ import 'package:account/Widgets/HelperWidgets/myContainer.dart';
 // ignore_for_file: file_names
 
 // ignore_for_file: library_private_types_in_public_api
-
+UserData user = getUserData();
 class CurrentTask extends StatefulWidget {
   const CurrentTask({Key? key}) : super(key: key);
 
@@ -142,7 +143,7 @@ class _CurrentTaskState extends State<CurrentTask> {
                     'لا يوجد مهمة مفعلة',
                     style: TextStyle(
                       fontSize: 18,
-                      color: AppColor.textTitle,
+                      color: AppColor.main,
                       fontFamily: 'DroidArabicKufi',
                     ),
                   ),
@@ -197,27 +198,34 @@ class _CurrentTaskState extends State<CurrentTask> {
                                       },
                                     ),
                                     const SizedBox(width: 10),
-                                    CardButtons(
-                                        context,
-                                        'تسليم المهمة',
-                                        activatedTask!.blnIsLeader
-                                            ? AppColor.main
-                                            : Colors.grey,
-                                        activatedTask!.blnIsLeader
-                                            ? AppColor.main
-                                            : Colors.grey,
-                                        screenWidth * 0.6, () {
-                                      // activatedTask!.blnIsLeader
-                                      //     ?
-                                      Navigator.push(
+                                    Visibility(
+                                      visible:
+                                          user.userType.contains("teamleader"),
+                                      child: CardButtons(
                                           context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const FinishTask(
-                                                    TaskID: '',
-                                                  )));
-                                      // : null;
-                                    }),
+                                          'تسليم المهمة',
+                                          activatedTask!.blnIsLeader
+                                              ? AppColor.main
+                                              : Colors.grey,
+                                          activatedTask!.blnIsLeader
+                                              ? AppColor.main
+                                              : Colors.grey,
+                                          screenWidth * 0.6, () {
+                                        // activatedTask!.blnIsLeader
+                                        //     ?
+                                    
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    FinishTask(
+                                                      TaskID: activatedTask!
+                                                          .taskId
+                                                          .toString(),
+                                                    )));
+                                        // : null;
+                                      }),
+                                    ),
                                     const Spacer(),
                                     Padding(
                                       padding: EdgeInsets.only(
@@ -248,7 +256,7 @@ class _CurrentTaskState extends State<CurrentTask> {
 
                                 Padding(
                                   padding: EdgeInsets.only(
-                                      right: screenWidth * 0.4,
+                                      right: screenWidth * 0.5,
                                       top: screenHeight * 0.04),
                                   child: text(address, AppColor.secondary),
                                 ),

@@ -1,10 +1,10 @@
-import 'package:account/API/login_request.dart';
-import 'package:account/Widgets/Bars/NavBarAdmin.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
+import 'package:account/API/login_request.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
 import 'package:account/Screens/Profile/logout.dart';
 import 'package:account/Screens/Profile/dataBox.dart';
+import 'package:account/Widgets/Bars/NavBarAdmin.dart';
 import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/Screens/Profile/textButton.dart';
 import 'package:account/Screens/Profile/switchWidget.dart';
@@ -54,7 +54,7 @@ class _ProfileState extends State<Profile> {
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
       bottomNavigationBar: userIsAdmin() ? NavBarAdmin(0) : BottomNavBar1(0),
-      appBar: myAppBar(context, "الإعدادات", false, screenHeight * 0.1),
+      appBar: myAppBar(context, "الإعدادات", false, screenWidth * 0.6),
       body: Padding(
         padding: EdgeInsets.symmetric(
           vertical: screenHeight * 0.01,

@@ -5,33 +5,27 @@ import 'package:geolocator/geolocator.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Utils/TeamMembers.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:account/Widgets/Popup/popup.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
 import 'package:page_indicator/page_indicator.dart';
 import 'package:account/Widgets/Bars/bottomNavBar.dart';
-import 'package:account/Widgets/Displays/TeamViewBox.dart';
+import 'package:account/API/TeamsAPI/GetTeamMembers.dart';
+import 'package:account/Widgets/HelperWidgets/Loader.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:account/API/TaskAPI/submit_task_request.dart';
 import 'package:account/Widgets/Buttons/bottonContainer.dart';
-import 'package:account/Widgets/Interactive/ratingBottomSheet.dart';
+import 'package:account/Widgets/Displays/TeamMemberDisplay.dart';
+import 'package:account/Widgets/Displays/TeamMemberAnalyticsDisplay.dart';
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 // ignore_for_file: file_names
 
 // ignore_for_file: use_build_context_synchronously
 
 // ignore_for_file: non_constant_identifier_names
 var currentPosition;
-
-
-final List<String> imageList = [
-  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7zjk6aWDXjWiB_mMUpuxQdzMxtXbyd8M5ag&usqp=CAU',
-  'img2.png',
-  'img3.png',
-];
-
-List<TeamMember> teamMembersListFake = [
-  TeamMember(1, 'محمد علي', false),
-  TeamMember(2, 'ياسر محمد', false),
-  TeamMember(3, 'عمر علي', false),
-  TeamMember(4, 'أحمد ياسين', false),
-];
+List<TeamMember> teamMembers = [];
+double ratingIntial = 0.0;
 
 class FinishTask extends StatefulWidget {
   final String TaskID;
@@ -46,17 +40,20 @@ class FinishTask extends StatefulWidget {
 }
 
 class _ComaplintState extends State<FinishTask> {
+  final GetTeamMembersRequest _memeber = GetTeamMembersRequest();
   List<MediaFile> selectedMediaFiles = [];
   PageController? controller;
   GlobalKey<PageContainerState> key = GlobalKey();
   TextEditingController commentController = TextEditingController();
   final FocusNode textFieldFocusNode = FocusNode();
+  List<WorkerRating> ratings = [];
   bool _isDisposed = false;
 
   @override
   void dispose() {
     _isDisposed = true;
     selectedMediaFiles.clear();
+    ratings.clear;
     super.dispose();
   }
 
@@ -67,13 +64,17 @@ class _ComaplintState extends State<FinishTask> {
     super.initState();
     controller = PageController();
     WidgetsBinding.instance.addPostFrameCallback((_) {});
+    getMemers();
   }
 
+  void getMemers() async {
+    teamMembers = await _memeber.getTeamMembersByLeader(1);
+  }
 
+//--------Location permissions -----------------------------------
   Future<bool> _handleLocationPermission() async {
     bool serviceEnabled;
     LocationPermission permission;
-
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -142,7 +143,6 @@ class _ComaplintState extends State<FinishTask> {
       // Navigator.pop(context);
     }
   }
-
   String address = "";
   Future<String?> fetchAddress() async {
     if (currentPosition != null) {
@@ -175,6 +175,8 @@ class _ComaplintState extends State<FinishTask> {
     }
   }
 
+
+//-----Page view widgets------------------------------------
   Widget stackButton(IconData icon, Function() onPressed) {
     return Padding(
       padding: const EdgeInsets.all(15.0),
@@ -227,15 +229,57 @@ class _ComaplintState extends State<FinishTask> {
       );
     }
   }
+  
+  //--------------Rating Widget bottomSheet
+  Widget ratingSheet(BuildContext context, TeamMember teamMember, index) {
+    return Container(
+      height: 150,
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: <Widget>[
+          Align(
+            alignment: Alignment.center,
+            child: Text(
+              teamMember.strName,
+              style: const TextStyle(
+                  color: AppColor.textBlue,
+                  fontFamily: 'DroidArabicKufi',
+                  fontSize: 15),
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          RatingBar.builder(
+            initialRating: ratingIntial,
+            minRating: 1,
+            direction: Axis.horizontal,
+            allowHalfRating: true,
+            itemCount: 5,
+            itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+            itemBuilder: (context, _) =>
+                const Icon(Icons.star, color: AppColor.main),
+            onRatingUpdate: (rating) {
+              setState(() {
+                ratings[index].decRating = rating;
+              });
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
-    double fieldWidth = screenWidth * 0.92;
     double fieldHeight = screenHeight * 0.2;
-    //double dialogHeight = screenHeight * 0.47;
     return GestureDetector(
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
@@ -244,15 +288,15 @@ class _ComaplintState extends State<FinishTask> {
         backgroundColor: AppColor.background,
         resizeToAvoidBottomInset: false,
         bottomNavigationBar: BottomNavBar1(3),
-        appBar: myAppBar(context, "تسليم العمل ", false, 135),
+        appBar: myAppBar(context, "تسليم العمل ", false, screenWidth * 0.5),
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
               child: Column(children: [
-                //--------pageView
+                //--------pageView-----------------------------------
                 SizedBox(
-                  height: screenHeight * 0.4,
+                  height: screenHeight * 0.3,
                   child: PageIndicatorContainer(
                     align: IndicatorAlign.bottom,
                     length: selectedMediaFiles.length,
@@ -300,32 +344,100 @@ class _ComaplintState extends State<FinishTask> {
                     ),
                   ),
                 ),
-                //--------------Teams
-                InkWell(
-                  onTap: () {
-                    showModalBottomSheet(
-                      backgroundColor: AppColor.background,
-                      useRootNavigator: true,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(25.0),
-                        ),
-                      ),
-                      context: context,
-                      builder: (BuildContext context) {
-                        return ratingSheet(context);
-                      },
-                    );
-                  },
-                  child: TeamViewBox(
-                    height: fieldHeight,
-                    width: double.infinity,
-                    boxHeight: fieldHeight * 0.55,
-                    boxWidth: fieldWidth * 0.35,
-                    teamMembers: teamMembersListFake,
+                //--------------Teams--------------------------------
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: Text(
+                      "فريق العمل",
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontFamily: 'DroidArabicKufi',
+                          color: AppColor.textTitle),
+                    ),
                   ),
                 ),
-                //const SizedBox(height: 0,),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    reverse: true,
+                    child: FutureBuilder<List<TeamMember>>(
+                      future: _memeber.getTeamMembersByLeader(1),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                                ConnectionState.waiting ||
+                            snapshot.data!.isEmpty) {
+                          return SizedBox(
+                            height: fieldHeight,
+                            child: const Loader(),
+                          );
+                        } else if (snapshot.hasError) {
+                          return Center(
+                              child: Text('Error: ${snapshot.error}'));
+                        }
+                        List<TeamMember> team = teamMembers;
+                        ratings = List.generate(
+                          team.length,
+                          (index) => WorkerRating(
+                              team[index].intId,
+                              ratings.isEmpty
+                                  ? ratingIntial
+                                  : ratings[index].decRating),
+                        );
+                        return Row(
+                          children: List.generate(
+                            team.length,
+                            (index) {
+                              return Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: screenWidth * 0.02),
+                                  child: team[index].blnIsLeader
+                                      ? TeamMemberDisplay(
+                                          height: screenHeight * 0.15,
+                                          width: screenWidth * 0.4,
+                                          name: team[index].strName,
+                                          icon: Icons.flag_circle_rounded,
+                                          color: AppColor.main,
+                                        )
+                                      : InkWell(
+                                          onTap: () {
+                                            showModalBottomSheet(
+                                                backgroundColor:
+                                                    AppColor.background,
+                                                useRootNavigator: true,
+                                                shape:
+                                                    const RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.vertical(
+                                                    top: Radius.circular(25.0),
+                                                  ),
+                                                ),
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  // Pass the selected TeamMember and the list of WorkerRating objects
+                                                  return ratingSheet(context,
+                                                      team[index], index);
+                                                });
+                                          },
+                                          child: TeamMemberAnalyticsDisplay(
+                                            height: screenHeight * 0.15,
+                                            width: screenWidth * 0.4,
+                                            name: team[index].strName,
+                                            icon: Icons.emoji_emotions_outlined,
+                                            color: AppColor.secondary,
+                                            rating: ratings[index].decRating,
+                                          ),
+                                        ));
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Container(
@@ -355,17 +467,21 @@ class _ComaplintState extends State<FinishTask> {
                 ),
                 BottonContainer("استمرار", Colors.white, AppColor.main,
                     screenWidth * 0.7, context, true, null, () {
-                  // showDialog(
-                  //   context: context,
-                  //   builder: (BuildContext context) => buildConfirmDialog(
-                  //       context,
-                  //       "تأكيد العمل",
-                  //       "موقع العمل",
-                  //       "ش.صوفي التل.عمان",
-                  //       widget.TaskID,
-                  //       commentController.text,
-                  //       selectedMediaFiles),
-                  // );
+                  print(
+                    widget.TaskID,
+                  );
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) => buildConfirmDialog(
+                        context,
+                        "تأكيد العمل",
+                        "موقع العمل",
+                        "ش.,صفي التل.عمان",
+                        widget.TaskID,
+                        commentController.text,
+                        selectedMediaFiles,
+                        ratings),
+                  );
                 }),
 
                 SizedBox(
@@ -376,4 +492,6 @@ class _ComaplintState extends State<FinishTask> {
       ),
     );
   }
+  
 }
+

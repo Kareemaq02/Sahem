@@ -49,6 +49,7 @@ class _XDTasksListState extends State<XDTasksList> {
                               id: data[index]['taskId'].toString(),
                               isLeader: data[index]['blnIsTaskLeader'],
                               deadline: data[index]['deadlineDate'],
+                              blnIsActive: data[index]['blnIsActive'],
                             ),
                           ],
                         );

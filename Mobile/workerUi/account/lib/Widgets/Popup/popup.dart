@@ -8,11 +8,14 @@ import 'package:account/API/TaskAPI/submit_task_request.dart';
 SubmitTask taskObj = SubmitTask();
 //confirm complaint
 Widget buildConfirmDialog(BuildContext context, title, title2, value, taskID,
-    comment, selectedMediaFiles) {
+    comment, selectedMediaFiles, ratingWorkers) {
   final screenWidth = MediaQuery.of(context).size.width;
   final screenHeight = MediaQuery.of(context).size.height;
 
   return AlertDialog(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(20.0),
+    ),
     title: Text(
       title,
       textAlign: TextAlign.center,
@@ -44,9 +47,10 @@ Widget buildConfirmDialog(BuildContext context, title, title2, value, taskID,
                   ),
                   BottonContainerPopup("استمرار", Colors.white, AppColor.main,
                       context, true, null, () {
-                      
+                    print(taskID + "here from pop ");
                     taskObj.submitTask(
-                        context, taskID, selectedMediaFiles, comment);
+                        context, taskID, selectedMediaFiles,
+                        comment, ratingWorkers);
                   }),
                 ],
               ),
