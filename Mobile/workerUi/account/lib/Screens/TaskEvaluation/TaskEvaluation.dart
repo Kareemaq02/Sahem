@@ -1,21 +1,21 @@
-import 'package:account/Screens/TaskEvaluation/TaskIncomplete.dart';
-import 'package:account/Utils/NaviTranstion.dart';
-import 'package:account/Widgets/Bars/NavBarAdmin.dart';
-import 'package:account/Widgets/HelperWidgets/Loader.dart';
-import 'package:account/Widgets/HelperWidgets/myContainer.dart';
+import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
+import 'package:account/Utils/NaviTranstion.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
-import 'package:account/Widgets/HelperWidgets/rowInfo.dart';
+import 'package:page_indicator/page_indicator.dart';
+import 'package:account/Widgets/Bars/NavBarAdmin.dart';
 import 'package:account/Screens/Results/FailurePage.dart';
 import 'package:account/Screens/Results/SuccessPage.dart';
+import 'package:account/Widgets/HelperWidgets/Loader.dart';
 import 'package:account/Widgets/Buttons/StyledButton.dart';
 import 'package:account/Widgets/Displays/TeamViewBox.dart';
+import 'package:account/Widgets/HelperWidgets/rowInfo.dart';
 import 'package:account/API/TaskAPI/Get_A_Task_Request.dart';
 import 'package:account/Widgets/HelperWidgets/TitleText.dart';
 import 'package:account/Widgets/Interactive/RatingWidget.dart';
+import 'package:account/Widgets/HelperWidgets/myContainer.dart';
 import 'package:account/Widgets/CheckBoxes/StyledCheckBox.dart';
-import 'package:page_indicator/page_indicator.dart';
-import 'package:flutter/material.dart';
+import 'package:account/Screens/TaskEvaluation/TaskIncomplete.dart';
 
 class TaskEvaluation extends StatefulWidget {
   final int taskId;

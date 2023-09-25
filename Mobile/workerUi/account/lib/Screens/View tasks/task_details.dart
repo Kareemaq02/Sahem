@@ -5,7 +5,6 @@ import 'package:account/Widgets/Bars/appBar.dart';
 import 'package:page_indicator/page_indicator.dart';
 import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/API/TaskAPI/view_tasks_request.dart';
-import 'package:account/Widgets/TaskCard/timeLineVertical.dart';
 import 'package:account/Widgets/HelperWidgets/myContainer.dart';
 
 // ignore_for_file: library_private_types_in_public_api
@@ -21,7 +20,7 @@ class ComplaintDetailsScreen extends StatefulWidget {
 
 class _ComplaintViewState extends State<ComplaintDetailsScreen> {
   final List<String> imageList = [
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7zjk6aWDXjWiB_mMUpuxQdzMxtXbyd8M5ag&usqp=CAU',
+    'https://gumlet.assettype.com/sabq%2Fimport%2Fuploads%2Fsabq_old%2Ffiles%2Fgeneral%2F77549_31468.jpg?auto=format%2Ccompress&w=1200',
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7zjk6aWDXjWiB_mMUpuxQdzMxtXbyd8M5ag&usqp=CAU',
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7zjk6aWDXjWiB_mMUpuxQdzMxtXbyd8M5ag&usqp=CAU',
   ];
@@ -50,7 +49,7 @@ class _ComplaintViewState extends State<ComplaintDetailsScreen> {
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
       bottomNavigationBar: BottomNavBar1(2),
-      appBar: myAppBar(context, 'الأعمال', false, screenHeight * 0.3),
+      appBar: myAppBar(context, 'الأعمال', false, screenHeight * 0.34),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
@@ -98,6 +97,7 @@ class _ComplaintViewState extends State<ComplaintDetailsScreen> {
                     RowInfo("رقم العمل", task.taskId.toString()),
                     RowInfo("تاريخ الاضافة ",
                         task.activatedDate.toString().substring(0, 10)),
+                    RowInfo("موعد النهائي لتسليم ", "2022-09-30"),
                     RowInfo("نوع البلاغ", task.strTypeNameAr.toString()),
                     RowInfo(
                       "موقع البلاغ",
@@ -109,16 +109,7 @@ class _ComplaintViewState extends State<ComplaintDetailsScreen> {
             ),
 
             // //satus details
-            Padding(
-              padding: EdgeInsets.all(screenWidth * 0.02),
-              child: myContainer(
-                screenHeight * 0.6,
-                Padding(
-                  padding: EdgeInsets.only(right: screenWidth * 0.10),
-                  child: timeLineVertical(),
-                ),
-              ),
-            ),
+        
           ],
         ),
       ),

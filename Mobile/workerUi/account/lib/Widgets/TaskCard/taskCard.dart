@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/HelperWidgets/text.dart';
 import 'package:account/API/TaskAPI/view_tasks_request.dart';
+import 'package:account/Screens/CurrentTask/currentTask.dart';
 import 'package:account/Widgets/Buttons/buttonsForCards.dart';
 import 'package:account/Widgets/TaskCard/timeLineWidget.dart';
 import 'package:account/Widgets/HelperWidgets/myContainer.dart';
@@ -18,6 +19,7 @@ class TaskCard extends StatelessWidget {
   final String id;
   final String deadline;
   final bool isLeader;
+  final bool blnIsActive;
 
   const TaskCard({
     Key? key,
@@ -28,6 +30,7 @@ class TaskCard extends StatelessWidget {
     required this.id,
     required this.deadline,
     required this.isLeader,
+      required this.blnIsActive
   }) : super(key: key);
 
   @override
@@ -48,15 +51,6 @@ class TaskCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  CardButtons(
-                      context,
-                      'تفعيل',
-                      !isLeader ? Colors.grey : AppColor.main,
-                      !isLeader ? Colors.grey : AppColor.main,
-                      0, () {
-                    isLeader == true ? b.activateTask(id) : null;
-                  }),
-                  SizedBox(width: screenWidth * 0.02),
                   CardButtons(context, 'معاينة', AppColor.main, AppColor.main,
                       screenWidth * 0.12, () {
                     Navigator.of(context).push(
@@ -93,6 +87,21 @@ class TaskCard extends StatelessWidget {
                       ),
                     );
                   }),
+                  SizedBox(width: screenWidth * 0.02),
+                  Visibility(
+                    visible: user.userType.contains("teamleader"),
+                    child: CardButtons(
+                        context,
+                        blnIsActive ? "مفعلة" : 'تفعيل',
+                        !blnIsActive ? Colors.grey : AppColor.main,
+                        !blnIsActive ? Colors.grey : AppColor.main,
+                        0, () {
+                      user.userType.contains("teamleader")
+                          ? b.activateTask(id)
+                          : null;
+                    }),
+                  ),
+                
                   const Spacer(),
                  
                   text(type, AppColor.textTitle),

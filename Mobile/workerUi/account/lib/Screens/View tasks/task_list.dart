@@ -49,22 +49,24 @@ class _XDTasksListState extends State<XDTasksList> {
                               id: data[index]['taskId'].toString(),
                               isLeader: data[index]['blnIsTaskLeader'],
                               deadline: data[index]['deadlineDate'],
+                              blnIsActive: data[index]['blnIsActive'],
                             ),
                           ],
                         );
                       },
                     );
                   } else {
-                    return const Center(
-                      child: Text(
-                        'لا يوجد مهمات ',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: AppColor.main,
-                          fontFamily: 'DroidArabicKufi',
-                        ),
-                      ),
-                    );
+                    return Container();
+                    // const Center(
+                    //   child: Text(
+                    //     'لا يوجد مهمات ',
+                    //     style: TextStyle(
+                    //       fontSize: 18,
+                    //       color: AppColor.main,
+                    //       fontFamily: 'DroidArabicKufi',
+                    //     ),
+                    //   ),
+                    // );
                   }
                 },
               ),
