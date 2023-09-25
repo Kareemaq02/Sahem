@@ -3,11 +3,11 @@ import 'package:account/main.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:account/Repository/urls.dart';
-import 'package:account/Widgets/Popup/confirmPage.dart';
 import 'package:account/Screens/Results/SuccessPage.dart';
-// ignore_for_file: avoid_print
+
 String leadertoken =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMiLCJ1c2VybmFtZSI6ImxlYWRlciIsImZpcnN0TmFtZSI6ImxlYWRlciIsImxhc3ROYW1lIjoibGVhZGVyIiwicGhvbmVOdW1iZXIiOiIwNzg4ODgxMjg4IiwidXNlclR5cGUiOiJ0ZWFtbGVhZGVyIiwibmJmIjoxNjk1NjM2OTM0LCJleHAiOjE2OTgyMjg5MzQsImlhdCI6MTY5NTYzNjkzNH0.hEWtiSKdYSYmpP7Pqkz0ym-cyN4Thw5lubeqWy1MDRo';
+
 class SubmitTask {
   final userToken = prefs!.getString('token');
   Future<void> submitTask(
