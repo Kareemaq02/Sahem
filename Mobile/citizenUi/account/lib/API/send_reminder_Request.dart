@@ -53,18 +53,24 @@ void _showDialog(String message, BuildContext context1, int statusCode) {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              statusCode == 200
-                  ? Icons.check_circle_outline
-                  : Icons.error_outline,
-              size: 40,
-              color: statusCode == 200 ? Colors.green : Colors.red,
+            Center(
+              child: Icon(
+                statusCode == 200
+                    ? Icons.check_circle_outline
+                    : Icons.error_outline,
+                size: 40,
+                color: statusCode == 200 ? Colors.green : Colors.red,
+              ),
             ),
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(10),
               child: Text(
                 message,
-                softWrap: true,
+                textDirection: TextDirection.rtl,
+                //softWrap: true,
+                style: const TextStyle(
+                  fontFamily: 'DroidArabicKufi',
+                ),
               ),
             ),
           ],

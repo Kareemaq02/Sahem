@@ -115,7 +115,14 @@ Future<dynamic> fileAsSimilar(var complaintId, context) async {
 
       return response.statusCode;
     } else {
-      print(' failed');
+      print(' ');
+        Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => const SuccessPage(
+                  text: 'تم إرسال البلاغ بنجاح',
+                )),
+      );
       return response.statusCode;
     }
   } catch (e) {

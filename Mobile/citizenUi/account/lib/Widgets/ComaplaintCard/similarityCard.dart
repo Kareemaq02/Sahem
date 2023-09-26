@@ -83,11 +83,12 @@ class _SimilarityCardState extends State<SimilarityCard> {
                 color: AppColor.line,
                 thickness: 1.5,
               ),
-              SizedBox(height: screenHeight * 0.0),
+              //SizedBox(height: screenHeight * 0.0),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(15.0),
+                    padding: const EdgeInsets.all(30.0),
                     child: BottonContainerPopup(
                       "لا",
                       AppColor.main,
@@ -107,8 +108,9 @@ class _SimilarityCardState extends State<SimilarityCard> {
                       },
                     ),
                   ),
+                  
                   Padding(
-                    padding: const EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.all(20.0),
                     child: BottonContainerPopup(
                       "نعم",
                       AppColor.main,
