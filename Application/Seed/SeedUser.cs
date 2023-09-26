@@ -1,7 +1,8 @@
 ﻿using Domain.DataModels.User;
 using Microsoft.AspNetCore.Identity;
+using Persistence;
 
-namespace Persistence
+namespace Application.Seed
 {
     public class SeedUser
     {
@@ -52,7 +53,6 @@ namespace Persistence
                 { "Fatima", "فاطمة" },
                 { "Omar", "عمر" },
                 { "Maryam", "مريم" },
-
             };
             Dictionary<string, string> lastNameMapping = new Dictionary<string, string>
             {

@@ -1,109 +1,227 @@
 ﻿using Domain.DataModels.Intersections;
 using Domain.DataModels.User;
 using Domain.Resources;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Persistence;
 
-namespace Persistence
+namespace Application.Seed
 {
     public class Seed
     {
         // Seed file Settings
-        private static readonly int _admins = 4;
-        private static readonly int _leaders = _admins * 2;
-        private static readonly int _workers = _leaders * 4;
-        private static readonly int _citizens = _workers * 2;
+        private readonly int _admins;
+        private readonly int _leaders;
+        private readonly int _workers;
+        private readonly int _citizens;
 
-        private static readonly int _complaints = 1322;
-        private static readonly int _tasks = 6;
+        private readonly int _complaints;
+        private readonly int _tasks;
 
-        public static async Task SeedData(
+        private readonly DataContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        private readonly IMediator _mediator;
+
+        public Seed(
             DataContext context,
-            UserManager<ApplicationUser> userManager
+            UserManager<ApplicationUser> userManager,
+            IMediator mediator
         )
         {
-            using var transaction = await context.Database.BeginTransactionAsync();
-            try
+            _context = context;
+            _userManager = userManager;
+            _mediator = mediator;
+
+            _admins = 4;
+            _leaders = _admins * 2;
+            _workers = _leaders * 4;
+            _citizens = _workers * 2;
+
+            _complaints = _citizens * 3;
+            _tasks = _leaders * 2;
+        }
+
+        public async Task SeedData()
+        {
+            await SeedDefaults.CreateComplaintLookUpTables(_context);
+            await SeedDefaults.CreateTaskLookUpTables(_context);
+
+            if (!_userManager.Users.Any())
             {
-                if (!userManager.Users.Any())
+                int typeAdmin = 0,
+                    typeWorker = 0,
+                    typeLeader = 0,
+                    typeUser = 0;
+
+                if (!_context.UserTypes.Any())
                 {
-                    int typeAdmin = 0,
-                        typeWorker = 0,
-                        typeLeader = 0,
-                        typeUser = 0;
-
-                    if (!context.UserTypes.Any())
-                    {
-                        var typeAdminEntity = await context.UserTypes.AddAsync(
-                            new UserType { strName = ConstantsDB.UserTypes.Admin }
-                        );
-
-                        var typeWorkerEntity = await context.UserTypes.AddAsync(
-                            new UserType { strName = ConstantsDB.UserTypes.Worker }
-                        );
-
-                        var typeLeaderEntity = await context.UserTypes.AddAsync(
-                            new UserType { strName = ConstantsDB.UserTypes.Leader }
-                        );
-
-                        var typeUserEntity = await context.UserTypes.AddAsync(
-                            new UserType { strName = ConstantsDB.UserTypes.User }
-                        );
-
-                        await context.SaveChangesAsync();
-
-                        // await saving to get valid IDs otherwise you'll get a zero which violates the Foreign key constraint
-                        typeAdmin = typeAdminEntity.Entity.intId;
-                        typeWorker = typeWorkerEntity.Entity.intId;
-                        typeLeader = typeLeaderEntity.Entity.intId;
-                        typeUser = typeUserEntity.Entity.intId;
-                    }
-
-                    await SeedDefaults.CreateDefaultUsers(
-                        context,
-                        userManager,
-                        typeAdmin,
-                        typeWorker,
-                        typeLeader,
-                        typeUser
+                    var typeAdminEntity = await _context.UserTypes.AddAsync(
+                        new UserType { strName = ConstantsDB.UserTypes.Admin }
                     );
 
-                    await SeedDefaults.CreateDepartmentAsync("تجريبي", "test", context);
-                    await SeedDefaults.CreateDepartmentAsync("1تجريبي", "test1", context);
-                    await SeedDefaults.CreateDepartmentAsync("2تجريبي", "test2", context);
-
-                    await context.DepartmentUsers.AddAsync(
-                        new DepartmentUsers { intDepartmentId = 1, intUserId = 1 }
+                    var typeWorkerEntity = await _context.UserTypes.AddAsync(
+                        new UserType { strName = ConstantsDB.UserTypes.Worker }
                     );
-                    await context.SaveChangesAsync();
 
-                    for (int i = 0; i < _citizens; i++)
-                    {
-                        await SeedUser.SeedUsers(context, userManager, typeUser, i);
-                    }
-                    for (int i = 0; i < _workers; i++)
-                    {
-                        await SeedUser.SeedUsers(context, userManager, typeWorker, i);
-                    }
-                    for (int i = 0; i < _leaders; i++)
-                    {
-                        await SeedUser.SeedUsers(context, userManager, typeLeader, i);
-                    }
-                    for (int i = 0; i < _admins; i++)
-                    {
-                        await SeedUser.SeedUsers(context, userManager, typeAdmin, i);
-                    }
+                    var typeLeaderEntity = await _context.UserTypes.AddAsync(
+                        new UserType { strName = ConstantsDB.UserTypes.Leader }
+                    );
+
+                    var typeUserEntity = await _context.UserTypes.AddAsync(
+                        new UserType { strName = ConstantsDB.UserTypes.User }
+                    );
+
+                    await _context.SaveChangesAsync();
+
+                    // await saving to get valid IDs otherwise you'll get a zero which violates the Foreign key constraint
+                    typeAdmin = typeAdminEntity.Entity.intId;
+                    typeWorker = typeWorkerEntity.Entity.intId;
+                    typeLeader = typeLeaderEntity.Entity.intId;
+                    typeUser = typeUserEntity.Entity.intId;
                 }
 
-                if (!context.Complaints.Any()) { }
+                await SeedDefaults.CreateDefaultUsers(
+                    _context,
+                    _userManager,
+                    typeAdmin,
+                    typeWorker,
+                    typeLeader,
+                    typeUser
+                );
 
-                if (!context.Tasks.Any()) { }
+                await SeedDefaults.CreateDepartmentAsync("تجريبي", "test", _context);
+                await SeedDefaults.CreateDepartmentAsync("1تجريبي", "test1", _context);
+                await SeedDefaults.CreateDepartmentAsync("2تجريبي", "test2", _context);
 
-                await transaction.CommitAsync();
+                await _context.DepartmentUsers.AddAsync(
+                    new DepartmentUsers { intDepartmentId = 1, intUserId = 1 }
+                );
+                await _context.SaveChangesAsync();
+
+                for (int i = 0; i < _citizens; i++)
+                {
+                    await SeedUser.SeedUsers(_context, _userManager, typeUser, i);
+                }
+                for (int i = 0; i < _workers; i++)
+                {
+                    await SeedUser.SeedUsers(_context, _userManager, typeWorker, i);
+                }
+                for (int i = 0; i < _leaders; i++)
+                {
+                    await SeedUser.SeedUsers(_context, _userManager, typeLeader, i);
+                }
+                for (int i = 0; i < _admins; i++)
+                {
+                    await SeedUser.SeedUsers(_context, _userManager, typeAdmin, i);
+                }
             }
-            catch (Exception)
+
+            if (!_context.NotificationTypes.Any())
             {
-                await transaction.RollbackAsync();
+                await SeedDefaults.CreateNotificationsTypeAsync(
+                    "تم تغيير حالة شكوتك",
+                    "Your complaint status has been changed",
+                    "تم رفض شكوتك رقم ",
+                    "Your complaint with the number",
+                    _context
+                );
+
+                await SeedDefaults.CreateNotificationsTypeAsync(
+                    "تم إضافتك إلى قسم ال",
+                    "You have been added to the",
+                    "يرحب بك",
+                    "welcomes you",
+                    _context
+                );
+
+                await SeedDefaults.CreateNotificationsTypeAsync(
+                    "تم تغيير حالة شكوتك",
+                    "Your complaint status has been changed",
+                    "تم تحديث شكواك إلى الحالة 'قيد العمل'. شكواك قيد المراجعة من قبل فريقنا، وسوف نقوم بإعلامك بأي تحديثات جديدة. شكرا لك على صبرك.",
+                    "Your complaint has been updated to 'In Progress' status. Your complaint is under review by our team, and we will notify you of any new updates. Thank you for your patience.",
+                    _context
+                );
+
+                await SeedDefaults.CreateNotificationsTypeAsync(
+                    "تم تغيير حالة شكوتك",
+                    "Your complaint status has been changed",
+                    "تم انجاز بلاغك. شكرا لك على صبرك.",
+                    "Your complaint has been completed. Thank you for your patience.",
+                    _context
+                );
+
+                await SeedDefaults.CreateNotificationsTypeAsync(
+                    "تم تغيير حالة شكوتك",
+                    "Your complaint status has been changed",
+                    "تم تحديث شكواك إلى الحالة 'قيد الانتظار'. شكواك قيد المراجعة من قبل فريقنا، وسوف نقوم بإعلامك بأي تحديثات جديدة. شكرا لك على صبرك.",
+                    "Your complaint has been updated to 'Pending' status. Your complaint is under review by our team, and we will notify you of any new updates. Thank you for your patience.",
+                    _context
+                );
+
+                await SeedDefaults.CreateNotificationsTypeAsync(
+                    "لقد تم تفعيل إحدى مهامك",
+                    "One of your tasks has been activated",
+                    "تم تفعيل المهمة ذات الرقم",
+                    "Task with the number",
+                    _context
+                );
+
+                await SeedDefaults.CreateNotificationsTypeAsync(
+                    "تم حذف إحدى مهامك",
+                    "One of your tasks has been deleted",
+                    "تم حذف المهمة ذات الرقم",
+                    "The task with the number #12 has been deleted",
+                    _context
+                );
+
+                await SeedDefaults.CreateNotificationsTypeAsync(
+                    "تم تغيير حالة شكوتك",
+                    "Your complaint status has been changed",
+                    "تم تحديث شكواك إلى الحالة 'مجدول'. شكواك قيد المراجعة من قبل فريقنا، وسوف نقوم بإعلامك بأي تحديثات جديدة. شكرا لك على صبرك.",
+                    "Your complaint has been updated to 'Scheduled' status. Your complaint is under review by our team, and we will notify you of any new updates. Thank you for your patience.",
+                    _context
+                );
+
+                await SeedDefaults.CreateNotificationsTypeAsync(
+                    "تم تعيين مهمة لفريقك",
+                    "A task has been assigned to your team",
+                    "يجب تنفيذ المهمة قبل التاريخ التالي:",
+                    "The task is to be done before the following date:",
+                    _context
+                );
+
+                await SeedDefaults.CreateNotificationsTypeAsync(
+                    "تم تغيير حالة شكوتك",
+                    "Your complaint status has been changed",
+                    "تم تحديث شكواك إلى الحالة 'انتظار التقييم'. شكواك قيد المراجعة من قبل فريقنا، وسوف نقوم بإعلامك بأي تحديثات جديدة. شكرا لك على صبرك.",
+                    "Your complaint has been updated to 'Waiting Evaluation' status. Your complaint is under review by our team, and we will notify you of any new updates. Thank you for your patience.",
+                    _context
+                );
+
+                await SeedDefaults.CreateNotificationsTypeAsync(
+                    "لقد تمت إضافتك إلى فريق",
+                    "You have been added to a team",
+                    "يرحب بك",
+                    "welcomes you",
+                    _context
+                );
             }
+
+            if (!_context.Teams.Any())
+            {
+                SeedTeams.Seed(_context, _mediator);
+            }
+
+            if (!_context.Complaints.Any())
+            {
+                for (int i = 0; i < _complaints; i++)
+                {
+                    await SeedComplaint.Seed(_mediator);
+                }
+            }
+
+            if (!_context.Tasks.Any()) { }
         }
     }
 }

@@ -1,12 +1,14 @@
 ﻿using Domain.DataModels.Complaints;
 using Domain.DataModels.Intersections;
 using Domain.DataModels.LookUps;
+using Domain.DataModels.Notifications;
 using Domain.DataModels.Tasks;
 using Domain.DataModels.User;
 using Domain.Resources;
 using Microsoft.AspNetCore.Identity;
+using Persistence;
 
-namespace Persistence
+namespace Application.Seed
 {
     public class SeedDefaults
     {
@@ -347,34 +349,6 @@ namespace Persistence
 
         public static async Task CreateTaskLookUpTables(DataContext context)
         {
-            if (!context.Teams.Any())
-            {
-                await context.Teams.AddAsync(
-                    new Team
-                    {
-                        intAdminId = 1,
-                        intDepartmentId = 1,
-                        intLeaderId = 3
-                    }
-                );
-                await context.SaveChangesAsync();
-
-                var workerArr = context.Users
-                    .Where(u => u.intUserTypeId == 2)
-                    .OrderBy(q => q.Id)
-                    .Skip(1)
-                    .Take(5)
-                    .ToArray();
-
-                for (int i = 0; i < workerArr.Length; i++)
-                {
-                    await context.TeamMembers.AddAsync(
-                        new TeamMembers { intWorkerId = workerArr[i].Id, intTeamId = 1, }
-                    );
-                }
-                await context.SaveChangesAsync();
-            }
-
             if (!context.TaskStatus.Any())
             {
                 var taskStatus = new List<WorkTaskStatus>
@@ -540,6 +514,32 @@ namespace Persistence
                 {
                     strNameAr = strAr,
                     strNameEn = strEn,
+                    blnIsDeleted = false,
+                    dtmDateCreated = DateTime.Now,
+                    dtmDateLastModified = DateTime.Now,
+                    intCreatedBy = 1,
+                    intLastModifiedBy = 1,
+                }
+            );
+            await context.SaveChangesAsync();
+            return 0;
+        }
+
+        public static async Task<uint> CreateNotificationsTypeAsync(
+            string strAr,
+            string strEn,
+            string strBodyAr,
+            string strBodyEn,
+            DataContext context
+        )
+        {
+            await context.NotificationTypes.AddAsync(
+                new NotificationType
+                {
+                    strHeaderAr = strAr,
+                    strHeaderEn = strEn,
+                    strBodyAr = strBodyAr,
+                    strBodyEn = strBodyEn,
                     blnIsDeleted = false,
                     dtmDateCreated = DateTime.Now,
                     dtmDateLastModified = DateTime.Now,

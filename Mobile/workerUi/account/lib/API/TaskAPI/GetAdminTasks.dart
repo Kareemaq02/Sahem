@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:account/API/TaskAPI/view_tasks_request.dart';
-import 'package:account/API/login_request.dart';
 import 'package:account/Repository/urls.dart';
 import 'package:account/Utils/LatLng.dart';
 import 'package:account/main.dart';
@@ -95,7 +94,7 @@ class AdminTasksRequest {
   Future<List<TaskEvaluationModel>> getAdminTasks(int pageNumber) async {
     final response = await http.get(
         Uri.parse(
-            "${AppUrl.baseURL}tasks?pageSize=10&pageNumber=$pageNumber&lstTaskStatusIds=3&strAdmin=${getUserData().userName}"),
+            "${AppUrl.baseURL}tasks?pageSize=10&pageNumber=$pageNumber&lstTaskStatusIds=3"),
         headers: {
           'Authorization': 'Bearer $userToken',
         });
