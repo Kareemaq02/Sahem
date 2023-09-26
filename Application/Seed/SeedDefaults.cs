@@ -1,10 +1,10 @@
 ﻿using Domain.DataModels.Complaints;
 using Domain.DataModels.Intersections;
+using Domain.DataModels.LookUps;
 using Domain.DataModels.Tasks;
 using Domain.DataModels.User;
 using Domain.Resources;
 using Microsoft.AspNetCore.Identity;
-using static Domain.Resources.ComplaintsConstant;
 
 namespace Persistence
 {
@@ -22,8 +22,10 @@ namespace Persistence
             var infoAdmin = await context.UserInfos.AddAsync(
                 new UserInfo
                 {
-                    strFirstName = "admin",
-                    strLastName = "admin",
+                    strFirstName = "Admin",
+                    strLastName = "Test",
+                    strFirstNameAr = "مشرف",
+                    strLastNameAr = "تجريبي",
                     strPhoneNumber = "0799999999",
                     strNationalId = "2000555333",
                     strNationalIdNumber = "RUX55333"
@@ -32,8 +34,10 @@ namespace Persistence
             var infoWorker = await context.UserInfos.AddAsync(
                 new UserInfo
                 {
-                    strFirstName = "worker",
-                    strLastName = "worker",
+                    strFirstName = "Worker",
+                    strLastName = "Test",
+                    strFirstNameAr = "عامل",
+                    strLastNameAr = "تجريبي",
                     strPhoneNumber = "0788888888",
                     strNationalId = "2000111222",
                     strNationalIdNumber = "RUX11222"
@@ -43,8 +47,10 @@ namespace Persistence
             var infoLeader = await context.UserInfos.AddAsync(
                 new UserInfo
                 {
-                    strFirstName = "leader",
-                    strLastName = "leader",
+                    strFirstName = "Leader",
+                    strLastName = "Test",
+                    strFirstNameAr = "رئيس",
+                    strLastNameAr = "تجريبي",
                     strPhoneNumber = "0788881288",
                     strNationalId = "2099111222",
                     strNationalIdNumber = "RHU11122"
@@ -53,8 +59,10 @@ namespace Persistence
             var infoUser = await context.UserInfos.AddAsync(
                 new UserInfo
                 {
-                    strFirstName = "user",
-                    strLastName = "user",
+                    strFirstName = "User",
+                    strLastName = "Test",
+                    strFirstNameAr = "مستخدم",
+                    strLastNameAr = "تجريبي",
                     strPhoneNumber = "0777777777",
                     strNationalId = "2000666888",
                     strNationalIdNumber = "RUX66888"
@@ -519,6 +527,28 @@ namespace Persistence
                 dtmDateLastModified = DateTime.Now,
                 blnIsDeleted = false,
             };
+        }
+
+        public static async Task<uint> CreateDepartmentAsync(
+            string strAr,
+            string strEn,
+            DataContext context
+        )
+        {
+            await context.Departments.AddAsync(
+                new Department
+                {
+                    strNameAr = strAr,
+                    strNameEn = strEn,
+                    blnIsDeleted = false,
+                    dtmDateCreated = DateTime.Now,
+                    dtmDateLastModified = DateTime.Now,
+                    intCreatedBy = 1,
+                    intLastModifiedBy = 1,
+                }
+            );
+            await context.SaveChangesAsync();
+            return 0;
         }
     }
 }

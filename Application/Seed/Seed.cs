@@ -1,4 +1,5 @@
-﻿using Domain.DataModels.User;
+﻿using Domain.DataModels.Intersections;
+using Domain.DataModels.User;
 using Domain.Resources;
 using Microsoft.AspNetCore.Identity;
 
@@ -7,12 +8,13 @@ namespace Persistence
     public class Seed
     {
         // Seed file Settings
-        private static readonly int _admins = 14;
-        private static readonly int _leaders = 32;
-        private static readonly int _workers = 87;
-        private static readonly int _citizens = 416;
+        private static readonly int _admins = 4;
+        private static readonly int _leaders = _admins * 2;
+        private static readonly int _workers = _leaders * 4;
+        private static readonly int _citizens = _workers * 2;
+
         private static readonly int _complaints = 1322;
-        private static readonly int _tasks = 781;
+        private static readonly int _tasks = 6;
 
         public static async Task SeedData(
             DataContext context,
@@ -65,6 +67,15 @@ namespace Persistence
                         typeUser
                     );
 
+                    await SeedDefaults.CreateDepartmentAsync("تجريبي", "test", context);
+                    await SeedDefaults.CreateDepartmentAsync("1تجريبي", "test1", context);
+                    await SeedDefaults.CreateDepartmentAsync("2تجريبي", "test2", context);
+
+                    await context.DepartmentUsers.AddAsync(
+                        new DepartmentUsers { intDepartmentId = 1, intUserId = 1 }
+                    );
+                    await context.SaveChangesAsync();
+
                     for (int i = 0; i < _citizens; i++)
                     {
                         await SeedUser.SeedUsers(context, userManager, typeUser, i);
@@ -83,27 +94,9 @@ namespace Persistence
                     }
                 }
 
-                if (!context.Complaints.Any())
-                {
-                    await SeedDefaults.CreateComplaintLookUpTables(context);
-                    await context.SaveChangesAsync();
+                if (!context.Complaints.Any()) { }
 
-                    for (int i = 0; i < _complaints; i++)
-                    {
-                        await SeedComplaint.SeedComplaints(context);
-                    }
-                }
-
-                if (!context.Tasks.Any())
-                {
-                    await SeedDefaults.CreateTaskLookUpTables(context);
-                    await context.SaveChangesAsync();
-
-                    for (int i = 0; i < _tasks; i++)
-                    {
-                        await SeedTask.SeedTasks(context);
-                    }
-                }
+                if (!context.Tasks.Any()) { }
 
                 await transaction.CommitAsync();
             }
