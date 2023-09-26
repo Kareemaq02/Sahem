@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/API/login_request.dart';
-import 'package:account/Widgets/HelperWidgets/text.dart';
-import 'package:account/Widgets/HelperWidgets/checkBox.dart';
+import 'package:account/Widgets/CheckBoxes/CheckBox.dart';
 import 'package:account/Widgets/Buttons/bottonContainer.dart';
 import 'package:account/Widgets/HelperWidgets/fieldContainer.dart';
 
@@ -17,7 +17,7 @@ class XDLogin extends StatefulWidget {
 }
 
 class _XDLoginState extends State<XDLogin> {
-
+bool remeberMe = false;
   void dispose() {
     usernameController.clear();
     passwordController.clear();
@@ -25,33 +25,17 @@ class _XDLoginState extends State<XDLogin> {
   }
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
+    ///final screenWidth = MediaQuery.of(context).size.width;
+    final screenSize = MediaQuery.of(context).size;
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: Center(
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 55,
-                      height: 100,
-                      decoration: const BoxDecoration(
-                          color: Colors.grey, shape: BoxShape.circle),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    const Text(
-                      'Logobrand',
-                      style: TextStyle(
-                          fontFamily: 'DroidArabicKufi',
-                          fontWeight: FontWeight.w100,
-                          fontSize: 20),
-                    ),
-                  ],
+                Image.asset(
+                  'assets/icons/logo_sahem.webp',
+                  scale: 3,
                 ),
                 const SizedBox(
                   height: 30,
@@ -69,35 +53,22 @@ class _XDLoginState extends State<XDLogin> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 58.0),
-                      child: text(
-                        "نسيت كلمة السر؟",
-                        AppColor.main,
-                      ),
-                    ),
                     SizedBox(
-                        width: MediaQuery.of(context).padding.left +
-                            screenWidth * 0.2),
-
-                    text(
-                      "تذكر تسجيل الدخول",
-                      AppColor.main,
+                      width: MediaQuery.of(context).padding.left +
+                          screenSize.width * 0.5,
                     ),
                     const SizedBox(
                       width: 2.5,
                     ),
-                    checkboxWidget("", context),
-                    //        Checkbox(
-                    //         focusColor: AppColor.main,
-                    //         side: BorderSide(width: 1,color: AppColor.main,),
-                    //         onChanged: (value) {
-                    //         setState(() {
-                    //         isChecked = value!;
-                    //         });
-                    //   },
-                    //   value: isChecked,
-                    // ),
+                    CheckBoxNew(
+                      text: "تذكر تسجيل الدخول",
+                      isChecked: remeberMe,
+                      onChanged: () {
+                        setState(() {
+                          remeberMe = !remeberMe;
+                        });
+                      },
+                    ),
                   ],
                 ),
                 const SizedBox(
@@ -113,6 +84,9 @@ class _XDLoginState extends State<XDLogin> {
                   true,
                   null,
                   () {
+                    if (remeberMe == true) {
+                      TextInput.finishAutofillContext();
+                    }
                     user.login(usernameController.text, passwordController.text,
                         context);
                   },
