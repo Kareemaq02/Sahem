@@ -29,7 +29,7 @@ String registrationNumber,String nationalIDNumber,BuildContext context) async {
       
        Response response = await  http.post(
         
-        Uri.parse('${AppUrl.baseURL}/account/register/'),
+        Uri.parse('${AppUrl.baseURL}/account/register'),
         headers: {
           'Content-Type': 'application/json',},
           
