@@ -60,8 +60,16 @@ class TeamAnalyticsModel {
 
 class TeamsAnalyticsRequest {
   final userToken = prefs!.getString('token');
-  Future<TeamAnalyticsModel> getTeamsAnalytics(int teamId) async {
-    var baseUrl = "${AppUrl.baseURL}teams/analytics/$teamId";
+  Future<TeamAnalyticsModel> getTeamsAnalytics(int teamId,
+      {DateTime? startDate, DateTime? endDate}) async {
+    String baseUrl;
+
+    baseUrl = "${AppUrl.baseURL}teams/analytics/$teamId";
+    if (startDate != null && endDate != null) {
+      baseUrl =
+          "${AppUrl.baseURL}teams/analytics/$teamId?dtmDatefrom=$startDate&dtmDateTo=$endDate";
+    }
+
     http.Response response = await http.get(
       Uri.parse(baseUrl),
       headers: {
@@ -94,7 +102,34 @@ class TeamsAnalyticsRequest {
 
       return analyticsObj;
     } else {
-      throw Exception('Failed to load complaint types');
+      throw Exception('Failed to load analytics.');
+    }
+  }
+
+  Future<TeamAnalyticsModel> getTeamsAnalyticsByLoggedInMemeber(
+      {DateTime? startDate, DateTime? endDate}) async {
+    String baseUrl;
+
+    baseUrl = "${AppUrl.baseURL}teams/loggedin/analytics";
+    if (startDate != null && endDate != null) {
+      baseUrl =
+          "${AppUrl.baseURL}teams/loggedin/analytics?dtmDatefrom=$startDate&dtmDateTo=$endDate";
+    }
+
+    http.Response response = await http.get(
+      Uri.parse(baseUrl),
+      headers: {
+        'Authorization': 'Bearer $userToken',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var jsonData = json.decode(response.body);
+      var analyticsObj = TeamAnalyticsModel.fromJson(jsonData);
+
+      return analyticsObj;
+    } else {
+      throw Exception('Failed to load analytics.');
     }
   }
 }

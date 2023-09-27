@@ -1,12 +1,12 @@
+import 'package:account/Screens/Home/MainMenuLeader.dart';
+import 'package:account/Screens/Home/MainMenuWorker.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
 import 'package:account/API/login_request.dart';
 import 'package:account/Screens/Home/MainMenuAdmin.dart';
-import 'package:account/Screens/Home/MainMenuWorker.dart';
 import 'package:account/Widgets/Buttons/StyledButton.dart';
 import 'package:account/Widgets/HelperWidgets/TitleText.dart';
 // ignore_for_file: file_names
-
 
 class SuccessPage extends StatelessWidget {
   final String text;
@@ -16,8 +16,8 @@ class SuccessPage extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
-    Widget page =
-        userIsAdmin() ? const MainMenuAdmin() : const MainMenuWorker();
+    Widget page = getCondtionalWidget(
+        const MainMenuAdmin(), const MainMenuLeader(), const MainMenuWorker());
     return Scaffold(
       body: Center(
         child: Column(

@@ -382,8 +382,10 @@ class _QuarterState extends State<Quarter> {
           setState(() {
             if (!selectedTypes.contains(map["intId"])) {
               selectedTypes.add(map["intId"]);
+              returnChartData();
             } else {
               selectedTypes.remove(map["intId"]);
+              returnChartData();
             }
           });
         },

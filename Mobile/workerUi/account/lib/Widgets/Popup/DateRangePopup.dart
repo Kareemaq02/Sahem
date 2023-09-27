@@ -10,7 +10,8 @@ void showDateRangeDialog(
     double height,
     Function(DateRangePickerSelectionChangedArgs) onSelectionChanged,
     PickerDateRange initialRange,
-    {List<DateTime>? blackedOutdates}) {
+    {List<DateTime>? blackedOutdates,
+    bool? allowPastDates}) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -42,7 +43,7 @@ void showDateRangeDialog(
               SizedBox(
                 height: height * 0.7,
                 child: SfDateRangePicker(
-                  enablePastDates: false,
+                  enablePastDates: allowPastDates ?? false,
                   todayHighlightColor: AppColor.main,
                   startRangeSelectionColor: AppColor.main,
                   endRangeSelectionColor: AppColor.main,

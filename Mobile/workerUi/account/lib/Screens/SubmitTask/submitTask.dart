@@ -50,7 +50,7 @@ class _ComaplintState extends State<FinishTask> {
   final FocusNode textFieldFocusNode = FocusNode();
   List<WorkerRating> ratings = [];
   List<TaskModel> taskDetailsList = [];
-  
+
   bool _isDisposed = false;
 
   @override
@@ -135,12 +135,11 @@ class _ComaplintState extends State<FinishTask> {
       setState(() {
         selectedMediaFiles.add(
           MediaFile(
-            File(pickedFile.path),
-            null, // Set initial value of decLat to null
-            null, // Set initial value of decLng to null
-            false,
-              intComplaintId
-          ),
+              File(pickedFile.path),
+              null, // Set initial value of decLat to null
+              null, // Set initial value of decLng to null
+              false,
+              intComplaintId),
         );
       });
 
@@ -155,6 +154,7 @@ class _ComaplintState extends State<FinishTask> {
       // Navigator.pop(context);
     }
   }
+
   String address = "";
   Future<String?> fetchAddress() async {
     if (currentPosition != null) {
@@ -186,7 +186,6 @@ class _ComaplintState extends State<FinishTask> {
       return '$e';
     }
   }
-
 
 //-----Page view widgets------------------------------------
   Widget stackButton(IconData icon, Function() onPressed) {
@@ -241,7 +240,7 @@ class _ComaplintState extends State<FinishTask> {
   //     );
   //   }
   // }
-  
+
   //--------------Rating Widget bottomSheet
   Widget ratingSheet(BuildContext context, TeamMember teamMember, index) {
     return Container(
@@ -283,9 +282,6 @@ class _ComaplintState extends State<FinishTask> {
     );
   }
 
-
-
-
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
@@ -305,7 +301,6 @@ class _ComaplintState extends State<FinishTask> {
             scrollDirection: Axis.vertical,
             child: Column(children: [
               //--------pageView-----------------------------------
-           
 
               Container(
                 height: screenHeight * 0.35,
@@ -327,8 +322,7 @@ class _ComaplintState extends State<FinishTask> {
                             data != null ? data.first.lstMedia.length : 0,
                         itemBuilder: (context, index) {
                           if (selectedMediaFiles.isNotEmpty &&
-                              selectedMediaFiles.length > index &&
-                              selectedMediaFiles[index] != null) {
+                              selectedMediaFiles.length > index) {
                             // Display the taken photo using Image widget
                             return SizedBox(
                               width: double.infinity,
@@ -532,6 +526,4 @@ class _ComaplintState extends State<FinishTask> {
       ),
     );
   }
-  
 }
-
