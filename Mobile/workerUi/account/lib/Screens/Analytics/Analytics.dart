@@ -1,19 +1,19 @@
-import 'package:account/API/ComplaintsAPI/Get_Complaints_Types.dart';
-import 'package:account/API/login_request.dart';
-import 'package:account/Widgets/Bars/NavBarAdmin.dart';
-import 'package:account/Widgets/CheckBoxes/StyledCheckBox.dart';
-import 'package:account/Widgets/Popup/DateRangePopup.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
+import 'package:account/API/login_request.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
+import 'package:account/Widgets/Bars/NavBarAdmin.dart';
 import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/Widgets/Charts/RatingChart.dart';
 import 'package:account/Widgets/Charts/PercentChart.dart';
+import 'package:account/Widgets/Popup/DateRangePopup.dart';
 import 'package:account/Widgets/Charts/AverageTimeChart.dart';
 import 'package:account/Widgets/Buttons/IconToggleButton.dart';
 import 'package:account/Widgets/Buttons/StyledFilterChip.dart';
-import 'package:account/Widgets/Charts/ComplaintTaskChart.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:account/Widgets/CheckBoxes/StyledCheckBox.dart';
+import 'package:account/Widgets/Charts/ComplaintTaskChart.dart';
+import 'package:account/API/ComplaintsAPI/Get_Complaints_Types.dart';
 
 class Analytics extends StatefulWidget {
   const Analytics({super.key});
@@ -136,7 +136,7 @@ class _AnalyticsState extends State<Analytics> {
       resizeToAvoidBottomInset: false,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: userIsAdmin() ? NavBarAdmin(0) : BottomNavBar1(0),
-      appBar: myAppBar(context, "الإحصائيات ", false, screenWidth * 0.55),
+      appBar: myAppBar(context, "الإحصائيات ", false, screenWidth * 0.6),
       body: Padding(
         padding: EdgeInsets.only(top: halfMarginY, bottom: halfMarginY),
         child: Column(
@@ -182,7 +182,7 @@ class _AnalyticsState extends State<Analytics> {
                         left: fullMarginX),
                     child: const Align(
                       alignment: Alignment.topRight,
-                      child: Text("أنواع البلاغات",
+                      child: Text("أنواع المهام",
                           textAlign: TextAlign.right,
                           textDirection: TextDirection.rtl,
                           style: TextStyle(
@@ -274,14 +274,14 @@ class _AnalyticsState extends State<Analytics> {
                     IconToggleButton(
                         height: 0.15 * screenHeight,
                         width: 0.31 * screenWidth,
-                        text: "حالة البلاغات",
+                        text: "حالة المهام",
                         icon: Icons.percent_rounded,
                         isChecked: chart == 2,
                         onPressed: () => {selectChart(2)}),
                     IconToggleButton(
                         height: 0.15 * screenHeight,
                         width: 0.31 * screenWidth,
-                        text: "مدة حل البلاغ",
+                        text: "مدةأنجاز المهام",
                         icon: Icons.av_timer_rounded,
                         isChecked: chart == 3,
                         onPressed: () => {selectChart(3)}),

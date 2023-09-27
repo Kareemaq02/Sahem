@@ -124,7 +124,7 @@ class _MainMenuWorkerState extends State<MainMenuWorker> {
                   left: fullMarginX),
               child: const Align(
                 alignment: Alignment.centerRight,
-                child: Text("ملخص الأداء",
+                child: Text("ملخص أداء الفريق",
                     textAlign: TextAlign.right,
                     textDirection: TextDirection.rtl,
                     style: TextStyle(
@@ -142,13 +142,15 @@ class _MainMenuWorkerState extends State<MainMenuWorker> {
                 InfoDisplayBox(
                     height: 0.12 * screenHeight,
                     width: 0.45 * screenWidth,
-                    title: "عدد البلاغات الناجحه",
-                    content: "2,452"),
+                    title: "عدد المهام المجدولة",
+                    content: "120"),
                 InfoDisplayBox(
                     height: 0.12 * screenHeight,
                     width: 0.45 * screenWidth,
-                    title: "متوسط مدة حل البلاغ",
-                    content: "3 أيام"),
+                  title: "تقييم الفريق",
+                  content: "3.5",
+                  displayStar: true,
+                ),
               ],
             ),
             // Chart
