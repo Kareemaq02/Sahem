@@ -59,9 +59,9 @@ class _TeamAnalyticsState extends State<TeamAnalytics> {
       waitingEvaluation =
           TeamData(selectedTeam.intTasksWaitingEvaluationCount, "قيد التقييم");
       tasksCount = selectedTeam.intTasksCount;
-      teamRating = selectedTeam.decTeamRatingAvg.toString();
+      teamRating = selectedTeam.decTeamRatingAvg.toStringAsFixed(1);
       successRate =
-          "${(selectedTeam.intTasksCompletedCount / selectedTeam.intTasksCount).toDouble().toStringAsFixed(1)}%";
+          "${((selectedTeam.intTasksCompletedCount / selectedTeam.intTasksCount) * 100).toDouble().toStringAsFixed(1)}%";
     });
   }
 

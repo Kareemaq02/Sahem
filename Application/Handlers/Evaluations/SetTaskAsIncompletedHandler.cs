@@ -204,25 +204,29 @@ namespace Application.Handlers.Evaluations
                         .Where(
                             c =>
                                 c.intComplaintId == complaintId
-                                && c.intStatusId
-                                    != (int)ComplaintsConstant.complaintStatus.Scheduled
+                                && (
+                                    c.intStatusId
+                                        == (int)ComplaintsConstant.complaintStatus.waitingEvaluation
+                                    || c.intStatusId
+                                        == (int)ComplaintsConstant.complaintStatus.inProgress
+                                )
                         )
-                        .OrderBy(q => q.dtmTransDate)
-                        .FirstOrDefaultAsync(cancellationToken);
+                        .OrderByDescending(q => q.dtmTransDate)
+                        .ToListAsync(cancellationToken);
 
                     if (complaintTransaction != null)
-                        _context.ComplaintsStatuses.Remove(complaintTransaction);
+                        _context.ComplaintsStatuses.RemoveRange(complaintTransaction);
 
                     await _context.SaveChangesAsync(cancellationToken);
 
-                    await _changeTransactionHandler.Handle(
-                        new AddComplaintStatusChangeTransactionCommand(
-                            complaintId,
-                            (int)ComplaintsConstant.complaintStatus.Scheduled
-                        ),
-                        cancellationToken
-                    );
-                    await _context.SaveChangesAsync(cancellationToken);
+                    //await _changeTransactionHandler.Handle(
+                    //    new AddComplaintStatusChangeTransactionCommand(
+                    //        complaintId,
+                    //        (int)ComplaintsConstant.complaintStatus.Scheduled
+                    //    ),
+                    //    cancellationToken
+                    //);
+                    //await _context.SaveChangesAsync(cancellationToken);
 
                     try
                     {

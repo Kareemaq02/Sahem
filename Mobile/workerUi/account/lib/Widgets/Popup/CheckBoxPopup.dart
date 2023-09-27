@@ -7,7 +7,6 @@ import 'package:account/Widgets/Interactive/FormTextField.dart';
 
 // ignore_for_file: file_names
 
-
 class CheckBoxPopup extends StatefulWidget {
   final double height;
   final String title;
@@ -31,7 +30,9 @@ class _CheckBoxPopupState extends State<CheckBoxPopup> {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
+
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30),
@@ -79,8 +80,65 @@ class _CheckBoxPopupState extends State<CheckBoxPopup> {
               child: widget.checkBoxes.isNotEmpty
                   ? Padding(
                       padding: EdgeInsets.only(right: screenWidth * 0.27),
-                      child: Column(
-                        children: widget.checkBoxes,
+                      child:
+                          NotificationListener<OverscrollIndicatorNotification>(
+                        onNotification:
+                            (OverscrollIndicatorNotification overscroll) {
+                          overscroll.disallowIndicator();
+
+                          return true;
+                        },
+                        child: Stack(
+                          children: [
+                            SingleChildScrollView(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: screenHeight * 0.01),
+                                child: Column(
+                                  children: widget.checkBoxes,
+                                ),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: IgnorePointer(
+                                child: Container(
+                                  height: screenHeight * 0.05,
+                                  width: screenWidth * 0.7,
+                                  decoration: const BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                        Colors.white,
+                                        Color.fromARGB(0, 255, 255, 255)
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: IgnorePointer(
+                                child: Container(
+                                  height: screenHeight * 0.05,
+                                  width: screenWidth * 0.7,
+                                  decoration: const BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.bottomCenter,
+                                      end: Alignment.topCenter,
+                                      colors: [
+                                        Colors.white,
+                                        Color.fromARGB(0, 255, 255, 255)
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     )
                   : const TitleText(

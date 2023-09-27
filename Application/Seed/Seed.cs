@@ -284,6 +284,84 @@ namespace Application.Seed
                         await SeedTask.EvaluateToComplete(task, mediator);
                     }
                 }
+
+                tasks = await _context.Tasks
+                    .Where(t => t.intStatusId == (int)TasksConstant.taskStatus.inactive)
+                    .ToListAsync();
+
+                for (int i = 0; i < tasks.Count / 2; i++)
+                {
+                    using (var scope = _serviceProvider.CreateScope())
+                    {
+                        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+                        WorkTask task = tasks[i];
+                        await SeedTask.Activate(task, mediator);
+                    }
+
+                    using (var scope = _serviceProvider.CreateScope())
+                    {
+                        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+                        WorkTask task = tasks[i];
+                        await SeedTask.Submit(context, mediator, task);
+                    }
+
+                    var dateEnd = await _context.Tasks
+                        .Where(
+                            t => t.intStatusId == (int)TasksConstant.taskStatus.waitingEvaluation
+                        )
+                        .OrderByDescending(t => t.dtmDateDeadline)
+                        .Select(t => t.dtmDateDeadline)
+                        .FirstOrDefaultAsync();
+                    using (var scope = _serviceProvider.CreateScope())
+                    {
+                        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+                        WorkTask task = tasks[i];
+                        await SeedTask.EvaluateToIncomplete(
+                            context,
+                            mediator,
+                            task,
+                            dateEnd,
+                            i + 1
+                        );
+                    }
+                }
+
+                tasks = await _context.Tasks
+                    .Where(t => t.intStatusId == (int)TasksConstant.taskStatus.inactive)
+                    .ToListAsync();
+
+                for (int i = 0; i < tasks.Count / 2; i++)
+                {
+                    using (var scope = _serviceProvider.CreateScope())
+                    {
+                        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+                        WorkTask task = tasks[i];
+                        await SeedTask.Activate(task, mediator);
+                    }
+
+                    using (var scope = _serviceProvider.CreateScope())
+                    {
+                        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+                        WorkTask task = tasks[i];
+                        await SeedTask.Submit(context, mediator, task);
+                    }
+                }
+
+                tasks = await _context.Tasks
+                    .Where(t => t.intStatusId == (int)TasksConstant.taskStatus.inactive)
+                    .ToListAsync();
+                using (var scope = _serviceProvider.CreateScope())
+                {
+                    var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                    var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+                    WorkTask task = tasks[0];
+                    await SeedTask.Activate(task, mediator);
+                }
             }
         }
     }

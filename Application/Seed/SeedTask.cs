@@ -1,21 +1,15 @@
-﻿using Application;
-using Application.Commands;
+﻿using Application.Commands;
 using Application.Core;
 using Application.Queries.Complaints;
 using Application.Seed.Images;
 using Domain.ClientDTOs.Complaint;
 using Domain.ClientDTOs.Evaluation;
 using Domain.ClientDTOs.Task;
+using Domain.DataModels.Tasks;
 using Domain.Helpers;
-using Domain.Resources;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Utilities.Zlib;
 using Persistence;
-using System.Data.Entity;
-using System.Threading.Tasks;
-using System;
-using Domain.DataModels.Tasks;
 
 namespace Application.Seed
 {
@@ -182,10 +176,39 @@ namespace Application.Seed
             var random = new Random();
             EvaluationDTO completedDTO = new EvaluationDTO
             {
-                decRating = (decimal)(random.Next(4) * 0.5 + 2.0),
-                strUserName = "admin"
+                strUserName = "admin",
+                decRating = (decimal)(random.Next(4) * 0.5 + 2.0)
             };
             await _mediator.Send(new CompleteTaskCommand(completedDTO, task.intId));
+        }
+
+        public static async Task EvaluateToIncomplete(
+            DataContext _context,
+            IMediator _mediator,
+            WorkTask task,
+            DateTime startDate,
+            int daysOffset
+        )
+        {
+            // Evaluation
+            var random = new Random();
+            var complaints = await _context.TasksComplaints
+                .Where(tc => tc.intTaskId == task.intId)
+                .Select(tc => tc.intComplaintId)
+                .ToListAsync();
+
+            IncompleteDTO incompleteDTO = new IncompleteDTO
+            {
+                strUserName = "admin",
+                decRating = 0.5m,
+                intNewTaskTypeId = task.intTypeId,
+                decCost = 0.0m,
+                dtmNewScheduled = startDate + TimeSpan.FromDays(daysOffset),
+                dtmNewDeadline = startDate + TimeSpan.FromDays(1 + daysOffset),
+                lstCompletedIds = new List<int>(),
+                lstFailedIds = complaints,
+            };
+            await _mediator.Send(new IncompleteTaskCommand(incompleteDTO, task.intId));
         }
     }
 }

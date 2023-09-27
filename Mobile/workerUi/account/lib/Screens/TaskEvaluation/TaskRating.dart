@@ -142,7 +142,8 @@ class _TaskRatingState extends State<TaskRating> {
                                     taskDetails.lstMediaBefore.length;
                                 var item = before
                                     ? taskDetails.lstMediaBefore[position]
-                                    : taskDetails.lstMediaAfter[position];
+                                    : taskDetails.lstMediaAfter[position -
+                                        taskDetails.lstMediaBefore.length];
                                 return Padding(
                                   padding: EdgeInsets.symmetric(
                                       vertical: screenHeight * 0.01,
@@ -223,9 +224,7 @@ class _TaskRatingState extends State<TaskRating> {
                                                                         0.005),
                                                                 child:
                                                                     TitleText(
-                                                                  text: taskDetails
-                                                                      .lstMediaBefore[
-                                                                          position]
+                                                                  text: item
                                                                       .intComplaintId
                                                                       .toString(),
                                                                 ),

@@ -77,7 +77,7 @@ class TeamMemberAnalyticsDisplay extends StatelessWidget {
                             color: AppColor.line,
                           ),
                         ),
-                        TitleText(text: rating.toString())
+                        TitleText(text: rating.toStringAsFixed(1))
                       ],
                     )
                   ],

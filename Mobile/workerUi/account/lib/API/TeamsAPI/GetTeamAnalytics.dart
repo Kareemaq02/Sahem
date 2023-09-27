@@ -82,6 +82,8 @@ class TeamsAnalyticsRequest {
       var analyticsObj = TeamAnalyticsModel.fromJson(jsonData);
       // Add leader from 2nd request
       var jsonDataLeader = json.decode(responseLeader.body);
+      analyticsObj.lstMembersAvgRating.removeWhere(
+          (element) => element.intId == jsonDataLeader["intTeamLeaderId"]);
       analyticsObj.lstMembersAvgRating.add(
         TeamMembersRating(
             jsonDataLeader["intTeamLeaderId"],
