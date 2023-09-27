@@ -1,3 +1,5 @@
+import 'package:account/API/login_request.dart';
+import 'package:account/Utils/NaviTranstion.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/HelperWidgets/text.dart';
@@ -10,7 +12,6 @@ import 'package:account/API/TaskAPI/activate_task_request.dart';
 import 'package:account/Screens/View%20tasks/task_details.dart';
 // ignore_for_file: file_names
 
-
 class TaskCard extends StatelessWidget {
   final String comment;
   final String type;
@@ -21,17 +22,17 @@ class TaskCard extends StatelessWidget {
   final bool isLeader;
   final bool blnIsActive;
 
-  const TaskCard({
-    Key? key,
-    required this.comment,
-    required this.status,
-    required this.date,
-    required this.type,
-    required this.id,
-    required this.deadline,
-    required this.isLeader,
-      required this.blnIsActive
-  }) : super(key: key);
+  const TaskCard(
+      {Key? key,
+      required this.comment,
+      required this.status,
+      required this.date,
+      required this.type,
+      required this.id,
+      required this.deadline,
+      required this.isLeader,
+      required this.blnIsActive})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -89,21 +90,24 @@ class TaskCard extends StatelessWidget {
                   }),
                   SizedBox(width: screenWidth * 0.02),
                   Visibility(
-                    visible: user.userType.contains("teamleader"),
+                    visible: getUserData().userType.contains("teamleader"),
                     child: CardButtons(
                         context,
                         blnIsActive ? "مفعلة" : 'تفعيل',
                         blnIsActive ? Colors.grey : AppColor.main,
                         blnIsActive ? Colors.grey : AppColor.main,
-                        0, () {
-                      user.userType.contains("teamleader")
-                          ? b.activateTask(id)
-                          : null;
+                        0, () async {
+                      var statusCode =
+                          getUserData().userType.contains("teamleader")
+                              ? b.activateTask(id)
+                              : null;
+
+                      if (await statusCode == 200) {
+                        naviTransition(context, const CurrentTask());
+                      }
                     }),
                   ),
-                
                   const Spacer(),
-                 
                   text(type, AppColor.textTitle),
                 ],
               ),

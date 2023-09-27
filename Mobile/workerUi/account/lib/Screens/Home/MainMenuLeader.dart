@@ -99,7 +99,7 @@ class _MainMenuLeaderState extends State<MainMenuLeader> {
                           height: buttonHeight,
                           width: buttonWidth,
                           icon: Icons.groups_outlined,
-                          text: "الشعبة",
+                          text: "الشُعبة",
                           onPressed: () => {
                             naviTransition(context, const TeamAnalyticsLeader())
                           },
@@ -151,12 +151,12 @@ class _MainMenuLeaderState extends State<MainMenuLeader> {
                 InfoDisplayBox(
                     height: 0.12 * screenHeight,
                     width: 0.45 * screenWidth,
-                    title: "عدد البلاغات الناجحه",
+                    title: "عدد البلاغات المنجزه",
                     content: complaintCount.toString()),
                 InfoDisplayBox(
                     height: 0.12 * screenHeight,
                     width: 0.45 * screenWidth,
-                    title: "متوسط مدة حل البلاغ",
+                    title: "متوسط مدة انجاز البلاغ",
                     content: avgResolve),
               ],
             ),

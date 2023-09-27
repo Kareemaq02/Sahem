@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:account/API/TaskAPI/get_activated_task.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -134,12 +135,7 @@ class _ComaplintState extends State<FinishTask> {
     if (pickedFile != null) {
       setState(() {
         selectedMediaFiles.add(
-          MediaFile(
-              File(pickedFile.path),
-              null, // Set initial value of decLat to null
-              null, // Set initial value of decLng to null
-              false,
-              intComplaintId),
+          MediaFile(File(pickedFile.path), null, false, intComplaintId),
         );
       });
 
@@ -147,8 +143,9 @@ class _ComaplintState extends State<FinishTask> {
       if (_isDisposed) return;
       setState(() {
         final mediaFile = selectedMediaFiles.last;
-        mediaFile.decLat = currentPosition!.latitude;
-        mediaFile.decLng = currentPosition!.longitude;
+        mediaFile.decLatLng = LatLng(
+            decLat: currentPosition!.latitude,
+            decLng: currentPosition!.longitude);
       });
     } else {
       // Navigator.pop(context);
@@ -296,7 +293,7 @@ class _ComaplintState extends State<FinishTask> {
         backgroundColor: AppColor.background,
         resizeToAvoidBottomInset: false,
         bottomNavigationBar: BottomNavBar1(3),
-        appBar: myAppBar(context, "تسليم العمل ", false, screenWidth * 0.5),
+        appBar: myAppBar(context, "تسليم المهمة ", false, screenWidth * 0.5),
         body: SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: Column(children: [
@@ -336,11 +333,12 @@ class _ComaplintState extends State<FinishTask> {
                             // Display the camera capture UI
                             return InkWell(
                               onTap: () {
-                               
                                 getImages(
-                                    context,
-                                    data[index].lstMediaBefore[index].intComplaintId,
-                                       );
+                                  context,
+                                  data[index]
+                                      .lstMediaBefore[index]
+                                      .intComplaintId,
+                                );
                                 setState(() {
                                   // Toggle the visibility of media for the tapped item
                                   showMediaList[index] = !showMediaList[index];
@@ -354,7 +352,7 @@ class _ComaplintState extends State<FinishTask> {
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(
+                                    const Icon(
                                       Icons.camera_alt,
                                       size: 35,
                                     ),
@@ -508,13 +506,14 @@ class _ComaplintState extends State<FinishTask> {
                   context: context,
                   builder: (BuildContext context) => buildConfirmDialog(
                       context,
-                      "تأكيد العمل",
-                      "موقع العمل",
+                      "تأكيد المهمة",
+                      "موقع المهمة",
                       "ش.,صفي التل.عمان",
                       widget.TaskID,
                       commentController.text,
                       selectedMediaFiles,
-                      ratings),
+                      ratings,
+                      height: screenHeight * 0.13),
                 );
               }),
 

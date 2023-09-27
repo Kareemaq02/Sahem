@@ -2,6 +2,7 @@ import 'package:account/API/TaskAPI/GetAdminTasks.dart';
 import 'package:account/Screens/TaskEvaluation/TaskRating.dart';
 import 'package:account/Utils/DateFormatter.dart';
 import 'package:account/Utils/NaviTranstion.dart';
+import 'package:account/Widgets/Bars/NavBarAdmin.dart';
 import 'package:account/Widgets/Buttons/StyledButton.dart';
 import 'package:account/Widgets/HelperWidgets/Base64ImageDisplay.dart';
 import 'package:account/Widgets/HelperWidgets/Loader.dart';
@@ -11,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
 import 'package:page_indicator/page_indicator.dart';
-import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/Widgets/HelperWidgets/myContainer.dart';
 
 class TaskEvaluation extends StatefulWidget {
@@ -82,7 +82,7 @@ class _TaskEvaluationState extends State<TaskEvaluation> {
     return Scaffold(
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
-      bottomNavigationBar: BottomNavBar1(0),
+      bottomNavigationBar: NavBarAdmin(2),
       appBar: myAppBar(context, 'تقييم المهام', false, screenHeight * 0.28),
       body: FutureBuilder<List<TaskEvaluationModel>>(
         future: tasksRequest,
@@ -238,19 +238,19 @@ class _TaskEvaluationState extends State<TaskEvaluation> {
                                 child: Column(
                                   children: [
                                     RowInfo(
-                                      "رقم المهمه",
+                                      "رقم المهمة",
                                       task.taskId.toString(),
                                     ),
                                     RowInfo(
-                                      "نوع المهمه",
+                                      "نوع المهمة",
                                       task.strTypeNameAr.toString(),
                                     ),
                                     RowInfo(
-                                      "موقع المهمه",
+                                      "موقع المهمة",
                                       "${task.latLng.lng} ,${task.latLng.lat}",
                                     ),
                                     RowInfo(
-                                      "تاريخ الاضافة ",
+                                      "تاريخ الاضافة",
                                       formatDate(
                                         DateTime.parse(task.scheduledDate),
                                       ),

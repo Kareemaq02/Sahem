@@ -294,7 +294,7 @@ class _AnalyticsState extends State<Analytics> {
                     IconToggleButton(
                         height: 0.15 * screenHeight,
                         width: 0.31 * screenWidth,
-                        text: "مدةأنجاز المهام",
+                        text: "مدة أنجاز المهام",
                         icon: Icons.av_timer_rounded,
                         isChecked: chart == 3,
                         onPressed: () => {selectChart(3)}),

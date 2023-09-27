@@ -14,7 +14,7 @@ class Base64ImageDisplay extends StatelessWidget {
     return Image.memory(
       bytes,
       scale: 0.1,
-      fit: BoxFit.cover,
+      fit: BoxFit.fill,
     );
   }
 }

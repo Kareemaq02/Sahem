@@ -22,7 +22,7 @@ class TaskModel {
   String strAdminFirstName;
   String strAdminLastName;
   List<WorkersList> workersList;
-  List<dynamic> lstMediaAfter; 
+  List<dynamic> lstMediaAfter;
   List<LstMediaBefore> lstMediaBefore;
 
   TaskModel({
@@ -98,7 +98,7 @@ class LstMediaBefore {
         decLatLng: LatLng(
           lat: json['decLatLng']['decLat'],
           lng: json['decLatLng']['decLng'],
-      ),
+        ),
         region: Region(
           strRegionEn: json['region']['strRegionEn'],
           strRegionAr: json['region']['strRegionAr'],
@@ -138,8 +138,6 @@ class WorkersList {
   }
 }
 
-
-
 class Region {
   String strRegionEn;
   String strRegionAr;
@@ -150,7 +148,6 @@ class Region {
   });
 }
 
-
 class WorkerTask {
   final userToken = prefs!.getString('token');
   Future<List<dynamic>> fetchUserTasks() async {
@@ -160,8 +157,10 @@ class WorkerTask {
           'Authorization': 'Bearer $userToken',
         });
 
+    var responseData = jsonDecode(response.body.toString());
+
     if (response.statusCode == 200) {
-      return jsonDecode(response.body.toString());
+      return responseData;
     } else {
       throw Exception('Failed to fetch Tasks');
     }

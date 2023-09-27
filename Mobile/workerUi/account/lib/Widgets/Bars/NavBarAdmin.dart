@@ -101,7 +101,7 @@ class _NavBarAdminState extends State<NavBarAdmin> {
                         color: Colors.grey,
                         size: 23,
                       ),
-                text: "إنشاء المهام"),
+                text: "إضافة المهام"),
             const SizedBox(
               width: 15,
             ),

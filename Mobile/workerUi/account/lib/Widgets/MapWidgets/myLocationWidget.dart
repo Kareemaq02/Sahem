@@ -1,8 +1,5 @@
-// ignore_for_file: file_names
-
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
-import 'package:account/Widgets/Filter/filterType.dart';
 
 Widget myLocationWidegt(
   Function() onPressed,
@@ -33,12 +30,13 @@ Widget filterIcon(context) {
       child: FloatingActionButton(
         backgroundColor: AppColor.background,
         heroTag: 'recenterr',
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) => const FilterPopup(),
-          );
-        },
+        onPressed: () {},
+        // onPressed: () {
+        //   showDialog(
+        //     context: context,
+        //     builder: (BuildContext context) => const FilterPopup(),
+        //   );
+        // },
         child: const Icon(
           Icons.filter_alt_sharp,
           color: AppColor.line,

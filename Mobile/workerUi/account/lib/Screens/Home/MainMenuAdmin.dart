@@ -99,7 +99,7 @@ class _MainMenuAdminState extends State<MainMenuAdmin> {
                           height: buttonHeight,
                           width: buttonWidth,
                           icon: Icons.groups_outlined,
-                          text: "الشعب",
+                          text: "الشُعب",
                           onPressed: () =>
                               {naviTransition(context, const TeamAnalytics())},
                         ),
@@ -115,7 +115,7 @@ class _MainMenuAdminState extends State<MainMenuAdmin> {
                           height: buttonHeight,
                           width: buttonWidth,
                           icon: Icons.spatial_tracking_sharp,
-                          text: "اضافة مهام",
+                          text: "إضافة مهام",
                           onPressed: () =>
                               {naviTransition(context, const CreateTask())},
                         ),
@@ -152,12 +152,12 @@ class _MainMenuAdminState extends State<MainMenuAdmin> {
                 InfoDisplayBox(
                     height: 0.12 * screenHeight,
                     width: 0.45 * screenWidth,
-                    title: "عدد البلاغات الناجحه",
+                    title: "عدد البلاغات المنجزه",
                     content: complaintCount.toString()),
                 InfoDisplayBox(
                     height: 0.12 * screenHeight,
                     width: 0.45 * screenWidth,
-                    title: "متوسط مدة حل البلاغ",
+                    title: "متوسط مدة انجاز البلاغ",
                     content: avgResolve),
               ],
             ),

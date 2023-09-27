@@ -62,8 +62,10 @@ class _TeamSelectionBoxState extends State<TeamSelectionBox> {
   }
 
   void getTeamMembers() async {
+    print(selectedTeamId);
     teamMembersRequest = GetTeamMembersRequest().getTeamMembers(selectedTeamId);
     teamMembersList = await teamMembersRequest;
+    print(teamMembersList.map((e) => e.intId));
   }
 
   void getTeams() async {

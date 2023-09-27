@@ -1,4 +1,5 @@
 import 'package:account/API/ComplaintsAPI/View_Complaints_Request.dart';
+import 'package:account/Widgets/Bars/NavBarAdmin.dart';
 import 'package:account/Widgets/Buttons/StyledButton.dart';
 import 'package:account/Widgets/HelperWidgets/Base64ImageDisplay.dart';
 import 'package:account/Widgets/HelperWidgets/Loader.dart';
@@ -8,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
 import 'package:page_indicator/page_indicator.dart';
-import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/Widgets/HelperWidgets/myContainer.dart';
 
 class AddComplaintPage extends StatefulWidget {
@@ -88,8 +88,8 @@ class _AddComplaintPageState extends State<AddComplaintPage> {
     return Scaffold(
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
-      bottomNavigationBar: BottomNavBar1(0),
-      appBar: myAppBar(context, 'اضافة عمل', false, screenHeight * 0.28),
+      bottomNavigationBar: NavBarAdmin(3),
+      appBar: myAppBar(context, 'إضافة مهمة', false, screenHeight * 0.29),
       body: FutureBuilder<List<ComplaintModel>>(
         future: complaintsRequest,
         builder: (context, snapshot) {
@@ -168,7 +168,7 @@ class _AddComplaintPageState extends State<AddComplaintPage> {
                                       complaint.intComplaintId.toString(),
                                     ),
                                     RowInfo(
-                                      "تاريخ الاضافة ",
+                                      "تاريخ الإضافة ",
                                       complaint.dtmDateCreated
                                           .toString()
                                           .substring(0, 10),
@@ -182,7 +182,7 @@ class _AddComplaintPageState extends State<AddComplaintPage> {
                                       "ش.وصفي التل ,عمان",
                                     ),
                                     RowInfo(
-                                      "الأولويه",
+                                      "الأولوية",
                                       "${(complaint.decPriority * 100).toStringAsFixed(1)}%",
                                     ),
                                   ],
@@ -192,7 +192,7 @@ class _AddComplaintPageState extends State<AddComplaintPage> {
                                 height: screenHeight * 0.008,
                               ),
                               StyledButton(
-                                text: "اضافه",
+                                text: "إضافة",
                                 fontSize: 14,
                                 onPressed: () {
                                   widget.onAddComplaint(complaint);

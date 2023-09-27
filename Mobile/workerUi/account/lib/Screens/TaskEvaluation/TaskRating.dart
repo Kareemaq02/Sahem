@@ -56,6 +56,7 @@ class _TaskRatingState extends State<TaskRating> {
           TaskIncomplete(
             taskId: widget.taskId,
             teamId: taskDetails.intTeamId,
+            taskDetails: taskDetails,
           ));
       return;
     }
@@ -69,7 +70,7 @@ class _TaskRatingState extends State<TaskRating> {
           builder: (context) => WillPopScope(
             onWillPop: () async => false,
             child: const SuccessPage(
-              text: 'تم تقييم المهمه بنجاح!',
+              text: 'تم تقييم المهمة بنجاح!',
             ),
           ),
         ),
@@ -80,7 +81,7 @@ class _TaskRatingState extends State<TaskRating> {
           builder: (context) => WillPopScope(
             onWillPop: () async => false,
             child: const FailurePage(
-              text: 'لم يتم تقييم المهمه!',
+              text: 'لم يتم تقييم المهمة!',
             ),
           ),
         ),
@@ -102,7 +103,7 @@ class _TaskRatingState extends State<TaskRating> {
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
       bottomNavigationBar: NavBarAdmin(2),
-      appBar: myAppBar(context, 'اضافة عمل', false, screenHeight * 0.28),
+      appBar: myAppBar(context, 'تقييم المهام', false, screenHeight * 0.28),
       body: FutureBuilder<TaskDetails>(
         future: taskDetailsRequest,
         builder: (context, snapshot) {
@@ -160,6 +161,7 @@ class _TaskRatingState extends State<TaskRating> {
                                               children: [
                                                 SizedBox(
                                                   height: double.infinity,
+                                                  width: double.infinity,
                                                   child: Base64ImageDisplay(
                                                     item.base64Data,
                                                   ),
@@ -291,11 +293,11 @@ class _TaskRatingState extends State<TaskRating> {
                           ),
                         ),
                         RowInfo(
-                          "رقم المهمه",
+                          "رقم المهمة",
                           taskDetails.intTaskID.toString(),
                         ),
                         RowInfo(
-                          "نوع المهمه",
+                          "نوع المهمة",
                           taskDetails.strTypeNameAr.toString(),
                         ),
                         RowInfo(

@@ -1,9 +1,12 @@
 import 'package:account/API/ComplaintsAPI/GetComplaintsByTaskId.dart';
 import 'package:account/API/ComplaintsAPI/View_Complaints_Request.dart';
-import 'package:account/API/TaskAPI/EvaluateIncompleteTask.dart';
+import 'package:account/API/TaskAPI/EvaluateCompletedTask.dart';
+// import 'package:account/API/TaskAPI/EvaluateIncompleteTask.dart';
+import 'package:account/API/TaskAPI/Get_A_Task_Request.dart';
 import 'package:account/API/TeamsAPI/GetTeamBusyDates.dart';
 import 'package:account/Screens/Results/FailurePage.dart';
 import 'package:account/Screens/Results/SuccessPage.dart';
+import 'package:account/Widgets/Bars/NavBarAdmin.dart';
 import 'package:account/Widgets/Buttons/StyledButton.dart';
 import 'package:account/Widgets/CheckBoxes/StyledCheckBox.dart';
 import 'package:account/Widgets/HelperWidgets/Base64ImageDisplay.dart';
@@ -14,14 +17,18 @@ import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
 import 'package:page_indicator/page_indicator.dart';
-import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/Widgets/HelperWidgets/myContainer.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class TaskIncomplete extends StatefulWidget {
   final int taskId;
   final int teamId;
-  const TaskIncomplete({super.key, required this.taskId, required this.teamId});
+  final TaskDetails taskDetails;
+  const TaskIncomplete(
+      {super.key,
+      required this.taskId,
+      required this.teamId,
+      required this.taskDetails});
 
   @override
   _TaskIncompleteState createState() => _TaskIncompleteState();
@@ -77,13 +84,16 @@ class _TaskIncompleteState extends State<TaskIncomplete> {
   }
 
   void _sendRequest() async {
-    var statusCode = await EvaluateIncompleteTaskRequest().evaluateTask(
-      intTaskId: widget.taskId,
-      dtmNewScheduled: startDate,
-      dtmNewDeadline: endDate,
-      lstFailedIds: incompleteIds,
-      strComment: commentController.text,
-    );
+    // var statusCode = await EvaluateIncompleteTaskRequest().evaluateTask(
+    //     intTaskId: widget.taskId,
+    //     dtmNewScheduled: startDate,
+    //     dtmNewDeadline: endDate,
+    //     lstFailedIds: incompleteIds,
+    //     strComment: commentController.text,
+    //     // Debug
+    //     taskTypeId: 3);
+    var statusCode =
+        await EvaluateCompletedTaskRequest().evaluateTask(widget.taskId, 2.5);
 
     if (statusCode == 200) {
       Navigator.of(context).pushReplacement(
@@ -91,7 +101,7 @@ class _TaskIncompleteState extends State<TaskIncomplete> {
           builder: (context) => WillPopScope(
             onWillPop: () async => false,
             child: const SuccessPage(
-              text: 'تم تقييم المهمه بنجاح!',
+              text: 'تم تقييم المهمة بنجاح!',
             ),
           ),
         ),
@@ -102,7 +112,7 @@ class _TaskIncompleteState extends State<TaskIncomplete> {
           builder: (context) => WillPopScope(
             onWillPop: () async => false,
             child: const FailurePage(
-              text: 'لم يتم تقييم المهمه!',
+              text: 'لم يتم تقييم المهمة!',
             ),
           ),
         ),
@@ -121,8 +131,8 @@ class _TaskIncompleteState extends State<TaskIncomplete> {
     return Scaffold(
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
-      bottomNavigationBar: BottomNavBar1(0),
-      appBar: myAppBar(context, 'اضافة عمل', false, screenHeight * 0.28),
+      bottomNavigationBar: NavBarAdmin(2),
+      appBar: myAppBar(context, 'تقييم المهام', false, screenHeight * 0.28),
       body: FutureBuilder<List<ComplaintModel>>(
         future: complaintsRequest,
         builder: (context, snapshot) {
@@ -263,10 +273,10 @@ class _TaskIncompleteState extends State<TaskIncomplete> {
                             width: fieldWidth,
                             onSelectionChanged: _onSelectionChanged,
                             initialRange: PickerDateRange(startDate, endDate),
-                            blackedOutdates: blackedOutDays,
+                            // blackedOutdates: blackedOutDays,
                           ),
                           const Text(
-                            "سيتم اعادة ارسال المهمه**",
+                            "سيتم اعادة ارسال المهمة**",
                             textDirection: TextDirection.rtl,
                             style: TextStyle(
                               fontSize: 12,

@@ -12,16 +12,17 @@ class EvaluateIncompleteTaskRequest {
     required DateTime dtmNewDeadline,
     required List<int> lstFailedIds,
     required String strComment,
+    required int taskTypeId,
   }) async {
     try {
       final Uri url =
-          Uri.parse("${AppUrl.baseURL}evaluations/complete/$intTaskId");
+          Uri.parse("${AppUrl.baseURL}evaluations/incomplete/$intTaskId");
 
       final Map<String, dynamic> data = {
-        'dtmNewScheduled': dtmNewScheduled,
-        'dtmNewDeadline': dtmNewDeadline,
-        'lstFailedIds': lstFailedIds,
         'strComment': strComment,
+        "decRating": 2.5,
+        "lstCompletedIds": [],
+        'lstFailedIds': lstFailedIds,
       };
 
       final String jsonData = jsonEncode(data);

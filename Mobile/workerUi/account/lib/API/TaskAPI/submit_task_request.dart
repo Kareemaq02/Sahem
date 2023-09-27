@@ -1,10 +1,11 @@
 import 'dart:io';
+import 'package:account/API/TaskAPI/get_activated_task.dart';
+import 'package:account/API/login_request.dart';
 import 'package:account/main.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:account/Repository/urls.dart';
 import 'package:account/Screens/Results/SuccessPage.dart';
-
 
 class SubmitTask {
   final userToken = prefs!.getString('token');
@@ -15,23 +16,8 @@ class SubmitTask {
     String strComment,
     List<WorkerRating> lstWorkersRatings,
   ) async {
-    print(intTaskId);
-    print(strComment);
-
-    for (int i = 0; i < lstMedia.length; i++) {
-      print(lstMedia[i].file);
-      print(lstMedia[i].blnIsVideo);
-      print(lstMedia[i].decLat);
-      print(lstMedia[i].decLng);
-      print(lstMedia[i].intComplaintId);
-    }
-
-    for (int i = 0; i < lstWorkersRatings.length; i++) {
-      print(lstWorkersRatings[i].decRating.toString() +
-          "  " +
-          lstWorkersRatings[i].intWorkerId.toString());
-    }
-    
+    lstWorkersRatings
+        .removeWhere((element) => element.intWorkerId == getUserData().intId);
     try {
       final request = http.MultipartRequest(
         'POST',
@@ -62,8 +48,10 @@ class SubmitTask {
           filename: mediaFile.file.path.split('/').last,
         );
         request.files.add(multipartFile);
-        request.fields['lstMedia[$index].decLat'] = mediaFile.decLat.toString();
-        request.fields['lstMedia[$index].decLng'] = mediaFile.decLng.toString();
+        request.fields['lstMedia[$index].decLatLng.decLat'] =
+            mediaFile.decLatLng!.decLat.toString();
+        request.fields['lstMedia[$index].decLatLng.decLng'] =
+            mediaFile.decLatLng!.decLng.toString();
 
         request.fields['lstMedia[$index].blnIsVideo'] =
             mediaFile.blnIsVideo.toString();
@@ -100,13 +88,11 @@ class SubmitTask {
 
 class MediaFile {
   File file;
-  double? decLat;
-  double? decLng;
+  LatLng? decLatLng;
   bool blnIsVideo;
   int intComplaintId;
 
-  MediaFile(this.file, this.decLat, this.decLng, this.blnIsVideo,
-      this.intComplaintId);
+  MediaFile(this.file, this.decLatLng, this.blnIsVideo, this.intComplaintId);
 }
 
 class WorkerRating {

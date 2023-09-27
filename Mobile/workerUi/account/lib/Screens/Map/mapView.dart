@@ -133,7 +133,8 @@ class FullMapState extends State<FullMap1> with TickerProviderStateMixin {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        bottomNavigationBar: userIsAdmin() ? NavBarAdmin(1) : BottomNavBar1(1),
+        bottomNavigationBar: getCondtionalWidget(
+            NavBarAdmin(1), BottomNavBar1(1), BottomNavBar1(1)),
         appBar: myAppBar(context, "الخريطة", false, screenWidth * 0.6),
         body: Stack(
           children: [

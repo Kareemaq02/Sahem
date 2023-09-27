@@ -111,7 +111,7 @@ class _CreateTaskState extends State<CreateTask> {
           builder: (context) => WillPopScope(
             onWillPop: () async => false,
             child: const SuccessPage(
-              text: 'تم اضافة المهمه بنجاح!',
+              text: 'تم اضافة المهمة بنجاح!',
             ),
           ),
         ),
@@ -122,7 +122,7 @@ class _CreateTaskState extends State<CreateTask> {
           builder: (context) => WillPopScope(
             onWillPop: () async => false,
             child: const FailurePage(
-              text: 'لم يتم اضافة المهمه!',
+              text: 'لم يتم اضافة المهمة!',
             ),
           ),
         ),
@@ -173,7 +173,7 @@ class _CreateTaskState extends State<CreateTask> {
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
       bottomNavigationBar: NavBarAdmin(3),
-      appBar: myAppBar(context, 'اضافة عمل', false, screenHeight * 0.28),
+      appBar: myAppBar(context, 'إضافة مهمة', false, screenHeight * 0.28),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,

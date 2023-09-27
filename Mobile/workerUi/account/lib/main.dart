@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 SharedPreferences? prefs;
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized(); 
+  WidgetsFlutterBinding.ensureInitialized();
   prefs = await SharedPreferences.getInstance();
   runApp(const MyApp());
 }
@@ -52,7 +52,7 @@ class _MyAppState extends State<MyApp> {
       // supportedLocales: AppLocalizations.supportedLocales,
       //onGenerateRoute: CustomRouter.generatedRoute,
       //initialRoute: homeRoute,
-    //  locale: _locale,
+      //  locale: _locale,
     );
   }
 }

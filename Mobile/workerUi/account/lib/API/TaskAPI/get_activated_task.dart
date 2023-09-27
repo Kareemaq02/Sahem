@@ -4,7 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:account/Repository/urls.dart';
 // ignore_for_file: file_names
 
-int activatedStatus=0;
+int activatedStatus = 0;
+
 class ActivatedTaskModel {
   int taskId;
   String deadlineDate;
@@ -33,7 +34,7 @@ class ActivatedTaskModel {
       taskId: json['taskID'],
       deadlineDate: json['deadlineDate'],
       activatedDate: json['activatedDate'],
-      strComment: json['strComment'],
+      strComment: json['strComment'] ?? "",
       strTypeNameAr: json['strTypeNameAr'],
       strTypeNameEn: json['strTypeNameEn'],
       latLng: LatLng.fromJson(json['latLng']),
@@ -88,8 +89,8 @@ class ActivatedTask {
         'Authorization': 'Bearer $userToken',
       },
     );
-    if (response.statusCode==400){
-      activatedStatus=400;
+    if (response.statusCode == 400) {
+      activatedStatus = 400;
     }
     if (response.statusCode == 200) {
       var jsonData = json.decode(response.body);

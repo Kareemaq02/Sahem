@@ -4,7 +4,6 @@ import 'package:account/Repository/color.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 // ignore_for_file: file_names
 
-
 class ComplaintData {
   ComplaintData(this.region, this.complaints, this.tasks);
   final String region;
@@ -74,7 +73,7 @@ class ComplaintTaskChart extends StatelessWidget {
                 fontFamily: 'DroidArabicKufi',
               ),
               title: AxisTitle(
-                text: 'العدد',
+                text: 'عدد البلاغات',
                 textStyle: const TextStyle(
                   fontSize: 12,
                   color: AppColor.textTitle,
@@ -99,7 +98,7 @@ class ComplaintTaskChart extends StatelessWidget {
                 dataSource: data,
                 xValueMapper: (ComplaintData count, _) => count.region,
                 yValueMapper: (ComplaintData count, _) => count.complaints,
-                name: 'البلاغات',
+                name: 'غير منجز',
                 dataLabelSettings: const DataLabelSettings(
                   isVisible: true,
                 ),
@@ -111,7 +110,7 @@ class ComplaintTaskChart extends StatelessWidget {
                 dataSource: data,
                 xValueMapper: (ComplaintData count, _) => count.region,
                 yValueMapper: (ComplaintData count, _) => count.complaints,
-                name: 'المهام',
+                name: 'المنجز',
                 dataLabelSettings: const DataLabelSettings(
                   isVisible: true,
                 ),

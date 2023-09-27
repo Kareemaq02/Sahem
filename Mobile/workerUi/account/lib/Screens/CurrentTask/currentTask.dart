@@ -12,10 +12,7 @@ import 'package:account/Screens/SubmitTask/submitTask.dart';
 import 'package:account/API/TaskAPI/get_activated_task.dart';
 import 'package:account/Widgets/Buttons/buttonsForCards.dart';
 import 'package:account/Widgets/HelperWidgets/myContainer.dart';
-// ignore_for_file: file_names
 
-// ignore_for_file: library_private_types_in_public_api
-UserData user = getUserData();
 class CurrentTask extends StatefulWidget {
   const CurrentTask({Key? key}) : super(key: key);
 
@@ -24,11 +21,6 @@ class CurrentTask extends StatefulWidget {
 }
 
 class _CurrentTaskState extends State<CurrentTask> {
-  // var reminder = false;
-  // var type = "";
-  // bool teamLeader = true;
-  // double destinationLat = 32.00685936542326;
-  // double destinationLng = 35.86430898176924;
   ActivatedTaskModel? activatedTask;
   String address = "";
 
@@ -131,7 +123,7 @@ class _CurrentTaskState extends State<CurrentTask> {
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
       bottomNavigationBar: BottomNavBar1(3),
-      appBar: myAppBar(context, ' المهمة الحالية', false, screenWidth * 0.5),
+      appBar: myAppBar(context, 'المهمة المفعلة', false, screenWidth * 0.5),
       body: activatedTask == null
           ? activatedStatus != 400
               ? const Center(
@@ -199,8 +191,9 @@ class _CurrentTaskState extends State<CurrentTask> {
                                     ),
                                     const SizedBox(width: 10),
                                     Visibility(
-                                      visible:
-                                          user.userType.contains("teamleader"),
+                                      visible: getUserData()
+                                          .userType
+                                          .contains("teamleader"),
                                       child: CardButtons(
                                           context,
                                           'تسليم المهمة',
@@ -213,7 +206,7 @@ class _CurrentTaskState extends State<CurrentTask> {
                                           screenWidth * 0.6, () {
                                         // activatedTask!.blnIsLeader
                                         //     ?
-                                    
+
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
