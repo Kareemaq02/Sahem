@@ -1,14 +1,21 @@
-﻿using Application.Commands;
+﻿using Application;
+using Application.Commands;
 using Application.Core;
 using Application.Queries.Complaints;
 using Application.Seed.Images;
 using Domain.ClientDTOs.Complaint;
+using Domain.ClientDTOs.Evaluation;
 using Domain.ClientDTOs.Task;
+using Domain.Helpers;
 using Domain.Resources;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Utilities.Zlib;
 using Persistence;
+using System.Data.Entity;
+using System.Threading.Tasks;
+using System;
+using Domain.DataModels.Tasks;
 
 namespace Application.Seed
 {
@@ -96,77 +103,89 @@ namespace Application.Seed
             }
         }
 
-        public static async Task ActivateToComplete(DataContext _context, IMediator _mediator)
+        public static async Task Activate(WorkTask task, IMediator _mediator)
         {
-            var tasks = await _context.Tasks
-                .Where(t => t.intStatusId == (int)TasksConstant.taskStatus.inactive)
-                .ToListAsync();
+            // Activate Task
+            await _mediator.Send(new ActivateTaskCommand(task.intId, "leader"));
+        }
 
+        public static async Task Submit(DataContext _context, IMediator _mediator, WorkTask task)
+        {
+            // Submit Task
             var random = new Random();
-            foreach (var task in tasks)
+            var membersIds = _context.TeamMembers
+                .Where(tm => tm.intTeamId == 1 && tm.intWorkerId != 3)
+                .Select(tm => tm.intWorkerId)
+                .ToList();
+
+            List<TaskWorkerRatingDTO> ratings = new List<TaskWorkerRatingDTO>();
+            foreach (var member in membersIds)
             {
-                await _mediator.Send(new ActivateTaskCommand(task.intId, "leader"));
-
-                var membersIds = _context.TeamMembers
-                    .Where(tm => tm.intTeamId == 1)
-                    .Select(tm => tm.intWorkerId)
-                    .ToList();
-
-                List<TaskWorkerRatingDTO> ratings = new List<TaskWorkerRatingDTO>();
-                foreach (var member in membersIds)
-                {
-                    var randomRate = random.Next(4) * 0.5 + 2.0;
-                    ratings.Add(
-                        new TaskWorkerRatingDTO
-                        {
-                            intWorkerId = member,
-                            decRating = (decimal)randomRate
-                        }
-                    );
-                }
-
-                // Type
-                int[] typeIds = { 5, 9, 19 };
-                int index = random.Next(0, typeIds.Length);
-                int typeId = typeIds[index];
-
-                // Image Path
-                string scriptDirectory = Path.GetDirectoryName(
-                    System.Reflection.Assembly.GetExecutingAssembly().Location
-                );
-                string randomImage = random.Next(1, 4) + ".jpg";
-                string file = Path.Combine(
-                    "Seed",
-                    "Images",
-                    "After",
-                    typeId.ToString(),
-                    randomImage
-                );
-                string filePath = Path.Combine(scriptDirectory, file);
-
-                var decLat = (decimal)(random.NextDouble() * 0.03 + 31.9564);
-                var decLng = (decimal)(random.NextDouble() * 0.0679 + 35.8570);
-
-                var media = new List<SubmitTaskAttatchmentsDTO>
-                {
-                    new SubmitTaskAttatchmentsDTO
+                var randomRate = random.Next(4) * 0.5 + 2.0;
+                ratings.Add(
+                    new TaskWorkerRatingDTO
                     {
-                        fileMedia = ImageLocalUpload.CreateIFormFileFromLocalFile(filePath),
-                        decLatLng = new Domain.Helpers.LatLng { decLat = decLat, decLng = decLng },
-                        blnIsVideo = false,
+                        intWorkerId = member,
+                        decRating = (decimal)randomRate
                     }
-                };
-
-                var submitTaskDTO = new SubmitTaskDTO
-                {
-                    strComment = task.strComment,
-                    lstWorkersRatings = ratings,
-                    strUserName = "leader",
-                    lstMedia = media
-                };
-
-                await _mediator.Send(new SubmitTaskCommand(submitTaskDTO, task.intId));
+                );
             }
+
+            // Type
+            int[] typeIds = { 5, 9, 19 };
+            int index = random.Next(0, typeIds.Length);
+            int typeId = typeIds[index];
+
+            // Image Path
+            string scriptDirectory = Path.GetDirectoryName(
+                System.Reflection.Assembly.GetExecutingAssembly().Location
+            );
+            string randomImage = random.Next(1, 4) + ".jpg";
+            string file = Path.Combine("Seed", "Images", "After", typeId.ToString(), randomImage);
+            string filePath = Path.Combine(scriptDirectory, file);
+
+            var complaintId = _context.TasksComplaints
+                .Where(tc => tc.intTaskId == task.intId)
+                .Select(tc => tc.intComplaintId)
+                .FirstOrDefault();
+
+            var latLng = _context.ComplaintAttachments
+                .Where(ca => ca.intComplaintId == complaintId)
+                .Select(ca => new LatLng { decLat = ca.decLat, decLng = ca.decLng })
+                .FirstOrDefault();
+
+            var media = new List<SubmitTaskAttatchmentsDTO>
+            {
+                new SubmitTaskAttatchmentsDTO
+                {
+                    intComplaintId = complaintId,
+                    fileMedia = ImageLocalUpload.CreateIFormFileFromLocalFile(filePath),
+                    decLatLng = latLng,
+                    blnIsVideo = false,
+                }
+            };
+
+            var submitTaskDTO = new SubmitTaskDTO
+            {
+                strComment = task.strComment,
+                lstWorkersRatings = ratings,
+                strUserName = "leader",
+                lstMedia = media
+            };
+
+            await _mediator.Send(new SubmitTaskCommand(submitTaskDTO, task.intId));
+        }
+
+        public static async Task EvaluateToComplete(WorkTask task, IMediator _mediator)
+        {
+            // Evaluation
+            var random = new Random();
+            EvaluationDTO completedDTO = new EvaluationDTO
+            {
+                decRating = (decimal)(random.Next(4) * 0.5 + 2.0),
+                strUserName = "admin"
+            };
+            await _mediator.Send(new CompleteTaskCommand(completedDTO, task.intId));
         }
     }
 }

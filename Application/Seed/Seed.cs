@@ -1,8 +1,10 @@
 ﻿using Domain.DataModels.Intersections;
+using Domain.DataModels.Tasks;
 using Domain.DataModels.User;
 using Domain.Resources;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Persistence;
 
@@ -252,6 +254,35 @@ namespace Application.Seed
                     var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
                     await SeedTask.Seed(mediator, _tasks);
+                }
+                var tasks = await _context.Tasks
+                    .Where(t => t.intStatusId == (int)TasksConstant.taskStatus.inactive)
+                    .ToListAsync();
+
+                var random = new Random();
+                for (int i = 0; i < tasks.Count / 2; i++)
+                {
+                    using (var scope = _serviceProvider.CreateScope())
+                    {
+                        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+                        WorkTask task = tasks[i];
+                        await SeedTask.Activate(task, mediator);
+                    }
+                    using (var scope = _serviceProvider.CreateScope())
+                    {
+                        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+                        WorkTask task = tasks[i];
+                        await SeedTask.Submit(context, mediator, task);
+                    }
+                    using (var scope = _serviceProvider.CreateScope())
+                    {
+                        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+                        WorkTask task = tasks[i];
+                        await SeedTask.EvaluateToComplete(task, mediator);
+                    }
                 }
             }
         }
