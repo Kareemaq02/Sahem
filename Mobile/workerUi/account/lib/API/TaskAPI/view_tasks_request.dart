@@ -22,7 +22,7 @@ class TaskModel {
   String strAdminFirstName;
   String strAdminLastName;
   List<WorkersList> workersList;
-  List<dynamic> lstMediaAfter; // Correct the type here
+  List<dynamic> lstMediaAfter; 
   List<LstMediaBefore> lstMediaBefore;
 
   TaskModel({

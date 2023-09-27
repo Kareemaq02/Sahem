@@ -311,7 +311,7 @@ class _ComaplintState extends State<FinishTask> {
                     if (snapshot.hasData) {
                       var data = snapshot.data;
                       List<bool> showMediaList = List.generate(
-                        data != null ? data.first.lstMedia.length : 0,
+                        data != null ? data.first.lstMediaBefore.length : 0,
                         (index) => false,
                       );
 
@@ -319,7 +319,7 @@ class _ComaplintState extends State<FinishTask> {
                         itemExtent: screenWidth * 1,
                         scrollDirection: Axis.horizontal,
                         itemCount:
-                            data != null ? data.first.lstMedia.length : 0,
+                            data != null ? data.first.lstMediaBefore.length : 0,
                         itemBuilder: (context, index) {
                           if (selectedMediaFiles.isNotEmpty &&
                               selectedMediaFiles.length > index) {
@@ -336,12 +336,11 @@ class _ComaplintState extends State<FinishTask> {
                             // Display the camera capture UI
                             return InkWell(
                               onTap: () {
-                                print(data[index].lstMedia[index]
-                                    ['intComplaintId']);
+                               
                                 getImages(
                                     context,
-                                    data[index].lstMedia[index]
-                                        ['intComplaintId']);
+                                    data[index].lstMediaBefore[index].intComplaintId,
+                                       );
                                 setState(() {
                                   // Toggle the visibility of media for the tapped item
                                   showMediaList[index] = !showMediaList[index];

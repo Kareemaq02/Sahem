@@ -5,8 +5,6 @@ import 'package:http/http.dart' as http;
 import 'package:account/Repository/urls.dart';
 import 'package:account/Screens/Results/SuccessPage.dart';
 
-String leadertoken =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMiLCJ1c2VybmFtZSI6ImxlYWRlciIsImZpcnN0TmFtZSI6ImxlYWRlciIsImxhc3ROYW1lIjoibGVhZGVyIiwicGhvbmVOdW1iZXIiOiIwNzg4ODgxMjg4IiwidXNlclR5cGUiOiJ0ZWFtbGVhZGVyIiwibmJmIjoxNjk1NjM2OTM0LCJleHAiOjE2OTgyMjg5MzQsImlhdCI6MTY5NTYzNjkzNH0.hEWtiSKdYSYmpP7Pqkz0ym-cyN4Thw5lubeqWy1MDRo';
 
 class SubmitTask {
   final userToken = prefs!.getString('token');
@@ -17,22 +15,22 @@ class SubmitTask {
     String strComment,
     List<WorkerRating> lstWorkersRatings,
   ) async {
-    // print(intTaskId);
-    // print(strComment);
+    print(intTaskId);
+    print(strComment);
 
-    // for (int i = 0; i < lstMedia.length; i++) {
-    //   print(lstMedia[i].file);
-    //   print(lstMedia[i].blnIsVideo);
-    //   print(lstMedia[i].decLat);
-    //   print(lstMedia[i].decLng);
-    //   print(lstMedia[i].intComplaintId);
-    // }
+    for (int i = 0; i < lstMedia.length; i++) {
+      print(lstMedia[i].file);
+      print(lstMedia[i].blnIsVideo);
+      print(lstMedia[i].decLat);
+      print(lstMedia[i].decLng);
+      print(lstMedia[i].intComplaintId);
+    }
 
-    // for (int i = 0; i < lstWorkersRatings.length; i++) {
-    //   print(lstWorkersRatings[i].decRating.toString() +
-    //       "  " +
-    //       lstWorkersRatings[i].intWorkerId.toString());
-    // }
+    for (int i = 0; i < lstWorkersRatings.length; i++) {
+      print(lstWorkersRatings[i].decRating.toString() +
+          "  " +
+          lstWorkersRatings[i].intWorkerId.toString());
+    }
     
     try {
       final request = http.MultipartRequest(
@@ -40,7 +38,7 @@ class SubmitTask {
         Uri.parse("${AppUrl.baseURL}tasks/submit/$intTaskId"),
       );
 
-      request.headers.addAll({"Authorization": "Bearer $leadertoken"});
+      request.headers.addAll({"Authorization": "Bearer $userToken"});
       request.headers['Content-Type'] = 'multipart/form-data';
 
       request.fields['strComment'] = strComment;
