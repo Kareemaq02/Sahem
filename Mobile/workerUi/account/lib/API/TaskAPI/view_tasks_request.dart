@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'package:account/main.dart';
 import 'package:http/http.dart' as http;
+import 'package:account/Utils/LatLng.dart';
+// Import the necessary class
 
 class TaskModel {
   int taskId;
+  int intTeamId;
   String? createdDate;
   String finishedDate;
   String scheduledDate;
@@ -19,10 +22,12 @@ class TaskModel {
   String strAdminFirstName;
   String strAdminLastName;
   List<WorkersList> workersList;
-  List<dynamic> lstMedia;
+  List<dynamic> lstMediaAfter; // Correct the type here
+  List<LstMediaBefore> lstMediaBefore;
 
   TaskModel({
     required this.taskId,
+    required this.intTeamId,
     required this.createdDate,
     required this.finishedDate,
     required this.scheduledDate,
@@ -38,13 +43,14 @@ class TaskModel {
     required this.strAdminFirstName,
     required this.strAdminLastName,
     required this.workersList,
-    required this.lstMedia,
+    required this.lstMediaAfter,
+    required this.lstMediaBefore,
   });
 
   factory TaskModel.fromJson(Map<String, dynamic> json) {
-    // Parse the JSON and create a TaskModel instance
     return TaskModel(
       taskId: json['taskID'],
+      intTeamId: json['intTeamId'],
       createdDate: json['createdDate'],
       finishedDate: json['finishedDate'],
       scheduledDate: json['scheduledDate'],
@@ -59,11 +65,44 @@ class TaskModel {
       strTaskStatus: json['strTaskStatus'],
       strAdminFirstName: json['strAdminFirstName'] ?? "",
       strAdminLastName: json['strAdminLastName'] ?? "",
-      workersList: List<WorkersList>.from(
-        json['workersList'].map((x) => WorkersList.fromJson(x)),
-      ),
-      lstMedia: List<dynamic>.from(json['lstMedia']),
+      workersList: (json['workersList'] as List<dynamic>)
+          .map((x) => WorkersList.fromJson(x as Map<String, dynamic>))
+          .toList(),
+      lstMediaAfter: json['lstMediaAfter'],
+      lstMediaBefore: (json['lstMediaBefore'] as List<dynamic>)
+          .map((x) => LstMediaBefore.fromJson(x as Map<String, dynamic>))
+          .toList(),
     );
+  }
+}
+
+class LstMediaBefore {
+  int intComplaintId;
+  dynamic data;
+  bool blnIsVideo;
+  LatLng decLatLng;
+  Region region;
+
+  LstMediaBefore({
+    required this.intComplaintId,
+    required this.data,
+    required this.blnIsVideo,
+    required this.decLatLng,
+    required this.region,
+  });
+  factory LstMediaBefore.fromJson(Map<String, dynamic> json) {
+    return LstMediaBefore(
+        intComplaintId: json['intComplaintId'],
+        data: json['data'],
+        blnIsVideo: json['blnIsVideo'],
+        decLatLng: LatLng(
+          lat: json['decLatLng']['decLat'],
+          lng: json['decLatLng']['decLng'],
+      ),
+        region: Region(
+          strRegionEn: json['region']['strRegionEn'],
+          strRegionAr: json['region']['strRegionAr'],
+        ));
   }
 }
 
@@ -71,23 +110,46 @@ class WorkersList {
   int intId;
   String strFirstName;
   String strLastName;
+  String? strFirstNameAr;
+  String? strLastNameAr;
   bool isLeader;
+  double decRating;
 
   WorkersList({
     required this.intId,
     required this.strFirstName,
     required this.strLastName,
+    required this.strFirstNameAr,
+    required this.strLastNameAr,
     required this.isLeader,
+    required this.decRating,
   });
+
   factory WorkersList.fromJson(Map<String, dynamic> json) {
     return WorkersList(
       intId: json['intId'],
       strFirstName: json['strFirstName'],
       strLastName: json['strLastName'],
+      strFirstNameAr: json['strFirstNameAr'],
+      strLastNameAr: json['strLastNameAr'],
       isLeader: json['isLeader'],
+      decRating: json['decRating'],
     );
   }
 }
+
+
+
+class Region {
+  String strRegionEn;
+  String strRegionAr;
+
+  Region({
+    required this.strRegionEn,
+    required this.strRegionAr,
+  });
+}
+
 
 class WorkerTask {
   final userToken = prefs!.getString('token');

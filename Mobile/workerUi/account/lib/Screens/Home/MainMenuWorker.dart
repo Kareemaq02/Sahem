@@ -155,7 +155,7 @@ class _MainMenuWorkerState extends State<MainMenuWorker> {
                   left: fullMarginX),
               child: const Align(
                 alignment: Alignment.centerRight,
-                child: Text("ملخص الأداء",
+                child: Text("ملخص أداء الفريق",
                     textAlign: TextAlign.right,
                     textDirection: TextDirection.rtl,
                     style: TextStyle(

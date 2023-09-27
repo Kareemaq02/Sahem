@@ -8,6 +8,7 @@ class InfoDisplayBox extends StatelessWidget {
   final String content;
   final IconData? icon;
   final Color? iconColor;
+  final bool? displayStar;
 
   const InfoDisplayBox({
     super.key,
@@ -17,6 +18,7 @@ class InfoDisplayBox extends StatelessWidget {
     required this.content,
     this.icon,
     this.iconColor,
+    this.displayStar = false,
   });
 
   @override
@@ -62,16 +64,30 @@ class InfoDisplayBox extends StatelessWidget {
                     child: icon == null
                         ? Align(
                             alignment: Alignment.center,
-                            child: Text(
-                              content,
-                              textDirection: TextDirection.rtl,
-                              style: const TextStyle(
-                                color: AppColor.secondary,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                                fontFamily: 'DroidArabicKufi',
-                              ),
-                              textAlign: TextAlign.center,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(bottom: 8),
+                                  child: Visibility(
+                                      visible: displayStar!,
+                                      child: const Icon(
+                                        Icons.star,
+                                        color: AppColor.line,
+                                      )),
+                                ),
+                                Text(
+                                  content,
+                                  textDirection: TextDirection.rtl,
+                                  style: const TextStyle(
+                                    color: AppColor.secondary,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                    fontFamily: 'DroidArabicKufi',
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
                             ),
                           )
                         : Padding(
