@@ -78,7 +78,6 @@ final token2 = prefs!.getString('token');
     }
   }
 
-  
 }
 
 class MediaFile {
@@ -103,12 +102,9 @@ Future<dynamic> fileAsSimilar(var complaintId, context) async {
         'Authorization': 'Bearer $token2'
       },
     );
-
     if (response.statusCode == 200) {
       print("file as similar");
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const SuccessPage(text: 'تم إرسال البلاغ بنجاح',)),
+      Navigator.push(context,MaterialPageRoute(builder: (context) => const SuccessPage(text: 'تم إرسال البلاغ بنجاح',)),
       );
 
       print('successful');

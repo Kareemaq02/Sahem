@@ -1,8 +1,7 @@
 import 'Screens/Login/home.dart';
 import 'package:flutter/material.dart';
-import 'Repository/language_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+//import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 //import 'package:flutter_localizations/flutter_localizations.dart';
@@ -30,19 +29,19 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Locale? _locale;
+  //Locale? _locale;
 
   setLocale(Locale locale) {
     setState(() {
-      _locale = locale;
+   //   _locale = locale;
     });
   }
 
-  @override
-  void didChangeDependencies() {
-    getLocale().then((locale) => {setLocale(locale)});
-    super.didChangeDependencies();
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   getLocale().then((locale) => {setLocale(locale)});
+  //   super.didChangeDependencies();
+  // }
 
 
   @override
@@ -54,9 +53,9 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.blue,
       ),
       home: const XDHome(),
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      locale: _locale,
+      // localizationsDelegates: AppLocalizations.localizationsDelegates,
+      // supportedLocales: AppLocalizations.supportedLocales,
+      //locale: _locale,
     );
   }
 }

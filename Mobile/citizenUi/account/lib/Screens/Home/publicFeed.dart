@@ -157,7 +157,7 @@ class _XDPublicFeed1State extends State<XDPublicFeed1> {
                               AppColor.main));
                     }
                   } else {
-                    return const Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator(color: AppColor.main));
                   }
                 },
               ),
