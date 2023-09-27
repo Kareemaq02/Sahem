@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
+import 'package:account/API/signup_request.dart';
 import 'package:account/Screens/Login/login.dart';
 import 'package:account/Validation/validations.dart';
 import 'package:account/Widgets/HelperWidegts/text.dart';
 import 'package:account/Widgets/CheckBoxes/CheckBox.dart';
+import 'package:account/Screens/Registration/register.dart';
+import 'package:account/Screens/Registration/register2.dart';
 import 'package:account/Widgets/Buttons/bottonContainer.dart';
 import 'package:account/Widgets/HelperWidegts/fieldContainer.dart';
 
@@ -17,6 +20,11 @@ late String _idNumber;
 late String _registrationNumber1;
 late String _registrationNumber2;
 Validation _validation = Validation();
+
+TextEditingController nationalNumController = TextEditingController();
+TextEditingController iDNumbberController = TextEditingController();
+TextEditingController regNumberController = TextEditingController();
+
 
 GlobalKey nationalNumKey = GlobalKey();
 
@@ -37,11 +45,10 @@ class XDRegister1 extends StatefulWidget {
 }
 
 class _XDRegister1State extends State<XDRegister1> {
-  TextEditingController nationalNumController = TextEditingController();
-  TextEditingController iDNumbberController = TextEditingController();
-  TextEditingController regNumberController = TextEditingController();
-  TextEditingController passwordController4 = TextEditingController();
+   UserSignup user = UserSignup();
+   TextEditingController passwordController4 = TextEditingController();
   TextEditingController usernameContoller4 = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -52,24 +59,9 @@ class _XDRegister1State extends State<XDRegister1> {
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 55,
-                      height: 100,
-                      decoration: BoxDecoration(
-                          color: Colors.grey, shape: BoxShape.circle),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    const Text(
-                      'Logobrand',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w100, fontSize: 20),
-                    ),
-                  ],
+               Image.asset(
+                  'assets/icons/logo_sahem.webp',
+                  scale: 3.5,
                 ),
                 const SizedBox(
                   height: 10,
@@ -77,9 +69,9 @@ class _XDRegister1State extends State<XDRegister1> {
                 FieldContainer(
                   context,
                   'رقم الوطني',
-                  true,
+                  false,
                   Icons.account_circle_rounded,
-                  passwordController4,
+                  nationalNumController,
                   TextInputType.number,
                   null,
                 ),
@@ -127,11 +119,11 @@ class _XDRegister1State extends State<XDRegister1> {
                 ),
                 FieldContainer(
                   context,
-                  'رقم القيد',
-                  true,
+                  !idNumber ? 'رقم القيد' : 'رقم الهوية',
+                  false,
                   Icons.note_rounded,
-                  passwordController4,
-                  TextInputType.number,
+                  !idNumber ? regNumberController : iDNumbberController,
+                  !idNumber ? TextInputType.number : TextInputType.text,
                   null,
                 ),
                 const SizedBox(
@@ -167,7 +159,20 @@ class _XDRegister1State extends State<XDRegister1> {
                 ),
 
                 BottonContainer("استمرار", Colors.white, AppColor.main, 240,
-                    context, false, XDLogin(), null),
+                    context, true, "", (){
+                      user.signup(
+                      usernameContoller4.text,
+                      PhoneController.text,
+                      passwordController4.text,
+                      FnameController.text,
+                      LnameController.text,
+                      EmailController.text,
+                      nationalNumController.text,
+                      passportNumController.text,
+                      regNumberController.text,
+                      iDNumbberController.text,
+                      context);
+                    }),
                 SizedBox(
                   height: 15,
                 ),

@@ -36,29 +36,9 @@ class _XDLoginState extends State<XDLogin> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 55,
-                  height: 100,
-                  decoration: const BoxDecoration(
-                    color: Colors.grey,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                const Text(
-                  'Logobrand',
-                  style: TextStyle(
-                    fontFamily: 'DroidArabicKufi',
-                    fontWeight: FontWeight.w100,
-                    fontSize: 20,
-                  ),
-                ),
-              ],
+            Image.asset(
+              'assets/icons/logo_sahem.webp',
+              scale: 3.5,
             ),
             const SizedBox(
               height: 30,

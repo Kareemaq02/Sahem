@@ -55,6 +55,7 @@ class _TaskRatingState extends State<TaskRating> {
           context,
           TaskIncomplete(
             taskId: widget.taskId,
+            teamId: taskDetails.intTeamId,
           ));
       return;
     }
@@ -127,15 +128,22 @@ class _TaskRatingState extends State<TaskRating> {
                           height: screenHeight * 0.33,
                           child: PageIndicatorContainer(
                             align: IndicatorAlign.bottom,
-                            length: taskDetails.lstMedia.length,
+                            length: taskDetails.lstMediaBefore.length,
                             indicatorSpace: 10.0,
                             padding: const EdgeInsets.all(15),
                             indicatorColor: Colors.grey,
                             indicatorSelectorColor: Colors.blue,
                             shape: IndicatorShape.circle(size: 7),
                             child: PageView.builder(
-                              itemCount: taskDetails.lstMedia.length,
+                              itemCount: taskDetails.lstMediaBefore.length +
+                                  taskDetails.lstMediaAfter.length,
                               itemBuilder: (context, position) {
+                                bool before = position <
+                                    taskDetails.lstMediaBefore.length;
+                                var item = before
+                                    ? taskDetails.lstMediaBefore[position]
+                                    : taskDetails.lstMediaAfter[position -
+                                        taskDetails.lstMediaBefore.length];
                                 return Padding(
                                   padding: EdgeInsets.symmetric(
                                       vertical: screenHeight * 0.01,
@@ -147,16 +155,13 @@ class _TaskRatingState extends State<TaskRating> {
                                         borderRadius: BorderRadius.circular(10),
                                         color: AppColor.background,
                                       ),
-                                      child: taskDetails.lstMedia[position]
-                                              .base64Data.isNotEmpty
+                                      child: item.base64Data.isNotEmpty
                                           ? Stack(
                                               children: [
                                                 SizedBox(
                                                   height: double.infinity,
                                                   child: Base64ImageDisplay(
-                                                    taskDetails
-                                                        .lstMedia[position]
-                                                        .base64Data,
+                                                    item.base64Data,
                                                   ),
                                                 ),
                                                 Align(
@@ -166,48 +171,109 @@ class _TaskRatingState extends State<TaskRating> {
                                                     padding: EdgeInsets.only(
                                                         top: screenHeight *
                                                             0.01),
-                                                    child: Container(
-                                                      height:
-                                                          screenHeight * 0.05,
-                                                      width: screenWidth * 0.10,
-                                                      decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                        boxShadow: [
-                                                          BoxShadow(
-                                                            color: const Color
-                                                                    .fromARGB(
-                                                                75, 0, 0, 0),
-                                                            blurRadius: 5,
-                                                            offset: Offset(
-                                                                0,
-                                                                screenHeight *
-                                                                    0.05 *
-                                                                    0.05),
-                                                          )
-                                                        ],
-                                                        color: Colors.white,
-                                                        border: Border.all(
-                                                            color:
-                                                                AppColor.line,
-                                                            width: 1),
-                                                      ),
-                                                      child: Center(
-                                                        child: Padding(
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Padding(
                                                           padding: EdgeInsets.only(
-                                                              top:
-                                                                  screenHeight *
-                                                                      0.005),
-                                                          child: TitleText(
-                                                            text: taskDetails
-                                                                .lstMedia[
-                                                                    position]
-                                                                .intComplaintId
-                                                                .toString(),
+                                                              right:
+                                                                  screenWidth *
+                                                                      0.01),
+                                                          child: Container(
+                                                            height:
+                                                                screenHeight *
+                                                                    0.05,
+                                                            width: screenWidth *
+                                                                0.10,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10),
+                                                              boxShadow: [
+                                                                BoxShadow(
+                                                                  color: const Color
+                                                                          .fromARGB(
+                                                                      75,
+                                                                      0,
+                                                                      0,
+                                                                      0),
+                                                                  blurRadius: 5,
+                                                                  offset: Offset(
+                                                                      0,
+                                                                      screenHeight *
+                                                                          0.05 *
+                                                                          0.05),
+                                                                )
+                                                              ],
+                                                              color:
+                                                                  Colors.white,
+                                                              border: Border.all(
+                                                                  color:
+                                                                      AppColor
+                                                                          .line,
+                                                                  width: 1),
+                                                            ),
+                                                            child: Center(
+                                                              child: Padding(
+                                                                padding: EdgeInsets.only(
+                                                                    top: screenHeight *
+                                                                        0.005),
+                                                                child:
+                                                                    TitleText(
+                                                                  text: item
+                                                                      .intComplaintId
+                                                                      .toString(),
+                                                                ),
+                                                              ),
+                                                            ),
                                                           ),
                                                         ),
-                                                      ),
+                                                        Container(
+                                                          height: screenHeight *
+                                                              0.05,
+                                                          width: screenWidth *
+                                                              0.10,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                color: const Color
+                                                                        .fromARGB(
+                                                                    75,
+                                                                    0,
+                                                                    0,
+                                                                    0),
+                                                                blurRadius: 5,
+                                                                offset: Offset(
+                                                                    0,
+                                                                    screenHeight *
+                                                                        0.05 *
+                                                                        0.05),
+                                                              )
+                                                            ],
+                                                            color: Colors.white,
+                                                            border: Border.all(
+                                                                color: AppColor
+                                                                    .line,
+                                                                width: 1),
+                                                          ),
+                                                          child: Center(
+                                                            child: TitleText(
+                                                              text: before
+                                                                  ? "قبل"
+                                                                  : "بعد",
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
                                                 ),

@@ -1,3 +1,9 @@
+import 'package:account/API/ComplaintsAPI/Get_Complaints_Types.dart';
+import 'package:account/API/login_request.dart';
+import 'package:account/Widgets/Bars/NavBarAdmin.dart';
+import 'package:account/Widgets/CheckBoxes/StyledCheckBox.dart';
+import 'package:account/Widgets/HelperWidgets/Loader.dart';
+import 'package:account/Widgets/Popup/DateRangePopup.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/API/login_request.dart';
@@ -58,12 +64,19 @@ class _AnalyticsState extends State<Analytics> {
         startDate = dateRange.startDate!;
         endDate = dateRange.endDate!;
       });
+      updateChart();
     }
   }
 
   void selectChart(int index) {
     setState(() {
       chart == index ? chart = 0 : chart = index;
+      renderedChart = renderChart(chart);
+    });
+  }
+
+  void updateChart() {
+    setState(() {
       renderedChart = renderChart(chart);
     });
   }
@@ -88,6 +101,7 @@ class _AnalyticsState extends State<Analytics> {
                 timeframe = 1;
                 startDate = DateTime.now().subtract(const Duration(days: 7));
                 endDate = DateTime.now();
+                updateChart();
               })),
       StyledFilterChip(
           selected: timeframe == 2,
@@ -96,6 +110,7 @@ class _AnalyticsState extends State<Analytics> {
                 timeframe = 2;
                 startDate = DateTime.now().subtract(const Duration(days: 30));
                 endDate = DateTime.now();
+                updateChart();
               })),
       StyledFilterChip(
           selected: timeframe == 3,
@@ -104,6 +119,7 @@ class _AnalyticsState extends State<Analytics> {
                 timeframe = 3;
                 startDate = DateTime.now().subtract(const Duration(days: 91));
                 endDate = DateTime.now();
+                updateChart();
               })),
       StyledFilterChip(
           selected: timeframe == 4,
@@ -112,6 +128,7 @@ class _AnalyticsState extends State<Analytics> {
                 timeframe = 4;
                 startDate = DateTime.now().subtract(const Duration(days: 365));
                 endDate = DateTime.now();
+                updateChart();
               })),
       StyledFilterChip(
         selected: timeframe == 5,
@@ -125,6 +142,7 @@ class _AnalyticsState extends State<Analytics> {
               screenHeight * 0.5,
               _onSelectionChanged,
               PickerDateRange(startDate, endDate),
+              allowPastDates: true,
             );
           },
         ),
@@ -317,8 +335,10 @@ class _AnalyticsState extends State<Analytics> {
           setState(() {
             if (!selectedTypes.contains(map["intId"])) {
               selectedTypes.add(map["intId"]);
+              updateChart();
             } else {
               selectedTypes.remove(map["intId"]);
+              updateChart();
             }
           });
         },
@@ -348,13 +368,7 @@ Widget renderChart(int chart) {
     future: Future.delayed(const Duration(milliseconds: 300)),
     builder: (context, snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) {
-        return const Center(
-          child: SizedBox(
-            child: CircularProgressIndicator(
-              color: AppColor.main,
-            ),
-          ),
-        );
+        return const Loader();
       } else {
         return sentChart;
       }

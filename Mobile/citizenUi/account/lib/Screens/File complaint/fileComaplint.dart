@@ -170,7 +170,7 @@ class ComaplintState extends State<FileCompalint> {
         backgroundColor: AppColor.background,
         resizeToAvoidBottomInset: true,
         bottomNavigationBar: BottomNavBar1(4),
-        appBar: myAppBar(context, "ارسال بلاغ", false, screenSize.width * 0.5),
+        appBar: myAppBar(context, "إرسال بلاغ", false, screenSize.width * 0.6),
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Column(
@@ -180,7 +180,7 @@ class ComaplintState extends State<FileCompalint> {
               Padding(
                 padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
                 child: SizedBox(
-                  height: screenSize.height * 0.45,
+                  height: screenSize.height * 0.3,
                   child: PageIndicatorContainer(
                     align: IndicatorAlign.bottom,
                     length: selectedMediaFiles.length,
@@ -244,7 +244,7 @@ class ComaplintState extends State<FileCompalint> {
                   child: TextField(
                     controller: commentController,
                     focusNode: textFieldFocusNode,
-                    autofocus: true,
+                   
                     maxLines: null,
                     textDirection: TextDirection.rtl,
                     decoration: const InputDecoration(

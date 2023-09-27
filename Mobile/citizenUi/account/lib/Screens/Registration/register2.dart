@@ -5,12 +5,14 @@ import 'package:flutter/services.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:account/Repository/color.dart';
+import 'package:account/API/login_request.dart';
+import 'package:account/API/signup_request.dart';
 import 'package:account/Screens/Login/login.dart';
 import '../../Repository/language_constants.dart';
 import 'package:account/Widgets/HelperWidegts/text.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:account/Screens/Registration/register.dart';
 import 'package:account/Screens/Registration/register1.dart';
-import 'package:account/Screens/Registration/register4.dart';
 import 'package:account/Widgets/Buttons/bottonContainer.dart';
 import 'package:account/Widgets/HelperWidegts/fieldContainer.dart';
 // ignore_for_file: constant_identifier_names, unused_element, unused_import, depend_on_referenced_packages, avoid_print, library_private_types_in_public_api
@@ -18,6 +20,8 @@ import 'package:account/Widgets/HelperWidegts/fieldContainer.dart';
 String dropdownValue = "";
 late List<String> dropdownItems;
 Map<String, String> _nationalities = {};
+TextEditingController passportNumController = TextEditingController();
+TextEditingController nationalityController = TextEditingController();
 
 Future<void> loadNationalities() async {
   final jsonString = await rootBundle.loadString('assets/data.json');
@@ -37,11 +41,9 @@ class XDRegister2 extends StatefulWidget {
 }
 
 class _XDRegister2State extends State<XDRegister2> {
-  TextEditingController passportNumController = TextEditingController();
   TextEditingController usernameController3 = TextEditingController();
   TextEditingController passwordController3 = TextEditingController();
-  TextEditingController nationalityController = TextEditingController();
-
+  UserSignup user = UserSignup();
   @override
   void initState() {
     super.initState();
@@ -128,24 +130,9 @@ class _XDRegister2State extends State<XDRegister2> {
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 55,
-                      height: 100,
-                      decoration: const BoxDecoration(
-                          color: Colors.grey, shape: BoxShape.circle),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    const Text(
-                      'Logobrand',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w100, fontSize: 20),
-                    ),
-                  ],
+                Image.asset(
+                  'assets/icons/logo_sahem.webp',
+                  scale: 3.5,
                 ),
                 const SizedBox(
                   height: 30,
@@ -196,17 +183,37 @@ class _XDRegister2State extends State<XDRegister2> {
                 const SizedBox(
                   height: 10,
                 ),
-
+   
                 BottonContainer("استمرار", Colors.white, AppColor.main, 240,
-                    context, false, const XDLogin(), null),
+                    context, true, "", () {
+                  user.signup(
+                      usernameController3.text,
+                      PhoneController.text,
+                      passwordController3.text,
+                      FnameController.text,
+                      LnameController.text,
+                      EmailController.text,
+                      nationalNumController.text,
+                      passportNumController.text,
+                      regNumberController.text,
+                      iDNumbberController.text,
+                      context);
+                }),
                 const SizedBox(
-                  height: 15,
+                  height: 0,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     text(" تسجيل الدخول ", AppColor.main),
-                    text(" لديك حساب؟", AppColor.secondary),
+                    TextButton(
+                      child: text(" لديك حساب؟", AppColor.secondary),
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const XDLogin()),
+                      ),
+                    ),
                   ],
                 ),
               ]),

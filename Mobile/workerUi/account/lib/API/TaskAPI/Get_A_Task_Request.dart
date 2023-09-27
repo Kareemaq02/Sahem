@@ -7,7 +7,6 @@ import 'package:account/Repository/urls.dart';
 import 'package:account/Utils/TeamMembers.dart';
 // ignore_for_file: file_names
 
-
 class TaskDetails {
   int intTaskID;
   String dtmCreatedDate;
@@ -27,7 +26,8 @@ class TaskDetails {
   LatLng latLng;
   int intTeamId;
   List<TeamMember> workersList;
-  List<dynamic> lstMedia;
+  List<dynamic> lstMediaBefore;
+  List<dynamic> lstMediaAfter;
 
   TaskDetails({
     required this.intTaskID,
@@ -48,11 +48,13 @@ class TaskDetails {
     required this.latLng,
     required this.intTeamId,
     required this.workersList,
-    required this.lstMedia,
+    required this.lstMediaBefore,
+    required this.lstMediaAfter,
   });
 
   factory TaskDetails.fromJson(Map<String, dynamic> json) {
-    var requestLstMedia = json['lstMedia'] as List;
+    var requestLstMediaBefore = json['lstMediaBefore'] as List;
+    var requestLstMediaAfter = json['lstMediaAfter'] as List;
     return TaskDetails(
       intTaskID: json['taskID'],
       dtmCreatedDate: json['createdDate'],
@@ -70,11 +72,11 @@ class TaskDetails {
       strAdminFirstName: json['strAdminFirstName'],
       strAdminLastName: json['strAdminLastName'],
       latLng: LatLng(
-        lat: requestLstMedia.isNotEmpty
-            ? requestLstMedia.first['decLatLng']['decLat']
+        lat: requestLstMediaBefore.isNotEmpty
+            ? requestLstMediaBefore.first['decLatLng']['decLat']
             : 0.0,
-        lng: requestLstMedia.isNotEmpty
-            ? requestLstMedia.first['decLatLng']['decLng']
+        lng: requestLstMediaBefore.isNotEmpty
+            ? requestLstMediaBefore.first['decLatLng']['decLng']
             : 0.0,
       ),
       intTeamId: json['intTeamId'],
@@ -82,7 +84,11 @@ class TaskDetails {
         json['workersList'].length,
         (index) => TeamMember.fromJson(json['workersList'][index]),
       ),
-      lstMedia: List<dynamic>.from(requestLstMedia)
+      lstMediaBefore: List<dynamic>.from(requestLstMediaBefore)
+          .map((e) => ComplaintImage(
+              intComplaintId: e["intComplaintId"], base64Data: e["data"] ?? ""))
+          .toList(),
+      lstMediaAfter: List<dynamic>.from(requestLstMediaAfter)
           .map((e) => ComplaintImage(
               intComplaintId: e["intComplaintId"], base64Data: e["data"] ?? ""))
           .toList(),

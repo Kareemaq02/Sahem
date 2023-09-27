@@ -20,11 +20,11 @@ class TeamAnalytics extends StatefulWidget {
 
 class _TeamAnalyticsState extends State<TeamAnalytics> {
   // Render Vars
-  int timeframe = 1;
+  int timeframe = 4;
 
   // Request Vars
-  DateTime startDate = DateTime.now().subtract(const Duration(days: 7));
-  DateTime endDate = DateTime.now();
+  DateTime? startDate;
+  DateTime? endDate;
   TeamAnalyticsModel selectedTeam = TeamAnalyticsModel(
     intTeamId: 0,
     intTasksCount: 0,
@@ -49,8 +49,11 @@ class _TeamAnalyticsState extends State<TeamAnalytics> {
   ///
 
   void setTeam(Team team) async {
-    var teamMembersRequest =
-        TeamsAnalyticsRequest().getTeamsAnalytics(team.intId);
+    var teamMembersRequest = TeamsAnalyticsRequest().getTeamsAnalytics(
+      team.intId,
+      startDate: startDate,
+      endDate: endDate,
+    );
     selectedTeam = await teamMembersRequest;
     setState(() {
       complete = TeamData(selectedTeam.intTasksCompletedCount, "مكتمل");
@@ -59,9 +62,29 @@ class _TeamAnalyticsState extends State<TeamAnalytics> {
       waitingEvaluation =
           TeamData(selectedTeam.intTasksWaitingEvaluationCount, "قيد التقييم");
       tasksCount = selectedTeam.intTasksCount;
-      teamRating = selectedTeam.decTeamRatingAvg.toString();
+      teamRating = selectedTeam.decTeamRatingAvg.toStringAsFixed(1);
       successRate =
-          "${(selectedTeam.intTasksCompletedCount / selectedTeam.intTasksCount).toDouble().toStringAsFixed(1)}%";
+          "${((selectedTeam.intTasksCompletedCount / selectedTeam.intTasksCount) * 100).toDouble().toStringAsFixed(1)}%";
+    });
+  }
+
+  void updateAnalytics() async {
+    var teamMembersRequest = TeamsAnalyticsRequest().getTeamsAnalytics(
+      selectedTeam.intTeamId,
+      startDate: startDate,
+      endDate: endDate,
+    );
+    selectedTeam = await teamMembersRequest;
+    setState(() {
+      complete = TeamData(selectedTeam.intTasksCompletedCount, "مكتمل");
+      incomplete = TeamData(selectedTeam.intTasksIncompleteCount, "غير مكتمل");
+      scheduled = TeamData(selectedTeam.intTasksScheduledCount, "مجدول");
+      waitingEvaluation =
+          TeamData(selectedTeam.intTasksWaitingEvaluationCount, "قيد التقييم");
+      tasksCount = selectedTeam.intTasksCount;
+      teamRating = selectedTeam.decTeamRatingAvg.toStringAsFixed(1);
+      successRate =
+          "${((selectedTeam.intTasksCompletedCount / selectedTeam.intTasksCount) * 100).toDouble().toStringAsFixed(1)}%";
     });
   }
 
@@ -78,6 +101,7 @@ class _TeamAnalyticsState extends State<TeamAnalytics> {
       setState(() {
         startDate = dateRange.startDate!;
         endDate = dateRange.endDate!;
+        updateAnalytics();
       });
     }
   }
@@ -107,6 +131,7 @@ class _TeamAnalyticsState extends State<TeamAnalytics> {
                 timeframe = 1;
                 startDate = DateTime.now().subtract(const Duration(days: 7));
                 endDate = DateTime.now();
+                updateAnalytics();
               })),
       StyledFilterChip(
           selected: timeframe == 2,
@@ -123,14 +148,16 @@ class _TeamAnalyticsState extends State<TeamAnalytics> {
                 timeframe = 3;
                 startDate = DateTime.now().subtract(const Duration(days: 91));
                 endDate = DateTime.now();
+                updateAnalytics();
               })),
       StyledFilterChip(
           selected: timeframe == 4,
-          text: "سنه",
+          text: "الكل",
           onPressed: () => setState(() {
                 timeframe = 4;
-                startDate = DateTime.now().subtract(const Duration(days: 365));
-                endDate = DateTime.now();
+                startDate = null;
+                endDate = null;
+                updateAnalytics();
               })),
       StyledFilterChip(
         selected: timeframe == 5,
@@ -144,6 +171,7 @@ class _TeamAnalyticsState extends State<TeamAnalytics> {
               screenHeight * 0.5,
               _onSelectionChanged,
               PickerDateRange(startDate, endDate),
+              allowPastDates: true,
             );
           },
         ),
@@ -217,7 +245,8 @@ class _TeamAnalyticsState extends State<TeamAnalytics> {
                         height: boxHeight,
                         width: boxWidth,
                         title: "نسبة النجاح",
-                        content: successRate),
+                        content:
+                            successRate.contains("NaN") ? "0.0%" : successRate),
                     InfoDisplayBox(
                       height: boxHeight,
                       width: boxWidth,

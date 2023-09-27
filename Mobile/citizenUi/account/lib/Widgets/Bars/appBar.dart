@@ -9,7 +9,7 @@ import 'package:account/Widgets/Filter/filterType.dart';
  myAppBar(BuildContext context,title,visible, space){
   return
   PreferredSize(
-    preferredSize: const Size.fromHeight(60.0),
+    preferredSize: const Size.fromHeight(55.0),
      child: AppBar(
       elevation: 0,
       backgroundColor: Colors.white,

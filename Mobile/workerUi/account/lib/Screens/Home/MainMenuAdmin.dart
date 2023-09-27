@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:account/Screens/TaskEvaluation/TaskEvaluation.dart';
 import 'package:account/Widgets/Bars/NavBarAdmin.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,11 @@ class _MainMenuAdminState extends State<MainMenuAdmin> {
   @override
   void initState() {
     super.initState();
+    returnChartData();
   }
+
+  int complaintCount = 0;
+  String avgResolve = "--:--";
 
   @override
   Widget build(BuildContext context) {
@@ -148,12 +153,12 @@ class _MainMenuAdminState extends State<MainMenuAdmin> {
                     height: 0.12 * screenHeight,
                     width: 0.45 * screenWidth,
                     title: "عدد البلاغات الناجحه",
-                    content: "2,452"),
+                    content: complaintCount.toString()),
                 InfoDisplayBox(
                     height: 0.12 * screenHeight,
                     width: 0.45 * screenWidth,
                     title: "متوسط مدة حل البلاغ",
-                    content: "3 أيام"),
+                    content: avgResolve),
               ],
             ),
             // Chart
@@ -171,5 +176,27 @@ class _MainMenuAdminState extends State<MainMenuAdmin> {
         ),
       ),
     );
+  }
+
+  void returnChartData() {
+    // Mock API
+    final Random random = Random();
+    complaintCount = random.nextInt(1423);
+    int timeToSolveHours = random.nextInt(74) + 24;
+    var timeToSolveDays = timeToSolveHours / 24;
+    switch (timeToSolveDays.floor()) {
+      case 0:
+        avgResolve = "أقل من يوم";
+        break;
+      case 1:
+        avgResolve = "يوم";
+        break;
+      case 2:
+        avgResolve = "يومين";
+        break;
+      default:
+        avgResolve = "${timeToSolveDays.toStringAsFixed(1)} أيام";
+        break;
+    }
   }
 }

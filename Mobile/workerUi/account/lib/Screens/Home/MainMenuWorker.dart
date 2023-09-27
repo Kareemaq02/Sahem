@@ -1,18 +1,19 @@
+import 'package:account/API/TeamsAPI/GetTeamAnalytics.dart';
+import 'package:account/API/login_request.dart';
+import 'package:account/Screens/CurrentTask/currentTask.dart';
+import 'package:account/Screens/View%20tasks/task_list.dart';
+import 'package:account/Utils/Team.dart';
+import 'package:account/Widgets/Bars/bottomNavBar.dart';
+import 'package:account/Widgets/Charts/TeamChart.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Utils/NaviTranstion.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
 import 'package:account/Screens/Profile/profile.dart';
 import 'package:account/Screens/Analytics/Quarter.dart';
-import 'package:account/Widgets/Bars/bottomNavBar.dart';
-import 'package:account/Widgets/Charts/RatingChart.dart';
 import 'package:account/Screens/Analytics/Analytics.dart';
-import 'package:account/Screens/View%20tasks/task_list.dart';
-import 'package:account/Screens/CurrentTask/currentTask.dart';
 import 'package:account/Widgets/Displays/InfoDisplayBox.dart';
 import 'package:account/Widgets/Buttons/squareButtonWithStroke.dart';
-// ignore_for_file: file_names
-
 
 class MainMenuWorker extends StatefulWidget {
   const MainMenuWorker({super.key});
@@ -25,6 +26,36 @@ class _MainMenuWorkerState extends State<MainMenuWorker> {
   @override
   void initState() {
     super.initState();
+    getCharts();
+  }
+
+  TeamData complete = TeamData(0, "مكتمل");
+  TeamData incomplete = TeamData(0, "غير مكتمل");
+  TeamData scheduled = TeamData(0, "مجدول");
+  TeamData waitingEvaluation = TeamData(0, "قيد التقييم");
+
+  int complaintCount = 0;
+  String rating = "0.0";
+
+  void getCharts() async {
+    Future<TeamAnalyticsModel> teamModel =
+        TeamsAnalyticsRequest().getTeamsAnalyticsByLoggedInMemeber();
+    var team = await teamModel;
+
+    complaintCount = team.intTasksScheduledCount;
+    rating = team.lstMembersAvgRating
+        .where((element) => element.intId == getUserData().intId)
+        .first
+        .decRating
+        .toStringAsFixed(1);
+
+    setState(() {
+      complete = TeamData(team.intTasksCompletedCount, "مكتمل");
+      incomplete = TeamData(team.intTasksIncompleteCount, "غير مكتمل");
+      scheduled = TeamData(team.intTasksScheduledCount, "مجدول");
+      waitingEvaluation =
+          TeamData(team.intTasksWaitingEvaluationCount, "قيد التقييم");
+    });
   }
 
   @override
@@ -142,22 +173,35 @@ class _MainMenuWorkerState extends State<MainMenuWorker> {
                 InfoDisplayBox(
                     height: 0.12 * screenHeight,
                     width: 0.45 * screenWidth,
-                    title: "عدد المهام المجدولة",
-                    content: "120"),
+                    title: "عدد المهام المجدوله ",
+                    content: complaintCount.toString()),
                 InfoDisplayBox(
-                    height: 0.12 * screenHeight,
-                    width: 0.45 * screenWidth,
-                  title: "تقييم الفريق",
-                  content: "3.5",
-                  displayStar: true,
+                  height: 0.12 * screenHeight,
+                  width: 0.45 * screenWidth,
+                  title: "التقييم الخاص",
+                  content: rating,
+                  icon: Icons.star_rate_rounded,
+                  iconColor: AppColor.line,
                 ),
               ],
             ),
             // Chart
             Expanded(
               child: Container(
-                  margin: EdgeInsets.only(bottom: halfMarginY),
-                  child: const RatingChart()),
+                margin: EdgeInsets.only(top: halfMarginY, bottom: halfMarginY),
+                width: 0.95 * screenWidth,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white),
+                child: TeamChart(
+                  data: <TeamData>[
+                    complete,
+                    scheduled,
+                    incomplete,
+                    waitingEvaluation
+                  ],
+                ),
+              ),
             )
           ],
         ),
