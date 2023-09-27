@@ -5,7 +5,6 @@ import 'package:account/Repository/urls.dart';
 import 'package:account/Utils/TeamMembers.dart';
 
 class GetTeamMembersRequest {
-  
   final userToken = prefs!.getString('token');
 
   Future<List<TeamMember>> getTeamMembers(int teamId) async {
@@ -22,6 +21,9 @@ class GetTeamMembersRequest {
       var lstWorkers = jsonData["lstWorkers"] as List;
       var formattedList =
           lstWorkers.map((e) => TeamMember.fromJson(e)).toList();
+
+      formattedList.removeWhere(
+          (element) => element.intId == jsonData["intTeamLeaderId"]);
       formattedList.add(
         TeamMember(
             jsonData["intTeamLeaderId"],
@@ -34,8 +36,7 @@ class GetTeamMembersRequest {
     }
   }
 
-
-   Future<List<TeamMember>> getTeamMembersByLeader(int leaderId) async {
+  Future<List<TeamMember>> getTeamMembersByLeader(int leaderId) async {
     var baseUrl = "${AppUrl.baseURL}teams/$leaderId";
     http.Response response = await http.get(
       Uri.parse(baseUrl),

@@ -4,13 +4,13 @@ import 'package:account/Widgets/Buttons/StyledButton.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 // ignore_for_file: file_names
 
-
 void showDateRangeDialog(
-    String Title,
+    String title,
     BuildContext context,
     double height,
     Function(DateRangePickerSelectionChangedArgs) onSelectionChanged,
-    PickerDateRange initialRange) {
+    PickerDateRange initialRange,
+    {List<DateTime>? blackedOutdates}) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -30,7 +30,7 @@ void showDateRangeDialog(
                   padding: EdgeInsets.only(
                       top: height * 0.02, bottom: height * 0.04),
                   child: Text(
-                    Title,
+                    title,
                     style: const TextStyle(
                       fontSize: 16,
                       color: AppColor.textTitle,
@@ -50,6 +50,11 @@ void showDateRangeDialog(
                   initialSelectedRange: initialRange,
                   onSelectionChanged: onSelectionChanged,
                   selectionMode: DateRangePickerSelectionMode.range,
+                  selectableDayPredicate: blackedOutdates != null
+                      ? (DateTime dateTime) {
+                          return blackedOutdates.contains(dateTime);
+                        }
+                      : null,
                 ),
               ),
               SizedBox(

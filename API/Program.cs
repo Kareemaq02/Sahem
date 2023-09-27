@@ -7,6 +7,9 @@ using Domain.DataModels.User;
 using Application.Handlers.Tasks;
 using Application.Handlers.Complaints;
 using Application.Services;
+using MediatR;
+using Application.Seed;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,15 +45,19 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+// Debug seeding
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
 
-// Debug seeding
 try
 {
     var context = services.GetRequiredService<DataContext>();
     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-    await Seed.SeedData(context, userManager);
+    var mediator = services.GetRequiredService<IMediator>();
+
+    await context.Database.MigrateAsync();
+    var seed = new Seed(context, userManager, mediator, services);
+    await seed.SeedData();
 }
 catch (Exception ex)
 {
