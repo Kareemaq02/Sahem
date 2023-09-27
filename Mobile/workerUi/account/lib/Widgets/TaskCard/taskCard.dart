@@ -93,8 +93,8 @@ class TaskCard extends StatelessWidget {
                     child: CardButtons(
                         context,
                         blnIsActive ? "مفعلة" : 'تفعيل',
-                        !blnIsActive ? Colors.grey : AppColor.main,
-                        !blnIsActive ? Colors.grey : AppColor.main,
+                        blnIsActive ? Colors.grey : AppColor.main,
+                        blnIsActive ? Colors.grey : AppColor.main,
                         0, () {
                       user.userType.contains("teamleader")
                           ? b.activateTask(id)

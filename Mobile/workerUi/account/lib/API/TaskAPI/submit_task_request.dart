@@ -17,6 +17,23 @@ class SubmitTask {
     String strComment,
     List<WorkerRating> lstWorkersRatings,
   ) async {
+    // print(intTaskId);
+    // print(strComment);
+
+    // for (int i = 0; i < lstMedia.length; i++) {
+    //   print(lstMedia[i].file);
+    //   print(lstMedia[i].blnIsVideo);
+    //   print(lstMedia[i].decLat);
+    //   print(lstMedia[i].decLng);
+    //   print(lstMedia[i].intComplaintId);
+    // }
+
+    // for (int i = 0; i < lstWorkersRatings.length; i++) {
+    //   print(lstWorkersRatings[i].decRating.toString() +
+    //       "  " +
+    //       lstWorkersRatings[i].intWorkerId.toString());
+    // }
+    
     try {
       final request = http.MultipartRequest(
         'POST',
@@ -52,6 +69,8 @@ class SubmitTask {
 
         request.fields['lstMedia[$index].blnIsVideo'] =
             mediaFile.blnIsVideo.toString();
+        request.fields['lstMedia[$index].intComplaintId'] =
+            mediaFile.intComplaintId.toString();
       }
 
       final response = await request.send();
@@ -62,7 +81,7 @@ class SubmitTask {
       print(response.reasonPhrase);
       print(response.statusCode);
       print(response.request);
-      if (response.statusCode != 200) {
+      if (response.statusCode == 200) {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -86,8 +105,10 @@ class MediaFile {
   double? decLat;
   double? decLng;
   bool blnIsVideo;
+  int intComplaintId;
 
-  MediaFile(this.file, this.decLat, this.decLng, this.blnIsVideo);
+  MediaFile(this.file, this.decLat, this.decLng, this.blnIsVideo,
+      this.intComplaintId);
 }
 
 class WorkerRating {
