@@ -56,7 +56,7 @@ try
     var mediator = services.GetRequiredService<IMediator>();
 
     await context.Database.MigrateAsync();
-    var seed = new Seed(context, userManager, mediator);
+    var seed = new Seed(context, userManager, mediator, services);
     await seed.SeedData();
 }
 catch (Exception ex)

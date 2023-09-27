@@ -3,6 +3,7 @@ using Domain.DataModels.User;
 using Domain.Resources;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using Persistence;
 
 namespace Application.Seed
@@ -20,18 +21,18 @@ namespace Application.Seed
 
         private readonly DataContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-
-        private readonly IMediator _mediator;
+        private readonly IServiceProvider _serviceProvider;
 
         public Seed(
             DataContext context,
             UserManager<ApplicationUser> userManager,
-            IMediator mediator
+            IMediator mediator,
+            IServiceProvider serviceProvider
         )
         {
             _context = context;
             _userManager = userManager;
-            _mediator = mediator;
+            _serviceProvider = serviceProvider;
 
             _admins = 4;
             _leaders = _admins * 2;
@@ -39,7 +40,7 @@ namespace Application.Seed
             _citizens = _workers * 2;
 
             _complaints = _citizens * 3;
-            _tasks = _leaders * 2;
+            _tasks = _complaints / 2;
         }
 
         public async Task SeedData()
@@ -210,18 +211,49 @@ namespace Application.Seed
 
             if (!_context.Teams.Any())
             {
-                SeedTeams.Seed(_context, _mediator);
+                using (var scope = _serviceProvider.CreateScope())
+                {
+                    var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                    var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+                    SeedTeams.Seed(context, mediator);
+                }
             }
 
             if (!_context.Complaints.Any())
             {
                 for (int i = 0; i < _complaints; i++)
                 {
-                    await SeedComplaint.Seed(_mediator);
+                    using (var scope = _serviceProvider.CreateScope())
+                    {
+                        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+                        await SeedComplaint.Seed(context, mediator);
+                    }
+                }
+                using (var scope = _serviceProvider.CreateScope())
+                {
+                    var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                    var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+                    await SeedComplaint.Reject(context, mediator);
+                }
+
+                using (var scope = _serviceProvider.CreateScope())
+                {
+                    var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                    var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+                    await SeedComplaint.Vote(context, mediator);
                 }
             }
 
-            if (!_context.Tasks.Any()) { }
+            if (!_context.Tasks.Any())
+            {
+                using (var scope = _serviceProvider.CreateScope())
+                {
+                    var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+
+                    await SeedTask.Seed(mediator, _tasks);
+                }
+            }
         }
     }
 }
