@@ -25,35 +25,33 @@ class _XDHomeState extends State<XDHome> {
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 40,
-                      height: 100,
-                      decoration: const BoxDecoration(
-                          color: Colors.grey, shape: BoxShape.circle),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    const Text(
-                      'Logobrand',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w100, fontSize: 20),
-                    ),
-                  ],
+                Image.asset(
+                  'assets/icons/logo_sahem.webp',
+                  scale: 3.5,
                 ),
+                const SizedBox(
+                  width: 10,
+                ),
+               
                 const SizedBox(
                   height: 50,
                 ),
                 BottonContainer('الدخول | مستخدم جديد', Colors.white,
-                    AppColor.main, 210, context, false, const XDLogin(), () {}),
+                    AppColor.main,
+                    MediaQuery.of(context).size.width * 0.7,
+                    context,
+                    false,
+                    const XDLogin(),
+                    () {}),
                 const SizedBox(
                   height: 20,
                 ),
                 BottonContainer('الدخول كزائر', AppColor.main, Colors.white,
-                    210, context, false, const XDLogin(), () {}),
+                    MediaQuery.of(context).size.width * 0.7,
+                    context,
+                    false,
+                    const XDLogin(),
+                    () {}),
               ]),
         ));
   }

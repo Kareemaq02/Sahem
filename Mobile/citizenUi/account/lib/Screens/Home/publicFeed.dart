@@ -93,7 +93,7 @@ class _XDPublicFeed1State extends State<XDPublicFeed1> {
     //  floatingActionButton: const CustomActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavBar1(3),
-      appBar: myAppBar(context, 'البلاغات المعلنة', true, screenSize.width*0.32),
+      appBar: myAppBar(context, 'المنتدى العام', true, screenSize.width * 0.37),
       body: Column(
         children: [
           Expanded(
