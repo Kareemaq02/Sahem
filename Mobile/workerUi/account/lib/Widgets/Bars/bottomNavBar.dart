@@ -1,9 +1,10 @@
+import 'package:account/Screens/Home/MainMenuLeader.dart';
+import 'package:account/Screens/Home/MainMenuWorker.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/API/login_request.dart';
 import 'package:account/Screens/Map/mapView.dart';
 import 'package:account/Screens/Home/MainMenuAdmin.dart';
-import 'package:account/Screens/Home/MainMenuWorker.dart';
 import 'package:account/Screens/View%20tasks/task_list.dart';
 import 'package:account/Screens/CurrentTask/currentTask.dart';
 // ignore_for_file: must_be_immutable, unused_local_variable, file_names
@@ -31,8 +32,8 @@ class _BottomNavBarState extends State<BottomNavBar1> {
   }
 
   _changeSelectedTab(int index) {
-    Widget menu =
-        userIsAdmin() ? const MainMenuAdmin() : const MainMenuWorker();
+    Widget menu = getCondtionalWidget(
+        const MainMenuAdmin(), const MainMenuLeader(), const MainMenuWorker());
     setState(() {
       _selectedIndex = index;
     });

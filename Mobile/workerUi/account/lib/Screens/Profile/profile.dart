@@ -1,3 +1,4 @@
+import 'package:account/Widgets/HelperWidgets/Loader.dart';
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/API/login_request.dart';
@@ -46,14 +47,17 @@ class _ProfileState extends State<Profile> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     if (_userInfo.isEmpty) {
-      return const Center(child: CircularProgressIndicator());
+      return const Scaffold(
+        body: Loader(),
+      );
     }
     UserInfoModel userInfo = _userInfo[0];
 
     return Scaffold(
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
-      bottomNavigationBar: userIsAdmin() ? NavBarAdmin(0) : BottomNavBar1(0),
+      bottomNavigationBar: getCondtionalWidget(
+          NavBarAdmin(0), BottomNavBar1(0), BottomNavBar1(0)),
       appBar: myAppBar(context, "الإعدادات", false, screenWidth * 0.6),
       body: Padding(
         padding: EdgeInsets.symmetric(
