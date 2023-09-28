@@ -56,7 +56,8 @@ class _XDComplaintsListState extends State<XDComplaintsList> {
                 },
                 child: FutureBuilder(
                   future: userComplaint.fetchComplaints(),
-                  builder: (context, snapshot) {
+                builder: (BuildContext context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
                     if (snapshot.hasData) {
                       var data = snapshot.data as List<dynamic>?;
                       var revList = data!.reversed.toList();
@@ -64,11 +65,11 @@ class _XDComplaintsListState extends State<XDComplaintsList> {
                         //reverse: true,
                         itemCount: revList != null ? revList.length : 0,
                         itemBuilder: (context, index) {
-                          if (revList.isEmpty) {
-                            return Center(
-                                child: text(
-                                    "لا يوجد بلاغات مسجلة ", AppColor.main));
-                          }
+                          // if (revList.isEmpty) {
+                          //   return Center(
+                          //       child: text(
+                          //           "لا يوجد بلاغات مسجلة ", AppColor.main));
+                          // }
                           return Column(
                             children: [
                               ComplaintCard2(
@@ -81,22 +82,25 @@ class _XDComplaintsListState extends State<XDComplaintsList> {
                                 lng: revList[index]['latLng']["decLng"],
                                 i: index,
                                 isRated: revList[index]['blnIsRated'],
-                              ),
-                            ],
-                          );
+                            )
+                          ]);
                         },
                       );
                     } else {
-                      return Container();
+                      return Center(
+                          child: text('لا يوجد بلاغات',
+                              AppColor.main));
                     }
-                  },
-                ),
+                  } else {
+                    return const Center(
+                        child: CircularProgressIndicator(color: AppColor.main));
+                  }
+                },
               ),
             ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
-
 }
-
-

@@ -63,7 +63,7 @@ class _RatingWidgetState extends State<RatingWidget1> {
                   ),
                   onRatingUpdate: (rating) {
                     rating = rating;
-                    print(_rating = rating);
+                    // print(_rating = rating);
                     setState(() {
                       _rating = rating;
                     });
@@ -72,34 +72,34 @@ class _RatingWidgetState extends State<RatingWidget1> {
                 SizedBox(
                   height: screenHeight * 0.14,
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: screenWidth * 0.13),
-                        child: BottonContainerPopup(
-                          "إلغاء ",
-                          AppColor.main,
-                          Colors.white,
-                          context,
-                          true,
-                          "",
-                          () {
-                            Navigator.pop(context);
-                          },
-                        ),
+                      BottonContainerPopup(
+                        "إلغاء ",
+                        AppColor.main,
+                        Colors.white,
+                        context,
+                        true,
+                        "",
+                        () {
+                          Navigator.pop(context);
+                        },
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(left: screenWidth * 0.1),
-                        child: BottonContainerPopup(
-                          "إرسال",
-                          AppColor.main,
-                          Colors.white,
-                          context,
-                          true,
-                          "",
-                          () {
-                            _rate.rateRequest(widget.complaintId, _rating);
-                          },
-                        ),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      BottonContainerPopup(
+                        "إرسال",
+                        AppColor.main,
+                        Colors.white,
+                        context,
+                        true,
+                        "",
+                        () {
+                          _rate.rateRequest(widget.complaintId, _rating);
+                          Navigator.pop(context);
+                          
+                        },
                       ),
                     ],
                   ),

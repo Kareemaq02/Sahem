@@ -4,6 +4,8 @@ import 'package:account/Repository/color.dart';
 import 'package:account/Screens/MainMenu/MainMenu.dart';
 import 'package:account/Widgets/HelperWidegts/titleText.dart';
 import 'package:account/Widgets/Buttons/bottonContainer.dart';
+// ignore_for_file: file_names
+
 
 class SuccessPage extends StatelessWidget {
   final String text;

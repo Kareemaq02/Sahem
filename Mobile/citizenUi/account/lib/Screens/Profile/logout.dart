@@ -11,11 +11,11 @@ Widget logoutBox(context) {
     padding: const EdgeInsets.all(8.0),
     child: InkWell(
       onTap: () => {
-        prefs!.setString('token', ""),
-        Navigator.push(
+        Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => const XDLogin()),
-        )
+          (route) => false,
+        ),
       },
       child: Container(
         decoration: const BoxDecoration(
@@ -33,10 +33,11 @@ Widget logoutBox(context) {
               TextButton(
                 onPressed: () => {
                   prefs!.setString('token', ""),
-                  Navigator.push(
+                  Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (context) => const XDLogin()),
-                  )
+                    (route) => false,
+                  ),
                 },
                 child: const Text(
                   "تسجيل الخروج",
