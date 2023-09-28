@@ -34,6 +34,24 @@ class TaskCard extends StatelessWidget {
       required this.blnIsActive})
       : super(key: key);
 
+  void _showSnackbar(BuildContext context) {
+    SnackBar snackBar = const SnackBar(
+      content: Center(
+        child: Text(
+          "يوجد مهمة مفعلة للفريق الحالي",
+          style: TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'DroidArabicKufi'),
+        ),
+      ),
+      duration: Duration(seconds: 3),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -104,6 +122,8 @@ class TaskCard extends StatelessWidget {
 
                       if (await statusCode == 200) {
                         naviTransition(context, const CurrentTask());
+                      } else {
+                        _showSnackbar(context);
                       }
                     }),
                   ),
