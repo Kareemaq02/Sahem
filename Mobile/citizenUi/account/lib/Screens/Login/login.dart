@@ -24,21 +24,22 @@ class XDLogin extends StatefulWidget {
 }
 
 class _XDLoginState extends State<XDLogin> {
-
-  
-
   @override
   Widget build(BuildContext context) {
-      final screenSize = MediaQuery.of(context).size;
+    final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Image.asset(
-              'assets/icons/logo_sahem.webp',
-              scale: 3.5,
+            SizedBox(
+              height: 150,
+              width: 150,
+              child: Image.asset(
+                'assets/icons/logo_sahem.png',
+                scale: 3.5,
+              ),
             ),
             const SizedBox(
               height: 30,
@@ -74,7 +75,8 @@ class _XDLoginState extends State<XDLogin> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 SizedBox(
-                  width: MediaQuery.of(context).padding.left + screenSize.width*0.5 ,
+                  width: MediaQuery.of(context).padding.left +
+                      screenSize.width * 0.5,
                 ),
                 const SizedBox(
                   width: 2.5,

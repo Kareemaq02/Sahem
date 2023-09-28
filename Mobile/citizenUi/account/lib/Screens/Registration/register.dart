@@ -21,6 +21,7 @@ TextEditingController LnameController = TextEditingController();
 TextEditingController PhoneController = TextEditingController();
 TextEditingController EmailController = TextEditingController();
 Validation a = Validation();
+
 class XDRegister extends StatefulWidget {
   const XDRegister({
     Key? key,
@@ -41,9 +42,13 @@ class _XDRegisterState extends State<XDRegister> {
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Image.asset(
-                    'assets/icons/logo_sahem.webp',
-                    scale: 3.5,
+                  SizedBox(
+                    height: 150,
+                    width: 150,
+                    child: Image.asset(
+                      'assets/icons/logo_sahem.png',
+                      scale: 3.5,
+                    ),
                   ),
                   const SizedBox(
                     height: 30,
@@ -54,7 +59,7 @@ class _XDRegisterState extends State<XDRegister> {
                     false,
                     Icons.account_circle,
                     FnameController,
-                    TextInputType.text, 
+                    TextInputType.text,
                     null,
                   ),
                   const SizedBox(
@@ -66,8 +71,8 @@ class _XDRegisterState extends State<XDRegister> {
                     false,
                     Icons.account_circle,
                     LnameController,
-                    TextInputType.text, 
-                    null, 
+                    TextInputType.text,
+                    null,
                   ),
                   const SizedBox(
                     height: 10,
@@ -79,8 +84,8 @@ class _XDRegisterState extends State<XDRegister> {
                     Icons.email,
                     EmailController,
                     //a.validateEmail,
-                    TextInputType.emailAddress, 
-                    null, 
+                    TextInputType.emailAddress,
+                    null,
                   ),
                   const SizedBox(
                     height: 10,
@@ -92,10 +97,9 @@ class _XDRegisterState extends State<XDRegister> {
                     Icons.phone_android,
                     PhoneController,
                     //a.validateEmail,
-                    TextInputType.number, 
-                    null, 
+                    TextInputType.number,
+                    null,
                   ),
-                  
                   const SizedBox(
                     height: 15,
                   ),
@@ -138,12 +142,9 @@ class _XDRegisterState extends State<XDRegister> {
                       )
                     ],
                   ),
-
-
                   const SizedBox(
                     height: 10,
                   ),
-
                   BottonContainer(
                       "استمرار",
                       Colors.white,
@@ -151,12 +152,10 @@ class _XDRegisterState extends State<XDRegister> {
                       240,
                       context,
                       false,
-                     
                       isJordanian == true
-                              ? const XDRegister1()
-                              : const XDRegister2(),
+                          ? const XDRegister1()
+                          : const XDRegister2(),
                       () {}),
-
                   const SizedBox(
                     height: 0,
                   ),

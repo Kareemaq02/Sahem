@@ -17,12 +17,13 @@ class XDLogin extends StatefulWidget {
 }
 
 class _XDLoginState extends State<XDLogin> {
-bool remeberMe = false;
+  bool remeberMe = false;
   void dispose() {
     usernameController.clear();
     passwordController.clear();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     ///final screenWidth = MediaQuery.of(context).size.width;
@@ -33,9 +34,13 @@ bool remeberMe = false;
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Image.asset(
-                  'assets/icons/logo_sahem.webp',
-                  scale: 3,
+                SizedBox(
+                  height: 150,
+                  width: 150,
+                  child: Image.asset(
+                    'assets/icons/logo_sahem.png',
+                    scale: 3,
+                  ),
                 ),
                 const SizedBox(
                   height: 30,

@@ -25,18 +25,23 @@ class _XDHomeState extends State<XDHome> {
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Image.asset(
-                  'assets/icons/logo_sahem.webp',
-                  scale: 3.5,
+                SizedBox(
+                  height: 150,
+                  width: 150,
+                  child: Image.asset(
+                    'assets/icons/logo_sahem.png',
+                    scale: 3.5,
+                  ),
                 ),
                 const SizedBox(
                   width: 10,
                 ),
-               
                 const SizedBox(
                   height: 50,
                 ),
-                BottonContainer('الدخول | مستخدم جديد', Colors.white,
+                BottonContainer(
+                    'الدخول | مستخدم جديد',
+                    Colors.white,
                     AppColor.main,
                     MediaQuery.of(context).size.width * 0.7,
                     context,
@@ -46,7 +51,10 @@ class _XDHomeState extends State<XDHome> {
                 const SizedBox(
                   height: 20,
                 ),
-                BottonContainer('الدخول كزائر', AppColor.main, Colors.white,
+                BottonContainer(
+                    'الدخول كزائر',
+                    AppColor.main,
+                    Colors.white,
                     MediaQuery.of(context).size.width * 0.7,
                     context,
                     false,

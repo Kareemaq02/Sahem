@@ -10,8 +10,6 @@ import 'package:account/Screens/Registration/register2.dart';
 import 'package:account/Widgets/Buttons/bottonContainer.dart';
 import 'package:account/Widgets/HelperWidegts/fieldContainer.dart';
 
-
-
 // ignore_for_file: prefer_const_constructors, constant_identifier_names, unused_element, depend_on_referenced_packages, non_constant_identifier_names, library_private_types_in_public_api, unnecessary_null_comparison
 
 bool idNumber = true;
@@ -24,7 +22,6 @@ Validation _validation = Validation();
 TextEditingController nationalNumController = TextEditingController();
 TextEditingController iDNumbberController = TextEditingController();
 TextEditingController regNumberController = TextEditingController();
-
 
 GlobalKey nationalNumKey = GlobalKey();
 
@@ -45,10 +42,9 @@ class XDRegister1 extends StatefulWidget {
 }
 
 class _XDRegister1State extends State<XDRegister1> {
-   UserSignup user = UserSignup();
-   TextEditingController passwordController4 = TextEditingController();
+  UserSignup user = UserSignup();
+  TextEditingController passwordController4 = TextEditingController();
   TextEditingController usernameContoller4 = TextEditingController();
-
 
   @override
   Widget build(BuildContext context) {
@@ -59,9 +55,13 @@ class _XDRegister1State extends State<XDRegister1> {
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-               Image.asset(
-                  'assets/icons/logo_sahem.webp',
-                  scale: 3.5,
+                SizedBox(
+                  height: 150,
+                  width: 150,
+                  child: Image.asset(
+                    'assets/icons/logo_sahem.png',
+                    scale: 3.5,
+                  ),
                 ),
                 const SizedBox(
                   height: 10,
@@ -98,12 +98,10 @@ class _XDRegister1State extends State<XDRegister1> {
                       isChecked: idNumber == false,
                       onChanged: () {
                         setState(() {
-                          idNumber = false
-                          ;
+                          idNumber = false;
                         });
                       },
                     ),
-
                     SizedBox(
                       width: MediaQuery.of(context).padding.left + 5,
                     ),
@@ -111,7 +109,6 @@ class _XDRegister1State extends State<XDRegister1> {
                       "مستند التحقق",
                       AppColor.main,
                     ),
-
                   ],
                 ),
                 const SizedBox(
@@ -153,14 +150,12 @@ class _XDRegister1State extends State<XDRegister1> {
                 const SizedBox(
                   height: 15,
                 ),
-
                 SizedBox(
                   height: 10,
                 ),
-
                 BottonContainer("استمرار", Colors.white, AppColor.main, 240,
-                    context, true, "", (){
-                      user.signup(
+                    context, true, "", () {
+                  user.signup(
                       usernameContoller4.text,
                       PhoneController.text,
                       passwordController4.text,
@@ -172,7 +167,7 @@ class _XDRegister1State extends State<XDRegister1> {
                       regNumberController.text,
                       iDNumbberController.text,
                       context);
-                    }),
+                }),
                 SizedBox(
                   height: 15,
                 ),

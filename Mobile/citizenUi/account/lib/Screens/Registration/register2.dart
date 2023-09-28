@@ -68,7 +68,6 @@ class _XDRegister2State extends State<XDRegister2> {
         ),
         child: TypeAheadFormField<String>(
           initialValue: null,
-
           autovalidateMode: AutovalidateMode.onUserInteraction,
           textFieldConfiguration: TextFieldConfiguration(
             controller: nationalityController,
@@ -116,7 +115,6 @@ class _XDRegister2State extends State<XDRegister2> {
               nationalityController.text = suggestion;
             });
           },
-
           getImmediateSuggestions: true,
         ));
   }
@@ -130,9 +128,13 @@ class _XDRegister2State extends State<XDRegister2> {
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Image.asset(
-                  'assets/icons/logo_sahem.webp',
-                  scale: 3.5,
+                SizedBox(
+                  height: 150,
+                  width: 150,
+                  child: Image.asset(
+                    'assets/icons/logo_sahem.png',
+                    scale: 3.5,
+                  ),
                 ),
                 const SizedBox(
                   height: 30,
@@ -183,7 +185,7 @@ class _XDRegister2State extends State<XDRegister2> {
                 const SizedBox(
                   height: 10,
                 ),
-   
+
                 BottonContainer("استمرار", Colors.white, AppColor.main, 240,
                     context, true, "", () {
                   user.signup(
