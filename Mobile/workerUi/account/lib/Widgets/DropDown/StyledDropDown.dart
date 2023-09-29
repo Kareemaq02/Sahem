@@ -58,7 +58,7 @@ class _TasksDropDownState extends State<TasksDropDown> {
             ),
           ),
           isExpanded: true,
-          itemHeight: screenHeight * 0.06,
+        //  itemHeight: screenHeight * 0.06,
           underline: const SizedBox(),
           value: selectedValue,
           borderRadius: BorderRadius.circular(50),

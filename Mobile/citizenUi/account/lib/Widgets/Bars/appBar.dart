@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Filter/filterType.dart';
+import 'package:account/Screens/Notifications/NotificationsHistory.dart';
 // ignore_for_file: file_names
 
 
@@ -23,7 +24,13 @@ import 'package:account/Widgets/Filter/filterType.dart';
 
           children: [
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const NotificationsHistory()),
+                );
+              },
               icon: const Icon(
                 Icons.notifications_none_outlined,
                 color: AppColor.textTitle,
