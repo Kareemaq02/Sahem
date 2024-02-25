@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:readmore/readmore.dart';
 import 'package:geocoding/geocoding.dart';
@@ -8,6 +9,7 @@ import 'package:account/API/watch_complaint_request.dart';
 import 'package:account/Widgets/VoteWidegts/downVote.dart';
 import 'package:account/Widgets/VoteWidegts/voteButton.dart';
 import 'package:account/Widgets/ComaplaintCard/timeLineWidget.dart';
+
 // ignore_for_file: file_names, library_private_types_in_public_api
 
 // ignore_for_file: must_be_immutable
@@ -27,9 +29,11 @@ class ComplaintCardPublicForm extends StatefulWidget {
   int isVoted;
   bool? isWatched;
   int i;
+  String base64ComplaintPic;
 
   ComplaintCardPublicForm(
       {super.key,
+      required this.base64ComplaintPic,
       required this.dtmDateCreated,
       required this.strComplaintTypeEn,
       required this.strComment,
@@ -184,8 +188,8 @@ class _ComplaintCardsState extends State<ComplaintCardPublicForm> {
             
               SizedBox(
                 height: screenHeight * 0.48,
-                child: Image.asset(
-                  'assets/imges2/pic${widget.i % 25}.jpg',
+                child: Image.memory(
+                  base64Decode(widget.base64ComplaintPic),
                   fit: BoxFit.cover,
                 ),
               ),

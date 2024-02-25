@@ -131,6 +131,7 @@ class _XDPublicFeed1State extends State<XDPublicFeed1> {
                           lat = data[index]['latLng']["decLat"];
                           lng = data[index]['latLng']["decLng"];
                           return ComplaintCardPublicForm(
+                            base64ComplaintPic: data[index]['lstMedia'][0]['data'],
                               intComplaintId: data[index]['intComplaintId'],
                             statusID: data[index]['intStatusId'],
                               strUserName1:

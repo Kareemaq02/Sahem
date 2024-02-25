@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
@@ -7,6 +9,8 @@ import 'package:account/API/complaint_requests.dart';
 import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/Widgets/HelperWidegts/myContainer.dart';
 import 'package:account/Widgets/ComaplaintCard/timeLineVertical.dart';
+
+
 
 // ignore_for_file: non_constant_identifier_names
 
@@ -26,11 +30,11 @@ class ComplaintDetailsScreen extends StatefulWidget {
 }
 
 class _ComplaintViewState extends State<ComplaintDetailsScreen> {
-  final List<String> imageList = [
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7zjk6aWDXjWiB_mMUpuxQdzMxtXbyd8M5ag&usqp=CAU',
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7zjk6aWDXjWiB_mMUpuxQdzMxtXbyd8M5ag&usqp=CAU',
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7zjk6aWDXjWiB_mMUpuxQdzMxtXbyd8M5ag&usqp=CAU',
-  ];
+  // final List<String> imageList = [
+  //   'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7zjk6aWDXjWiB_mMUpuxQdzMxtXbyd8M5ag&usqp=CAU',
+  //   'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7zjk6aWDXjWiB_mMUpuxQdzMxtXbyd8M5ag&usqp=CAU',
+  //   'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7zjk6aWDXjWiB_mMUpuxQdzMxtXbyd8M5ag&usqp=CAU',
+  // ];
 
   int selectedIndex = 0;
 
@@ -79,23 +83,24 @@ class _ComplaintViewState extends State<ComplaintDetailsScreen> {
               height: screenHeight * 0.5,
               child: PageIndicatorContainer(
                 align: IndicatorAlign.bottom,
-                length: imageList.length,
+                length: complaint.lstMedia.length,
                 indicatorSpace: 10.0,
                 padding: const EdgeInsets.all(15),
                 indicatorColor: Colors.grey,
                 indicatorSelectorColor: Colors.blue,
                 shape: IndicatorShape.circle(size: 7),
                 child: PageView.builder(
-                  itemCount: imageList.length,
+                  itemCount: complaint.lstMedia.length,
                   itemBuilder: (context, position) {
+                    Uint8List bytes =
+                        base64Decode(complaint.lstMedia[position].data);
                     return Container(
                       padding: const EdgeInsets.fromLTRB(5, 5, 5, 10),
                       child: Container(
                         //height: ,
                         color: AppColor.background,
-                        child: Image.network(
-                          imageList[
-                              position], 
+                        child: Image.memory(
+                          bytes, // Assuming imageData is a Uint8List
                           scale: 0.1,
                           fit: BoxFit.cover,
                         ),
