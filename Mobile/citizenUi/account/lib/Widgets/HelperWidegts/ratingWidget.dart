@@ -85,7 +85,7 @@ class _RatingWidgetState extends State<RatingWidget1> {
                           Navigator.pop(context);
                         },
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 15,
                       ),
                       BottonContainerPopup(

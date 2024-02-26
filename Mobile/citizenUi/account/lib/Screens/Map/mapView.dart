@@ -3,6 +3,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart' as b;
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:account/API/map_complaints.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
 import 'package:account/Repository/mapLinks.dart';
 import 'package:account/Widgets/Bars/bottomNavBar.dart';
@@ -10,8 +11,9 @@ import 'package:account/Widgets/MapWidgets/marker.dart';
 import 'package:account/Widgets/MapWidgets/mapCard.dart';
 import 'package:account/Widgets/MapWidgets/myLocationWidget.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
-// ignore_for_file: file_names, depend_on_referenced_packages, use_build_context_synchronously
+// ignore_for_file: avoid_print
 
+// ignore_for_file: file_names, depend_on_referenced_packages, use_build_context_synchronously
 
 class FullMap extends StatefulWidget {
   const FullMap({super.key});
@@ -26,7 +28,7 @@ class FullMapState extends State<FullMap> with TickerProviderStateMixin {
   int selectedIndex = 0;
   late final MapController mapController;
   late double _markerSize;
-
+  List<ComplaintModel2> complaints = [];
   Position? _currentPosition;
 
   Future<bool> _handleLocationPermission() async {
@@ -73,8 +75,7 @@ class FullMapState extends State<FullMap> with TickerProviderStateMixin {
     await placemarkFromCoordinates(
             _currentPosition!.latitude, _currentPosition!.longitude)
         .then((List<Placemark> placemarks) {
-      setState(() {
-      });
+      setState(() {});
     }).catchError((e) {
       //debugPrint(e);
     });
@@ -86,6 +87,27 @@ class FullMapState extends State<FullMap> with TickerProviderStateMixin {
     _getCurrentPosition();
     mapController = MapController();
     _markerSize = 200.0;
+    _fetchComplaints();
+  }
+
+  Future<void> _fetchComplaints() async {
+    getUsersComplaint usersComplaintObj = getUsersComplaint();
+    try {
+      final List<ComplaintModel2> fetchedComplaints =
+          await usersComplaintObj.getComplaints();
+      setState(() {
+        complaints = fetchedComplaints;
+      });
+    } catch (error) {
+      print('Error fetching complaints: $error');
+    }
+  }
+
+  List<b.LatLng> buildMarkerLocations() {
+    return complaints
+        .map((complaint) =>
+            b.LatLng(complaint.latLng.decLat, complaint.latLng.decLng))
+        .toList();
   }
 
   void _updateMarkerSize(var zoom) {
@@ -99,36 +121,36 @@ class FullMapState extends State<FullMap> with TickerProviderStateMixin {
     });
   }
 
-  List<b.LatLng> markerLocations = [
-    b.LatLng(31.97843632996766, 35.841184352214725),
-    b.LatLng(31.983572397437857, 35.83794951164986),
-    b.LatLng(32.001625414747444, 35.821641682069675),
-    b.LatLng(31.957505727610943, 35.82867979799376),
-    b.LatLng(31.95138845374212, 35.850480791222),
-    b.LatLng(32.065174697792365, 35.88038905102139),
-    b.LatLng(32.016864736899166, 35.97428781713044),
-    b.LatLng(32.09470105626992, 35.96776468529836),
-    b.LatLng(32.03811261913162, 35.974974462586445),
-    b.LatLng(32.0666294215345, 35.955061744362226),
-    b.LatLng(31.97843632996766, 35.841184352214725),
-    b.LatLng(31.949392102408837, 35.66974543840278),
-    b.LatLng(31.845924404519707, 35.87126799133567),
-    b.LatLng(31.831202772105296, 35.66992164287437),
-    b.LatLng(31.97843632996766, 35.841184352214725),
-    b.LatLng(31.939822118246564, 35.93438642676467),
-    b.LatLng(31.956094613166286, 35.92756946460224),
-    b.LatLng(31.934368093257547, 35.919691260853014),
-    b.LatLng(31.927681976801534, 35.931789930896464),
-    b.LatLng(31.919323647502658, 35.89577528518574),
-    b.LatLng(31.988794078410276, 35.895212556346515),
-    b.LatLng(31.97066101036198, 35.91707996576524),
-    b.LatLng(31.948245997893004, 35.91399446229071),
-    b.LatLng(31.941700436945087, 35.903195200129844),
-  ];
+  // List<b.LatLng> markerLocations = [
+  //   b.LatLng(31.97843632996766, 35.841184352214725),
+  //   b.LatLng(31.983572397437857, 35.83794951164986),
+  //   b.LatLng(32.001625414747444, 35.821641682069675),
+  //   b.LatLng(31.957505727610943, 35.82867979799376),
+  //   b.LatLng(31.95138845374212, 35.850480791222),
+  //   b.LatLng(32.065174697792365, 35.88038905102139),
+  //   b.LatLng(32.016864736899166, 35.97428781713044),
+  //   b.LatLng(32.09470105626992, 35.96776468529836),
+  //   b.LatLng(32.03811261913162, 35.974974462586445),
+  //   b.LatLng(32.0666294215345, 35.955061744362226),
+  //   b.LatLng(31.97843632996766, 35.841184352214725),
+  //   b.LatLng(31.949392102408837, 35.66974543840278),
+  //   b.LatLng(31.845924404519707, 35.87126799133567),
+  //   b.LatLng(31.831202772105296, 35.66992164287437),
+  //   b.LatLng(31.97843632996766, 35.841184352214725),
+  //   b.LatLng(31.939822118246564, 35.93438642676467),
+  //   b.LatLng(31.956094613166286, 35.92756946460224),
+  //   b.LatLng(31.934368093257547, 35.919691260853014),
+  //   b.LatLng(31.927681976801534, 35.931789930896464),
+  //   b.LatLng(31.919323647502658, 35.89577528518574),
+  //   b.LatLng(31.988794078410276, 35.895212556346515),
+  //   b.LatLng(31.97066101036198, 35.91707996576524),
+  //   b.LatLng(31.948245997893004, 35.91399446229071),
+  //   b.LatLng(31.941700436945087, 35.903195200129844),
+  // ];
 
   @override
   Widget build(BuildContext context) {
-   // final screenHeight = MediaQuery.of(context).size.height;
+    // final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -157,7 +179,6 @@ class FullMapState extends State<FullMap> with TickerProviderStateMixin {
                 center: _currentPosition != null
                     ? b.LatLng(
                         _currentPosition!.latitude, _currentPosition!.longitude)
-                        
                     : b.LatLng(31.961030, 35.881216),
               ),
               layers: [
@@ -188,7 +209,7 @@ class FullMapState extends State<FullMap> with TickerProviderStateMixin {
 
                 MarkerClusterLayerOptions(
                   maxClusterRadius: 120,
-                  markers: markerLocations.asMap().entries.map((entry) {
+                  markers: buildMarkerLocations().asMap().entries.map((entry) {
                     int index = entry.key;
                     b.LatLng location = entry.value;
                     return Marker(

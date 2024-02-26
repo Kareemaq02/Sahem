@@ -9,6 +9,8 @@ import 'package:account/API/watch_complaint_request.dart';
 import 'package:account/Widgets/VoteWidegts/downVote.dart';
 import 'package:account/Widgets/VoteWidegts/voteButton.dart';
 import 'package:account/Widgets/ComaplaintCard/timeLineWidget.dart';
+// ignore_for_file: unused_import
+
 
 // ignore_for_file: file_names, library_private_types_in_public_api
 
@@ -21,6 +23,7 @@ class ComplaintCardPublicForm extends StatefulWidget {
   final String strComment;
   int intVotersCount;
   final int statusID;
+  final String statusAr;
   final String strUserName1;
   final String strUserName2;
   final double lat;
@@ -39,6 +42,7 @@ class ComplaintCardPublicForm extends StatefulWidget {
       required this.strComment,
       required this.intVotersCount,
       required this.statusID,
+      required this.statusAr,
       required this.strUserName1,
       required this.strUserName2,
       required this.intComplaintId,
@@ -122,7 +126,7 @@ class _ComplaintCardsState extends State<ComplaintCardPublicForm> {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         text(
-                          status1[widget.statusID + 2].name,
+                          widget.statusAr,
                           AppColor.main,
                         ),
                         const Icon(Icons.circle,
