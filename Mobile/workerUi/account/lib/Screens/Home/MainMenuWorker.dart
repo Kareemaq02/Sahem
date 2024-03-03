@@ -1,17 +1,17 @@
-import 'package:account/API/TeamsAPI/GetTeamAnalytics.dart';
-import 'package:account/API/login_request.dart';
-import 'package:account/Screens/CurrentTask/currentTask.dart';
-import 'package:account/Screens/View%20tasks/task_list.dart';
-import 'package:account/Utils/Team.dart';
-import 'package:account/Widgets/Bars/bottomNavBar.dart';
-import 'package:account/Widgets/Charts/TeamChart.dart';
 import 'package:flutter/material.dart';
+import 'package:account/Utils/Team.dart';
 import 'package:account/Repository/color.dart';
+import 'package:account/API/login_request.dart';
 import 'package:account/Utils/NaviTranstion.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
 import 'package:account/Screens/Profile/profile.dart';
+import 'package:account/Widgets/Charts/TeamChart.dart';
+import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/Screens/Analytics/Quarter.dart';
 import 'package:account/Screens/Analytics/Analytics.dart';
+import 'package:account/API/TeamsAPI/GetTeamAnalytics.dart';
+import 'package:account/Screens/View%20tasks/task_list.dart';
+import 'package:account/Screens/CurrentTask/currentTask.dart';
 import 'package:account/Widgets/Displays/InfoDisplayBox.dart';
 import 'package:account/Widgets/Buttons/squareButtonWithStroke.dart';
 
@@ -76,7 +76,7 @@ class _MainMenuWorkerState extends State<MainMenuWorker> {
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
       bottomNavigationBar: BottomNavBar1(0),
-      appBar: myAppBar(context, "الصفحة الرئيسية", false, screenWidth * 0.45),
+      appBar: myAppBar(context, "الصفحة الرئيسية", false, screenWidth * 0.55),
       body: Padding(
         padding: EdgeInsets.only(top: halfMarginY, bottom: halfMarginY),
         child: Column(

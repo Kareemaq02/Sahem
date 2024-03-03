@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:account/Repository/color.dart';
 import '../../Widgets/HelperWidgets/rowInfo.dart';
@@ -6,6 +8,7 @@ import 'package:page_indicator/page_indicator.dart';
 import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/API/TaskAPI/view_tasks_request.dart';
 import 'package:account/Widgets/HelperWidgets/myContainer.dart';
+
 
 // ignore_for_file: library_private_types_in_public_api
 
@@ -19,11 +22,7 @@ class ComplaintDetailsScreen extends StatefulWidget {
 }
 
 class _ComplaintViewState extends State<ComplaintDetailsScreen> {
-  final List<String> imageList = [
-    'https://gumlet.assettype.com/sabq%2Fimport%2Fuploads%2Fsabq_old%2Ffiles%2Fgeneral%2F77549_31468.jpg?auto=format%2Ccompress&w=1200',
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7zjk6aWDXjWiB_mMUpuxQdzMxtXbyd8M5ag&usqp=CAU',
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7zjk6aWDXjWiB_mMUpuxQdzMxtXbyd8M5ag&usqp=CAU',
-  ];
+
 
   int selectedIndex = 0;
 
@@ -59,23 +58,24 @@ class _ComplaintViewState extends State<ComplaintDetailsScreen> {
               height: screenHeight * 0.5,
               child: PageIndicatorContainer(
                 align: IndicatorAlign.bottom,
-                length: imageList.length,
+                length: task.lstMediaBefore.length,
                 indicatorSpace: 10.0,
                 padding: const EdgeInsets.all(15),
                 indicatorColor: Colors.grey,
                 indicatorSelectorColor: Colors.blue,
                 shape: IndicatorShape.circle(size: 7),
                 child: PageView.builder(
-                  itemCount: imageList.length,
+                  itemCount: task.lstMediaBefore.length,
                   itemBuilder: (context, position) {
+                    Uint8List bytes =
+                        base64Decode(task.lstMediaBefore[position].data);
                     return Container(
                       padding: const EdgeInsets.fromLTRB(5, 5, 5, 10),
                       child: Container(
                         //height: ,
                         color: AppColor.background,
-                        child: Image.network(
-                          imageList[
-                              position], // Use the correct image path here
+                        child: Image.memory(
+                          bytes,
                           scale: 0.1,
                           fit: BoxFit.cover,
                         ),
