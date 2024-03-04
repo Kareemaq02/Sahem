@@ -3,6 +3,8 @@ import 'package:account/Widgets/Bars/appBar.dart';
 import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/Widgets/HelperWidegts/titleText.dart';
 import 'package:account/Screens/Notifications/DateFormatter.dart';
+// ignore_for_file: file_names
+
 
 class NotificationsHistory extends StatefulWidget {
   const NotificationsHistory({super.key});

@@ -25,13 +25,26 @@ class _XDPublicFeed1State extends State<XDPublicFeed1> {
   bool _isDisposed = false;
   double lat = 0.0;
   double lng = 0.0;
+  late Future<List<dynamic>> _complaintsFuture;
 
   @override
   void initState() {
-    _getCurrentPosition();
     selectedTypes1.clear();
     selectedStatus.clear();
     super.initState();
+    _complaintsFuture = getFilteredComplaints(
+      // Move data fetching logic to initState
+      selectedStatus,
+      selectedTypes1,
+      currentPosition?.latitude ?? 0.0,
+      currentPosition?.longitude ?? 0.0,
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _getCurrentPosition();
   }
 
   @override
@@ -114,12 +127,7 @@ class _XDPublicFeed1State extends State<XDPublicFeed1> {
                 setState(() {});
               },
               child: FutureBuilder<List<dynamic>>(
-                future: getFilteredComplaints(
-                  selectedStatus,
-                  selectedTypes1,
-                  currentPosition?.latitude ?? 0.0,
-                  currentPosition?.longitude ?? 0.0,
-                ),
+                future: _complaintsFuture,
                 builder: (BuildContext context,
                     AsyncSnapshot<List<dynamic>> snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
@@ -131,8 +139,10 @@ class _XDPublicFeed1State extends State<XDPublicFeed1> {
                           lat = data[index]['latLng']["decLat"];
                           lng = data[index]['latLng']["decLng"];
                           return ComplaintCardPublicForm(
+                            base64ComplaintPic: data[index]['lstMedia'][0]['data'],
                               intComplaintId: data[index]['intComplaintId'],
                             statusID: data[index]['intStatusId'],
+                            statusAr: data[index]['strStatusAr'],
                               strUserName1:
                                 data[index]['strFirstNameAr'].toString(),
                               strUserName2:
@@ -161,6 +171,7 @@ class _XDPublicFeed1State extends State<XDPublicFeed1> {
                   }
                 },
               ),
+              
             ),
           ),
         ],

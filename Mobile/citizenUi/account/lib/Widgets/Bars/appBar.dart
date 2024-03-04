@@ -33,7 +33,7 @@ import 'package:account/Screens/Notifications/NotificationsHistory.dart';
               },
               icon: const Icon(
                 Icons.notifications_none_outlined,
-                color: AppColor.textTitle,
+                color: Colors.white,
                 size: 30,
               ),
             ),

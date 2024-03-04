@@ -54,9 +54,6 @@ class _BottomNavBarState extends State<BottomNavBar1> {
 
   @override
   void initState() {
-    setState(() {
-      // _selectedIndex =widget.selectedIcon ;
-    });
     super.initState();
   }
 

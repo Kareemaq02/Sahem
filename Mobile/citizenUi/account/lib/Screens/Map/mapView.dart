@@ -3,6 +3,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart' as b;
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:account/API/map_complaints.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
 import 'package:account/Repository/mapLinks.dart';
 import 'package:account/Widgets/Bars/bottomNavBar.dart';
@@ -10,8 +11,9 @@ import 'package:account/Widgets/MapWidgets/marker.dart';
 import 'package:account/Widgets/MapWidgets/mapCard.dart';
 import 'package:account/Widgets/MapWidgets/myLocationWidget.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
-// ignore_for_file: file_names, depend_on_referenced_packages, use_build_context_synchronously
+// ignore_for_file: avoid_print
 
+// ignore_for_file: file_names, depend_on_referenced_packages, use_build_context_synchronously
 
 class FullMap extends StatefulWidget {
   const FullMap({super.key});
@@ -26,7 +28,7 @@ class FullMapState extends State<FullMap> with TickerProviderStateMixin {
   int selectedIndex = 0;
   late final MapController mapController;
   late double _markerSize;
-
+  List<ComplaintModel2> complaints = [];
   Position? _currentPosition;
 
   Future<bool> _handleLocationPermission() async {
@@ -73,8 +75,7 @@ class FullMapState extends State<FullMap> with TickerProviderStateMixin {
     await placemarkFromCoordinates(
             _currentPosition!.latitude, _currentPosition!.longitude)
         .then((List<Placemark> placemarks) {
-      setState(() {
-      });
+      setState(() {});
     }).catchError((e) {
       //debugPrint(e);
     });
@@ -86,6 +87,27 @@ class FullMapState extends State<FullMap> with TickerProviderStateMixin {
     _getCurrentPosition();
     mapController = MapController();
     _markerSize = 200.0;
+    _fetchComplaints();
+  }
+
+  Future<void> _fetchComplaints() async {
+    getUsersComplaint usersComplaintObj = getUsersComplaint();
+    try {
+      final List<ComplaintModel2> fetchedComplaints =
+          await usersComplaintObj.getComplaints();
+      setState(() {
+        complaints = fetchedComplaints;
+      });
+    } catch (error) {
+      print('Error fetching complaints: $error');
+    }
+  }
+
+  List<b.LatLng> buildMarkerLocations() {
+    return complaints
+        .map((complaint) =>
+            b.LatLng(complaint.latLng.decLat, complaint.latLng.decLng))
+        .toList();
   }
 
   void _updateMarkerSize(var zoom) {
@@ -128,7 +150,7 @@ class FullMapState extends State<FullMap> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-   // final screenHeight = MediaQuery.of(context).size.height;
+    // final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -157,7 +179,6 @@ class FullMapState extends State<FullMap> with TickerProviderStateMixin {
                 center: _currentPosition != null
                     ? b.LatLng(
                         _currentPosition!.latitude, _currentPosition!.longitude)
-                        
                     : b.LatLng(31.961030, 35.881216),
               ),
               layers: [
