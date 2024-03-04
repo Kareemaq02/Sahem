@@ -13,15 +13,15 @@ myAppBar(BuildContext context, title, visible, double space) {
       leadingWidth: double.infinity,
       leading: Row(
         children: [
-          // IconButton(
-          //   onPressed: () =>
-          //       naviTransition(context, const NotificationsHistory()),
-          //   icon: const Icon(
-          //     Icons.notifications_none_outlined,
-          //     color: AppColor.textTitle,
-          //     size: 30,
-          //   ),
-          // ),
+          IconButton(
+            onPressed: () =>
+                naviTransition(context, const NotificationsHistory()),
+            icon: const Icon(
+              Icons.notifications_none_outlined,
+              color: Colors.white,
+              size: 30,
+            ),
+          ),
           SizedBox(width: MediaQuery.of(context).padding.right + space),
           Visibility(
             visible: false,

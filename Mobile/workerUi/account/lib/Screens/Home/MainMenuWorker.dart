@@ -76,7 +76,7 @@ class _MainMenuWorkerState extends State<MainMenuWorker> {
       backgroundColor: AppColor.background,
       resizeToAvoidBottomInset: false,
       bottomNavigationBar: BottomNavBar1(0),
-      appBar: myAppBar(context, "الصفحة الرئيسية", false, screenWidth * 0.55),
+      appBar: myAppBar(context, "الصفحة الرئيسية", false, screenWidth * 0.45),
       body: Padding(
         padding: EdgeInsets.only(top: halfMarginY, bottom: halfMarginY),
         child: Column(

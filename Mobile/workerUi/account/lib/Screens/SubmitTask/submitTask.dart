@@ -1,9 +1,9 @@
 import 'dart:io';
-import 'package:account/API/TaskAPI/get_activated_task.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:account/Repository/color.dart';
+import 'package:account/API/login_request.dart';
 import 'package:account/Utils/TeamMembers.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:account/Widgets/Popup/popup.dart';
@@ -13,11 +13,13 @@ import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/API/TeamsAPI/GetTeamMembers.dart';
 import 'package:account/Widgets/HelperWidgets/Loader.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:account/API/TaskAPI/get_activated_task.dart';
 import 'package:account/API/TaskAPI/view_tasks_request.dart';
 import 'package:account/Widgets/HelperWidgets/TitleText.dart';
 import 'package:account/API/TaskAPI/submit_task_request.dart';
 import 'package:account/Widgets/Buttons/bottonContainer.dart';
 import 'package:account/Widgets/Displays/TeamMemberDisplay.dart';
+import 'package:account/API/ProfileAPI/user_info_request%20copy.dart';
 import 'package:account/Widgets/Displays/TeamMemberAnalyticsDisplay.dart';
 // ignore_for_file: prefer_typing_uninitialized_variables
 
@@ -74,7 +76,7 @@ class _ComaplintState extends State<FinishTask> {
   }
 
   void getMemers() async {
-    teamMembers = await _memeber.getTeamMembersByLeader(1);
+    teamMembers = await _memeber.getTeamMembersByLeader(getUserData().intId);
   }
 
   WorkerTask _task = WorkerTask();
@@ -393,7 +395,8 @@ class _ComaplintState extends State<FinishTask> {
                   scrollDirection: Axis.horizontal,
                   reverse: true,
                   child: FutureBuilder<List<TeamMember>>(
-                    future: _memeber.getTeamMembersByLeader(1),
+                    future:
+                        _memeber.getTeamMembersByLeader(getUserData().intId),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting ||
                           snapshot.data!.isEmpty) {
@@ -415,7 +418,7 @@ class _ComaplintState extends State<FinishTask> {
                       );
                       return Row(
                         children: List.generate(
-                          team.length,
+                          team.length - 1,
                           (index) {
                             if (index == 0) {
                               return SizedBox();

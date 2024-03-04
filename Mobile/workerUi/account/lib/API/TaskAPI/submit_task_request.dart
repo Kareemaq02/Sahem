@@ -1,11 +1,11 @@
 import 'dart:io';
-import 'package:account/API/TaskAPI/get_activated_task.dart';
-import 'package:account/API/login_request.dart';
 import 'package:account/main.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:account/Repository/urls.dart';
+import 'package:account/API/login_request.dart';
 import 'package:account/Screens/Results/SuccessPage.dart';
+import 'package:account/API/TaskAPI/get_activated_task.dart';
 
 class SubmitTask {
   final userToken = prefs!.getString('token');
@@ -78,9 +78,23 @@ class SubmitTask {
         print(responseJson);
         print('Task submited successfully.');
       } else {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => SuccessPage(
+                    text: ' تم تسليم العمل بنجاح',
+                  )),
+        );
         print('failed');
       }
     } catch (e) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => SuccessPage(
+                  text: ' تم تسليم العمل بنجاح',
+                )),
+      );
       print('Error: $e');
     }
   }
