@@ -98,6 +98,7 @@ class _CurrentTaskState extends State<CurrentTask> {
       if (placemarks.isNotEmpty) {
         final Placemark placemark = placemarks[0];
         final String? address = placemark.street;
+        print(address);
         return address;
       } else {
         return '';
@@ -146,7 +147,7 @@ class _CurrentTaskState extends State<CurrentTask> {
                 scrollDirection: Axis.vertical,
                 child: Container(
                   color: Colors.white,
-                  height: screenHeight * 0.90,
+                  height: screenHeight * 0.85,
                   child: Column(children: [
                     //mapview
                     Container(
@@ -249,9 +250,10 @@ class _CurrentTaskState extends State<CurrentTask> {
 
                                 Padding(
                                   padding: EdgeInsets.only(
-                                      right: screenWidth * 0.5,
+                                      right: screenWidth * 0.6,
                                       top: screenHeight * 0.04),
-                                  child: text(address, AppColor.secondary),
+                                  child: text('عمان, شارع وصفي التل',
+                                      AppColor.secondary),
                                 ),
                               ],
                             ),

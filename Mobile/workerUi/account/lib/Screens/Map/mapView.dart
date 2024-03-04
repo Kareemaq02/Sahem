@@ -1,12 +1,12 @@
-import 'package:account/API/login_request.dart';
-import 'package:account/Widgets/Bars/NavBarAdmin.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart' as b;
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:account/API/login_request.dart';
 import 'package:account/Widgets/Bars/appBar.dart';
 import 'package:account/Repository/mapLinks.dart';
+import 'package:account/Widgets/Bars/NavBarAdmin.dart';
 import 'package:account/Widgets/Bars/bottomNavBar.dart';
 import 'package:account/Widgets/MapWidgets/marker.dart';
 import 'package:account/Widgets/MapWidgets/mapCard.dart';
@@ -210,7 +210,7 @@ class FullMapState extends State<FullMap1> with TickerProviderStateMixin {
                 ),
               ],
             ),
-            filterIcon(context),
+            // filterIcon(context),
             myLocationWidegt(() {
               if (_currentPosition != null) {
                 _animatedMapMove(
