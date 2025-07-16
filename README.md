@@ -4,7 +4,7 @@ This is the **public version** of the Sahem repository. It has been made availab
 
 ## 📱 About the App
 
-The Complaint System is a mobile application designed to help users **submit and track complaints efficiently**. It is aimed at streamlining the complaint-handling process for both users and administrators through a digital platform.
+Sahem is a mobile and web application designed to help users **submit and track complaints efficiently**. It is aimed at streamlining the complaint-handling process for both users and administrators through a digital platform.
 
 ### 🌟 Key Features
 
@@ -16,7 +16,7 @@ The Complaint System is a mobile application designed to help users **submit and
 
 ## 📄 User Manual
 
-For a detailed walkthrough of the app's features and how to use it, refer to the attached PDF below:
+For a detailed walkthrough of the mobile app's features and how to use it, refer to the attached PDF below:
 
 📎 [Mobile_app_user_manual_ar.pdf](./Mobile_app_user_manual_ar.pdf)
 
