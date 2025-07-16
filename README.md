@@ -1,6 +1,6 @@
-# Complaint System (Public Version)
+# Sahem (Public Version)
 
-This is the **public version** of the Complaint System repository. It has been made available to allow others to **view and explore the structure, features, and implementation** of the application. Sensitive files and credentials have been removed for security reasons.
+This is the **public version** of the Sahem repository. It has been made available to allow others to **view and explore the structure, features, and implementation** of the application. Sensitive files and credentials have been removed for security reasons.
 
 ## 📱 About the App
 
